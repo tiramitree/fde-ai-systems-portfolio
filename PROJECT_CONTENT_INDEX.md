@@ -158,6 +158,7 @@ Path: `secure-enterprise-knowledge-copilot`
 Important files:
 
 - `app.py`: Python HTTP server and API routes.
+- `src/copilot/api.py`: application API layer for HTTP-facing use cases.
 - `src/copilot/retrieval.py`: role-aware retrieval and evidence selection.
 - `src/copilot/security.py`: unsafe retrieved-content detection.
 - `src/copilot/answering.py`: answer shaping, citation behavior, abstention.
@@ -165,7 +166,7 @@ Important files:
 - `src/copilot/evals.py`: golden eval definitions and assertions.
 - `src/copilot/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.
-- `web/index.html`, `web/styles.css`, `web/app.js`: browser demo UI.
+- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, renderers, and app orchestration.
 - `data/seed_documents.json`: seed knowledge base.
 - `data/eval_cases.json`: eval cases.
 - `docs/architecture.md`: project architecture.
@@ -188,13 +189,14 @@ Path: `regulated-customer-operations-agent`
 Important files:
 
 - `app.py`: Python HTTP server and API routes.
+- `src/ops_agent/api.py`: application API layer for HTTP-facing use cases.
 - `src/ops_agent/agent.py`: workflow planning and response assembly.
 - `src/ops_agent/tools.py`: deterministic business tools and side-effect guards.
 - `src/ops_agent/storage.py`: thread-safe JSON state, traces, audit log, approvals.
 - `src/ops_agent/evals.py`: golden eval definitions and assertions.
 - `src/ops_agent/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.
-- `web/index.html`, `web/styles.css`, `web/app.js`: browser demo UI.
+- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, renderers, and app orchestration.
 - `data/seed_state.json`: seeded operations state.
 - `data/eval_cases.json`: eval cases.
 - `docs/architecture.md`: project architecture.

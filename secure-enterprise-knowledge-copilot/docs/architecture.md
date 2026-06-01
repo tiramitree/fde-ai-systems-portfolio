@@ -3,11 +3,17 @@
 ## Current MVP
 
 ```text
-Static HTML/JS UI
+Static ES-module UI
+  +-- api.js: HTTP client
+  +-- dom.js: safe DOM helpers
+  +-- renderers.js: UI rendering
+  +-- app.js: screen orchestration
   |
   | HTTP JSON
   v
 Python standard-library HTTP server
+  |
+  +-- api.py: application API layer
   |
   +-- JSON runtime storage
   |   +-- users
@@ -59,5 +65,7 @@ Permission filtering happens before evidence is assembled. The model should neve
 Retrieved documents are treated as data, not instructions. Instruction-like text inside documents is detected and excluded from evidence.
 
 The answer shape is structured around answer, citations, confidence, missing evidence, abstain reason, and security events. This makes the output inspectable and testable.
+
+The static UI is separated from the application API. The HTTP server only parses requests and serves assets; the API layer owns endpoint behavior; frontend modules own API calls, DOM helpers, rendering, and screen orchestration separately.
 
 Eval cases include required citations and forbidden citations. This catches both quality regressions and permission leaks.

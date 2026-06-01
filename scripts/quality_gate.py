@@ -59,10 +59,20 @@ REQUIRED_FILES = [
     "scripts/dev.py",
     "scripts/public_safety_scan.py",
     "scripts/post_publish_check.py",
+    "secure-enterprise-knowledge-copilot/src/copilot/api.py",
     "secure-enterprise-knowledge-copilot/.dockerignore",
     "secure-enterprise-knowledge-copilot/README.md",
+    "secure-enterprise-knowledge-copilot/web/js/api.js",
+    "secure-enterprise-knowledge-copilot/web/js/app.js",
+    "secure-enterprise-knowledge-copilot/web/js/dom.js",
+    "secure-enterprise-knowledge-copilot/web/js/renderers.js",
+    "regulated-customer-operations-agent/src/ops_agent/api.py",
     "regulated-customer-operations-agent/.dockerignore",
     "regulated-customer-operations-agent/README.md",
+    "regulated-customer-operations-agent/web/js/api.js",
+    "regulated-customer-operations-agent/web/js/app.js",
+    "regulated-customer-operations-agent/web/js/dom.js",
+    "regulated-customer-operations-agent/web/js/renderers.js",
 ]
 
 

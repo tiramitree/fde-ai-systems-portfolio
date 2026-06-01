@@ -6,7 +6,7 @@ import mimetypes
 import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 
 ROOT = Path(__file__).resolve().parent
@@ -14,27 +14,12 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from copilot.answering import generate_answer
-from copilot.evals import latest_eval_run, run_evals
-from copilot.storage import (
-    connect,
-    init_db,
-    list_audit_events,
-    list_traces,
-    list_users,
-    list_visible_documents,
-    get_user,
-)
+from copilot.api import ApiError, CopilotApi
+from copilot.storage import init_db
 
 
 WEB_DIR = ROOT / "web"
-
-
-class ApiError(Exception):
-    def __init__(self, status: int, message: str):
-        self.status = status
-        self.message = message
-        super().__init__(message)
+API = CopilotApi()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -44,7 +29,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             parsed = urlparse(self.path)
             if parsed.path.startswith("/api/"):
-                self.handle_api_get(parsed.path, parse_qs(parsed.query))
+                self.send_json(API.get(parsed.path, API.parse_query(parsed.query)))
             else:
                 self.serve_static(parsed.path)
         except ApiError as exc:
@@ -58,51 +43,13 @@ class Handler(BaseHTTPRequestHandler):
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length).decode("utf-8") if length else "{}"
             body = json.loads(raw or "{}")
-            if parsed.path == "/api/query":
-                with connect() as conn:
-                    result = generate_answer(conn, body.get("user_id", ""), body.get("question", ""))
-                    self.send_json(result)
-                return
-            if parsed.path == "/api/eval/run":
-                with connect() as conn:
-                    result = run_evals(conn)
-                    self.send_json(result)
-                return
-            raise ApiError(404, f"Unknown endpoint: {parsed.path}")
+            self.send_json(API.post(parsed.path, body))
         except json.JSONDecodeError:
             self.send_json({"error": "Invalid JSON body"}, 400)
         except ApiError as exc:
             self.send_json({"error": exc.message}, exc.status)
         except Exception as exc:
             self.send_json({"error": str(exc)}, 500)
-
-    def handle_api_get(self, path: str, query: dict[str, list[str]]) -> None:
-        with connect() as conn:
-            if path == "/api/health":
-                self.send_json({"status": "ok", "app": "secure-enterprise-knowledge-copilot"})
-                return
-            if path == "/api/users":
-                self.send_json({"users": list_users(conn)})
-                return
-            if path == "/api/documents":
-                user_id = query.get("user_id", ["alice"])[0]
-                user = get_user(conn, user_id)
-                if not user:
-                    raise ApiError(404, f"Unknown user_id: {user_id}")
-                self.send_json({"documents": list_visible_documents(conn, user)})
-                return
-            if path == "/api/traces":
-                limit = int(query.get("limit", ["25"])[0])
-                self.send_json({"traces": list_traces(conn, limit=limit)})
-                return
-            if path == "/api/audit":
-                limit = int(query.get("limit", ["50"])[0])
-                self.send_json({"events": list_audit_events(conn, limit=limit)})
-                return
-            if path == "/api/eval/latest":
-                self.send_json({"eval_run": latest_eval_run(conn)})
-                return
-        raise ApiError(404, f"Unknown endpoint: {path}")
 
     def serve_static(self, path: str) -> None:
         if path in ("", "/"):
@@ -153,4 +100,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
