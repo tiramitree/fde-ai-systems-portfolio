@@ -24,6 +24,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 - Threats, deterministic controls, evidence files, and proof commands can be verified with `python -B scripts/dev.py threat-model`.
 - Public PR review rules and malicious-contribution heuristics can be verified with `python -B scripts/dev.py pr-policy`.
 - Release-attachable replay evidence can be generated with `python -B scripts/dev.py replay-artifact`.
+- Docker/Compose release hygiene can be verified without a local Docker daemon with `python -B scripts/dev.py container-release`.
 
 ## Interviewer Skepticism
 
@@ -32,11 +33,15 @@ Expected challenges:
 - "This is local JSON, not production."
 - "The prompt-injection detection is simple."
 - "The model is optional."
-- "Docker was not verified here."
+- "Docker runtime was not verified here."
 
 Approved answer:
 
 > Correct. The repo is a local-first portfolio that demonstrates the control boundaries. The production path is documented. The important thing is that permissions, approval gates, audit, traces, and evals are explicit and testable instead of hidden inside prompts.
+
+For Docker specifically, add:
+
+> The container files are statically gated for ports, health checks, commands, env defaults, and ignored build-context state. I would still run `docker compose up --build` on a Docker-enabled machine before claiming Docker runtime verification.
 
 ## Star-Worthiness
 

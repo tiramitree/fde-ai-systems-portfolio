@@ -16,6 +16,7 @@ The command verifies:
 
 - public safety scan
 - Markdown links and public assets
+- Docker/Compose release hygiene
 - dependency-surface policy
 - repository governance files
 - model gateway safety

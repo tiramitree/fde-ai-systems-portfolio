@@ -72,6 +72,7 @@ PR review policy: passed
 Fresh clone experience: command published; run after each public push
 API documentation gate: passed
 Demo replay artifact: command published; writes ignored files under `out/`
+Container release hygiene: passed
 Quality gate: passed
 ```
 
@@ -87,6 +88,7 @@ Confirmed:
 - fresh clone script and documentation published
 - API documentation script and documentation published
 - demo replay artifact script and documentation published
+- container release hygiene script and documentation published
 - remote `main` exists
 - local tracked worktree clean
 
@@ -106,6 +108,6 @@ Confirmed:
 - Create a GitHub release page for `v0.1.0`; `python -B scripts/configure_github_launch.py --apply` can do this after `gh auth login`.
 - Pin repository on profile.
 - Record demo GIF/video.
-- Verify Docker runtime.
+- Verify Docker runtime; static Docker/Compose release hygiene is already gated.
 - Verify optional OpenAI mode with a live API key.
 - Collect launch feedback and star-growth evidence.

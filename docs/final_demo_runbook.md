@@ -76,9 +76,15 @@ Verify public PR review heuristics, the maintainer policy, the runbook, and the 
 python -B scripts/dev.py pr-policy
 ```
 
+Verify Docker/Compose release hygiene without requiring a local Docker daemon:
+
+```bash
+python -B scripts/dev.py container-release
+```
+
 ## 2. Optional Docker Run
 
-Docker was not available in the current local environment, so this config is prepared but not runtime-verified here.
+Docker was not available in the current local environment, so this config is statically gated but not runtime-verified here.
 
 ```bash
 docker compose up --build

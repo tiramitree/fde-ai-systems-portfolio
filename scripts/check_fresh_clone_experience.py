@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STATIC_COMMANDS = [
     "safety",
     "assets",
+    "container-release",
     "dependency-surface",
     "governance",
     "model-gateway-safety",

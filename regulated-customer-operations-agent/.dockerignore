@@ -5,8 +5,11 @@ __pycache__/
 
 data/runtime_state.json
 data/eval_runtime_state.json
+data/runtime_state.tmp
+data/*.sqlite
+data/*.sqlite-journal
+data/write-test.txt
 
 .env
 .venv/
 venv/
-
