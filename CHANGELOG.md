@@ -35,6 +35,7 @@ Initial public-ready portfolio release.
   - optional OpenAI model, reasoning effort, verbosity, and structured-output configuration
   - GitHub repository settings and community backlog
   - portfolio evidence matrix and initial GitHub issue templates
+  - launch copy pack and demo recording checklist
 
 ### Verified
 
