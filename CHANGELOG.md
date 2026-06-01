@@ -36,6 +36,7 @@ Initial public-ready portfolio release.
   - GitHub repository settings and community backlog
   - portfolio evidence matrix and initial GitHub issue templates
   - launch copy pack and demo recording checklist
+  - post-publish verification script and checklist
 
 ### Verified
 

@@ -87,6 +87,7 @@ Local Git state:
 - `scripts/generate_demo_report.py`: writes `docs/demo_report.md`.
 - `scripts/quality_gate.py`: local release gate.
 - `scripts/ci_quality_gate.py`: clean-checkout CI gate for GitHub Actions.
+- `scripts/post_publish_check.py`: verifies remote GitHub publication after `main` is pushed.
 
 ## GitHub Assets
 
@@ -122,6 +123,7 @@ Release and growth:
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
 - `docs/github_release_commands.md`: publication commands.
+- `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: initial issue titles, labels, and bodies for launch.
 - `docs/demo_video_script.md`: short video/GIF script.
