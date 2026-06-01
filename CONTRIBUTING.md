@@ -33,6 +33,7 @@ python -B scripts/dev.py eval-csv
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
+python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
@@ -55,9 +56,10 @@ python -B scripts/dev.py verify
 6. Run the dependency-surface check.
 7. Run the architecture boundary check.
 8. Run the workflow security check.
-9. Run the frontend integrity check.
-10. Run the runtime UI contract check.
-11. Update docs and demo report if behavior changed.
+9. Run the model gateway safety check.
+10. Run the frontend integrity check.
+11. Run the runtime UI contract check.
+12. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -68,6 +70,7 @@ python -B scripts/dev.py verify
 - [ ] Dependency-surface check passes.
 - [ ] Architecture boundary check passes.
 - [ ] Workflow security check passes.
+- [ ] Model gateway safety check passes.
 - [ ] Frontend integrity check passes.
 - [ ] Runtime UI contract check passes.
 - [ ] Security or governance behavior is not weakened.

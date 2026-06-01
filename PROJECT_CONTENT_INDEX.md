@@ -37,6 +37,7 @@ python -B scripts/dev.py frontend
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
+python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
@@ -98,10 +99,11 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, architecture, assets, claims, dependency-surface, contracts, health, evals, eval-csv, frontend, github-launch-setup, github-readiness, governance, otel-traces, pr-triage, readiness-report, replay, smoke, report, safety, quality, ui-contracts, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, architecture, assets, claims, dependency-surface, contracts, health, evals, eval-csv, frontend, github-launch-setup, github-readiness, governance, model-gateway-safety, otel-traces, pr-triage, readiness-report, replay, smoke, report, safety, quality, ui-contracts, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
+- `scripts/check_model_gateway_safety.py`: verifies optional OpenAI gateways stay opt-in, key references remain constrained, structured outputs are required, and failures fall back locally.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, and quick-action controls.
@@ -153,6 +155,7 @@ Interview preparation:
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
+- `docs/model_gateway_safety.md`: optional model gateway key-safety, fallback, and boundary contract.
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and interview framing.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.

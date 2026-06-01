@@ -33,6 +33,7 @@ All notable changes to this repository will be documented here.
 - Runtime UI contract gate through `python -B scripts/dev.py ui-contracts`.
 - Architecture boundary gate through `python -B scripts/dev.py architecture`.
 - Workflow security gate through `python -B scripts/dev.py workflow-security`.
+- Model gateway safety gate through `python -B scripts/dev.py model-gateway-safety`.
 
 ### Verified
 
