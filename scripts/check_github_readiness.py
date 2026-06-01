@@ -118,6 +118,20 @@ def collect_checks(strict: bool) -> list[Check]:
     license_info = repo_data.get("license") or {}
     checks.append(check(license_info.get("key") == "mit", "license detected as MIT", license_info.get("key") or "missing"))
     checks.append(check(repo_data.get("default_branch") == "main", "default branch is main", repo_data.get("default_branch") or "missing"))
+    status, branch_data, error = api_get(repo, "/branches/main")
+    branch_protected = (
+        status == 200
+        and isinstance(branch_data, dict)
+        and branch_data.get("protected") is True
+    )
+    checks.append(
+        check(
+            branch_protected,
+            "main branch protection enabled",
+            "protected" if branch_protected else error or "not protected",
+            warn=not strict,
+        )
+    )
     checks.append(check(True, "stars observed", str(repo_data.get("stargazers_count", 0))))
     checks.append(check(True, "forks observed", str(repo_data.get("forks_count", 0))))
 

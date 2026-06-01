@@ -82,6 +82,7 @@ def main() -> int:
         "README.md",
         "PROJECT_CONTENT_INDEX.md",
         "docs/portfolio_evidence_matrix.md",
+        "docs/github_branch_protection.json",
         "docs/github_repository_settings.md",
         "docs/github_release_notes_v0.1.0.md",
         "docs/launch_copy_pack.md",

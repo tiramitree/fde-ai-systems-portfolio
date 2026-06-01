@@ -31,8 +31,9 @@ After the automated check passes:
 2. Confirm screenshots render.
 3. Confirm the `quality-gate` workflow completes successfully.
 4. Confirm the README quality badge points to the real GitHub Actions workflow.
-5. Apply repository topics from `docs/github_repository_settings.md`.
-6. Add repository social preview.
-7. Create issues from `docs/github_initial_issues.md`.
-8. Create a GitHub release page for `v0.1.0`.
-9. Pin the repository on the GitHub profile.
+5. Apply repository description and topics from `docs/github_repository_settings.md`.
+6. Enable branch protection on `main` using `docs/github_branch_protection.json`.
+7. Add repository social preview.
+8. Create issues from `docs/github_initial_issues.md`.
+9. Create a GitHub release page for `v0.1.0`.
+10. Pin the repository on the GitHub profile.

@@ -53,9 +53,10 @@ python -B scripts/check_github_readiness.py --strict
 | repository topics set | WARN | missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling |
 | license detected as MIT | PASS | mit |
 | default branch is main | PASS | main |
+| main branch protection enabled | WARN | not protected |
 | stars observed at generation | PASS | 3 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26769421585 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26769933959 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
@@ -67,6 +68,7 @@ python -B scripts/check_github_readiness.py --strict
 
 - repository description set: missing
 - repository topics set: missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling
+- main branch protection enabled: not protected
 - GitHub release page exists for v0.1.0: missing
 - social preview configured: GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md
 - profile repository pin configured: Requires account profile settings
@@ -74,7 +76,7 @@ python -B scripts/check_github_readiness.py --strict
 - Optional OpenAI live mode: not verified without a valid API key.
 - Star growth: cannot be claimed as achieved until real launch feedback accumulates.
 
-Repository description, topics, and the first release can be applied after `gh auth login` with:
+Repository description, topics, branch protection, and the first release can be applied after `gh auth login` with:
 
 ```bash
 python -B scripts/configure_github_launch.py --apply

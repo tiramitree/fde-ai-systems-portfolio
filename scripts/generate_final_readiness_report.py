@@ -113,7 +113,7 @@ def render() -> str:
         "",
         *blockers(github_checks),
         "",
-        "Repository description, topics, and the first release can be applied after `gh auth login` with:",
+        "Repository description, topics, branch protection, and the first release can be applied after `gh auth login` with:",
         "",
         "```bash",
         "python -B scripts/configure_github_launch.py --apply",

@@ -55,6 +55,18 @@ Recommended for `main` after the first push:
 - require branches to be up to date before merging
 - disallow force pushes
 
+Automated path after `gh auth login`:
+
+```powershell
+python -B scripts/configure_github_launch.py --apply --skip-release
+```
+
+The branch-protection API payload is tracked in:
+
+```text
+docs/github_branch_protection.json
+```
+
 ## First Release
 
 Automated path after `gh auth login`:

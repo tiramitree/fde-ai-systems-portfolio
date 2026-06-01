@@ -96,7 +96,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Human approval | Project 2 approval queue and supervisor endpoint | supervisor approval sends the notice once |
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 | API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
-| GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, and release commands |
+| GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
 | Public PR triage | `scripts/review_open_prs.py` | inspect open PRs and flag risky diffs before running code |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
 | Observability export | `scripts/export_traces_otel.py` | local traces convert to OTLP/JSON-compatible `resourceSpans` |

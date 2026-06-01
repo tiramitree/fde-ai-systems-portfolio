@@ -22,6 +22,8 @@ Use strict mode when you want automation to fail on high-risk findings:
 python -B scripts/review_open_prs.py --strict
 ```
 
+If unauthenticated GitHub API rate limits are hit, the script falls back to the public pulls page to detect whether any open PRs are visible. Authenticate with `gh auth login` before reviewing or merging if the API cannot provide full file-level triage.
+
 ## Review Order
 
 1. Read the PR title, author, changed files, and automated triage findings.

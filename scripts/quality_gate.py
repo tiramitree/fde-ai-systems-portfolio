@@ -41,6 +41,7 @@ REQUIRED_FILES = [
     "docs/adr_0001_local_first_portfolio.md",
     "docs/adr_0002_model_is_not_security_boundary.md",
     "docs/adr_0003_eval_state_isolated_from_demo_state.md",
+    "docs/github_branch_protection.json",
     "docs/github_repository_settings.md",
     "docs/community_backlog.md",
     "docs/github_initial_issues.md",

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 import subprocess
 import sys
@@ -16,6 +17,7 @@ from check_github_readiness import (
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE_NOTES = ROOT / "docs" / "github_release_notes_v0.1.0.md"
+BRANCH_PROTECTION = ROOT / "docs" / "github_branch_protection.json"
 RELEASE_TITLE = "FDE AI Systems Portfolio v0.1.0"
 
 
@@ -71,7 +73,7 @@ def get_repo() -> str:
     return repo
 
 
-def build_commands(gh: str, repo: str) -> list[list[str]]:
+def build_commands(gh: str, repo: str) -> list[tuple[str, list[str]]]:
     topics = sorted(EXPECTED_TOPICS)
     repo_edit = [
         gh,
@@ -103,7 +105,20 @@ def build_commands(gh: str, repo: str) -> list[list[str]]:
         RELEASE_NOTES.relative_to(ROOT).as_posix(),
         "--latest",
     ]
-    return [repo_edit, release]
+    branch_protection = [
+        gh,
+        "api",
+        "--method",
+        "PUT",
+        f"repos/{repo}/branches/main/protection",
+        "--input",
+        BRANCH_PROTECTION.relative_to(ROOT).as_posix(),
+    ]
+    return [
+        ("repository metadata and topics", repo_edit),
+        ("main branch protection", branch_protection),
+        ("release", release),
+    ]
 
 
 def release_exists(gh: str, repo: str) -> bool:
@@ -128,7 +143,7 @@ def main() -> int:
     parser.add_argument(
         "--skip-release",
         action="store_true",
-        help="Only configure repository metadata and topics.",
+        help="Configure repository metadata, topics, and branch protection without creating the release.",
     )
     args = parser.parse_args()
 
@@ -140,15 +155,24 @@ def main() -> int:
     if not RELEASE_NOTES.exists():
         print(f"Release notes file is missing: {RELEASE_NOTES.relative_to(ROOT)}")
         return 1
+    if not BRANCH_PROTECTION.exists():
+        print(f"Branch protection file is missing: {BRANCH_PROTECTION.relative_to(ROOT)}")
+        return 1
+    try:
+        json.loads(BRANCH_PROTECTION.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"Branch protection JSON is invalid: {exc}")
+        return 1
 
     repo = get_repo()
     commands = build_commands(gh, repo)
     if args.skip_release:
-        commands = commands[:1]
+        commands = [(name, command) for name, command in commands if name != "release"]
 
     if not args.apply:
         print("Dry run. Review these commands, then run with --apply after `gh auth login`:")
-        for command in commands:
+        for name, command in commands:
+            print(f"# {name}")
             print(display_command(command))
         print()
         print("Manual after --apply:")
@@ -162,8 +186,8 @@ def main() -> int:
         print("GitHub CLI is not authenticated. Run `gh auth login`, then retry with --apply.")
         return auth_status.returncode
 
-    for index, command in enumerate(commands):
-        if index == 1 and release_exists(gh, repo):
+    for name, command in commands:
+        if name == "release" and release_exists(gh, repo):
             print(f"Release {EXPECTED_RELEASE_TAG} already exists; skipping release creation.")
             continue
         code = run_command(command)
