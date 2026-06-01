@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 COMMANDS = {
     "start": ["scripts/start_demo_servers.py"],
+    "assets": ["scripts/check_public_assets.py"],
     "health": ["scripts/check_health.py"],
     "evals": ["scripts/run_all_evals.py"],
     "eval-csv": ["scripts/export_eval_csv.py"],
@@ -35,7 +36,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; health/evals/eval-csv/otel-traces/replay/smoke/report/safety/quality: run individual gates; "
+            "start: run both demo servers; assets/health/evals/eval-csv/otel-traces/replay/smoke/report/safety/quality: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

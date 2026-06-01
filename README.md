@@ -59,6 +59,7 @@ python -B app.py --reset --port 8770
 Useful commands:
 
 ```bash
+python -B scripts/dev.py assets
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
