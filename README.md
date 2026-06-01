@@ -240,4 +240,4 @@ Together they show I can build AI systems that are useful, inspectable, and safe
 
 ## License
 
-MIT
+This project is released under the MIT License. See [LICENSE](LICENSE).
