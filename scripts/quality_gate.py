@@ -37,6 +37,7 @@ REQUIRED_FILES = [
     "docs/model_runtime_configuration.md",
     "docs/supply_chain_security.md",
     "docs/frontend_integrity.md",
+    "docs/runtime_ui_contracts.md",
     "docs/public_release_audit.md",
     "docs/differentiation_strategy.md",
     "docs/hard_interview_playbook.md",
@@ -71,6 +72,7 @@ REQUIRED_FILES = [
     "scripts/dev.py",
     "scripts/check_claim_consistency.py",
     "scripts/check_frontend_integrity.py",
+    "scripts/check_runtime_ui_contracts.py",
     "scripts/check_dependency_surface.py",
     "scripts/public_safety_scan.py",
     "scripts/check_public_assets.py",
@@ -124,6 +126,7 @@ def main() -> int:
     command_checks = [
         ("assets", [sys.executable, "-B", "scripts/check_public_assets.py"]),
         ("frontend", [sys.executable, "-B", "scripts/check_frontend_integrity.py"]),
+        ("ui-contracts", [sys.executable, "-B", "scripts/check_runtime_ui_contracts.py"]),
         ("dependency-surface", [sys.executable, "-B", "scripts/check_dependency_surface.py"]),
         ("governance", [sys.executable, "-B", "scripts/check_repository_governance.py"]),
         ("contracts", [sys.executable, "-B", "scripts/check_api_contracts.py"]),

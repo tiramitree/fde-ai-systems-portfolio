@@ -10,6 +10,7 @@ This repository demonstrates enterprise AI security patterns. It is not producti
 - Audit and trace records are first-class system outputs.
 - Evals must include negative and adversarial cases.
 - Dependency changes must be explicit, reviewed, and covered by the dependency-surface gate.
+- Local UI routes use explicit content types, basic browser safety headers, and traversal blocking.
 
 ## Reporting Issues
 

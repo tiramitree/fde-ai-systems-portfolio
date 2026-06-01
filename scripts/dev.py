@@ -29,6 +29,7 @@ COMMANDS = {
     "report": ["scripts/generate_demo_report.py"],
     "safety": ["scripts/public_safety_scan.py"],
     "quality": ["scripts/quality_gate.py"],
+    "ui-contracts": ["scripts/check_runtime_ui_contracts.py"],
     "verify": ["scripts/ci_quality_gate.py"],
 }
 
@@ -45,7 +46,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; assets/claims/dependency-surface/contracts/health/evals/eval-csv/frontend/github-launch-setup/github-readiness/governance/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality: run individual gates; "
+            "start: run both demo servers; assets/claims/dependency-surface/contracts/health/evals/eval-csv/frontend/github-launch-setup/github-readiness/governance/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality/ui-contracts: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

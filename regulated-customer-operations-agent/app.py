@@ -57,10 +57,14 @@ class Handler(BaseHTTPRequestHandler):
             raise ApiError(403, "Forbidden")
         if not file_path.exists() or not file_path.is_file():
             raise ApiError(404, "Not found")
+        content_type = mimetypes.guess_type(file_path.name)[0] or "application/octet-stream"
+        if content_type.startswith("text/"):
+            content_type = f"{content_type}; charset=utf-8"
         data = file_path.read_bytes()
         self.send_response(200)
-        self.send_header("Content-Type", mimetypes.guess_type(file_path.name)[0] or "application/octet-stream")
+        self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(data)))
+        self.send_security_headers()
         self.end_headers()
         self.wfile.write(data)
 
@@ -69,8 +73,18 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(data)))
+        self.send_security_headers()
         self.end_headers()
         self.wfile.write(data)
+
+    def send_security_headers(self) -> None:
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header(
+            "Content-Security-Policy",
+            "default-src 'self'; script-src 'self'; style-src 'self'; "
+            "connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
+        )
 
     def log_message(self, fmt: str, *args) -> None:
         sys.stdout.write("%s - %s\n" % (self.address_string(), fmt % args))

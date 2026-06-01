@@ -30,6 +30,7 @@ All notable changes to this repository will be documented here.
 - GitHub launch setup now attempts secret scanning and push protection as a best-effort authenticated setup step.
 - Frontend integrity gate through `python -B scripts/dev.py frontend`.
 - GitHub readiness can prove the release tag through `git ls-remote` when unauthenticated GitHub API limits are exhausted.
+- Runtime UI contract gate through `python -B scripts/dev.py ui-contracts`.
 
 ### Verified
 
