@@ -13,7 +13,7 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Intermediate Issues
 
 1. Add a hybrid BM25 + vector retrieval path behind a feature flag.
-2. Add OpenTelemetry-compatible trace export.
+2. Add live OTLP HTTP export to an OpenTelemetry Collector.
 3. Add per-case eval reports with failure diffs.
 4. Add Docker Compose healthcheck documentation and screenshots.
 5. Add a replay-output artifact that can be attached to releases.

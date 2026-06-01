@@ -3,6 +3,7 @@ __pycache__/
 *.pyo
 *.log
 eval_summaries*.csv
+otel_traces*.json
 out/
 
 **/data/runtime_state.json

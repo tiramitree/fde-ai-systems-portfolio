@@ -13,6 +13,7 @@ All notable changes to this repository will be documented here.
 - CSV eval summary export through `python -B scripts/dev.py eval-csv`.
 - Replayable demo reset command through `python -B scripts/dev.py replay`.
 - PostgreSQL and pgvector adapter design covering schema, migrations, RLS, indexing, eval isolation, and rollout risks.
+- OpenTelemetry-compatible local trace export through `python -B scripts/dev.py otel-traces`.
 
 ### Verified
 
