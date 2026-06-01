@@ -23,6 +23,7 @@ The post-publish check must prove:
 - GitHub Actions workflow is reachable.
 - key documentation files are published.
 - the observability integrity script and documentation are published.
+- the threat model script and documentation are published.
 
 ## Manual GitHub Checks
 

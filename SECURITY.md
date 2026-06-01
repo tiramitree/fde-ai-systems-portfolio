@@ -12,6 +12,12 @@ This repository demonstrates enterprise AI security patterns. It is not producti
 - Dependency changes must be explicit, reviewed, and covered by the dependency-surface gate.
 - Local UI routes use explicit content types, basic browser safety headers, and traversal blocking.
 
+The portfolio-level threat model is tracked in [docs/threat_model.md](docs/threat_model.md) and verified by:
+
+```bash
+python -B scripts/dev.py threat-model
+```
+
 ## Reporting Issues
 
 For portfolio use, file a GitHub issue with:

@@ -34,6 +34,7 @@ COMMANDS = {
     "report": ["scripts/generate_demo_report.py"],
     "safety": ["scripts/public_safety_scan.py"],
     "quality": ["scripts/quality_gate.py"],
+    "threat-model": ["scripts/check_threat_model.py"],
     "ui-contracts": ["scripts/check_runtime_ui_contracts.py"],
     "verify": ["scripts/ci_quality_gate.py"],
     "workflow-security": ["scripts/check_workflow_security.py"],
@@ -52,7 +53,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; architecture/assets/claims/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/github-launch-setup/github-readiness/governance/model-gateway-safety/observability/otel-traces/pr-triage/readiness-report/replay/scenario-data/smoke/report/safety/quality/ui-contracts/workflow-security: run individual gates; "
+            "start: run both demo servers; architecture/assets/claims/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/github-launch-setup/github-readiness/governance/model-gateway-safety/observability/otel-traces/pr-triage/readiness-report/replay/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/workflow-security: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

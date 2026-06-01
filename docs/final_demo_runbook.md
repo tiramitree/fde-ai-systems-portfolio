@@ -45,6 +45,12 @@ Verify response trace IDs, linked audit events, approval records, and blocked-ac
 python -B scripts/dev.py observability
 ```
 
+Verify the portfolio threat model maps each risk to deterministic controls and evidence:
+
+```bash
+python -B scripts/dev.py threat-model
+```
+
 ## 2. Optional Docker Run
 
 Docker was not available in the current local environment, so this config is prepared but not runtime-verified here.

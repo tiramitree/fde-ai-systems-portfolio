@@ -67,6 +67,7 @@ Project 1 eval: 11/11 passed, unsafe leaks 0
 Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 Smoke tests: 9/9 passed
 Observability integrity: 30/30 passed
+Threat model: 12/12 mapped
 Quality gate: passed
 ```
 
@@ -77,6 +78,7 @@ Confirmed:
 - GitHub Actions workflow reachable
 - key documentation files published
 - observability integrity script and documentation published
+- threat model script and documentation published
 - remote `main` exists
 - local tracked worktree clean
 

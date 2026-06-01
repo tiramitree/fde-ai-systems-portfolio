@@ -85,7 +85,11 @@ Project 2:
 
 I would start from the response `trace_id`, inspect the retrieved evidence or tool calls, then check linked audit events and approval records. For the knowledge copilot, I want to know whether the retrieval filter, citation set, abstain reason, and security events explain the answer. For the operations agent, I want to know whether side effects were blocked, whether an approval request was created, and whether supervisor execution happened exactly once. The local command `python -B scripts/dev.py observability` proves those evidence links for the critical flows.
 
-## Q9: What are the biggest weaknesses in the current version?
+## Q9: What is your threat model?
+
+I group the risks into unauthorized disclosure, prompt injection, unsupported answers, unsafe side effects, approval bypass, duplicate side effects, secret or error leakage, public PR abuse, dependency drift, optional model gateway risk, observability gaps, and UI serving surprises. Each risk has a deterministic control owner and an evidence command in `docs/threat_model.md`; `python -B scripts/dev.py threat-model` verifies that the mapping stays connected to real code and gates.
+
+## Q10: What are the biggest weaknesses in the current version?
 
 The current version is intentionally local-first and dependency-free. It does not yet have real auth, PostgreSQL, dense embeddings, external connectors, or verified Docker runtime. Those are production adapters, not changes to the core control design. The important boundaries are already explicit: permission filter before generation, approval gate before side effects, traces, audit, and evals.
 
