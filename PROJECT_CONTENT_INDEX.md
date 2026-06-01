@@ -54,6 +54,13 @@ Result:
 - demo report generated
 - quality gate passed
 
+Local Git state:
+
+- repository initialized
+- default branch: `main`
+- tracked worktree clean after `python -B scripts/dev.py verify`
+- runtime state, logs, SQLite files, and Python caches are ignored
+
 ## Root Files
 
 - `README.md`: public GitHub-facing landing page.
@@ -210,12 +217,13 @@ Important boundary:
 
 These are not local code blockers, but they should not be claimed as completed until verified:
 
-1. Publish to GitHub and replace the static quality badge with a real Actions badge.
-2. Confirm GitHub Actions is green on the published repository.
-3. Verify Docker Compose on a machine with Docker installed.
-4. Verify optional OpenAI mode with a valid API key.
-5. Record and include a short demo GIF/video.
-6. Collect real launch feedback and star-growth evidence.
+1. Add a GitHub remote and push `main`.
+2. Replace the static quality badge with a real Actions badge after publishing.
+3. Confirm GitHub Actions is green on the published repository.
+4. Verify Docker Compose on a machine with Docker installed.
+5. Verify optional OpenAI mode with a valid API key.
+6. Record and include a short demo GIF/video.
+7. Collect real launch feedback and star-growth evidence.
 
 ## Interview Narrative
 

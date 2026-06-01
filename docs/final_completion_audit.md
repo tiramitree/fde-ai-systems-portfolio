@@ -105,23 +105,26 @@ GitHub/open-source readiness is now partially achieved:
 - `python -B scripts\quality_gate.py` passes.
 - `python -B scripts\ci_quality_gate.py` passes.
 - `python -B scripts/dev.py verify` passes.
+- `python -B scripts/dev.py verify` no longer dirties tracked files.
 - GitHub Actions workflow exists.
 - README visual assets and real UI screenshots exist.
 - Case studies, demo video script, and star growth plan exist.
 - `PROJECT_CONTENT_INDEX.md` exists as the compact context-recovery map.
+- Local Git repository is initialized on branch `main`.
 
 Full objective should not be marked complete yet because these evidence items remain externally unverified:
 
 1. Docker runtime verification.
 2. Optional OpenAI mode verification with an API key.
 3. Recorded demo video/GIF is not yet included.
-4. Actual GitHub publication and star growth cannot be proven locally.
+4. GitHub remote publication and GitHub Actions status.
+5. Actual star growth cannot be proven locally.
 
 Next step:
 
 - verify Docker on a Docker-enabled machine or explicitly accept non-Docker local Python as the delivery target
 - verify optional OpenAI mode when an API key is available
 - record and add demo GIF/video
-- publish to GitHub and iterate on launch feedback
+- add GitHub remote, push `main`, confirm Actions, and iterate on launch feedback
 
 

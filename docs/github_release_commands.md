@@ -11,6 +11,7 @@ Before publishing:
 ```powershell
 cd <repo-root>
 python -B scripts/dev.py verify
+git status --short
 ```
 
 Initialize and publish:
@@ -21,6 +22,13 @@ git status --short
 git add .
 git commit -m "Initial open-source FDE AI systems portfolio"
 git branch -M main
+git remote add origin https://github.com/<your-user>/fde-ai-systems-portfolio.git
+git push -u origin main
+```
+
+If you are publishing from the current local workspace, the repository is already initialized and committed on `main`. Use only:
+
+```powershell
 git remote add origin https://github.com/<your-user>/fde-ai-systems-portfolio.git
 git push -u origin main
 ```
