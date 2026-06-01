@@ -37,6 +37,21 @@ After publishing:
 
 1. Replace the static quality badge with the real GitHub Actions badge.
 2. Confirm GitHub Actions passes.
-3. Add repo topics from `docs/github_launch_plan.md`.
-4. Pin the repo on your profile.
-5. Add screenshots or GIF if available.
+3. Dry-run GitHub launch setup:
+
+```powershell
+python -B scripts/dev.py github-launch-setup
+```
+
+4. After `gh auth login`, apply repository description, topics, and the `v0.1.0` release:
+
+```powershell
+python -B scripts/configure_github_launch.py --apply
+```
+
+5. Upload the social preview and pin the repo on your profile.
+6. Re-run:
+
+```powershell
+python -B scripts/dev.py github-readiness
+```

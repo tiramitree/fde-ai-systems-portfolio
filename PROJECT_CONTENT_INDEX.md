@@ -30,6 +30,7 @@ python -B scripts/dev.py contracts
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py readiness-report
@@ -89,11 +90,12 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, assets, contracts, health, evals, eval-csv, github-readiness, otel-traces, readiness-report, replay, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, assets, contracts, health, evals, eval-csv, github-launch-setup, github-readiness, otel-traces, readiness-report, replay, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
+- `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, and first-release setup through `gh`.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and interview walkthrough report.
 - `scripts/run_all_evals.py`: runs both project eval suites.
@@ -145,6 +147,7 @@ Release and growth:
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
 - `docs/github_release_commands.md`: publication commands.
+- `docs/github_release_notes_v0.1.0.md`: release notes used by `scripts/configure_github_launch.py`.
 - `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.

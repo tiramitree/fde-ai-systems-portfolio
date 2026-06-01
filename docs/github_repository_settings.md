@@ -57,6 +57,14 @@ Recommended for `main` after the first push:
 
 ## First Release
 
+Automated path after `gh auth login`:
+
+```powershell
+python -B scripts/configure_github_launch.py --apply
+```
+
+Manual release details if using the GitHub UI:
+
 Create release:
 
 ```text
