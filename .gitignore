@@ -2,6 +2,8 @@ __pycache__/
 *.pyc
 *.pyo
 *.log
+eval_summaries*.csv
+out/
 
 **/data/runtime_state.json
 **/data/eval_runtime_state.json
@@ -13,4 +15,3 @@ __pycache__/
 .env
 .venv/
 venv/
-

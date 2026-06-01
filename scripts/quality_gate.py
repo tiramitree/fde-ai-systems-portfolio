@@ -64,10 +64,23 @@ REQUIRED_FILES = [
 FORBIDDEN_PATTERNS = [
     "sk-",
     "CV_Runze",
+    "Runze Zheng",
     "C:\\NYU",
     "C:\\Users",
+    "C:/Users",
     "OneDrive",
     "xwechat",
+    "wxid_",
+    "11758",
+    "github_pat_",
+    "ghp_",
+    "gho_",
+    "ghu_",
+    "ghs_",
+    "ghr_",
+    "AKIA",
+    "BEGIN PRIVATE KEY",
+    "BEGIN OPENSSH PRIVATE KEY",
 ]
 
 TEXT_EXTENSIONS = {
