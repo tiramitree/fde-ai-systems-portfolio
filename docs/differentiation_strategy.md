@@ -65,10 +65,9 @@ Use these:
 Highest leverage:
 
 1. Add screenshots/GIF.
-2. Add Docker runtime proof.
+2. Run and publish Docker runtime proof from `python -B scripts/dev.py docker-runtime`.
 3. Add real OpenAI mode screenshot with structured output.
 4. Add FastAPI/PostgreSQL branch or module.
 5. Add red-team eval pack.
 6. Add GitHub Actions workflow.
 7. Add technical blog post.
-

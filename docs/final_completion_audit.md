@@ -122,14 +122,14 @@ GitHub/open-source readiness is now partially achieved:
 
 Full objective should not be marked complete yet because these evidence items remain externally unverified:
 
-1. Docker runtime verification.
+1. Docker runtime verification with `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine.
 2. Optional OpenAI mode verification with an API key.
 3. A narrated demo video is not yet recorded; the README GIF is included.
 4. Actual star growth cannot be proven immediately after publication.
 
 Next step:
 
-- verify Docker on a Docker-enabled machine or explicitly accept non-Docker local Python as the delivery target
+- verify Docker on a Docker-enabled machine with `python -B scripts/dev.py docker-runtime` or explicitly accept non-Docker local Python as the delivery target
 - verify optional OpenAI mode when an API key is available
 - record an optional narrated demo video
 - apply GitHub description, topics, branch protection, and release page for `v0.1.0`; record an optional narrated video; verify Docker/OpenAI live modes; and iterate on launch feedback

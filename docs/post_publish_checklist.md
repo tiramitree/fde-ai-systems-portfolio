@@ -47,7 +47,8 @@ After the automated check passes:
 10. Run `python -B scripts/dev.py fresh-clone` after the push is visible.
 11. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
 12. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
-13. Run `python -B scripts/dev.py visual-assets` after refreshing README screenshots.
+13. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
+14. Run `python -B scripts/dev.py visual-assets` after refreshing README screenshots.
 
 ## Optional Backlog Seeding
 

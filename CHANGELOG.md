@@ -14,6 +14,7 @@ All notable changes to this repository will be documented here.
 - Replayable demo reset command through `python -B scripts/dev.py replay`.
 - Release-attachable demo replay artifact through `python -B scripts/dev.py replay-artifact`.
 - Container release hygiene gate through `python -B scripts/dev.py container-release`.
+- Docker runtime verification command through `python -B scripts/dev.py docker-runtime` for Docker-enabled machines.
 - Fresh clone checks now include the container release hygiene gate.
 - Copy trace ID buttons in both demo UIs, backed by a first-party clipboard module and frontend integrity checks.
 - Refreshed README screenshots and added a visual asset manifest gate through `python -B scripts/dev.py visual-assets`.
