@@ -16,6 +16,7 @@ Use this file when a reviewer, recruiter, or interviewer asks: "How do I know th
 | Both projects have regression evals. | project `scripts/run_eval.py`, root `scripts/run_all_evals.py` | `python -B scripts/dev.py evals` | Evals protect the security and workflow invariants. |
 | Demo flows are smoke-tested end to end. | `scripts/smoke_test_demo_flows.py` | `python -B scripts/dev.py smoke` | The demo path is tested like a user journey. |
 | Public release content is scanned. | `scripts/quality_gate.py` | `python -B scripts/dev.py quality` | The repository has a release gate, not just code. |
+| Dependency surface is intentional. | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | `python -B scripts/dev.py dependency-surface` | The local path stays easy to audit: stdlib-only Python, first-party frontend assets, pinned Docker bases, and automated update monitoring. |
 | Optional OpenAI mode is configurable. | model gateway files, `.env.example`, `docs/model_runtime_configuration.md` | import check through `python -B scripts/dev.py verify` | Model choice, reasoning effort, and verbosity are runtime decisions. |
 | The model is not the security boundary. | `docs/adr_0002_model_is_not_security_boundary.md` | doc review plus smoke/evals | This is the core enterprise deployment principle. |
 

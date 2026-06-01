@@ -73,6 +73,20 @@ The payload expects code-owner review coverage from:
 .github/CODEOWNERS
 ```
 
+## Dependency Monitoring
+
+Dependabot version updates are tracked in:
+
+```text
+.github/dependabot.yml
+```
+
+After publishing, enable the repository security features available in the GitHub UI:
+
+- Dependabot alerts
+- Dependabot security updates
+- secret scanning and push protection, if the account plan exposes them
+
 ## First Release
 
 Automated path after `gh auth login`:

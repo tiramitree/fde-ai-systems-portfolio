@@ -25,6 +25,7 @@ All notable changes to this repository will be documented here.
 - Tracked GitHub branch-protection payload for `main` and readiness warning when protection is missing.
 - CODEOWNERS and repository-governance gate through `python -B scripts/dev.py governance`.
 - Public claim-consistency gate through `python -B scripts/dev.py claims`.
+- Dependency-surface gate, Dependabot config, and digest-pinned Docker base images through `python -B scripts/dev.py dependency-surface`.
 
 ### Verified
 
