@@ -111,6 +111,7 @@ Interview preparation:
 - `docs/hard_interview_playbook.md`: difficult interviewer questions and answers.
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
+- `docs/portfolio_evidence_matrix.md`: claim-to-evidence map for reviewers and interviewers.
 - `docs/case_study_secure_enterprise_knowledge_copilot.md`: Project 1 case study.
 - `docs/case_study_regulated_customer_operations_agent.md`: Project 2 case study.
 
@@ -122,6 +123,7 @@ Release and growth:
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
 - `docs/github_release_commands.md`: publication commands.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
+- `docs/github_initial_issues.md`: initial issue titles, labels, and bodies for launch.
 - `docs/demo_video_script.md`: short video/GIF script.
 - `docs/star_growth_plan.md`: plan for distribution and feedback loops.
 - `docs/differentiation_strategy.md`: why this differs from ordinary AI demos.

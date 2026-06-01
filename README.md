@@ -75,7 +75,17 @@ Project 1 eval: 7/7 passed, unsafe_leak_failures = 0
 Project 2 eval: 5/5 passed, unsafe_direct_side_effect_failures = 0
 ```
 
-## Demo Flow
+## Evidence Matrix
+
+| Production Concern | Where To Look | Verification |
+| --- | --- | --- |
+| Permission-aware RAG | `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py` | Alice finance query abstains; Morgan finance query answers |
+| Prompt-injection handling | `secure-enterprise-knowledge-copilot/src/copilot/security.py` | `eval-005-injection-detected` |
+| Governed tool use | `regulated-customer-operations-agent/src/ops_agent/tools.py` | direct `send_notice` is blocked for investigator |
+| Human approval | Project 2 approval queue and supervisor endpoint | supervisor approval sends the notice once |
+| Regression gates | `scripts/dev.py`, project eval runners | `python -B scripts/dev.py verify` |
+
+See [Portfolio Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full claim-to-evidence map.
 
 ## Screenshots
 
@@ -204,6 +214,7 @@ fde_portfolio/
 - [Differentiation Strategy](docs/differentiation_strategy.md)
 - [Hard Interview Playbook](docs/hard_interview_playbook.md)
 - [System Design Deep Dive](docs/system_design_deep_dive.md)
+- [Portfolio Evidence Matrix](docs/portfolio_evidence_matrix.md)
 - [ADR 0001: Local-First Portfolio Runtime](docs/adr_0001_local_first_portfolio.md)
 - [ADR 0002: The Model Is Not The Security Boundary](docs/adr_0002_model_is_not_security_boundary.md)
 - [ADR 0003: Eval State Isolated From Demo State](docs/adr_0003_eval_state_isolated_from_demo_state.md)
@@ -211,6 +222,7 @@ fde_portfolio/
 - [Governed Agent Case Study](docs/case_study_regulated_customer_operations_agent.md)
 - [Demo Video Script](docs/demo_video_script.md)
 - [Star Growth Plan](docs/star_growth_plan.md)
+- [GitHub Initial Issues](docs/github_initial_issues.md)
 - [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md)
 - [GitHub Release Commands](docs/github_release_commands.md)
 - [Roadmap](ROADMAP.md)

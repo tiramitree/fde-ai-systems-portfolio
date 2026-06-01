@@ -34,6 +34,7 @@ Initial public-ready portfolio release.
   - Dockerfiles and Docker Compose configuration
   - optional OpenAI model, reasoning effort, verbosity, and structured-output configuration
   - GitHub repository settings and community backlog
+  - portfolio evidence matrix and initial GitHub issue templates
 
 ### Verified
 
