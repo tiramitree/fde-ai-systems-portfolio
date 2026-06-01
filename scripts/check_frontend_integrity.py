@@ -36,6 +36,7 @@ PROJECTS = [
             "answer",
             "citations",
             "trace",
+            "copyTraceId",
             "audit",
             "traces",
         },
@@ -58,6 +59,7 @@ PROJECTS = [
             "decision",
             "approvals",
             "trace",
+            "copyTraceId",
             "audit",
             "traces",
         },
@@ -187,7 +189,7 @@ def api_paths(js_path: Path) -> set[str]:
 def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     failures: list[str] = []
     js_dir = project.root / "web" / "js"
-    expected_modules = {"api.js", "app.js", "dom.js", "renderers.js"}
+    expected_modules = {"api.js", "app.js", "clipboard.js", "dom.js", "renderers.js"}
     present_modules = {path.name for path in js_dir.glob("*.js")}
     missing_modules = sorted(expected_modules - present_modules)
     if missing_modules:
@@ -209,6 +211,29 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
         for path in sorted(api_paths(js_path)):
             if not path.startswith("/api/"):
                 failures.append(f"{rel}: API path must be rooted under /api/: {path}")
+
+    app_text = (js_dir / "app.js").read_text(encoding="utf-8")
+    clipboard_text = (js_dir / "clipboard.js").read_text(encoding="utf-8")
+    required_app_markers = [
+        'import { installTraceCopyButton } from "./clipboard.js";',
+        'lastTraceId: ""',
+        'installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId)',
+        "state.lastTraceId = data.trace_id",
+        "setTraceCopyState(data.trace_id)",
+    ]
+    for marker in required_app_markers:
+        if marker not in app_text:
+            failures.append(f"{project.name}: app.js missing trace-copy marker: {marker}")
+
+    required_clipboard_markers = [
+        "export function installTraceCopyButton",
+        "navigator.clipboard.writeText",
+        'document.createElement("textarea")',
+        'button.disabled = !traceId',
+    ]
+    for marker in required_clipboard_markers:
+        if marker not in clipboard_text:
+            failures.append(f"{project.name}: clipboard.js missing marker: {marker}")
     return failures
 
 
@@ -220,6 +245,10 @@ def check_project(project: FrontendProject) -> list[str]:
     failures = []
     failures.extend(check_html(project, parser))
     failures.extend(check_javascript(project, set(parser.ids)))
+    styles = (project.root / "web" / "styles.css").read_text(encoding="utf-8")
+    for marker in [".sectionHeader", ".secondaryButton", ".secondaryButton:disabled"]:
+        if marker not in styles:
+            failures.append(f"{project.name}: styles.css missing trace-copy style marker: {marker}")
     return failures
 
 
@@ -234,7 +263,10 @@ def main() -> int:
             print(f"- {failure}")
         return 1
 
-    print("Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, and quick actions are intact.")
+    print(
+        "Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, "
+        "trace-copy controls, and quick actions are intact."
+    )
     return 0
 
 

@@ -1,5 +1,6 @@
 import { api } from "./api.js";
 import { byId } from "./dom.js";
+import { installTraceCopyButton } from "./clipboard.js";
 import {
   populateUserSelect,
   renderAnswer,
@@ -12,7 +13,10 @@ import {
 const state = {
   users: [],
   selectedUser: "alice",
+  lastTraceId: "",
 };
+
+const setTraceCopyState = installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId);
 
 async function loadUsers() {
   const data = await api("/api/users");
@@ -47,6 +51,8 @@ async function ask() {
     body: JSON.stringify({ user_id: state.selectedUser, question }),
   });
   renderAnswer(data);
+  state.lastTraceId = data.trace_id;
+  setTraceCopyState(data.trace_id);
   await refreshObservability();
 }
 

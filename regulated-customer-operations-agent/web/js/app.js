@@ -1,5 +1,6 @@
 import { api } from "./api.js";
 import { byId } from "./dom.js";
+import { installTraceCopyButton } from "./clipboard.js";
 import {
   populateCaseSelect,
   populateUserSelect,
@@ -15,7 +16,10 @@ const state = {
   cases: [],
   selectedUser: "ivy",
   selectedCase: "case-1001",
+  lastTraceId: "",
 };
+
+const setTraceCopyState = installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId);
 
 async function loadUsers() {
   const data = await api("/api/users");
@@ -40,6 +44,8 @@ async function runAgent() {
     }),
   });
   renderDecision(data);
+  state.lastTraceId = data.trace_id;
+  setTraceCopyState(data.trace_id);
   await refreshOperationalViews();
 }
 

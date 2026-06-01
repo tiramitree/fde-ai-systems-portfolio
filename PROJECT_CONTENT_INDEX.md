@@ -120,7 +120,7 @@ Local Git state:
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.
-- `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, and quick-action controls.
+- `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, and quick-action controls.
 - `scripts/check_fresh_clone_experience.py`: clones the repository into a temporary directory, runs release-facing static checks, starts both demos on isolated ports, and runs health/smoke flows.
 - `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, content types, security headers, 404s, and traversal blocking.
 - `scripts/check_api_documentation.py`: verifies API source routes, public API contract documentation, README, index, and evidence matrix stay aligned.
@@ -183,7 +183,7 @@ Interview preparation:
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and interview framing.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
-- `docs/frontend_integrity.md`: frontend wiring, no-build local UI posture, and interview framing.
+- `docs/frontend_integrity.md`: frontend wiring, trace-copy controls, no-build local UI posture, and interview framing.
 - `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and interview framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
 - `docs/api_contracts.md`: documented backend API surface, response-shape boundaries, and interview framing.
@@ -244,7 +244,7 @@ Important files:
 - `src/copilot/evals.py`: golden eval definitions and assertions.
 - `src/copilot/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.
-- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, renderers, and app orchestration.
+- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, renderers, and app orchestration.
 - `data/seed_documents.json`: seed knowledge base.
 - `data/eval_cases.json`: eval cases.
 - `docs/architecture.md`: project architecture.
@@ -274,7 +274,7 @@ Important files:
 - `src/ops_agent/evals.py`: golden eval definitions and assertions.
 - `src/ops_agent/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.
-- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, renderers, and app orchestration.
+- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, renderers, and app orchestration.
 - `data/seed_state.json`: seeded operations state.
 - `data/eval_cases.json`: eval cases.
 - `docs/architecture.md`: project architecture.

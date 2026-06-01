@@ -15,6 +15,7 @@ All notable changes to this repository will be documented here.
 - Release-attachable demo replay artifact through `python -B scripts/dev.py replay-artifact`.
 - Container release hygiene gate through `python -B scripts/dev.py container-release`.
 - Fresh clone checks now include the container release hygiene gate.
+- Copy trace ID buttons in both demo UIs, backed by a first-party clipboard module and frontend integrity checks.
 - PostgreSQL and pgvector adapter design covering schema, migrations, RLS, indexing, eval isolation, and rollout risks.
 - OpenTelemetry-compatible local trace export through `python -B scripts/dev.py otel-traces`.
 - README demo walkthrough GIF under `docs/assets/demo-walkthrough.gif`.

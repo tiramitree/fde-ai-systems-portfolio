@@ -173,6 +173,7 @@ def project_checks(project: Project) -> list[Check]:
                 '<script type="module" src="/js/app.js">',
                 project.primary_label,
                 project.primary_button,
+                'id="copyTraceId"',
             ],
         )
     )
@@ -190,6 +191,14 @@ def project_checks(project: Project) -> list[Check]:
             "/js/app.js",
             "text/javascript",
             ['import { api } from "./api.js"', "boot"],
+        )
+    )
+    checks.extend(
+        check_text_asset(
+            project,
+            "/js/clipboard.js",
+            "text/javascript",
+            ["installTraceCopyButton", "navigator.clipboard"],
         )
     )
     checks.extend(

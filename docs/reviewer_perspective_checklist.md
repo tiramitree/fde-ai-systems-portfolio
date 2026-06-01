@@ -21,6 +21,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 - The backend API surface is documented and verified with `python -B scripts/dev.py api-docs`.
 - Error messages are not raw stack traces in the browser.
 - Trace IDs, audit events, approval records, and blocked actions can be verified with `python -B scripts/dev.py observability`.
+- Trace IDs can be copied from both demo UIs without selecting raw JSON.
 - Threats, deterministic controls, evidence files, and proof commands can be verified with `python -B scripts/dev.py threat-model`.
 - Public PR review rules and malicious-contribution heuristics can be verified with `python -B scripts/dev.py pr-policy`.
 - Release-attachable replay evidence can be generated with `python -B scripts/dev.py replay-artifact`.
