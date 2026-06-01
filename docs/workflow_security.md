@@ -37,4 +37,4 @@ The gate complements:
 
 ## Maintainer Rule
 
-External PR workflow runs should be approved only after reading the diff. Any PR that changes `.github/workflows/`, `scripts/dev.py`, `scripts/quality_gate.py`, `scripts/ci_quality_gate.py`, safety scans, dependency policy, or model/security boundaries requires high scrutiny even if the automated check is green.
+External PR workflow runs should be approved only after reading the diff. Any PR that changes `.github/workflows/`, `scripts/dev.py`, `scripts/quality_gate.py`, `scripts/ci_quality_gate.py`, safety scans, launch asset checks, dependency policy, or model/security boundaries requires high scrutiny even if the automated check is green.

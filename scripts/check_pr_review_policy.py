@@ -18,6 +18,7 @@ REQUIRED_HIGH_IMPACT_PATHS = [
     "scripts/ci_quality_gate.py",
     "scripts/dev.py",
     "scripts/configure_github_launch.py",
+    "scripts/check_launch_assets.py",
     "secure-enterprise-knowledge-copilot/src/copilot/security.py",
     "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py",
     "secure-enterprise-knowledge-copilot/src/copilot/answering.py",
