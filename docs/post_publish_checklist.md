@@ -26,6 +26,7 @@ The post-publish check must prove:
 - the threat model script and documentation are published.
 - the PR review policy script and documentation are published.
 - the fresh clone script and documentation are published.
+- the API documentation script and documentation are published.
 
 ## Manual GitHub Checks
 

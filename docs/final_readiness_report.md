@@ -29,6 +29,7 @@ Run these from the repository root before sending the project to an interviewer 
 ```bash
 python -B scripts/dev.py verify
 python -B scripts/dev.py fresh-clone
+python -B scripts/dev.py api-docs
 python -B scripts/dev.py replay
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py governance
@@ -61,7 +62,7 @@ python -B scripts/check_github_readiness.py --strict
 | main branch protection enabled | WARN | not protected |
 | stars observed at generation | PASS | 3 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26780256870 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26780881179 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
@@ -97,8 +98,9 @@ python -B scripts/configure_github_launch.py --apply
 6. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
 7. Run `python -B scripts/dev.py threat-model` to show threats map to controls, files, and evidence commands.
 8. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
-9. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
-10. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
+9. Run `python -B scripts/dev.py api-docs` and show `docs/api_contracts.md` to map UI behavior to backend endpoints.
+10. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
+11. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
 
 ## Quality Bar
 

@@ -70,6 +70,7 @@ Observability integrity: 30/30 passed
 Threat model: 12/12 mapped
 PR review policy: passed
 Fresh clone experience: command published; run after each public push
+API documentation gate: passed
 Quality gate: passed
 ```
 
@@ -83,6 +84,7 @@ Confirmed:
 - threat model script and documentation published
 - PR review policy script and documentation published
 - fresh clone script and documentation published
+- API documentation script and documentation published
 - remote `main` exists
 - local tracked worktree clean
 

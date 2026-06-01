@@ -21,6 +21,7 @@ This repository is designed as a practical reference for building enterprise AI 
 - Preserve the portfolio-level commands:
 
 ```powershell
+python -B scripts/dev.py api-docs
 python -B scripts/dev.py assets
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
@@ -70,8 +71,9 @@ python -B scripts/dev.py verify
 14. Run the threat model check.
 15. Run the PR review policy check.
 16. Run the runtime UI contract check.
-17. Run the fresh clone check before broad external sharing or release updates.
-18. Update docs and demo report if behavior changed.
+17. Run the API documentation check.
+18. Run the fresh clone check before broad external sharing or release updates.
+19. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -90,6 +92,7 @@ python -B scripts/dev.py verify
 - [ ] Threat model check passes.
 - [ ] PR review policy check passes.
 - [ ] Runtime UI contract check passes.
+- [ ] API documentation check passes.
 - [ ] Fresh clone check passes before broad external sharing or release updates.
 - [ ] Security or governance behavior is not weakened.
 - [ ] README or docs are updated if the user-facing workflow changed.

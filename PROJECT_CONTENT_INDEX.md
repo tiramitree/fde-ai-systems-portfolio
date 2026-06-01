@@ -25,6 +25,7 @@ From the repository root:
 ```bash
 python -B scripts/dev.py verify
 python -B scripts/dev.py start
+python -B scripts/dev.py api-docs
 python -B scripts/dev.py assets
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
@@ -105,7 +106,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, architecture, assets, claims, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, replay, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, replay, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -119,6 +120,7 @@ Local Git state:
 - `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, and quick-action controls.
 - `scripts/check_fresh_clone_experience.py`: clones the repository into a temporary directory, runs release-facing static checks, starts both demos on isolated ports, and runs health/smoke flows.
 - `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, content types, security headers, 404s, and traversal blocking.
+- `scripts/check_api_documentation.py`: verifies API source routes, public API contract documentation, README, index, and evidence matrix stay aligned.
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
@@ -178,6 +180,7 @@ Interview preparation:
 - `docs/frontend_integrity.md`: frontend wiring, no-build local UI posture, and interview framing.
 - `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and interview framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
+- `docs/api_contracts.md`: documented backend API surface, response-shape boundaries, and interview framing.
 - `docs/portfolio_evidence_matrix.md`: claim-to-evidence map for reviewers and interviewers.
 - `docs/case_study_secure_enterprise_knowledge_copilot.md`: Project 1 case study.
 - `docs/case_study_regulated_customer_operations_agent.md`: Project 2 case study.
