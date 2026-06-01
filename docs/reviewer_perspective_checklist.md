@@ -18,6 +18,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 - Runtime artifacts are ignored.
 - The user can open two local URLs and see meaningful UI.
 - Error messages are not raw stack traces in the browser.
+- Trace IDs, audit events, approval records, and blocked actions can be verified with `python -B scripts/dev.py observability`.
 
 ## Interviewer Skepticism
 

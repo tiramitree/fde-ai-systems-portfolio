@@ -81,7 +81,11 @@ Project 2:
 - human intervention rate
 - trace failure categories
 
-## Q8: What are the biggest weaknesses in the current version?
+## Q8: How would you debug a bad answer or unsafe action?
+
+I would start from the response `trace_id`, inspect the retrieved evidence or tool calls, then check linked audit events and approval records. For the knowledge copilot, I want to know whether the retrieval filter, citation set, abstain reason, and security events explain the answer. For the operations agent, I want to know whether side effects were blocked, whether an approval request was created, and whether supervisor execution happened exactly once. The local command `python -B scripts/dev.py observability` proves those evidence links for the critical flows.
+
+## Q9: What are the biggest weaknesses in the current version?
 
 The current version is intentionally local-first and dependency-free. It does not yet have real auth, PostgreSQL, dense embeddings, external connectors, or verified Docker runtime. Those are production adapters, not changes to the core control design. The important boundaries are already explicit: permission filter before generation, approval gate before side effects, traces, audit, and evals.
 
@@ -127,4 +131,3 @@ Important explanation:
 ## 5. Strong Closing Answer
 
 The main thing I would emphasize is that I do not treat LLM integration as the hard part by itself. The hard part is making the workflow reliable enough for enterprise use: permissions, evidence, tool boundaries, approval, audit, traces, evals, and rollback. These projects are built to demonstrate that mindset.
-
