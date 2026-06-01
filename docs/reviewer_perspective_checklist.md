@@ -48,6 +48,6 @@ The repo should make a reader think:
 - README has local machine paths
 - demo report is stale or failing
 - runtime artifacts are staged
-- badge has placeholder owner/repo
+- badge still uses sample owner/repo text
 - docs overclaim production readiness
 - OpenAI live mode is described as verified without an actual run

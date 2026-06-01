@@ -79,7 +79,7 @@ Evidence:
 
 Status: achieved.
 
-## 6. Optional GPT-5.5 / OpenAI Integration
+## 6. Optional GPT-5.2 / OpenAI Integration
 
 Evidence:
 
@@ -88,7 +88,7 @@ Evidence:
 - Environment controls:
   - `COPILOT_MODEL_PROVIDER=openai`
   - `OPS_AGENT_MODEL_ROUTER=openai`
-  - `OPENAI_MODEL=gpt-5.5`
+  - `OPENAI_MODEL=gpt-5.2`
   - `OPENAI_API_KEY=...`
 
 Status: code path exists but live API call is not verified because no API key was supplied.

@@ -32,6 +32,8 @@ Initial public-ready portfolio release.
   - open-source contribution, security, conduct, roadmap, and issue templates
   - screenshots, architecture visuals, case studies, and interview docs
   - Dockerfiles and Docker Compose configuration
+  - optional OpenAI model, reasoning effort, verbosity, and structured-output configuration
+  - GitHub repository settings and community backlog
 
 ### Verified
 
@@ -46,4 +48,3 @@ Initial public-ready portfolio release.
 - Docker runtime on a Docker-enabled machine.
 - Optional OpenAI mode with a live API key.
 - Published GitHub Actions run after repository publication.
-

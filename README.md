@@ -154,7 +154,9 @@ Both projects are dependency-free by default so they run reliably anywhere with 
 
 ```powershell
 $env:OPENAI_API_KEY="..."
-$env:OPENAI_MODEL="gpt-5.5"
+$env:OPENAI_MODEL="gpt-5.2"
+$env:OPENAI_REASONING_EFFORT="medium"
+$env:OPENAI_TEXT_VERBOSITY="low"
 $env:COPILOT_MODEL_PROVIDER="openai"
 $env:OPS_AGENT_MODEL_ROUTER="openai"
 ```
@@ -193,8 +195,11 @@ fde_portfolio/
 - [Demo Report](docs/demo_report.md)
 - [Resume And Interview Package](docs/resume_and_interview_package.md)
 - [Production Upgrade Notes](docs/production_upgrade_notes.md)
+- [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
+- [GitHub Repository Settings](docs/github_repository_settings.md)
+- [Community Backlog](docs/community_backlog.md)
 - [Public Release Audit](docs/public_release_audit.md)
 - [Differentiation Strategy](docs/differentiation_strategy.md)
 - [Hard Interview Playbook](docs/hard_interview_playbook.md)

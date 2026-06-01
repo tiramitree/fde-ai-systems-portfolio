@@ -97,7 +97,7 @@ Date: 2026-06-01
 
 - `.github/workflows/ci.yml` added.
 - `scripts/ci_quality_gate.py` added for GitHub Actions and clean-checkout validation.
-- README badges added without owner/repo placeholders.
+- README badges added without owner/repo template values.
 - `docs/assets/github-preview.svg` added.
 - `docs/assets/architecture-overview.svg` added.
 - real UI screenshots added:

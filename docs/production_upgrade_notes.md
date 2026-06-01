@@ -21,6 +21,14 @@ Optional OpenAI Responses API gateways are implemented:
 - Project 1: `COPILOT_MODEL_PROVIDER=openai`
 - Project 2: `OPS_AGENT_MODEL_ROUTER=openai`
 
+Runtime controls:
+
+- `OPENAI_MODEL=gpt-5.2`
+- `OPENAI_REASONING_EFFORT=none|low|medium|high|xhigh`
+- `OPENAI_TEXT_VERBOSITY=low|medium|high`
+
+See `docs/model_runtime_configuration.md` for the current model selection rationale.
+
 References:
 
 - Responses API: https://platform.openai.com/docs/api-reference/responses
@@ -85,4 +93,3 @@ Do not deploy a change unless:
 - unsafe leak/direct-side-effect failures remain zero
 - trace/audit schema compatibility is preserved
 - demo script still works end to end
-

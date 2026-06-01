@@ -4,7 +4,7 @@ services:
       context: ./secure-enterprise-knowledge-copilot
     environment:
       COPILOT_MODEL_PROVIDER: ${COPILOT_MODEL_PROVIDER:-local}
-      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.5}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.2}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     ports:
       - "8765:8765"
@@ -20,7 +20,7 @@ services:
       context: ./regulated-customer-operations-agent
     environment:
       OPS_AGENT_MODEL_ROUTER: ${OPS_AGENT_MODEL_ROUTER:-local}
-      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.5}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.2}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     ports:
       - "8770:8770"
@@ -30,4 +30,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-

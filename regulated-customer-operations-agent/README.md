@@ -75,7 +75,7 @@ Default mode is local and deterministic.
 
 ```powershell
 $env:OPENAI_API_KEY="..."
-$env:OPENAI_MODEL="gpt-5.5"
+$env:OPENAI_MODEL="gpt-5.2"
 $env:OPS_AGENT_MODEL_ROUTER="openai"
 python -B app.py --reset --port 8770
 ```
