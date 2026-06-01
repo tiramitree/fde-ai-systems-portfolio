@@ -43,6 +43,14 @@ $env:COPILOT_MODEL_PROVIDER="openai"
 $env:OPS_AGENT_MODEL_ROUTER="openai"
 ```
 
+With a real key, run the live proof:
+
+```powershell
+python -B scripts/dev.py openai-live
+```
+
+That command starts both apps on isolated local ports with OpenAI mode enabled. It requires Project 1 to report `model_provider=openai`, Project 2 to report `model_router=openai`, and both workflows to keep their normal safety behavior.
+
 Supported reasoning effort values:
 
 ```text
@@ -90,5 +98,5 @@ Rationale:
 Use this wording:
 
 ```text
-I keep local deterministic mode as the verified default, then expose an optional OpenAI Responses API path for the model-facing part of each workflow. I tune model, reasoning effort, verbosity, and structured outputs through environment variables, but I do not move permissions or side-effect authorization into the model. That keeps demos reliable, makes production tuning explicit, and lets evals compare local and model-backed behavior.
+I keep local deterministic mode as the verified default, then expose an optional OpenAI Responses API path for the model-facing part of each workflow. I tune model, reasoning effort, verbosity, and structured outputs through environment variables, but I do not move permissions or side-effect authorization into the model. When a key is available, `python -B scripts/dev.py openai-live` proves both apps actually used OpenAI mode while preserving citations, approvals, and side-effect blocking.
 ```

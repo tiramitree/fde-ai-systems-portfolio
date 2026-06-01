@@ -27,13 +27,13 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 ## Still Not Fully Verified
 
 - Docker runtime was not verified because `docker` is not installed in the current environment; `python -B scripts/dev.py docker-runtime` is the tracked runtime proof for Docker-enabled machines.
-- Optional OpenAI mode was not called because no API key was provided.
+- Optional OpenAI mode was not called because no API key was provided; `python -B scripts/dev.py openai-live` is the tracked live proof for API-key environments.
 - A README demo GIF is stored at `docs/assets/demo-walkthrough.gif`; a narrated demo video is not yet recorded.
 
 ## Remaining Work Before Marking Goal Complete
 
 1. Verify Docker Compose on a machine with Docker by running `python -B scripts/dev.py docker-runtime`.
-2. Optionally verify OpenAI Responses API mode with a valid `OPENAI_API_KEY`.
+2. Optionally verify OpenAI Responses API mode with a valid key by running `python -B scripts/dev.py openai-live`.
 3. Record an optional short narrated demo video, or use the README GIF as the lightweight visual proof.
 4. Do one final browser walkthrough of both projects from a clean reset.
 5. Add repository description, topics, branch protection, and social preview on GitHub.

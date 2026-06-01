@@ -48,7 +48,8 @@ After the automated check passes:
 11. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
 12. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
 13. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
-14. Run `python -B scripts/dev.py visual-assets` after refreshing README screenshots.
+14. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
+15. Run `python -B scripts/dev.py visual-assets` after refreshing README screenshots.
 
 ## Optional Backlog Seeding
 

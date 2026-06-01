@@ -106,6 +106,7 @@ Security contract:
 - non-supervisors receive `403` when approving actions
 - supervisor approval is idempotent
 - bypass instructions create blocked-action evidence instead of side effects
+- `model_router` reports the actual routing source for the intent classification path, not just whether OpenAI mode was configured
 
 ## Interview Framing
 

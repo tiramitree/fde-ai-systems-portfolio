@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 
-from .model_gateway import classify_intent_with_openai, should_use_openai_router
+from .model_gateway import classify_intent_with_openai
 from .storage import JsonStore, append_audit, append_trace, get_case, get_user, utc_now
 from .tools import (
     approve_action,
@@ -26,20 +26,20 @@ INJECTION_MARKERS = [
 ]
 
 
-def classify_intent(message: str) -> str:
+def classify_intent(message: str) -> tuple[str, str]:
     model_intent = classify_intent_with_openai(message)
     if model_intent:
-        return model_intent
+        return model_intent, "openai"
     lower = message.lower()
     if "approve" in lower and "apr-" in lower:
-        return "approve_action"
+        return "approve_action", "local"
     if "escalate" in lower:
-        return "request_escalation"
+        return "request_escalation", "local"
     if "send" in lower and "notice" in lower:
-        return "request_notice_send"
+        return "request_notice_send", "local"
     if "listing" in lower or "seller" in lower or "recalled" in lower or "recall" in lower:
-        return "investigate_listing"
-    return "general"
+        return "investigate_listing", "local"
+    return "general", "local"
 
 
 def detect_injection(message: str) -> list[str]:
@@ -65,7 +65,7 @@ def process_message(store: JsonStore, user_id: str, message: str, case_id: str |
         raise ValueError(f"unknown user_id: {user_id}")
 
     trace_id = str(uuid.uuid4())
-    intent = classify_intent(message)
+    intent, model_router = classify_intent(message)
     injection_hits = detect_injection(message)
     tool_calls = []
     approvals = []
@@ -92,6 +92,7 @@ def process_message(store: JsonStore, user_id: str, message: str, case_id: str |
             "blocked_actions": [blocked],
             "cited_policies": [],
             "case": get_case(store, case_id) if case_id else None,
+            "model_router": model_router,
         }
         append_trace(
             store,
@@ -130,6 +131,7 @@ def process_message(store: JsonStore, user_id: str, message: str, case_id: str |
             "blocked_actions": blocked_actions,
             "cited_policies": cited_policies,
             "case": get_case(store, case_id) if case_id else None,
+            "model_router": model_router,
         }
         append_trace(
             store,
@@ -223,7 +225,7 @@ def process_message(store: JsonStore, user_id: str, message: str, case_id: str |
         "cited_policies": cited_policies,
         "outputs": outputs,
         "case": case,
-        "model_router": "openai" if should_use_openai_router() else "local",
+        "model_router": model_router,
     }
     append_trace(
         store,
