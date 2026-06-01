@@ -27,6 +27,12 @@ Run all evals:
 python -B scripts/dev.py evals
 ```
 
+Prove the GitHub clone path from a temporary directory:
+
+```bash
+python -B scripts/dev.py fresh-clone
+```
+
 Replay the end-to-end demo path with fresh reset services:
 
 ```bash

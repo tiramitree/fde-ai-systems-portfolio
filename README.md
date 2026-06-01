@@ -70,6 +70,7 @@ python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py github-launch-setup
+python -B scripts/dev.py fresh-clone
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
 python -B scripts/dev.py model-gateway-safety
@@ -111,6 +112,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
 | Architecture boundaries | `scripts/check_architecture_boundaries.py`, `docs/architecture_boundaries.md` | app shells, API classes, backend packages, and frontend modules preserve separation of concerns |
 | Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, and quick actions stay intact |
+| Fresh clone experience | `scripts/check_fresh_clone_experience.py`, `docs/fresh_clone_experience.md` | clone the public repo into a temp directory, run release-facing checks, start both apps on isolated ports, and run smoke flows |
 | Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, both `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
 | Error hygiene | `scripts/check_error_hygiene.py`, both `app.py` files | unexpected exceptions return generic JSON errors without leaking paths, stack details, or secret-like strings |
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
@@ -281,6 +283,7 @@ fde_portfolio/
 - [Launch Copy Pack](docs/launch_copy_pack.md)
 - [GitHub Initial Issues](docs/github_initial_issues.md)
 - [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md)
+- [Fresh Clone Experience](docs/fresh_clone_experience.md)
 - [PR Review Security](docs/pr_review_security.md)
 - [Pull Request Review Runbook](docs/pr_review_runbook.md)
 - [GitHub Release Commands](docs/github_release_commands.md)

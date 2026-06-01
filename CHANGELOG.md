@@ -17,6 +17,7 @@ All notable changes to this repository will be documented here.
 - README demo walkthrough GIF under `docs/assets/demo-walkthrough.gif`.
 - Upload-ready GitHub social preview PNG under `docs/assets/github-preview.png`.
 - Public asset and Markdown-link quality check through `python -B scripts/dev.py assets`.
+- Fresh clone experience check through `python -B scripts/dev.py fresh-clone`.
 - GitHub public-readiness report through `python -B scripts/dev.py github-readiness`.
 - API contract checks for UI-facing endpoints through `python -B scripts/dev.py contracts`.
 - Final launch and interview readiness report through `python -B scripts/dev.py readiness-report`.

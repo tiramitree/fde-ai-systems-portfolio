@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
 
-PROJECT_1 = "http://127.0.0.1:8765"
-PROJECT_2 = "http://127.0.0.1:8770"
+PROJECT_1 = os.getenv("FDE_PROJECT_1_URL", "http://127.0.0.1:8765").rstrip("/")
+PROJECT_2 = os.getenv("FDE_PROJECT_2_URL", "http://127.0.0.1:8770").rstrip("/")
 
 
 @dataclass
@@ -190,4 +191,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -13,6 +13,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 ## User Clone Experience
 
 - `python -B scripts/dev.py verify` works from a clean checkout.
+- `python -B scripts/dev.py fresh-clone` works against the published repository before sharing broadly.
 - The local demo does not require OpenAI API keys.
 - The command entrypoint is cross-platform.
 - Runtime artifacts are ignored.

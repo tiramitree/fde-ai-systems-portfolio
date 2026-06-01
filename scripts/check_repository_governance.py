@@ -27,6 +27,7 @@ REQUIRED_CODEOWNER_PATTERNS = {
     "scripts/public_safety_scan.py": "@tiramitree",
     "scripts/check_dependency_surface.py": "@tiramitree",
     "scripts/check_frontend_integrity.py": "@tiramitree",
+    "scripts/check_fresh_clone_experience.py": "@tiramitree",
     "scripts/check_runtime_ui_contracts.py": "@tiramitree",
     "scripts/quality_gate.py": "@tiramitree",
     "scripts/ci_quality_gate.py": "@tiramitree",

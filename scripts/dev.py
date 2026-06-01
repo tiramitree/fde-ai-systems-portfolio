@@ -20,6 +20,7 @@ COMMANDS = {
     "evals": ["scripts/run_all_evals.py"],
     "eval-csv": ["scripts/export_eval_csv.py"],
     "frontend": ["scripts/check_frontend_integrity.py"],
+    "fresh-clone": ["scripts/check_fresh_clone_experience.py"],
     "github-launch-setup": ["scripts/configure_github_launch.py"],
     "github-readiness": ["scripts/check_github_readiness.py"],
     "governance": ["scripts/check_repository_governance.py"],
@@ -54,7 +55,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; architecture/assets/claims/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/github-launch-setup/github-readiness/governance/model-gateway-safety/observability/otel-traces/pr-policy/pr-triage/readiness-report/replay/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/workflow-security: run individual gates; "
+            "start: run both demo servers; architecture/assets/claims/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/github-launch-setup/github-readiness/governance/model-gateway-safety/observability/otel-traces/pr-policy/pr-triage/readiness-report/replay/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/workflow-security: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )
