@@ -67,6 +67,12 @@ The branch-protection API payload is tracked in:
 docs/github_branch_protection.json
 ```
 
+The payload expects code-owner review coverage from:
+
+```text
+.github/CODEOWNERS
+```
+
 ## First Release
 
 Automated path after `gh auth login`:

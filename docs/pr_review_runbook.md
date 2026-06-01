@@ -6,6 +6,7 @@ Use this before approving external PR workflows, running contributor code, or me
 
 ```bash
 python -B scripts/dev.py pr-triage
+python -B scripts/dev.py governance
 python -B scripts/dev.py safety
 python -B scripts/dev.py verify
 ```
@@ -47,6 +48,7 @@ Close, ignore, or mark spam when a PR:
 Before merge:
 
 - `python -B scripts/dev.py pr-triage` has no unresolved high-risk finding.
+- `python -B scripts/dev.py governance` passes.
 - `python -B scripts/dev.py safety` passes.
 - `python -B scripts/dev.py verify` passes.
 - GitHub Actions is green.

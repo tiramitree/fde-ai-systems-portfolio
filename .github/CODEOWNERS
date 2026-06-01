@@ -1,0 +1,25 @@
+# Default owner for all public changes.
+* @tiramitree
+
+# GitHub automation and merge policy.
+.github/ @tiramitree
+.github/workflows/ @tiramitree
+
+# Quality, launch, release, and safety automation.
+scripts/ @tiramitree
+scripts/public_safety_scan.py @tiramitree
+scripts/quality_gate.py @tiramitree
+scripts/ci_quality_gate.py @tiramitree
+scripts/check_github_readiness.py @tiramitree
+scripts/review_open_prs.py @tiramitree
+scripts/configure_github_launch.py @tiramitree
+docs/github_branch_protection.json @tiramitree
+
+# AI safety boundaries.
+secure-enterprise-knowledge-copilot/src/copilot/ @tiramitree
+regulated-customer-operations-agent/src/ops_agent/ @tiramitree
+
+# Public positioning and release materials.
+README.md @tiramitree
+PROJECT_CONTENT_INDEX.md @tiramitree
+docs/ @tiramitree

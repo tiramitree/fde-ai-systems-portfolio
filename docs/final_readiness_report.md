@@ -30,6 +30,7 @@ Run these from the repository root before sending the project to an interviewer 
 python -B scripts/dev.py verify
 python -B scripts/dev.py replay
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py governance
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py github-launch-setup
@@ -48,30 +49,13 @@ python -B scripts/check_github_readiness.py --strict
 | Check | Status | Detail |
 | --- | --- | --- |
 | origin points to GitHub | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio.git |
-| GitHub repository metadata reachable | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio |
-| repository description set | WARN | missing |
-| repository topics set | WARN | missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling |
-| license detected as MIT | PASS | mit |
-| default branch is main | PASS | main |
-| main branch protection enabled | WARN | not protected |
-| stars observed at generation | PASS | 3 |
-| forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26769933959 |
-| no open issues | PASS | 0 |
-| no open PRs awaiting review | PASS | 0 |
-| tag v0.1.0 exists | PASS | ok |
-| GitHub release page exists for v0.1.0 | WARN | missing |
-| social preview configured | MANUAL | GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md |
-| profile repository pin configured | MANUAL | Requires account profile settings |
+| GitHub repository metadata reachable | WARN | API rate-limited; authenticate with GH_TOKEN, GITHUB_TOKEN, or gh auth login |
 
 ## Remaining Blockers
 
-- repository description set: missing
-- repository topics set: missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling
-- main branch protection enabled: not protected
-- GitHub release page exists for v0.1.0: missing
-- social preview configured: GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md
-- profile repository pin configured: Requires account profile settings
+- GitHub repository metadata reachable: API rate-limited; authenticate with GH_TOKEN, GITHUB_TOKEN, or gh auth login
+- repository description, topics, branch protection, release page, social preview, and profile pin still require authenticated verification.
+- rerun `python -B scripts/dev.py github-readiness` with `GH_TOKEN`, `GITHUB_TOKEN`, or `gh auth login` before claiming GitHub launch completion.
 - Docker Compose runtime: not verified on this machine because Docker is not installed.
 - Optional OpenAI live mode: not verified without a valid API key.
 - Star growth: cannot be claimed as achieved until real launch feedback accumulates.
