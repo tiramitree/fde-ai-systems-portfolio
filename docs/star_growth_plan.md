@@ -40,6 +40,7 @@ Most AI app repos show model calls. This repo shows the missing enterprise contr
 
 Ready-to-use copy lives in `docs/launch_copy_pack.md`.
 The recording checklist lives in `docs/demo_recording_checklist.md`.
+Run `python -B scripts/dev.py launch-assets` before posting so required channels, issue materials, and anti-hype language stay aligned.
 
 ## First Issue Labels
 

@@ -29,6 +29,7 @@ REQUIRED_CODEOWNER_PATTERNS = {
     "scripts/check_dependency_surface.py": "@tiramitree",
     "scripts/check_container_release.py": "@tiramitree",
     "scripts/check_docker_runtime.py": "@tiramitree",
+    "scripts/check_launch_assets.py": "@tiramitree",
     "scripts/check_frontend_integrity.py": "@tiramitree",
     "scripts/check_visual_asset_manifest.py": "@tiramitree",
     "scripts/refresh_visual_assets.py": "@tiramitree",

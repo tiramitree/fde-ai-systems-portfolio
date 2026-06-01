@@ -16,6 +16,7 @@ All notable changes to this repository will be documented here.
 - Container release hygiene gate through `python -B scripts/dev.py container-release`.
 - Docker runtime verification command through `python -B scripts/dev.py docker-runtime` for Docker-enabled machines.
 - OpenAI live mode verification command through `python -B scripts/dev.py openai-live` for API-key environments.
+- Launch asset hygiene gate through `python -B scripts/dev.py launch-assets`.
 - Fresh clone checks now include the container release hygiene gate.
 - Copy trace ID buttons in both demo UIs, backed by a first-party clipboard module and frontend integrity checks.
 - Refreshed README screenshots and added a visual asset manifest gate through `python -B scripts/dev.py visual-assets`.

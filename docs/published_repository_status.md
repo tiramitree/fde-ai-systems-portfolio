@@ -74,6 +74,7 @@ API documentation gate: passed
 Demo replay artifact: command published; writes ignored files under `out/`
 Container release hygiene: passed
 Visual asset manifest: passed
+Launch asset hygiene: passed
 Quality gate: passed
 ```
 
@@ -91,6 +92,7 @@ Confirmed:
 - demo replay artifact script and documentation published
 - container release hygiene script and documentation published
 - visual asset manifest script, documentation, and manifest published
+- launch copy and star-growth materials published with a deterministic anti-hype gate
 - remote `main` exists
 - local tracked worktree clean
 
