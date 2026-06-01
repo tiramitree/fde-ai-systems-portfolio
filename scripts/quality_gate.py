@@ -66,6 +66,7 @@ REQUIRED_FILES = [
     "docs/assets/secure-knowledge-copilot-screenshot.png",
     "docs/assets/regulated-ops-agent-screenshot.png",
     "scripts/dev.py",
+    "scripts/check_claim_consistency.py",
     "scripts/public_safety_scan.py",
     "scripts/check_public_assets.py",
     "scripts/check_github_readiness.py",
@@ -123,6 +124,7 @@ def main() -> int:
         ("evals", [sys.executable, "-B", "scripts/run_all_evals.py"]),
         ("smoke", [sys.executable, "-B", "scripts/smoke_test_demo_flows.py"]),
         ("report", [sys.executable, "-B", "scripts/generate_demo_report.py"]),
+        ("claims", [sys.executable, "-B", "scripts/check_claim_consistency.py"]),
     ]
     for name, command in command_checks:
         ok, output = run(command)

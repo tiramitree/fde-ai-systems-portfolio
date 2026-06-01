@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 COMMANDS = {
     "start": ["scripts/start_demo_servers.py"],
     "assets": ["scripts/check_public_assets.py"],
+    "claims": ["scripts/check_claim_consistency.py"],
     "contracts": ["scripts/check_api_contracts.py"],
     "health": ["scripts/check_health.py"],
     "evals": ["scripts/run_all_evals.py"],
@@ -42,7 +43,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; assets/contracts/health/evals/eval-csv/github-launch-setup/github-readiness/governance/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality: run individual gates; "
+            "start: run both demo servers; assets/claims/contracts/health/evals/eval-csv/github-launch-setup/github-readiness/governance/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

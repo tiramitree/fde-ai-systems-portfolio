@@ -106,6 +106,7 @@ def main() -> int:
         "docs/pr_review_runbook.md",
         "docs/assets/github-preview.png",
         "docs/assets/demo-walkthrough.gif",
+        "scripts/check_claim_consistency.py",
         "scripts/configure_github_launch.py",
         "scripts/check_repository_governance.py",
         "scripts/review_open_prs.py",
