@@ -35,7 +35,7 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 2. Optionally verify OpenAI Responses API mode with a valid `OPENAI_API_KEY`.
 3. Record an optional short narrated demo video, or use the README GIF as the lightweight visual proof.
 4. Do one final browser walkthrough of both projects from a clean reset.
-5. Add repository topics and social preview on GitHub.
+5. Add repository description, topics, branch protection, and social preview on GitHub.
 6. Create a GitHub release page for `v0.1.0`.
 7. Update this checklist with final evidence.
 

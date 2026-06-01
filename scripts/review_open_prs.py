@@ -191,6 +191,30 @@ def api_pages(path: str) -> tuple[int, list[dict[str, Any]], str]:
         page += 1
 
 
+def scrape_open_pr_numbers(repo: str) -> list[int] | None:
+    encoded_query = urllib.parse.urlencode({"q": "is:pr is:open"})
+    request = urllib.request.Request(
+        f"https://github.com/{repo}/pulls?{encoded_query}",
+        headers={"User-Agent": "fde-portfolio-pr-triage"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            html = response.read().decode("utf-8", errors="replace")
+    except (urllib.error.HTTPError, urllib.error.URLError):
+        return None
+
+    open_count = re.search(r">\s*0\s+Open\s*<", html, re.IGNORECASE)
+    if open_count:
+        return []
+    numbers = sorted(
+        {
+            int(match)
+            for match in re.findall(rf"/{re.escape(repo)}/pull/(\d+)", html)
+        }
+    )
+    return numbers
+
+
 def added_lines(patch: str | None) -> str:
     if not patch:
         return ""
@@ -325,6 +349,19 @@ def main() -> int:
         query = urllib.parse.urlencode({"state": "open", "sort": "updated", "direction": "desc"})
         status, prs, error = api_pages(f"/repos/{repo}/pulls?{query}")
         if status != 200:
+            fallback_numbers = scrape_open_pr_numbers(repo)
+            if fallback_numbers == []:
+                print(f"Repository: {repo}")
+                print("Open PRs: 0")
+                print("GitHub API was unavailable or rate-limited; HTML fallback found no open PRs.")
+                print("Authenticate with `gh auth login` for higher API rate limits.")
+                return 0
+            if fallback_numbers:
+                print(f"Repository: {repo}")
+                print("Open PRs could not be fully triaged because the GitHub API was unavailable or rate-limited.")
+                print("Open PR numbers visible from HTML fallback: " + ", ".join(str(number) for number in fallback_numbers))
+                print("Authenticate with `gh auth login`, then rerun this command before approving workflows or merging.")
+                return 1
             print(f"Open PRs could not be fetched: {error or status}")
             return 1
 

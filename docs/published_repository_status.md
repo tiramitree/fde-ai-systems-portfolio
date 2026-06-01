@@ -89,6 +89,7 @@ Confirmed:
 ## Still Manual
 
 - Add repository description and topics from `docs/github_repository_settings.md`; `python -B scripts/dev.py github-launch-setup` dry-runs the required `gh` commands.
+- Enable branch protection on `main`; `docs/github_branch_protection.json` is the tracked API payload used by `python -B scripts/configure_github_launch.py --apply`.
 - Add social preview.
 - Create a GitHub release page for `v0.1.0`; `python -B scripts/configure_github_launch.py --apply` can do this after `gh auth login`.
 - Pin repository on profile.

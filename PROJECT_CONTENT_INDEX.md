@@ -96,7 +96,7 @@ Local Git state:
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
-- `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, and first-release setup through `gh`.
+- `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, branch protection, and first-release setup through `gh`.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and interview walkthrough report.
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
@@ -147,6 +147,7 @@ Release and growth:
 - `docs/reviewer_perspective_checklist.md`: checks from user and interviewer perspectives.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
+- `docs/github_branch_protection.json`: branch-protection payload for `main`.
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
 - `docs/github_release_commands.md`: publication commands.
 - `docs/github_release_notes_v0.1.0.md`: release notes used by `scripts/configure_github_launch.py`.
@@ -258,7 +259,7 @@ Important boundary:
 
 These are not local code blockers, but they should not be claimed as completed until verified:
 
-1. Add repository topics and social preview in GitHub settings.
+1. Add repository description, topics, branch protection, and social preview in GitHub settings.
 2. Create a GitHub release page for `v0.1.0`.
 3. Verify Docker Compose on a machine with Docker installed.
 4. Verify optional OpenAI mode with a valid API key.

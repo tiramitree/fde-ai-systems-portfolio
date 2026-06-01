@@ -130,6 +130,6 @@ Next step:
 - verify Docker on a Docker-enabled machine or explicitly accept non-Docker local Python as the delivery target
 - verify optional OpenAI mode when an API key is available
 - record an optional narrated demo video
-- create a GitHub release page for `v0.1.0`, record an optional narrated video, verify Docker/OpenAI live modes, and iterate on launch feedback
+- apply GitHub description, topics, branch protection, and release page for `v0.1.0`; record an optional narrated video; verify Docker/OpenAI live modes; and iterate on launch feedback
 
 
