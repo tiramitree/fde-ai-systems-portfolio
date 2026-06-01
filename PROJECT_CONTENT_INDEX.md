@@ -41,6 +41,7 @@ python -B scripts/dev.py governance
 python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
@@ -103,7 +104,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, architecture, assets, claims, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-triage, readiness-report, replay, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, architecture, assets, claims, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, replay, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -123,6 +124,7 @@ Local Git state:
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/check_repository_governance.py`: validates CODEOWNERS, branch-protection payload, and PR-template safeguards.
 - `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and interview walkthrough report.
+- `scripts/check_pr_review_policy.py`: verifies malicious-contribution triage heuristics, runbook, maintainer policy, and PR template safeguards remain intact.
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
 - `scripts/run_all_evals.py`: runs both project eval suites.
 - `scripts/export_eval_csv.py`: exports portfolio eval summary rows to `eval_summaries.csv`.
@@ -181,6 +183,7 @@ Release and growth:
 
 - `docs/public_release_audit.md`: public-readiness audit.
 - `docs/reviewer_perspective_checklist.md`: checks from user and interviewer perspectives.
+- `docs/pr_review_security.md`: PR review policy gate and malicious-contribution review framing.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_branch_protection.json`: branch-protection payload for `main`.

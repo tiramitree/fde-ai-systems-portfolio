@@ -31,7 +31,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 | T05 | Approval bypass or non-supervisor approval | Approval execution is supervisor-only; bypass instructions create refusal evidence instead of approvals. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py observability` |
 | T06 | Duplicate side-effect execution | Approval requests use idempotency keys and already-processed approvals return without sending duplicate notices. | `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
 | T07 | Secret, private path, or internal exception leakage | Public files are scanned for secret-like and local-machine markers; unexpected backend exceptions return generic JSON errors. | `python -B scripts/dev.py safety`, `python -B scripts/dev.py error-hygiene` |
-| T08 | Public PR or CI workflow abuse | GitHub Actions run with read-only permissions, safe triggers, hardened checkout, no secrets, and CODEOWNERS/governance checks. | `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-triage` |
+| T08 | Public PR or CI workflow abuse | GitHub Actions run with read-only permissions, safe triggers, hardened checkout, no secrets, and CODEOWNERS/governance plus PR-review-policy checks. | `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py pr-triage` |
 | T09 | Dependency or supply-chain drift | Local runtime stays stdlib-first; Docker bases are digest-pinned; Dependabot covers allowed update surfaces. | `python -B scripts/dev.py dependency-surface` |
 | T10 | Optional model gateway weakens controls or leaks keys | OpenAI mode is opt-in, key references are constrained, structured outputs are required, and failures fall back locally. | `python -B scripts/dev.py model-gateway-safety` |
 | T11 | Trace, audit, or approval evidence does not explain behavior | Observability integrity checks connect responses to persisted trace IDs, audit events, blocked actions, and approval records. | `python -B scripts/dev.py observability`, `python -B scripts/dev.py otel-traces` |
@@ -46,7 +46,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 | Agent tools | `tools.py` and `agent.py` | user request and model/router output | Side effects require deterministic approval. |
 | Approval | `approve_action` and approval endpoint | approval ID and requester role | Supervisor-only execution. |
 | Model gateway | project `model_gateway.py` files | model output and API availability | Optional model output cannot authorize access or side effects. |
-| Public repo | safety, dependency, workflow, governance gates | contributor code and public docs | No secrets, no privileged CI, no unreviewed security-boundary changes. |
+| Public repo | safety, dependency, workflow, governance, and PR-policy gates | contributor code and public docs | No secrets, no privileged CI, no unreviewed security-boundary changes, and no weakened review heuristics. |
 | UI runtime | project `app.py` files | path input and browser requests | Serve known local assets with explicit security headers. |
 
 ## Production Controls To Add

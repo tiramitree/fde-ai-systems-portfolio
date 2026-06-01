@@ -34,6 +34,7 @@ python -B scripts/dev.py governance
 python -B scripts/dev.py observability
 python -B scripts/dev.py threat-model
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
@@ -59,7 +60,7 @@ python -B scripts/check_github_readiness.py --strict
 | main branch protection enabled | WARN | not protected |
 | stars observed at generation | PASS | 3 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26778652856 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26779482198 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
@@ -93,12 +94,13 @@ python -B scripts/configure_github_launch.py --apply
 4. Open Project 2 and show investigation, approval queue, supervisor approval, trace, and audit log evidence.
 5. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
 6. Run `python -B scripts/dev.py threat-model` to show threats map to controls, files, and evidence commands.
-7. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
-8. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
+7. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
+8. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
+9. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
 
 ## Quality Bar
 
 - If `verify` fails, fix the failing local behavior before changing docs.
 - If `github-readiness --strict` fails only on manual/account settings, do not call the launch complete.
-- If an external PR appears, follow `docs/maintainer_review_policy.md` before merging.
+- If an external PR appears, run `python -B scripts/dev.py pr-policy` and follow `docs/maintainer_review_policy.md` before merging.
 - If generated runtime files appear in Git status, investigate `.gitignore` and the safety scan before publishing.
