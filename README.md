@@ -64,6 +64,7 @@ python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
 python -B scripts/dev.py dependency-surface
 python -B scripts/dev.py contracts
+python -B scripts/dev.py error-hygiene
 python -B scripts/dev.py frontend
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
@@ -108,6 +109,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Architecture boundaries | `scripts/check_architecture_boundaries.py`, `docs/architecture_boundaries.md` | app shells, API classes, backend packages, and frontend modules preserve separation of concerns |
 | Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, and quick actions stay intact |
 | Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, both `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
+| Error hygiene | `scripts/check_error_hygiene.py`, both `app.py` files | unexpected exceptions return generic JSON errors without leaking paths, stack details, or secret-like strings |
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
 | API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
@@ -247,6 +249,7 @@ fde_portfolio/
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Model Gateway Safety](docs/model_gateway_safety.md)
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)
+- [Error Hygiene](docs/error_hygiene.md)
 - [Architecture Boundaries](docs/architecture_boundaries.md)
 - [Workflow Security](docs/workflow_security.md)
 - [Final Completion Audit](docs/final_completion_audit.md)

@@ -26,6 +26,7 @@ python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
 python -B scripts/dev.py dependency-surface
 python -B scripts/dev.py contracts
+python -B scripts/dev.py error-hygiene
 python -B scripts/dev.py frontend
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
@@ -59,9 +60,10 @@ python -B scripts/dev.py verify
 8. Run the workflow security check.
 9. Run the model gateway safety check.
 10. Run the scenario data integrity check.
-11. Run the frontend integrity check.
-12. Run the runtime UI contract check.
-13. Update docs and demo report if behavior changed.
+11. Run the error hygiene check.
+12. Run the frontend integrity check.
+13. Run the runtime UI contract check.
+14. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -74,6 +76,7 @@ python -B scripts/dev.py verify
 - [ ] Workflow security check passes.
 - [ ] Model gateway safety check passes.
 - [ ] Scenario data integrity check passes.
+- [ ] Error hygiene check passes.
 - [ ] Frontend integrity check passes.
 - [ ] Runtime UI contract check passes.
 - [ ] Security or governance behavior is not weakened.

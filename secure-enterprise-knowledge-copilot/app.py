@@ -34,8 +34,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.serve_static(parsed.path)
         except ApiError as exc:
             self.send_json({"error": exc.message}, exc.status)
-        except Exception as exc:
-            self.send_json({"error": str(exc)}, 500)
+        except Exception:
+            self.send_json({"error": "Internal server error"}, 500)
 
     def do_POST(self) -> None:
         try:
@@ -48,8 +48,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json({"error": "Invalid JSON body"}, 400)
         except ApiError as exc:
             self.send_json({"error": exc.message}, exc.status)
-        except Exception as exc:
-            self.send_json({"error": str(exc)}, 500)
+        except Exception:
+            self.send_json({"error": "Internal server error"}, 500)
 
     def serve_static(self, path: str) -> None:
         if path in ("", "/"):
