@@ -1,6 +1,6 @@
 # FDE AI Systems Portfolio
 
-![Quality Gate](https://img.shields.io/badge/quality_gate-passing-brightgreen)
+[![Quality Gate](https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Local First](https://img.shields.io/badge/local--first-no_paid_API_required-2f855a)

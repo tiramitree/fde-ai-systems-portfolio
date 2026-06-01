@@ -27,10 +27,10 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
 
 - [ ] Confirm README renders well on GitHub.
 - [x] Add visual README assets.
-- [ ] Replace static quality badge with GitHub Actions badge after publishing.
+- [x] Replace static quality badge with GitHub Actions badge after publishing.
 - [x] Add screenshots.
 - [ ] Add short GIF or video.
-- [ ] Run all evals and smoke tests.
+- [x] Run all evals and smoke tests.
 - [ ] Add repo topics:
   - `ai-agents`
   - `rag`

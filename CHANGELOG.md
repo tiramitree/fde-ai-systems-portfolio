@@ -50,4 +50,8 @@ Initial public-ready portfolio release.
 
 - Docker runtime on a Docker-enabled machine.
 - Optional OpenAI mode with a live API key.
-- Published GitHub Actions run after repository publication.
+
+### Published
+
+- Repository: https://github.com/tiramitree/fde-ai-systems-portfolio
+- GitHub Actions `quality-gate`: passing
