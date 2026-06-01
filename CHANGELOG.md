@@ -15,6 +15,7 @@ All notable changes to this repository will be documented here.
 - PostgreSQL and pgvector adapter design covering schema, migrations, RLS, indexing, eval isolation, and rollout risks.
 - OpenTelemetry-compatible local trace export through `python -B scripts/dev.py otel-traces`.
 - README demo walkthrough GIF under `docs/assets/demo-walkthrough.gif`.
+- Upload-ready GitHub social preview PNG under `docs/assets/github-preview.png`.
 - Public asset and Markdown-link quality check through `python -B scripts/dev.py assets`.
 - GitHub public-readiness report through `python -B scripts/dev.py github-readiness`.
 - API contract checks for UI-facing endpoints through `python -B scripts/dev.py contracts`.

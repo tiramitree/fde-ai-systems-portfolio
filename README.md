@@ -7,7 +7,7 @@
 
 Two runnable enterprise AI systems for demonstrating secure RAG, governed agents, evals, traces, audit logs, and approval gates.
 
-![FDE AI Systems Portfolio](docs/assets/github-preview.svg)
+![FDE AI Systems Portfolio](docs/assets/github-preview.png)
 
 Most AI app demos stop at chat. Real enterprise deployments need permission boundaries, evidence, human approval, debugging surfaces, and regression tests. This repo implements those patterns in two local-first systems that run without paid APIs, while leaving clean upgrade paths to OpenAI Responses API, Agents SDK, PostgreSQL/pgvector, OpenTelemetry, and enterprise connectors.
 

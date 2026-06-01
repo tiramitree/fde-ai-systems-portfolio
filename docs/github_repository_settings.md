@@ -40,10 +40,10 @@ python
 Use:
 
 ```text
-docs/assets/github-preview.svg
+docs/assets/github-preview.png
 ```
 
-If GitHub requires a bitmap upload, export the SVG to PNG before uploading.
+The SVG source is also kept at `docs/assets/github-preview.svg`.
 
 ## Branch Protection
 

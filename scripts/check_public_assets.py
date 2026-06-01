@@ -11,6 +11,9 @@ ROOT = Path(__file__).resolve().parents[1]
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 IMAGE_SUFFIXES = {".gif", ".png", ".svg"}
+REQUIRED_IMAGE_SIZES = {
+    "docs/assets/github-preview.png": (1200, 520),
+}
 
 
 def tracked_markdown_files() -> list[Path]:
@@ -171,6 +174,17 @@ def check_assets() -> list[str]:
     for path in sorted((ROOT / "docs" / "assets").glob("*")):
         if path.suffix.lower() in IMAGE_SUFFIXES:
             failures.extend(check_image(path))
+    for rel_path, minimum in REQUIRED_IMAGE_SIZES.items():
+        path = ROOT / rel_path
+        if not path.exists():
+            failures.append(f"missing required image asset: {rel_path}")
+            continue
+        size = png_size(path)
+        if not size:
+            failures.append(f"invalid required PNG asset: {rel_path}")
+            continue
+        if size[0] < minimum[0] or size[1] < minimum[1]:
+            failures.append(f"required image asset too small: {rel_path} {size[0]}x{size[1]}")
     return failures
 
 

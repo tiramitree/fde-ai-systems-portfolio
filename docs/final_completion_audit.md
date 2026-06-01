@@ -47,6 +47,8 @@ Evidence:
   - `docs/assets/regulated-ops-agent-screenshot.png`
 - README walkthrough GIF:
   - `docs/assets/demo-walkthrough.gif`
+- GitHub social preview:
+  - `docs/assets/github-preview.png`
 - Browser verification already performed for:
   - Project 1 permission difference between Alice and Morgan
   - Project 1 eval button
