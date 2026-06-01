@@ -60,6 +60,7 @@ Useful commands:
 
 ```bash
 python -B scripts/dev.py assets
+python -B scripts/dev.py claims
 python -B scripts/dev.py contracts
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
@@ -96,6 +97,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Governed tool use | `regulated-customer-operations-agent/src/ops_agent/tools.py` | direct `send_notice` is blocked for investigator |
 | Human approval | Project 2 approval queue and supervisor endpoint | supervisor approval sends the notice once |
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
+| Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
 | API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |

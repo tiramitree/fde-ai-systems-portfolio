@@ -26,6 +26,7 @@ From the repository root:
 python -B scripts/dev.py verify
 python -B scripts/dev.py start
 python -B scripts/dev.py assets
+python -B scripts/dev.py claims
 python -B scripts/dev.py contracts
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
@@ -92,9 +93,10 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, assets, contracts, health, evals, eval-csv, github-launch-setup, github-readiness, governance, otel-traces, pr-triage, readiness-report, replay, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, assets, claims, contracts, health, evals, eval-csv, github-launch-setup, github-readiness, governance, otel-traces, pr-triage, readiness-report, replay, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
+- `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
 - `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, branch protection, and first-release setup through `gh`.

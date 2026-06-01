@@ -24,6 +24,7 @@ All notable changes to this repository will be documented here.
 - Public PR triage and risky-diff review runbook through `python -B scripts/dev.py pr-triage`.
 - Tracked GitHub branch-protection payload for `main` and readiness warning when protection is missing.
 - CODEOWNERS and repository-governance gate through `python -B scripts/dev.py governance`.
+- Public claim-consistency gate through `python -B scripts/dev.py claims`.
 
 ### Verified
 
