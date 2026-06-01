@@ -41,6 +41,7 @@ Before merging any external PR:
 
 ```bash
 python -B scripts/dev.py pr-triage
+python -B scripts/dev.py governance
 ```
 
 4. Run:

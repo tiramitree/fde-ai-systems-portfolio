@@ -32,6 +32,7 @@ python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
+python -B scripts/dev.py governance
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
@@ -91,13 +92,14 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, assets, contracts, health, evals, eval-csv, github-launch-setup, github-readiness, otel-traces, pr-triage, readiness-report, replay, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, assets, contracts, health, evals, eval-csv, github-launch-setup, github-readiness, governance, otel-traces, pr-triage, readiness-report, replay, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
 - `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, branch protection, and first-release setup through `gh`.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
+- `scripts/check_repository_governance.py`: validates CODEOWNERS, branch-protection payload, and PR-template safeguards.
 - `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and interview walkthrough report.
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
 - `scripts/run_all_evals.py`: runs both project eval suites.
@@ -114,6 +116,7 @@ Local Git state:
 ## GitHub Assets
 
 - `.github/workflows/ci.yml`: GitHub Actions workflow.
+- `.github/CODEOWNERS`: code-owner review coverage for public contributions and safety-critical files.
 - `.github/pull_request_template.md`: PR checklist.
 - `.github/ISSUE_TEMPLATE/bug_report.md`: bug report template.
 - `.github/ISSUE_TEMPLATE/eval_case.md`: eval regression template.

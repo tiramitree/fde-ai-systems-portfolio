@@ -40,6 +40,19 @@ def blockers(checks: list[Check]) -> list[str]:
         for item in checks
         if item.status in {"FAIL", "WARN", "MANUAL"}
     ]
+    rate_limited = any(
+        item.name == "GitHub repository metadata reachable"
+        and item.status == "WARN"
+        and "rate-limited" in item.detail
+        for item in checks
+    )
+    if rate_limited:
+        dynamic.extend(
+            [
+                "- repository description, topics, branch protection, release page, social preview, and profile pin still require authenticated verification.",
+                "- rerun `python -B scripts/dev.py github-readiness` with `GH_TOKEN`, `GITHUB_TOKEN`, or `gh auth login` before claiming GitHub launch completion.",
+            ]
+        )
     static = [
         "- Docker Compose runtime: not verified on this machine because Docker is not installed.",
         "- Optional OpenAI live mode: not verified without a valid API key.",
@@ -92,6 +105,7 @@ def render() -> str:
         "python -B scripts/dev.py verify",
         "python -B scripts/dev.py replay",
         "python -B scripts/dev.py eval-csv",
+        "python -B scripts/dev.py governance",
         "python -B scripts/dev.py otel-traces",
         "python -B scripts/dev.py pr-triage",
         "python -B scripts/dev.py github-launch-setup",

@@ -94,6 +94,7 @@ def main() -> int:
     expected_files = [
         "README.md",
         "PROJECT_CONTENT_INDEX.md",
+        ".github/CODEOWNERS",
         "docs/portfolio_evidence_matrix.md",
         "docs/github_branch_protection.json",
         "docs/github_repository_settings.md",
@@ -105,6 +106,7 @@ def main() -> int:
         "docs/pr_review_runbook.md",
         "docs/assets/demo-walkthrough.gif",
         "scripts/configure_github_launch.py",
+        "scripts/check_repository_governance.py",
         "scripts/review_open_prs.py",
         ".github/workflows/ci.yml",
     ]

@@ -19,6 +19,7 @@ REQUIRED_FILES = [
     "SECURITY.md",
     "ROADMAP.md",
     "CODE_OF_CONDUCT.md",
+    ".github/CODEOWNERS",
     ".github/pull_request_template.md",
     ".github/workflows/ci.yml",
     ".github/ISSUE_TEMPLATE/bug_report.md",
@@ -67,6 +68,7 @@ REQUIRED_FILES = [
     "scripts/public_safety_scan.py",
     "scripts/check_public_assets.py",
     "scripts/check_github_readiness.py",
+    "scripts/check_repository_governance.py",
     "scripts/check_api_contracts.py",
     "scripts/configure_github_launch.py",
     "scripts/generate_final_readiness_report.py",
@@ -114,6 +116,7 @@ def main() -> int:
 
     command_checks = [
         ("assets", [sys.executable, "-B", "scripts/check_public_assets.py"]),
+        ("governance", [sys.executable, "-B", "scripts/check_repository_governance.py"]),
         ("contracts", [sys.executable, "-B", "scripts/check_api_contracts.py"]),
         ("health", [sys.executable, "-B", "scripts/check_health.py"]),
         ("evals", [sys.executable, "-B", "scripts/run_all_evals.py"]),
