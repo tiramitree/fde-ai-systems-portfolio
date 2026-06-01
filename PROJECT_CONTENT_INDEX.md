@@ -32,6 +32,7 @@ python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
@@ -88,12 +89,13 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, assets, contracts, health, evals, eval-csv, github-readiness, otel-traces, replay, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, assets, contracts, health, evals, eval-csv, github-readiness, otel-traces, readiness-report, replay, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
+- `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and interview walkthrough report.
 - `scripts/run_all_evals.py`: runs both project eval suites.
 - `scripts/export_eval_csv.py`: exports portfolio eval summary rows to `eval_summaries.csv`.
 - `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload.
@@ -118,6 +120,7 @@ Local Git state:
 Start here:
 
 - `docs/final_demo_runbook.md`: exact live demo order.
+- `docs/final_readiness_report.md`: compact launch, blocker, and interview walkthrough status.
 - `docs/demo_report.md`: generated verification report.
 - `docs/completion_checklist.md`: current status and remaining blockers.
 - `docs/final_completion_audit.md`: objective-by-objective audit.
@@ -253,7 +256,7 @@ These are not local code blockers, but they should not be claimed as completed u
 2. Create a GitHub release page for `v0.1.0`.
 3. Verify Docker Compose on a machine with Docker installed.
 4. Verify optional OpenAI mode with a valid API key.
-5. Record and include a short demo GIF/video.
+5. Record an optional narrated demo video; the README GIF is already included.
 6. Collect real launch feedback and star-growth evidence.
 
 ## Interview Narrative
