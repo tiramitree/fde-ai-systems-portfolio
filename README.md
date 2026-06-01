@@ -64,6 +64,7 @@ python -B scripts/dev.py evals
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py quality
+python -B scripts/post_publish_check.py
 ```
 
 Current verified status:
@@ -227,6 +228,7 @@ fde_portfolio/
 - [GitHub Initial Issues](docs/github_initial_issues.md)
 - [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md)
 - [GitHub Release Commands](docs/github_release_commands.md)
+- [Post-Publish Checklist](docs/post_publish_checklist.md)
 - [Roadmap](ROADMAP.md)
 
 ## Interview Narrative

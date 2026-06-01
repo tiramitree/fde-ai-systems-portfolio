@@ -40,6 +40,7 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
   - `openai`
   - `agentic-workflows`
 - [ ] Apply repository settings from `docs/github_repository_settings.md`.
+- [ ] Run `python -B scripts/post_publish_check.py`.
 - [ ] Convert `docs/community_backlog.md` into initial public issues.
 - [ ] Create the first public issues from `docs/github_initial_issues.md`.
 - [ ] Record the first demo using `docs/demo_recording_checklist.md`.
