@@ -71,12 +71,12 @@ async function refreshObservability() {
 async function boot() {
   try {
     const health = await api("/api/health");
-    byId("health").textContent = health.status;
+    byId("health").textContent = health.status === "ok" ? "Healthy" : health.status;
     await loadUsers();
     await loadDocuments();
     await refreshObservability();
   } catch (error) {
-    byId("health").textContent = "error";
+    byId("health").textContent = "Error";
     byId("answer").textContent = error.message;
   }
 }

@@ -89,7 +89,7 @@ async function refreshOperationalViews() {
 
 async function boot() {
   const health = await api("/api/health");
-  byId("health").textContent = health.status;
+  byId("health").textContent = health.status === "ok" ? "Healthy" : health.status;
   await loadUsers();
   await refreshOperationalViews();
 }
@@ -113,6 +113,6 @@ document.querySelectorAll("[data-message]").forEach((button) => {
 });
 
 boot().catch((error) => {
-  byId("health").textContent = "error";
+  byId("health").textContent = "Error";
   byId("decision").textContent = error.message;
 });

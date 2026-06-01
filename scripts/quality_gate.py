@@ -110,6 +110,7 @@ REQUIRED_FILES = [
     "scripts/check_claim_consistency.py",
     "scripts/check_container_release.py",
     "scripts/check_visual_asset_manifest.py",
+    "scripts/refresh_visual_assets.py",
     "scripts/check_frontend_integrity.py",
     "scripts/check_fresh_clone_experience.py",
     "scripts/check_runtime_ui_contracts.py",
