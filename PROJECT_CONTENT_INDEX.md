@@ -29,6 +29,7 @@ python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
+python -B scripts/dev.py safety
 python -B scripts/dev.py quality
 ```
 
@@ -87,6 +88,7 @@ Local Git state:
 - `scripts/run_all_evals.py`: runs both project eval suites.
 - `scripts/smoke_test_demo_flows.py`: exercises the critical demo paths end to end.
 - `scripts/generate_demo_report.py`: writes `docs/demo_report.md`.
+- `scripts/public_safety_scan.py`: scans public files for secret-like tokens, personal identifiers, local paths, and tracked runtime artifacts.
 - `scripts/quality_gate.py`: local release gate.
 - `scripts/ci_quality_gate.py`: clean-checkout CI gate for GitHub Actions.
 - `scripts/post_publish_check.py`: verifies remote GitHub publication after `main` is pushed.
@@ -126,6 +128,7 @@ Release and growth:
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
 - `docs/github_release_commands.md`: publication commands.
+- `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: initial issue titles, labels, and bodies for launch.

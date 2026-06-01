@@ -14,6 +14,7 @@ COMMANDS = {
     "evals": ["scripts/run_all_evals.py"],
     "smoke": ["scripts/smoke_test_demo_flows.py"],
     "report": ["scripts/generate_demo_report.py"],
+    "safety": ["scripts/public_safety_scan.py"],
     "quality": ["scripts/quality_gate.py"],
     "verify": ["scripts/ci_quality_gate.py"],
 }
@@ -31,7 +32,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; health/evals/smoke/report/quality: run individual gates; "
+            "start: run both demo servers; health/evals/smoke/report/safety/quality: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )
@@ -41,4 +42,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
