@@ -95,7 +95,9 @@ def main() -> int:
         "README.md",
         "PROJECT_CONTENT_INDEX.md",
         ".github/CODEOWNERS",
+        ".github/dependabot.yml",
         "docs/portfolio_evidence_matrix.md",
+        "docs/supply_chain_security.md",
         "docs/github_branch_protection.json",
         "docs/github_repository_settings.md",
         "docs/github_release_notes_v0.1.0.md",
@@ -107,9 +109,12 @@ def main() -> int:
         "docs/assets/github-preview.png",
         "docs/assets/demo-walkthrough.gif",
         "scripts/check_claim_consistency.py",
+        "scripts/check_dependency_surface.py",
         "scripts/configure_github_launch.py",
         "scripts/check_repository_governance.py",
         "scripts/review_open_prs.py",
+        "secure-enterprise-knowledge-copilot/Dockerfile",
+        "regulated-customer-operations-agent/Dockerfile",
         ".github/workflows/ci.yml",
     ]
     for rel_path in expected_files:

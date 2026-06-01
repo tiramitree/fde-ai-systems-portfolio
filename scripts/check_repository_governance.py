@@ -8,14 +8,17 @@ ROOT = Path(__file__).resolve().parents[1]
 CODEOWNERS = ROOT / ".github" / "CODEOWNERS"
 BRANCH_PROTECTION = ROOT / "docs" / "github_branch_protection.json"
 PR_TEMPLATE = ROOT / ".github" / "pull_request_template.md"
+DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 
 
 REQUIRED_CODEOWNER_PATTERNS = {
     "*": "@tiramitree",
     ".github/": "@tiramitree",
     ".github/workflows/": "@tiramitree",
+    ".github/dependabot.yml": "@tiramitree",
     "scripts/": "@tiramitree",
     "scripts/public_safety_scan.py": "@tiramitree",
+    "scripts/check_dependency_surface.py": "@tiramitree",
     "scripts/quality_gate.py": "@tiramitree",
     "scripts/ci_quality_gate.py": "@tiramitree",
     "scripts/check_github_readiness.py": "@tiramitree",
@@ -92,6 +95,7 @@ def check_pr_template() -> list[str]:
         "Permission checks are preserved",
         "Approval gates are preserved",
         "No secrets",
+        "Dependency surface",
         "Eval or CI failures are not hidden",
     ]
     for phrase in required_phrases:
@@ -100,11 +104,29 @@ def check_pr_template() -> list[str]:
     return failures
 
 
+def check_dependabot() -> list[str]:
+    failures: list[str] = []
+    if not DEPENDABOT.exists():
+        return ["missing .github/dependabot.yml"]
+    text = DEPENDABOT.read_text(encoding="utf-8")
+    required_phrases = [
+        'package-ecosystem: "github-actions"',
+        'package-ecosystem: "docker"',
+        'directory: "/secure-enterprise-knowledge-copilot"',
+        'directory: "/regulated-customer-operations-agent"',
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"Dependabot config missing phrase: {phrase}")
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_codeowners())
     failures.extend(check_branch_protection())
     failures.extend(check_pr_template())
+    failures.extend(check_dependabot())
 
     if failures:
         print("Repository governance check failed:")

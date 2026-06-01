@@ -4,10 +4,12 @@
 # GitHub automation and merge policy.
 .github/ @tiramitree
 .github/workflows/ @tiramitree
+.github/dependabot.yml @tiramitree
 
 # Quality, launch, release, and safety automation.
 scripts/ @tiramitree
 scripts/public_safety_scan.py @tiramitree
+scripts/check_dependency_surface.py @tiramitree
 scripts/quality_gate.py @tiramitree
 scripts/ci_quality_gate.py @tiramitree
 scripts/check_github_readiness.py @tiramitree
