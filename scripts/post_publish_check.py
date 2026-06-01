@@ -45,6 +45,8 @@ def url_exists_once(url: str) -> tuple[bool, str]:
         return False, str(exc.code)
     except urllib.error.URLError as exc:
         return False, str(exc.reason)
+    except TimeoutError as exc:
+        return False, str(exc)
 
 
 def url_exists(url: str, attempts: int = 3) -> tuple[bool, str]:
