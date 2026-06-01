@@ -18,6 +18,7 @@ REQUIRED_CODEOWNER_PATTERNS = {
     ".github/dependabot.yml": "@tiramitree",
     "scripts/": "@tiramitree",
     "scripts/check_architecture_boundaries.py": "@tiramitree",
+    "scripts/check_workflow_security.py": "@tiramitree",
     "scripts/public_safety_scan.py": "@tiramitree",
     "scripts/check_dependency_surface.py": "@tiramitree",
     "scripts/check_frontend_integrity.py": "@tiramitree",

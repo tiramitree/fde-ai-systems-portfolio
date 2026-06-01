@@ -32,6 +32,7 @@ All notable changes to this repository will be documented here.
 - GitHub readiness can prove the release tag through `git ls-remote` when unauthenticated GitHub API limits are exhausted.
 - Runtime UI contract gate through `python -B scripts/dev.py ui-contracts`.
 - Architecture boundary gate through `python -B scripts/dev.py architecture`.
+- Workflow security gate through `python -B scripts/dev.py workflow-security`.
 
 ### Verified
 

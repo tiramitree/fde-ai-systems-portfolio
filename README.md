@@ -79,6 +79,7 @@ python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
 python -B scripts/dev.py ui-contracts
+python -B scripts/dev.py workflow-security
 python -B scripts/dev.py quality
 python -B scripts/post_publish_check.py
 ```
@@ -109,6 +110,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
+| Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
 | Public PR triage | `scripts/review_open_prs.py` | inspect open PRs and flag risky diffs before running code |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
 | Observability export | `scripts/export_traces_otel.py` | local traces convert to OTLP/JSON-compatible `resourceSpans` |
@@ -240,6 +242,7 @@ fde_portfolio/
 - [OpenTelemetry Trace Export](docs/otel_trace_export.md)
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Architecture Boundaries](docs/architecture_boundaries.md)
+- [Workflow Security](docs/workflow_security.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
 - [Published Repository Status](docs/published_repository_status.md)
