@@ -38,6 +38,9 @@ Most AI app repos show model calls. This repo shows the missing enterprise contr
 4. Short post: "Two enterprise AI demos that run without paid APIs."
 5. Red-team eval pack follow-up.
 
+Ready-to-use copy lives in `docs/launch_copy_pack.md`.
+The recording checklist lives in `docs/demo_recording_checklist.md`.
+
 ## First Issue Labels
 
 Create issues for:

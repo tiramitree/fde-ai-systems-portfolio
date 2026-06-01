@@ -125,7 +125,9 @@ Release and growth:
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: initial issue titles, labels, and bodies for launch.
 - `docs/demo_video_script.md`: short video/GIF script.
+- `docs/demo_recording_checklist.md`: operational checklist for recording the first demo video or GIF.
 - `docs/star_growth_plan.md`: plan for distribution and feedback loops.
+- `docs/launch_copy_pack.md`: copy-ready launch posts for GitHub, LinkedIn, X, Hacker News, and communities.
 - `docs/differentiation_strategy.md`: why this differs from ordinary AI demos.
 
 Architecture decisions:

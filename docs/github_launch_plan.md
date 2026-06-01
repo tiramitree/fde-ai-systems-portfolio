@@ -42,6 +42,8 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
 - [ ] Apply repository settings from `docs/github_repository_settings.md`.
 - [ ] Convert `docs/community_backlog.md` into initial public issues.
 - [ ] Create the first public issues from `docs/github_initial_issues.md`.
+- [ ] Record the first demo using `docs/demo_recording_checklist.md`.
+- [ ] Publish launch copy from `docs/launch_copy_pack.md`.
 - [ ] Publish a short technical post.
 - [ ] Pin the repo on GitHub profile.
 
