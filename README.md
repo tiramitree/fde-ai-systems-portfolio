@@ -76,6 +76,7 @@ python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
+python -B scripts/dev.py scenario-data
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
@@ -113,6 +114,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
 | Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
 | Model gateway safety | `scripts/check_model_gateway_safety.py`, project `model_gateway.py` files | OpenAI mode is opt-in, key references are constrained, structured outputs are required, and failures fall back locally |
+| Scenario data integrity | `scripts/check_scenario_data_integrity.py`, project `data/` folders | fictional seed data, roles, references, and eval expectations remain internally consistent |
 | Public PR triage | `scripts/review_open_prs.py` | inspect open PRs and flag risky diffs before running code |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
 | Observability export | `scripts/export_traces_otel.py` | local traces convert to OTLP/JSON-compatible `resourceSpans` |
@@ -244,6 +246,7 @@ fde_portfolio/
 - [OpenTelemetry Trace Export](docs/otel_trace_export.md)
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Model Gateway Safety](docs/model_gateway_safety.md)
+- [Scenario Data Integrity](docs/scenario_data_integrity.md)
 - [Architecture Boundaries](docs/architecture_boundaries.md)
 - [Workflow Security](docs/workflow_security.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
