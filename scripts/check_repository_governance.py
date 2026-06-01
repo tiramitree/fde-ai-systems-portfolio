@@ -35,6 +35,7 @@ REQUIRED_CODEOWNER_PATTERNS = {
     "scripts/check_github_readiness.py": "@tiramitree",
     "scripts/check_pr_review_policy.py": "@tiramitree",
     "scripts/review_open_prs.py": "@tiramitree",
+    "scripts/export_demo_replay_artifact.py": "@tiramitree",
     "scripts/configure_github_launch.py": "@tiramitree",
     "docs/github_branch_protection.json": "@tiramitree",
     "secure-enterprise-knowledge-copilot/src/copilot/": "@tiramitree",

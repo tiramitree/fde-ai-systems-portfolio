@@ -12,6 +12,7 @@ All notable changes to this repository will be documented here.
 - Maintainer review policy for triaging external PRs, useful reviews, unsafe changes, and phishing attempts.
 - CSV eval summary export through `python -B scripts/dev.py eval-csv`.
 - Replayable demo reset command through `python -B scripts/dev.py replay`.
+- Release-attachable demo replay artifact through `python -B scripts/dev.py replay-artifact`.
 - PostgreSQL and pgvector adapter design covering schema, migrations, RLS, indexing, eval isolation, and rollout risks.
 - OpenTelemetry-compatible local trace export through `python -B scripts/dev.py otel-traces`.
 - README demo walkthrough GIF under `docs/assets/demo-walkthrough.gif`.

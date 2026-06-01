@@ -16,7 +16,7 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 2. Add live OTLP HTTP export to an OpenTelemetry Collector.
 3. Add per-case eval reports with failure diffs.
 4. Add Docker Compose healthcheck documentation and screenshots.
-5. Add a replay-output artifact that can be attached to releases.
+5. Add release automation that uploads `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` after `python -B scripts/dev.py replay-artifact` passes.
 
 ## Advanced Issues
 

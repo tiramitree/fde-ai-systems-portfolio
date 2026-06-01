@@ -46,6 +46,7 @@ REQUIRED_FILES = [
     "docs/final_demo_runbook.md",
     "docs/final_readiness_report.md",
     "docs/demo_report.md",
+    "docs/demo_replay_artifact.md",
     "docs/resume_and_interview_package.md",
     "docs/production_upgrade_notes.md",
     "docs/postgres_pgvector_adapter_design.md",
@@ -119,6 +120,7 @@ REQUIRED_FILES = [
     "scripts/check_pr_review_policy.py",
     "scripts/review_open_prs.py",
     "scripts/replay_demo.py",
+    "scripts/export_demo_replay_artifact.py",
     "scripts/export_eval_csv.py",
     "scripts/export_traces_otel.py",
     "scripts/post_publish_check.py",
@@ -217,6 +219,7 @@ def main() -> int:
         ("health", [sys.executable, "-B", "scripts/check_health.py"]),
         ("evals", [sys.executable, "-B", "scripts/run_all_evals.py"]),
         ("smoke", [sys.executable, "-B", "scripts/smoke_test_demo_flows.py"]),
+        ("replay-artifact", [sys.executable, "-B", "scripts/export_demo_replay_artifact.py"]),
         ("report", [sys.executable, "-B", "scripts/generate_demo_report.py"]),
         ("claims", [sys.executable, "-B", "scripts/check_claim_consistency.py"]),
     ]

@@ -43,6 +43,7 @@ python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
+python -B scripts/dev.py replay-artifact
 python -B scripts/dev.py scenario-data
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
@@ -72,8 +73,9 @@ python -B scripts/dev.py verify
 15. Run the PR review policy check.
 16. Run the runtime UI contract check.
 17. Run the API documentation check.
-18. Run the fresh clone check before broad external sharing or release updates.
-19. Update docs and demo report if behavior changed.
+18. Run the replay artifact export before release updates.
+19. Run the fresh clone check before broad external sharing or release updates.
+20. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -93,6 +95,7 @@ python -B scripts/dev.py verify
 - [ ] PR review policy check passes.
 - [ ] Runtime UI contract check passes.
 - [ ] API documentation check passes.
+- [ ] Replay artifact export passes before release updates.
 - [ ] Fresh clone check passes before broad external sharing or release updates.
 - [ ] Security or governance behavior is not weakened.
 - [ ] README or docs are updated if the user-facing workflow changed.

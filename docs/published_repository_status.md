@@ -71,6 +71,7 @@ Threat model: 12/12 mapped
 PR review policy: passed
 Fresh clone experience: command published; run after each public push
 API documentation gate: passed
+Demo replay artifact: command published; writes ignored files under `out/`
 Quality gate: passed
 ```
 
@@ -85,6 +86,7 @@ Confirmed:
 - PR review policy script and documentation published
 - fresh clone script and documentation published
 - API documentation script and documentation published
+- demo replay artifact script and documentation published
 - remote `main` exists
 - local tracked worktree clean
 
