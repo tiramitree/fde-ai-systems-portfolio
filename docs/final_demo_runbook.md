@@ -33,6 +33,12 @@ Replay the end-to-end demo path with fresh reset services:
 python -B scripts/dev.py replay
 ```
 
+Export local traces in an OpenTelemetry-compatible JSON shape:
+
+```bash
+python -B scripts/dev.py otel-traces
+```
+
 ## 2. Optional Docker Run
 
 Docker was not available in the current local environment, so this config is prepared but not runtime-verified here.

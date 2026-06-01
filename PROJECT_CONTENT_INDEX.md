@@ -28,6 +28,7 @@ python -B scripts/dev.py start
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py otel-traces
 python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
@@ -84,11 +85,12 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, health, evals, eval-csv, replay, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, health, evals, eval-csv, otel-traces, replay, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_health.py`: verifies both service health endpoints.
 - `scripts/run_all_evals.py`: runs both project eval suites.
 - `scripts/export_eval_csv.py`: exports portfolio eval summary rows to `eval_summaries.csv`.
+- `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload.
 - `scripts/replay_demo.py`: starts clean reset demo services, runs the interview demo path, and prints trace/approval evidence.
 - `scripts/smoke_test_demo_flows.py`: exercises the critical demo paths end to end.
 - `scripts/generate_demo_report.py`: writes `docs/demo_report.md`.
@@ -120,6 +122,7 @@ Interview preparation:
 - `docs/hard_interview_playbook.md`: difficult interviewer questions and answers.
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
+- `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/portfolio_evidence_matrix.md`: claim-to-evidence map for reviewers and interviewers.
 - `docs/case_study_secure_enterprise_knowledge_copilot.md`: Project 1 case study.

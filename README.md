@@ -62,6 +62,7 @@ Useful commands:
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py otel-traces
 python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
@@ -89,6 +90,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Human approval | Project 2 approval queue and supervisor endpoint | supervisor approval sends the notice once |
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
+| Observability export | `scripts/export_traces_otel.py` | local traces convert to OTLP/JSON-compatible `resourceSpans` |
 
 See [Portfolio Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full claim-to-evidence map.
 
@@ -211,6 +213,7 @@ fde_portfolio/
 - [Resume And Interview Package](docs/resume_and_interview_package.md)
 - [Production Upgrade Notes](docs/production_upgrade_notes.md)
 - [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md)
+- [OpenTelemetry Trace Export](docs/otel_trace_export.md)
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
