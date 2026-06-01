@@ -82,6 +82,7 @@ python -B scripts/dev.py scenario-data
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
+python -B scripts/dev.py threat-model
 python -B scripts/dev.py ui-contracts
 python -B scripts/dev.py workflow-security
 python -B scripts/dev.py quality
@@ -118,6 +119,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
 | Model gateway safety | `scripts/check_model_gateway_safety.py`, project `model_gateway.py` files | OpenAI mode is opt-in, key references are constrained, structured outputs are required, and failures fall back locally |
 | Observability integrity | `scripts/check_observability_integrity.py`, project trace/audit/approval endpoints | response trace IDs, audit events, approval records, blocked actions, and unauthorized-query evidence stay internally consistent |
+| Threat model | `docs/threat_model.md`, `scripts/check_threat_model.py` | threat IDs map to deterministic controls, source files, and evidence commands |
 | Scenario data integrity | `scripts/check_scenario_data_integrity.py`, project `data/` folders | fictional seed data, roles, references, and eval expectations remain internally consistent |
 | Public PR triage | `scripts/review_open_prs.py` | inspect open PRs and flag risky diffs before running code |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
@@ -251,6 +253,7 @@ fde_portfolio/
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Model Gateway Safety](docs/model_gateway_safety.md)
 - [Observability Integrity](docs/observability_integrity.md)
+- [Threat Model](docs/threat_model.md)
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)
 - [Error Hygiene](docs/error_hygiene.md)
 - [Architecture Boundaries](docs/architecture_boundaries.md)

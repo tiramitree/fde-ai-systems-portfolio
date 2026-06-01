@@ -21,6 +21,7 @@ REQUIRED_CODEOWNER_PATTERNS = {
     "scripts/check_workflow_security.py": "@tiramitree",
     "scripts/check_model_gateway_safety.py": "@tiramitree",
     "scripts/check_observability_integrity.py": "@tiramitree",
+    "scripts/check_threat_model.py": "@tiramitree",
     "scripts/check_scenario_data_integrity.py": "@tiramitree",
     "scripts/check_error_hygiene.py": "@tiramitree",
     "scripts/public_safety_scan.py": "@tiramitree",
