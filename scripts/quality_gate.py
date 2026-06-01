@@ -29,6 +29,7 @@ REQUIRED_FILES = [
     "docs/demo_report.md",
     "docs/resume_and_interview_package.md",
     "docs/production_upgrade_notes.md",
+    "docs/postgres_pgvector_adapter_design.md",
     "docs/model_runtime_configuration.md",
     "docs/public_release_audit.md",
     "docs/differentiation_strategy.md",

@@ -119,6 +119,7 @@ Interview preparation:
 - `docs/resume_and_interview_package.md`: resume bullets and interview framing.
 - `docs/hard_interview_playbook.md`: difficult interviewer questions and answers.
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
+- `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/portfolio_evidence_matrix.md`: claim-to-evidence map for reviewers and interviewers.
 - `docs/case_study_secure_enterprise_knowledge_copilot.md`: Project 1 case study.

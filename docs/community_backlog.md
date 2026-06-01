@@ -20,7 +20,7 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 
 ## Advanced Issues
 
-1. Add PostgreSQL and pgvector storage adapters.
+1. Implement PostgreSQL and pgvector storage adapters from the design note.
 2. Add connector stubs for Google Drive, Slack, Jira, CRM, email, and calendar.
 3. Add model-backed eval grading while keeping deterministic safety assertions.
 4. Add a multi-tenant permission model with row-level policy examples.
