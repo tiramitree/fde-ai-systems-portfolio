@@ -8,6 +8,8 @@ import urllib.request
 
 OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses"
 INTENTS = ["approve_action", "request_escalation", "request_notice_send", "investigate_listing", "general"]
+REASONING_EFFORTS = {"none", "low", "medium", "high", "xhigh"}
+TEXT_VERBOSITY = {"low", "medium", "high"}
 
 
 def should_use_openai_router() -> bool:
@@ -26,6 +28,26 @@ def _extract_output_text(response: dict) -> str:
     return "\n".join(parts).strip()
 
 
+def _reasoning_config() -> dict:
+    effort = os.getenv("OPENAI_REASONING_EFFORT", "low").lower()
+    return {"effort": effort} if effort in REASONING_EFFORTS else {"effort": "low"}
+
+
+def _text_config(schema: dict) -> dict:
+    verbosity = os.getenv("OPENAI_TEXT_VERBOSITY", "low").lower()
+    text = {
+        "format": {
+            "type": "json_schema",
+            "name": "ops_agent_intent",
+            "strict": True,
+            "schema": schema,
+        }
+    }
+    if verbosity in TEXT_VERBOSITY:
+        text["verbosity"] = verbosity
+    return text
+
+
 def classify_intent_with_openai(message: str) -> str | None:
     """Optional OpenAI router. Deterministic governance checks remain outside the model."""
     if not should_use_openai_router():
@@ -38,7 +60,8 @@ def classify_intent_with_openai(message: str) -> str | None:
         "required": ["intent"],
     }
     payload = {
-        "model": os.getenv("OPENAI_MODEL", "gpt-5.5"),
+        "model": os.getenv("OPENAI_MODEL", "gpt-5.2"),
+        "reasoning": _reasoning_config(),
         "input": [
             {
                 "role": "system",
@@ -49,14 +72,7 @@ def classify_intent_with_openai(message: str) -> str | None:
             },
             {"role": "user", "content": message},
         ],
-        "text": {
-            "format": {
-                "type": "json_schema",
-                "name": "ops_agent_intent",
-                "strict": True,
-                "schema": schema,
-            }
-        },
+        "text": _text_config(schema),
     }
     request = urllib.request.Request(
         OPENAI_RESPONSES_URL,
@@ -75,4 +91,3 @@ def classify_intent_with_openai(message: str) -> str | None:
         return intent if intent in INTENTS else None
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError, ValueError):
         return None
-

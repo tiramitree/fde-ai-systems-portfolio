@@ -43,7 +43,7 @@ To test OpenAI routing/generation:
 
 ```powershell
 $env:OPENAI_API_KEY="..."
-$env:OPENAI_MODEL="gpt-5.5"
+$env:OPENAI_MODEL="gpt-5.2"
 $env:COPILOT_MODEL_PROVIDER="openai"
 $env:OPS_AGENT_MODEL_ROUTER="openai"
 ```

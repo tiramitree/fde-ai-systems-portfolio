@@ -17,7 +17,7 @@ I build enterprise AI applications that connect models to real business workflow
 
 ## Project 1 Resume Bullet
 
-Built a permission-aware enterprise knowledge copilot with role-based retrieval, citation enforcement, abstention, prompt-injection checks, trace logging, audit events, and eval-gated regression tests using Python, static web UI, and a production upgrade path to GPT-5.5, FastAPI, PostgreSQL/pgvector, and OpenTelemetry.
+Built a permission-aware enterprise knowledge copilot with role-based retrieval, citation enforcement, abstention, prompt-injection checks, trace logging, audit events, and eval-gated regression tests using Python, static web UI, and a production upgrade path to GPT-5.2, FastAPI, PostgreSQL/pgvector, and OpenTelemetry.
 
 ## Project 2 Resume Bullet
 
@@ -47,4 +47,4 @@ The first project proves I can build secure enterprise RAG. The second project p
 
 ## Production Upgrade Answer
 
-The current local version is dependency-free for reliable demonstration. In production I would replace local stores with PostgreSQL and pgvector, use FastAPI and Next.js, integrate GPT-5.5 through Responses API or Agents SDK, add OpenTelemetry traces, run evals in CI, and connect to enterprise systems such as Drive, Slack, Jira, CRM, email, and calendar through permissioned connectors.
+The current local version is dependency-free for reliable demonstration. In production I would replace local stores with PostgreSQL and pgvector, use FastAPI and Next.js, integrate GPT-5.2 through Responses API or Agents SDK, add OpenTelemetry traces, run evals in CI, and connect to enterprise systems such as Drive, Slack, Jira, CRM, email, and calendar through permissioned connectors.

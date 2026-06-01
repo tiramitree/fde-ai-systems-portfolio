@@ -10,7 +10,7 @@ Forward-deployed AI work often means connecting a model to real business systems
 
 ## Core Tradeoff
 
-The current MVP uses deterministic routing so governance behavior is reproducible. In production, I would move reasoning to GPT-5.5 through Responses API or Agents SDK, but keep the approval and permission checks outside the model as deterministic application logic.
+The current MVP uses deterministic routing so governance behavior is reproducible. In production, I would move reasoning to GPT-5.2 through Responses API or Agents SDK, but keep the approval and permission checks outside the model as deterministic application logic.
 
 ## Failure Modes
 
@@ -19,4 +19,3 @@ The current MVP uses deterministic routing so governance behavior is reproducibl
 - Approval idempotency bugs could create duplicate notices.
 - A model-only approval policy would be unsafe; approval enforcement must live in the application layer.
 - Eval cases must include adversarial bypass attempts, not just happy paths.
-

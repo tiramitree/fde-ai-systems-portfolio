@@ -12,7 +12,7 @@ This is framed as a deployment problem, not a chatbot. A real customer would ask
 
 SQLite and a local answerer make the MVP runnable without dependencies. The production path is PostgreSQL/pgvector, FastAPI, queue-based ingestion, and OpenAI Responses API structured outputs.
 
-The MVP uses deterministic extraction instead of generation so the security and eval behavior is reproducible locally. In production, GPT-5.5 would generate the final answer from sanitized accessible evidence with a strict structured schema.
+The MVP uses deterministic extraction instead of generation so the security and eval behavior is reproducible locally. In production, GPT-5.2 would generate the final answer from sanitized accessible evidence with a strict structured schema.
 
 The permission filter is applied before answer generation. This reduces leakage risk compared with retrieving everything and asking the model to ignore forbidden chunks.
 
@@ -32,4 +32,3 @@ The permission filter is applied before answer generation. This reduces leakage 
 - Add OpenTelemetry trace export.
 - Add Docker Compose with PostgreSQL and worker service.
 - Add real auth provider integration.
-

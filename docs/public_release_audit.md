@@ -18,7 +18,7 @@ Do not say:
 - This is a complete replacement for enterprise auth, workflow, or compliance systems.
 - It already uses a real vector database.
 - It already has verified Docker runtime if Docker has not been tested.
-- It has live GPT-5.5 behavior unless an API-key run has been verified.
+- It has live GPT-5.2 behavior unless an API-key run has been verified.
 
 ## Known Weak Points And How To Frame Them
 

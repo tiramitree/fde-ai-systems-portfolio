@@ -39,6 +39,8 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
   - `enterprise-ai`
   - `openai`
   - `agentic-workflows`
+- [ ] Apply repository settings from `docs/github_repository_settings.md`.
+- [ ] Convert `docs/community_backlog.md` into initial public issues.
 - [ ] Publish a short technical post.
 - [ ] Pin the repo on GitHub profile.
 
