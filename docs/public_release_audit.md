@@ -75,7 +75,7 @@ Answer:
 ## Public Repo Must Not Include
 
 - API keys
-- real personal/company data
+- real personal/company data, including legal names, phone numbers, personal email addresses, local usernames, chat export paths, or private resume files
 - private resume files
 - temp SQLite files
 - runtime JSON state
