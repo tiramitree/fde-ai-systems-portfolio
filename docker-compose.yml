@@ -1,0 +1,33 @@
+services:
+  secure-enterprise-knowledge-copilot:
+    build:
+      context: ./secure-enterprise-knowledge-copilot
+    environment:
+      COPILOT_MODEL_PROVIDER: ${COPILOT_MODEL_PROVIDER:-local}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.5}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "8765:8765"
+    command: ["python", "-B", "app.py", "--reset", "--host", "0.0.0.0", "--port", "8765"]
+    healthcheck:
+      test: ["CMD", "python", "-B", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/api/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  regulated-customer-operations-agent:
+    build:
+      context: ./regulated-customer-operations-agent
+    environment:
+      OPS_AGENT_MODEL_ROUTER: ${OPS_AGENT_MODEL_ROUTER:-local}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.5}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "8770:8770"
+    command: ["python", "-B", "app.py", "--reset", "--host", "0.0.0.0", "--port", "8770"]
+    healthcheck:
+      test: ["CMD", "python", "-B", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8770/api/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+

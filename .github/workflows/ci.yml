@@ -1,0 +1,31 @@
+name: quality-gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run portfolio quality gate
+        run: python -B scripts/ci_quality_gate.py
+
+      - name: Upload demo report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-report
+          path: docs/demo_report.md
+
