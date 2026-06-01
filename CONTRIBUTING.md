@@ -51,6 +51,7 @@ python -B scripts/dev.py report
 python -B scripts/dev.py safety
 python -B scripts/dev.py threat-model
 python -B scripts/dev.py ui-contracts
+python -B scripts/dev.py visual-assets
 python -B scripts/dev.py workflow-security
 python -B scripts/dev.py verify
 ```
@@ -74,10 +75,11 @@ python -B scripts/dev.py verify
 15. Run the threat model check.
 16. Run the PR review policy check.
 17. Run the runtime UI contract check.
-18. Run the API documentation check.
-19. Run the replay artifact export before release updates.
-20. Run the fresh clone check before broad external sharing or release updates.
-21. Update docs and demo report if behavior changed.
+18. Run the visual asset manifest check.
+19. Run the API documentation check.
+20. Run the replay artifact export before release updates.
+21. Run the fresh clone check before broad external sharing or release updates.
+22. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -97,6 +99,7 @@ python -B scripts/dev.py verify
 - [ ] Threat model check passes.
 - [ ] PR review policy check passes.
 - [ ] Runtime UI contract check passes.
+- [ ] Visual asset manifest check passes.
 - [ ] API documentation check passes.
 - [ ] Replay artifact export passes before release updates.
 - [ ] Fresh clone check passes before broad external sharing or release updates.

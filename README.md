@@ -89,6 +89,7 @@ python -B scripts/dev.py report
 python -B scripts/dev.py safety
 python -B scripts/dev.py threat-model
 python -B scripts/dev.py ui-contracts
+python -B scripts/dev.py visual-assets
 python -B scripts/dev.py workflow-security
 python -B scripts/dev.py quality
 python -B scripts/post_publish_check.py
@@ -115,6 +116,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
 | Architecture boundaries | `scripts/check_architecture_boundaries.py`, `docs/architecture_boundaries.md` | app shells, API classes, backend packages, and frontend modules preserve separation of concerns |
 | Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, trace-copy controls, and quick actions stay intact |
+| Visual asset hygiene | `scripts/check_visual_asset_manifest.py`, `docs/visual_assets_manifest.json` | README screenshots stay tied to recorded frontend source hashes |
 | Fresh clone experience | `scripts/check_fresh_clone_experience.py`, `docs/fresh_clone_experience.md` | clone the public repo into a temp directory, run release-facing checks, start both apps on isolated ports, and run smoke flows |
 | Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, both `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
 | Error hygiene | `scripts/check_error_hygiene.py`, both `app.py` files | unexpected exceptions return generic JSON errors without leaking paths, stack details, or secret-like strings |
@@ -273,6 +275,7 @@ fde_portfolio/
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)
 - [Error Hygiene](docs/error_hygiene.md)
 - [Container Release Hygiene](docs/container_release_hygiene.md)
+- [Visual Asset Hygiene](docs/visual_asset_hygiene.md)
 - [Architecture Boundaries](docs/architecture_boundaries.md)
 - [Workflow Security](docs/workflow_security.md)
 - [Final Completion Audit](docs/final_completion_audit.md)

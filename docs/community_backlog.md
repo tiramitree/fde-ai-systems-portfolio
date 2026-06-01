@@ -6,7 +6,7 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 
 1. Add a small dark-mode toggle to both demo UIs.
 2. Add per-trace deep links for sharing a specific audit trail in demos.
-3. Add a screenshot refresh script for the README assets.
+3. Add a one-command screenshot refresh script that updates `docs/visual_assets_manifest.json`.
 4. Add a tiny seed-data editor for local demos.
 5. Add a narrated demo video using the walkthrough GIF as the storyboard.
 
