@@ -39,6 +39,7 @@ python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
+python -B scripts/dev.py ui-contracts
 python -B scripts/dev.py verify
 ```
 
@@ -51,7 +52,8 @@ python -B scripts/dev.py verify
 5. Run the public safety scan.
 6. Run the dependency-surface check.
 7. Run the frontend integrity check.
-8. Update docs and demo report if behavior changed.
+8. Run the runtime UI contract check.
+9. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -61,6 +63,7 @@ python -B scripts/dev.py verify
 - [ ] Public safety scan passes.
 - [ ] Dependency-surface check passes.
 - [ ] Frontend integrity check passes.
+- [ ] Runtime UI contract check passes.
 - [ ] Security or governance behavior is not weakened.
 - [ ] README or docs are updated if the user-facing workflow changed.
 

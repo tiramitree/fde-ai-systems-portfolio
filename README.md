@@ -77,6 +77,7 @@ python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
+python -B scripts/dev.py ui-contracts
 python -B scripts/dev.py quality
 python -B scripts/post_publish_check.py
 ```
@@ -101,6 +102,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 | Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
 | Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, and quick actions stay intact |
+| Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, both `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
 | API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
