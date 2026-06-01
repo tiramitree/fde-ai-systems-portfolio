@@ -61,6 +61,7 @@ REQUIRED_FILES = [
     "docs/assets/regulated-ops-agent-screenshot.png",
     "scripts/dev.py",
     "scripts/public_safety_scan.py",
+    "scripts/check_public_assets.py",
     "scripts/replay_demo.py",
     "scripts/export_eval_csv.py",
     "scripts/export_traces_otel.py",
@@ -103,6 +104,7 @@ def main() -> int:
     failures.extend(check_runtime_artifacts())
 
     command_checks = [
+        ("assets", [sys.executable, "-B", "scripts/check_public_assets.py"]),
         ("health", [sys.executable, "-B", "scripts/check_health.py"]),
         ("evals", [sys.executable, "-B", "scripts/run_all_evals.py"]),
         ("smoke", [sys.executable, "-B", "scripts/smoke_test_demo_flows.py"]),

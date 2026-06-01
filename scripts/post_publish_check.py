@@ -84,6 +84,9 @@ def main() -> int:
         "docs/portfolio_evidence_matrix.md",
         "docs/github_repository_settings.md",
         "docs/launch_copy_pack.md",
+        "docs/postgres_pgvector_adapter_design.md",
+        "docs/otel_trace_export.md",
+        "docs/assets/demo-walkthrough.gif",
         ".github/workflows/ci.yml",
     ]
     for rel_path in expected_files:
@@ -101,4 +104,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
