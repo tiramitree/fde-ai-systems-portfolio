@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -35,7 +36,7 @@ def repo_from_remote(remote: str) -> str | None:
     return None
 
 
-def url_exists(url: str) -> tuple[bool, str]:
+def url_exists_once(url: str) -> tuple[bool, str]:
     request = urllib.request.Request(url, headers={"User-Agent": "fde-portfolio-post-publish-check"})
     try:
         with urllib.request.urlopen(request, timeout=15) as response:
@@ -44,6 +45,18 @@ def url_exists(url: str) -> tuple[bool, str]:
         return False, str(exc.code)
     except urllib.error.URLError as exc:
         return False, str(exc.reason)
+
+
+def url_exists(url: str, attempts: int = 3) -> tuple[bool, str]:
+    last_detail = ""
+    for attempt in range(1, attempts + 1):
+        ok, detail = url_exists_once(url)
+        if ok:
+            return ok, detail if attempt == 1 else f"{detail} after retry {attempt}"
+        last_detail = detail
+        if attempt < attempts:
+            time.sleep(1)
+    return False, last_detail
 
 
 def main() -> int:
