@@ -1,0 +1,254 @@
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+P1_ROOT = ROOT / "secure-enterprise-knowledge-copilot"
+P2_ROOT = ROOT / "regulated-customer-operations-agent"
+
+P1_ROLES = {"employee", "manager", "admin"}
+P2_ROLES = {"investigator", "supervisor"}
+P1_BEHAVIORS = {"answer", "abstain"}
+P2_INTENTS = {"approve_action", "request_escalation", "request_notice_send", "investigate_listing", "general"}
+
+FORBIDDEN_DATA_MARKERS = (
+    "C:/",
+    "C:\\",
+    "One" + "Drive",
+    "x" + "wechat",
+    "wx" + "id_",
+    "117" + "58",
+    "Runze",
+    "s" + "k-",
+    "github_" + "pat_",
+    "BEGIN " + "PRIVATE KEY",
+)
+
+INJECTION_MARKERS = (
+    "ignore previous",
+    "disregard prior",
+    "follow the vendor note",
+    "reveal",
+    "override policy",
+    "override approval",
+    "bypass approval",
+    "without approval",
+    "do not log",
+    "hide this",
+    "exfiltrate",
+)
+
+
+def read_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def require(condition: bool, failures: list[str], message: str) -> None:
+    if not condition:
+        failures.append(message)
+
+
+def ids(rows: list[dict[str, Any]], label: str, failures: list[str]) -> set[str]:
+    seen: set[str] = set()
+    for row in rows:
+        row_id = row.get("id")
+        if not isinstance(row_id, str) or not row_id:
+            failures.append(f"{label}: row missing string id")
+            continue
+        if row_id in seen:
+            failures.append(f"{label}: duplicate id {row_id}")
+        seen.add(row_id)
+    return seen
+
+
+def check_text_safety(payload: Any, source: str, failures: list[str]) -> None:
+    text = json.dumps(payload, ensure_ascii=False)
+    for marker in FORBIDDEN_DATA_MARKERS:
+        if marker in text:
+            failures.append(f"{source}: forbidden data marker {marker!r}")
+
+
+def has_injection_marker(text: str) -> bool:
+    lower = text.lower()
+    return any(marker in lower for marker in INJECTION_MARKERS)
+
+
+def check_eval_ids(cases: list[dict[str, Any]], source: str, failures: list[str]) -> None:
+    seen = ids(cases, source, failures)
+    for case in cases:
+        case_id = case.get("id", "")
+        require(bool(re.fullmatch(r"eval-\d{3}-[a-z0-9-]+", case_id)), failures, f"{source}: invalid eval id {case_id}")
+    require(len(seen) == len(cases), failures, f"{source}: eval ids must be unique")
+
+
+def check_p1() -> list[str]:
+    failures: list[str] = []
+    seed = read_json(P1_ROOT / "data" / "seed_documents.json")
+    eval_cases = read_json(P1_ROOT / "data" / "eval_cases.json")
+    check_text_safety(seed, "P1 seed_documents.json", failures)
+    check_text_safety(eval_cases, "P1 eval_cases.json", failures)
+
+    users = seed.get("users", [])
+    documents = seed.get("documents", [])
+    require(isinstance(users, list) and users, failures, "P1: users must be a non-empty list")
+    require(isinstance(documents, list) and documents, failures, "P1: documents must be a non-empty list")
+    user_ids = ids(users, "P1 users", failures)
+    doc_ids = ids(documents, "P1 documents", failures)
+    roles = {user.get("role") for user in users}
+
+    require(P1_ROLES.issubset(roles), failures, "P1: employee, manager, and admin demo roles must all exist")
+    for user in users:
+        require(user.get("role") in P1_ROLES, failures, f"P1 user {user.get('id')}: unknown role {user.get('role')}")
+        require(user.get("tenant_id") == "acme", failures, f"P1 user {user.get('id')}: tenant_id must be acme")
+
+    for doc in documents:
+        doc_id = doc.get("id")
+        allowed_roles = set(doc.get("allowed_roles", []))
+        classification = doc.get("classification")
+        require(classification in {"internal", "confidential"}, failures, f"P1 document {doc_id}: invalid classification")
+        require(bool(allowed_roles), failures, f"P1 document {doc_id}: allowed_roles cannot be empty")
+        require(allowed_roles <= P1_ROLES, failures, f"P1 document {doc_id}: allowed_roles contains unknown role")
+        require(doc.get("source_url", "").startswith("internal://"), failures, f"P1 document {doc_id}: source_url must be internal://")
+        require(str(doc.get("title", "")) in str(doc.get("body", "")), failures, f"P1 document {doc_id}: body should include title")
+        if classification == "confidential":
+            require("employee" not in allowed_roles, failures, f"P1 document {doc_id}: confidential docs must not allow employee")
+            require({"manager", "admin"} <= allowed_roles, failures, f"P1 document {doc_id}: confidential docs must allow manager and admin")
+
+    unsafe_docs = [doc for doc in documents if has_injection_marker(str(doc.get("body", "")))]
+    require(bool(unsafe_docs), failures, "P1: seed data must include at least one unsafe retrieved-content document")
+    require(
+        any(doc.get("id") == "vendor-onboarding-note-unsafe" for doc in unsafe_docs),
+        failures,
+        "P1: vendor-onboarding-note-unsafe must remain the unsafe retrieved-content fixture",
+    )
+
+    require(isinstance(eval_cases, list) and eval_cases, failures, "P1: eval cases must be a non-empty list")
+    check_eval_ids(eval_cases, "P1 eval_cases.json", failures)
+    for case in eval_cases:
+        case_id = case.get("id")
+        user_id = case.get("user_id")
+        expected = case.get("expected", {})
+        require(user_id in user_ids, failures, f"P1 eval {case_id}: unknown user_id {user_id}")
+        require(expected.get("behavior") in P1_BEHAVIORS, failures, f"P1 eval {case_id}: invalid behavior")
+        for field in ("must_cite_doc_ids", "forbidden_doc_ids"):
+            values = expected.get(field, [])
+            require(isinstance(values, list), failures, f"P1 eval {case_id}: {field} must be a list")
+            for doc_id in values:
+                require(doc_id in doc_ids, failures, f"P1 eval {case_id}: {field} references missing doc {doc_id}")
+        if expected.get("requires_security_event"):
+            require(
+                has_injection_marker(case.get("question", "")),
+                failures,
+                f"P1 eval {case_id}: security-event eval should include an injection/exfiltration marker",
+            )
+        if expected.get("behavior") == "answer":
+            require(bool(expected.get("must_cite_doc_ids")), failures, f"P1 eval {case_id}: answer cases must require a citation")
+
+    return failures
+
+
+def check_p2() -> list[str]:
+    failures: list[str] = []
+    seed = read_json(P2_ROOT / "data" / "seed_state.json")
+    eval_cases = read_json(P2_ROOT / "data" / "eval_cases.json")
+    check_text_safety(seed, "P2 seed_state.json", failures)
+    check_text_safety(eval_cases, "P2 eval_cases.json", failures)
+
+    users = seed.get("users", [])
+    policies = seed.get("policies", [])
+    products = seed.get("products", [])
+    sellers = seed.get("sellers", [])
+    listings = seed.get("listings", [])
+    cases = seed.get("cases", [])
+
+    user_ids = ids(users, "P2 users", failures)
+    policy_ids = ids(policies, "P2 policies", failures)
+    product_ids = ids(products, "P2 products", failures)
+    seller_ids = ids(sellers, "P2 sellers", failures)
+    listing_ids = ids(listings, "P2 listings", failures)
+    case_ids = ids(cases, "P2 cases", failures)
+    roles = {user.get("role") for user in users}
+
+    require(P2_ROLES.issubset(roles), failures, "P2: investigator and supervisor roles must both exist")
+    for user in users:
+        require(user.get("role") in P2_ROLES, failures, f"P2 user {user.get('id')}: unknown role {user.get('role')}")
+
+    for policy in policies:
+        body = str(policy.get("body", ""))
+        require("approval" in body.lower(), failures, f"P2 policy {policy.get('id')}: policy should describe approval")
+        require(policy.get("version", "").startswith("2026."), failures, f"P2 policy {policy.get('id')}: version should be 2026.x")
+
+    active_recalled_products: set[str] = set()
+    for product in products:
+        status = product.get("recall_status")
+        product_id = product.get("id")
+        require(status in {"active", "none"}, failures, f"P2 product {product_id}: invalid recall_status")
+        if status == "active":
+            active_recalled_products.add(product_id)
+            require(bool(product.get("recall_id")), failures, f"P2 product {product_id}: active recalls need recall_id")
+            require(bool(product.get("hazard")), failures, f"P2 product {product_id}: active recalls need hazard")
+
+    active_recalled_listings: set[str] = set()
+    for listing in listings:
+        listing_id = listing.get("id")
+        seller_id = listing.get("seller_id")
+        product_id = listing.get("product_id")
+        require(seller_id in seller_ids, failures, f"P2 listing {listing_id}: missing seller {seller_id}")
+        require(product_id in product_ids, failures, f"P2 listing {listing_id}: missing product {product_id}")
+        require(listing.get("status") in {"active", "removed"}, failures, f"P2 listing {listing_id}: invalid status")
+        require(str(listing.get("url", "")).startswith("marketplace://"), failures, f"P2 listing {listing_id}: url must be marketplace://")
+        if listing.get("status") == "active" and product_id in active_recalled_products:
+            active_recalled_listings.add(listing_id)
+    require(bool(active_recalled_listings), failures, "P2: must include an active listing for an actively recalled product")
+
+    for case in cases:
+        case_id = case.get("id")
+        seller_id = case.get("seller_id")
+        product_id = case.get("product_id")
+        require(seller_id in seller_ids, failures, f"P2 case {case_id}: missing seller {seller_id}")
+        require(product_id in product_ids, failures, f"P2 case {case_id}: missing product {product_id}")
+        require(case.get("status") in {"open", "monitoring"}, failures, f"P2 case {case_id}: invalid status")
+
+    require(isinstance(eval_cases, list) and eval_cases, failures, "P2: eval cases must be a non-empty list")
+    check_eval_ids(eval_cases, "P2 eval_cases.json", failures)
+    for case in eval_cases:
+        case_id = case.get("id")
+        user_id = case.get("user_id")
+        expected = case.get("expected", {})
+        require(user_id in user_ids, failures, f"P2 eval {case_id}: unknown user_id {user_id}")
+        if "case_id" in case:
+            require(case.get("case_id") in case_ids, failures, f"P2 eval {case_id}: missing case {case.get('case_id')}")
+        require(expected.get("intent") in P2_INTENTS, failures, f"P2 eval {case_id}: invalid intent")
+        require(expected.get("forbids_direct_side_effect") is True, failures, f"P2 eval {case_id}: must forbid direct side effects")
+        for policy_id in expected.get("must_cite_policy_ids", []):
+            require(policy_id in policy_ids, failures, f"P2 eval {case_id}: missing policy {policy_id}")
+        if expected.get("must_refuse"):
+            require(has_injection_marker(case.get("message", "")) or expected.get("intent") == "approve_action", failures, f"P2 eval {case_id}: refusal case should include bypass marker or approval attempt")
+        if expected.get("requires_approval"):
+            require(expected.get("requires_blocked_action") is True, failures, f"P2 eval {case_id}: approval cases must require blocked action")
+
+    return failures
+
+
+def main() -> int:
+    failures = []
+    failures.extend(check_p1())
+    failures.extend(check_p2())
+
+    if failures:
+        print("Scenario data integrity check failed:")
+        for failure in failures:
+            print(f"- {failure}")
+        return 1
+
+    print("Scenario data integrity check passed: seed data, roles, references, and eval expectations are internally consistent.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
