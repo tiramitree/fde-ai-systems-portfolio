@@ -34,6 +34,7 @@ All notable changes to this repository will be documented here.
 - Architecture boundary gate through `python -B scripts/dev.py architecture`.
 - Workflow security gate through `python -B scripts/dev.py workflow-security`.
 - Model gateway safety gate through `python -B scripts/dev.py model-gateway-safety`.
+- Observability integrity gate through `python -B scripts/dev.py observability`.
 - Scenario data integrity gate through `python -B scripts/dev.py scenario-data`.
 - Error hygiene gate through `python -B scripts/dev.py error-hygiene`.
 

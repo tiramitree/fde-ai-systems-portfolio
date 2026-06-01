@@ -22,6 +22,7 @@ The post-publish check must prove:
 - raw README is reachable.
 - GitHub Actions workflow is reachable.
 - key documentation files are published.
+- the observability integrity script and documentation are published.
 
 ## Manual GitHub Checks
 

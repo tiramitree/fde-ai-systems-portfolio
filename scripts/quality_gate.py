@@ -2,12 +2,28 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import time
 from pathlib import Path
+from urllib.request import urlopen
 
 from public_safety_scan import check_forbidden_content, check_runtime_artifacts
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SERVICES = [
+    {
+        "name": "secure-enterprise-knowledge-copilot",
+        "path": ROOT / "secure-enterprise-knowledge-copilot",
+        "port": 8765,
+        "health": "http://127.0.0.1:8765/api/health",
+    },
+    {
+        "name": "regulated-customer-operations-agent",
+        "path": ROOT / "regulated-customer-operations-agent",
+        "port": 8770,
+        "health": "http://127.0.0.1:8770/api/health",
+    },
+]
 
 REQUIRED_FILES = [
     "README.md",
@@ -36,6 +52,7 @@ REQUIRED_FILES = [
     "docs/otel_trace_export.md",
     "docs/model_runtime_configuration.md",
     "docs/model_gateway_safety.md",
+    "docs/observability_integrity.md",
     "docs/scenario_data_integrity.md",
     "docs/error_hygiene.md",
     "docs/supply_chain_security.md",
@@ -78,6 +95,7 @@ REQUIRED_FILES = [
     "scripts/check_architecture_boundaries.py",
     "scripts/check_workflow_security.py",
     "scripts/check_model_gateway_safety.py",
+    "scripts/check_observability_integrity.py",
     "scripts/check_scenario_data_integrity.py",
     "scripts/check_error_hygiene.py",
     "scripts/check_claim_consistency.py",
@@ -119,6 +137,44 @@ def run(args: list[str]) -> tuple[bool, str]:
     return result.returncode == 0, output
 
 
+def healthy(url: str) -> bool:
+    try:
+        with urlopen(url, timeout=2) as response:
+            return response.status == 200
+    except Exception:
+        return False
+
+
+def wait_for_health(url: str, seconds: int = 15) -> bool:
+    for _ in range(seconds):
+        if healthy(url):
+            return True
+        time.sleep(1)
+    return False
+
+
+def start_service(service: dict) -> subprocess.Popen | None:
+    if healthy(service["health"]):
+        print(f"{service['name']} already healthy on port {service['port']}")
+        return None
+
+    print(f"Starting {service['name']} on port {service['port']}")
+    return subprocess.Popen(
+        [
+            sys.executable,
+            "-B",
+            "app.py",
+            "--reset",
+            "--port",
+            str(service["port"]),
+        ],
+        cwd=service["path"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+    )
+
+
 def check_required_files() -> list[str]:
     failures = []
     for rel_path in REQUIRED_FILES:
@@ -132,11 +188,13 @@ def main() -> int:
     failures.extend(check_required_files())
     failures.extend(check_forbidden_content())
     failures.extend(check_runtime_artifacts())
+    started: list[subprocess.Popen] = []
 
     command_checks = [
         ("architecture", [sys.executable, "-B", "scripts/check_architecture_boundaries.py"]),
         ("workflow-security", [sys.executable, "-B", "scripts/check_workflow_security.py"]),
         ("model-gateway-safety", [sys.executable, "-B", "scripts/check_model_gateway_safety.py"]),
+        ("observability", [sys.executable, "-B", "scripts/check_observability_integrity.py"]),
         ("scenario-data", [sys.executable, "-B", "scripts/check_scenario_data_integrity.py"]),
         ("error-hygiene", [sys.executable, "-B", "scripts/check_error_hygiene.py"]),
         ("assets", [sys.executable, "-B", "scripts/check_public_assets.py"]),
@@ -151,12 +209,30 @@ def main() -> int:
         ("report", [sys.executable, "-B", "scripts/generate_demo_report.py"]),
         ("claims", [sys.executable, "-B", "scripts/check_claim_consistency.py"]),
     ]
-    for name, command in command_checks:
-        ok, output = run(command)
-        print(f"\n=== {name} ===")
-        print(output)
-        if not ok:
-            failures.append(f"command failed: {name}")
+    try:
+        for service in SERVICES:
+            process = start_service(service)
+            if process is not None:
+                started.append(process)
+
+        for service in SERVICES:
+            if not wait_for_health(service["health"]):
+                failures.append(f"service did not become healthy: {service['name']}")
+
+        for name, command in command_checks:
+            ok, output = run(command)
+            print(f"\n=== {name} ===")
+            print(output)
+            if not ok:
+                failures.append(f"command failed: {name}")
+    finally:
+        for process in started:
+            process.terminate()
+        for process in started:
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
 
     if failures:
         print("\nQuality gate failed:")

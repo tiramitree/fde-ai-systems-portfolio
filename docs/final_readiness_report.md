@@ -31,6 +31,7 @@ python -B scripts/dev.py verify
 python -B scripts/dev.py replay
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py governance
+python -B scripts/dev.py observability
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py github-launch-setup
@@ -72,8 +73,9 @@ python -B scripts/configure_github_launch.py --apply
 2. Run `python -B scripts/dev.py replay` to show the end-to-end demo path without relying on browser state.
 3. Open Project 1 and show permission-aware retrieval, citations, abstention, and prompt-injection handling.
 4. Open Project 2 and show investigation, approval queue, supervisor approval, trace, and audit log evidence.
-5. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
-6. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
+5. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
+6. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
+7. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
 
 ## Quality Bar
 

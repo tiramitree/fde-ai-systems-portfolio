@@ -35,6 +35,7 @@ python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
 python -B scripts/dev.py model-gateway-safety
+python -B scripts/dev.py observability
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
@@ -59,11 +60,12 @@ python -B scripts/dev.py verify
 7. Run the architecture boundary check.
 8. Run the workflow security check.
 9. Run the model gateway safety check.
-10. Run the scenario data integrity check.
-11. Run the error hygiene check.
-12. Run the frontend integrity check.
-13. Run the runtime UI contract check.
-14. Update docs and demo report if behavior changed.
+10. Run the observability integrity check.
+11. Run the scenario data integrity check.
+12. Run the error hygiene check.
+13. Run the frontend integrity check.
+14. Run the runtime UI contract check.
+15. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -75,6 +77,7 @@ python -B scripts/dev.py verify
 - [ ] Architecture boundary check passes.
 - [ ] Workflow security check passes.
 - [ ] Model gateway safety check passes.
+- [ ] Observability integrity check passes.
 - [ ] Scenario data integrity check passes.
 - [ ] Error hygiene check passes.
 - [ ] Frontend integrity check passes.

@@ -39,6 +39,12 @@ Export local traces in an OpenTelemetry-compatible JSON shape:
 python -B scripts/dev.py otel-traces
 ```
 
+Verify response trace IDs, linked audit events, approval records, and blocked-action evidence:
+
+```bash
+python -B scripts/dev.py observability
+```
+
 ## 2. Optional Docker Run
 
 Docker was not available in the current local environment, so this config is prepared but not runtime-verified here.
