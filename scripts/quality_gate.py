@@ -35,6 +35,7 @@ REQUIRED_FILES = [
     "docs/postgres_pgvector_adapter_design.md",
     "docs/otel_trace_export.md",
     "docs/model_runtime_configuration.md",
+    "docs/model_gateway_safety.md",
     "docs/supply_chain_security.md",
     "docs/architecture_boundaries.md",
     "docs/workflow_security.md",
@@ -74,6 +75,7 @@ REQUIRED_FILES = [
     "scripts/dev.py",
     "scripts/check_architecture_boundaries.py",
     "scripts/check_workflow_security.py",
+    "scripts/check_model_gateway_safety.py",
     "scripts/check_claim_consistency.py",
     "scripts/check_frontend_integrity.py",
     "scripts/check_runtime_ui_contracts.py",
@@ -130,6 +132,7 @@ def main() -> int:
     command_checks = [
         ("architecture", [sys.executable, "-B", "scripts/check_architecture_boundaries.py"]),
         ("workflow-security", [sys.executable, "-B", "scripts/check_workflow_security.py"]),
+        ("model-gateway-safety", [sys.executable, "-B", "scripts/check_model_gateway_safety.py"]),
         ("assets", [sys.executable, "-B", "scripts/check_public_assets.py"]),
         ("frontend", [sys.executable, "-B", "scripts/check_frontend_integrity.py"]),
         ("ui-contracts", [sys.executable, "-B", "scripts/check_runtime_ui_contracts.py"]),

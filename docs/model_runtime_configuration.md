@@ -9,6 +9,8 @@ This portfolio runs locally by default. The OpenAI path is optional and intentio
 
 The model is not the security boundary.
 
+See [Model Gateway Safety](model_gateway_safety.md) for the gate that verifies OpenAI mode stays opt-in, API key references remain constrained, structured outputs are required, and gateway failures fall back to local behavior.
+
 ## Default Optional Model
 
 The default optional model is:
