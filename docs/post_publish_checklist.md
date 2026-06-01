@@ -27,6 +27,7 @@ The post-publish check must prove:
 - the PR review policy script and documentation are published.
 - the fresh clone script and documentation are published.
 - the API documentation script and documentation are published.
+- the demo replay artifact script and documentation are published.
 
 ## Manual GitHub Checks
 
@@ -42,6 +43,7 @@ After the automated check passes:
 8. Create a GitHub release page for `v0.1.0`.
 9. Pin the repository on the GitHub profile.
 10. Run `python -B scripts/dev.py fresh-clone` after the push is visible.
+11. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
 
 ## Optional Backlog Seeding
 

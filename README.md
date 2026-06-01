@@ -81,6 +81,7 @@ python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
+python -B scripts/dev.py replay-artifact
 python -B scripts/dev.py scenario-data
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
@@ -128,6 +129,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | PR review policy | `scripts/check_pr_review_policy.py`, `docs/pr_review_security.md` | triage heuristics, runbook, maintainer policy, and PR template keep malicious-contribution checks intact |
 | Public PR triage | `scripts/review_open_prs.py` | inspect open PRs and flag risky diffs before running code |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
+| Replay artifact | `scripts/export_demo_replay_artifact.py`, `docs/demo_replay_artifact.md` | generate release-attachable Markdown and JSON evidence under ignored `out/` |
 | Observability export | `scripts/export_traces_otel.py` | local traces convert to OTLP/JSON-compatible `resourceSpans` |
 | Final readiness report | `scripts/generate_final_readiness_report.py` | compact launch, blocker, and interview walkthrough status |
 
@@ -251,6 +253,7 @@ fde_portfolio/
 - [Changelog](CHANGELOG.md)
 - [Final Demo Runbook](docs/final_demo_runbook.md)
 - [Demo Report](docs/demo_report.md)
+- [Demo Replay Artifact](docs/demo_replay_artifact.md)
 - [Resume And Interview Package](docs/resume_and_interview_package.md)
 - [Production Upgrade Notes](docs/production_upgrade_notes.md)
 - [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md)

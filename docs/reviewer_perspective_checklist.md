@@ -23,6 +23,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 - Trace IDs, audit events, approval records, and blocked actions can be verified with `python -B scripts/dev.py observability`.
 - Threats, deterministic controls, evidence files, and proof commands can be verified with `python -B scripts/dev.py threat-model`.
 - Public PR review rules and malicious-contribution heuristics can be verified with `python -B scripts/dev.py pr-policy`.
+- Release-attachable replay evidence can be generated with `python -B scripts/dev.py replay-artifact`.
 
 ## Interviewer Skepticism
 

@@ -47,6 +47,7 @@ python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
+python -B scripts/dev.py replay-artifact
 python -B scripts/dev.py scenario-data
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
@@ -106,7 +107,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, replay, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -134,6 +135,7 @@ Local Git state:
 - `scripts/export_eval_csv.py`: exports portfolio eval summary rows to `eval_summaries.csv`.
 - `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload.
 - `scripts/replay_demo.py`: starts clean reset demo services, runs the interview demo path, and prints trace/approval evidence.
+- `scripts/export_demo_replay_artifact.py`: writes release-attachable Markdown and JSON replay evidence under ignored `out/`.
 - `scripts/smoke_test_demo_flows.py`: exercises the critical demo paths end to end.
 - `scripts/generate_demo_report.py`: writes `docs/demo_report.md`.
 - `scripts/public_safety_scan.py`: scans public files for secret-like tokens, personal identifiers, local paths, and tracked runtime artifacts.
@@ -158,6 +160,7 @@ Start here:
 - `docs/final_demo_runbook.md`: exact live demo order.
 - `docs/final_readiness_report.md`: compact launch, blocker, and interview walkthrough status.
 - `docs/demo_report.md`: generated verification report.
+- `docs/demo_replay_artifact.md`: release-attachable replay evidence artifact instructions and interview framing.
 - `docs/completion_checklist.md`: current status and remaining blockers.
 - `docs/final_completion_audit.md`: objective-by-objective audit.
 

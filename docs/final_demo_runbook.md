@@ -46,6 +46,12 @@ Replay the end-to-end demo path with fresh reset services:
 python -B scripts/dev.py replay
 ```
 
+Generate release-attachable replay evidence under `out/`:
+
+```bash
+python -B scripts/dev.py replay-artifact
+```
+
 Export local traces in an OpenTelemetry-compatible JSON shape:
 
 ```bash
