@@ -29,6 +29,7 @@ All notable changes to this repository will be documented here.
 - GitHub readiness now checks the latest `main` push workflow run directly so Dependabot PR runs do not create false failures.
 - GitHub launch setup now attempts secret scanning and push protection as a best-effort authenticated setup step.
 - Frontend integrity gate through `python -B scripts/dev.py frontend`.
+- GitHub readiness can prove the release tag through `git ls-remote` when unauthenticated GitHub API limits are exhausted.
 
 ### Verified
 

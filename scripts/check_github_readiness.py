@@ -91,6 +91,11 @@ def is_rate_limited(error: str) -> bool:
     return "rate limit" in error.lower()
 
 
+def tag_exists_via_git(tag: str) -> bool:
+    code, output = run_git(["ls-remote", "--tags", "origin", tag])
+    return code == 0 and f"refs/tags/{tag}" in output
+
+
 def collect_checks(strict: bool) -> list[Check]:
     checks: list[Check] = []
 
@@ -198,7 +203,16 @@ def collect_checks(strict: bool) -> list[Check]:
     )
 
     status, tag_data, error = api_get(repo, f"/git/ref/tags/{EXPECTED_RELEASE_TAG}")
-    checks.append(check(status == 200, f"tag {EXPECTED_RELEASE_TAG} exists", "ok" if status == 200 else error or str(status)))
+    tag_exists = status == 200 or tag_exists_via_git(EXPECTED_RELEASE_TAG)
+    tag_detail = "ok" if status == 200 else "ok via git" if tag_exists else error or str(status)
+    checks.append(
+        check(
+            tag_exists,
+            f"tag {EXPECTED_RELEASE_TAG} exists",
+            tag_detail,
+            warn=not strict and is_rate_limited(error),
+        )
+    )
 
     status, release_data, error = api_get(repo, "/releases/latest")
     release_tag = release_data.get("tag_name") if isinstance(release_data, dict) else None
