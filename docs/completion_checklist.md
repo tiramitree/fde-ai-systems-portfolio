@@ -35,8 +35,8 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 2. Optionally verify OpenAI Responses API mode with a valid `OPENAI_API_KEY`.
 3. Record a short demo video/GIF.
 4. Do one final browser walkthrough of both projects from a clean reset.
-5. Add GitHub remote and push `main`.
-6. Confirm GitHub Actions passes on the published repository.
+5. Add repository topics and social preview on GitHub.
+6. Create release `v0.1.0`.
 7. Update this checklist with final evidence.
 
 ## Latest Verification
@@ -116,4 +116,6 @@ Date: 2026-06-01
 - GitHub repository published at `https://github.com/tiramitree/fde-ai-systems-portfolio`.
 - GitHub Actions `quality-gate` completed successfully.
 - README quality badge now points to the real GitHub Actions workflow.
+- Post-publish verification passed.
+- Initial public issues #1-#5 created.
 - CI quality gate verified again after adding screenshots and case studies.

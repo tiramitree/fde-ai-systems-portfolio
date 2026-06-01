@@ -55,3 +55,5 @@ Initial public-ready portfolio release.
 
 - Repository: https://github.com/tiramitree/fde-ai-systems-portfolio
 - GitHub Actions `quality-gate`: passing
+- Initial public issues: #1-#5
+- Post-publish verification: passing
