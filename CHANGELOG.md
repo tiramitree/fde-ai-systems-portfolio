@@ -20,6 +20,7 @@ All notable changes to this repository will be documented here.
 - API contract checks for UI-facing endpoints through `python -B scripts/dev.py contracts`.
 - Final launch and interview readiness report through `python -B scripts/dev.py readiness-report`.
 - Dry-run/apply GitHub launch setup for repository metadata, topics, and first release through `python -B scripts/dev.py github-launch-setup`.
+- Public PR triage and risky-diff review runbook through `python -B scripts/dev.py pr-triage`.
 
 ### Verified
 

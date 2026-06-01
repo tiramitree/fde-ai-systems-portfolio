@@ -31,6 +31,7 @@ python -B scripts/dev.py verify
 python -B scripts/dev.py replay
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py pr-triage
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/post_publish_check.py
@@ -54,7 +55,7 @@ python -B scripts/check_github_readiness.py --strict
 | default branch is main | PASS | main |
 | stars observed at generation | PASS | 3 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26769043416 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26769421585 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |

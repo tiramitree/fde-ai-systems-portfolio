@@ -88,8 +88,10 @@ def main() -> int:
         "docs/postgres_pgvector_adapter_design.md",
         "docs/otel_trace_export.md",
         "docs/final_readiness_report.md",
+        "docs/pr_review_runbook.md",
         "docs/assets/demo-walkthrough.gif",
         "scripts/configure_github_launch.py",
+        "scripts/review_open_prs.py",
         ".github/workflows/ci.yml",
     ]
     for rel_path in expected_files:
