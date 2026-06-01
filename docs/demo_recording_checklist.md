@@ -109,8 +109,8 @@ python -B scripts/dev.py verify
 
 Show final lines:
 
-- Project 1 eval 7/7
-- Project 2 eval 5/5
+- Project 1 eval 11/11
+- Project 2 eval 8/8
 - smoke tests 9/9
 - quality gate passed
 
@@ -142,4 +142,3 @@ Finally run:
 python -B scripts/dev.py verify
 git status --short
 ```
-

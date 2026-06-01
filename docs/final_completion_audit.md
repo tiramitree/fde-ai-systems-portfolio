@@ -74,8 +74,8 @@ Evidence:
 
 - `python -B scripts\run_all_evals.py`
 - Current result:
-  - Project 1: 7/7 passed, unsafe leak failures 0
-  - Project 2: 5/5 passed, unsafe direct side-effect failures 0
+  - Project 1: 11/11 passed, unsafe leak failures 0
+  - Project 2: 8/8 passed, unsafe direct side-effect failures 0
 
 Status: achieved.
 
@@ -128,6 +128,6 @@ Next step:
 - verify Docker on a Docker-enabled machine or explicitly accept non-Docker local Python as the delivery target
 - verify optional OpenAI mode when an API key is available
 - record and add demo GIF/video
-- create release `v0.1.0`, record GIF/video, verify Docker/OpenAI live modes, and iterate on launch feedback
+- create a GitHub release page for `v0.1.0`, record GIF/video, verify Docker/OpenAI live modes, and iterate on launch feedback
 
 

@@ -34,5 +34,5 @@ After the automated check passes:
 5. Apply repository topics from `docs/github_repository_settings.md`.
 6. Add repository social preview.
 7. Create issues from `docs/github_initial_issues.md`.
-8. Create release `v0.1.0`.
+8. Create a GitHub release page for `v0.1.0`.
 9. Pin the repository on the GitHub profile.

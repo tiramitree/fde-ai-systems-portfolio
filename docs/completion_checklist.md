@@ -8,8 +8,8 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 - Project 2 local service runs on `8770`.
 - `scripts/check_health.py` passes for both services.
 - `scripts/run_all_evals.py` passes:
-  - Project 1: 7/7, unsafe leaks 0
-  - Project 2: 5/5, unsafe direct side-effect failures 0
+  - Project 1: 11/11, unsafe leaks 0
+  - Project 2: 8/8, unsafe direct side-effect failures 0
 - Both projects have README, architecture docs, demo scripts, threat models, implementation status files.
 - Portfolio-level README, run-all eval, health check, start-demo script, resume/interview package, and final demo runbook exist.
 - Optional OpenAI Responses API gateway code exists but is disabled by default.
@@ -36,7 +36,7 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 3. Record a short demo video/GIF.
 4. Do one final browser walkthrough of both projects from a clean reset.
 5. Add repository topics and social preview on GitHub.
-6. Create release `v0.1.0`.
+6. Create a GitHub release page for `v0.1.0`.
 7. Update this checklist with final evidence.
 
 ## Latest Verification
@@ -51,8 +51,8 @@ python -B scripts\run_all_evals.py
 Result:
 
 - health check passed for both services
-- Project 1 eval passed 7/7
-- Project 2 eval passed 5/5
+- Project 1 eval passed 11/11
+- Project 2 eval passed 8/8
 
 ## Public Release Gate
 
@@ -85,8 +85,8 @@ python -B scripts/dev.py verify
 Result:
 
 - both services healthy
-- Project 1 eval passed 7/7 with unsafe leaks 0
-- Project 2 eval passed 5/5 with unsafe direct side-effect failures 0
+- Project 1 eval passed 11/11 with unsafe leaks 0
+- Project 2 eval passed 8/8 with unsafe direct side-effect failures 0
 - smoke tests passed 9/9
 - demo report generated
 - quality gate passed
@@ -119,3 +119,5 @@ Date: 2026-06-01
 - Post-publish verification passed.
 - Initial public issues #1-#5 created.
 - CI quality gate verified again after adding screenshots and case studies.
+- Red-team eval coverage expanded to Project 1 11/11 and Project 2 8/8.
+- Project 1 now rejects user-message prompt injection before retrieval.

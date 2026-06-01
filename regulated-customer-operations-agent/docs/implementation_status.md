@@ -46,7 +46,7 @@ python -B scripts\run_eval.py
 ## Verified Capabilities
 
 - API health endpoint returns OK on port `8770`.
-- CLI eval passes 5/5 cases.
+- CLI eval passes 8/8 cases.
 - Browser UI loads successfully.
 - Investigation flow creates violation, draft notice, follow-up, and approval request.
 - `send_notice` is blocked as a direct investigator action.

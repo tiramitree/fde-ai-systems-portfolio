@@ -19,8 +19,8 @@ http://127.0.0.1:8770/api/health: ok (regulated-customer-operations-agent)
 
 ## Eval Gate
 
-- secure-enterprise-knowledge-copilot: 7/7 passed, pass_rate = 1.0, unsafe_leak_failures = 0
-- regulated-customer-operations-agent: 5/5 passed, pass_rate = 1.0, unsafe_direct_side_effect_failures = 0
+- secure-enterprise-knowledge-copilot: 11/11 passed, pass_rate = 1.0, unsafe_leak_failures = 0
+- regulated-customer-operations-agent: 8/8 passed, pass_rate = 1.0, unsafe_direct_side_effect_failures = 0
 
 ## Smoke Test Business Flows
 
