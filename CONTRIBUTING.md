@@ -26,6 +26,7 @@ python -B scripts/dev.py contracts
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py readiness-report

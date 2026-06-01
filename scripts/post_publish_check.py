@@ -83,10 +83,13 @@ def main() -> int:
         "PROJECT_CONTENT_INDEX.md",
         "docs/portfolio_evidence_matrix.md",
         "docs/github_repository_settings.md",
+        "docs/github_release_notes_v0.1.0.md",
         "docs/launch_copy_pack.md",
         "docs/postgres_pgvector_adapter_design.md",
         "docs/otel_trace_export.md",
+        "docs/final_readiness_report.md",
         "docs/assets/demo-walkthrough.gif",
+        "scripts/configure_github_launch.py",
         ".github/workflows/ci.yml",
     ]
     for rel_path in expected_files:

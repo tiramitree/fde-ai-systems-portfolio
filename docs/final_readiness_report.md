@@ -31,6 +31,7 @@ python -B scripts/dev.py verify
 python -B scripts/dev.py replay
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/post_publish_check.py
 ```
@@ -53,7 +54,7 @@ python -B scripts/check_github_readiness.py --strict
 | default branch is main | PASS | main |
 | stars observed at generation | PASS | 3 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26768470906 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26769043416 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
@@ -71,6 +72,12 @@ python -B scripts/check_github_readiness.py --strict
 - Docker Compose runtime: not verified on this machine because Docker is not installed.
 - Optional OpenAI live mode: not verified without a valid API key.
 - Star growth: cannot be claimed as achieved until real launch feedback accumulates.
+
+Repository description, topics, and the first release can be applied after `gh auth login` with:
+
+```bash
+python -B scripts/configure_github_launch.py --apply
+```
 
 ## Interview Walkthrough Order
 
