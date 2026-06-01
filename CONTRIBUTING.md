@@ -24,6 +24,7 @@ This repository is designed as a practical reference for building enterprise AI 
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety

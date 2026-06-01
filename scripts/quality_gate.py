@@ -58,6 +58,7 @@ REQUIRED_FILES = [
     "docs/assets/regulated-ops-agent-screenshot.png",
     "scripts/dev.py",
     "scripts/public_safety_scan.py",
+    "scripts/replay_demo.py",
     "scripts/export_eval_csv.py",
     "scripts/post_publish_check.py",
     "secure-enterprise-knowledge-copilot/src/copilot/api.py",

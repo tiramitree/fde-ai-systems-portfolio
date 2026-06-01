@@ -27,6 +27,12 @@ Run all evals:
 python -B scripts/dev.py evals
 ```
 
+Replay the end-to-end demo path with fresh reset services:
+
+```bash
+python -B scripts/dev.py replay
+```
+
 ## 2. Optional Docker Run
 
 Docker was not available in the current local environment, so this config is prepared but not runtime-verified here.

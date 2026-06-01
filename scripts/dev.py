@@ -13,6 +13,7 @@ COMMANDS = {
     "health": ["scripts/check_health.py"],
     "evals": ["scripts/run_all_evals.py"],
     "eval-csv": ["scripts/export_eval_csv.py"],
+    "replay": ["scripts/replay_demo.py"],
     "smoke": ["scripts/smoke_test_demo_flows.py"],
     "report": ["scripts/generate_demo_report.py"],
     "safety": ["scripts/public_safety_scan.py"],
@@ -33,7 +34,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; health/evals/eval-csv/smoke/report/safety/quality: run individual gates; "
+            "start: run both demo servers; health/evals/eval-csv/replay/smoke/report/safety/quality: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

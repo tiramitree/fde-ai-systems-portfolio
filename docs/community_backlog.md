@@ -16,7 +16,7 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 2. Add OpenTelemetry-compatible trace export.
 3. Add per-case eval reports with failure diffs.
 4. Add Docker Compose healthcheck documentation and screenshots.
-5. Add a replayable demo script that resets and runs both project flows.
+5. Add a replay-output artifact that can be attached to releases.
 
 ## Advanced Issues
 

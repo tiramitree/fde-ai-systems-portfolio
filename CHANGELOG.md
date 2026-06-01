@@ -2,6 +2,23 @@
 
 All notable changes to this repository will be documented here.
 
+## Unreleased
+
+### Added
+
+- Modular backend API layers for both demo applications.
+- Modular frontend ES modules for API calls, DOM helpers, renderers, and app orchestration.
+- Public safety scan for secret-like content, local paths, private identifiers, and tracked runtime artifacts.
+- Maintainer review policy for triaging external PRs, useful reviews, unsafe changes, and phishing attempts.
+- CSV eval summary export through `python -B scripts/dev.py eval-csv`.
+- Replayable demo reset command through `python -B scripts/dev.py replay`.
+
+### Verified
+
+- GitHub Actions passed after frontend/backend modularization.
+- External PR #6 was reviewed, tested, and merged safely.
+- Replay command starts clean reset services and passed 10/10 demo evidence checks locally.
+
 ## 0.1.0 - 2026-06-01
 
 Initial public-ready portfolio release.
