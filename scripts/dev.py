@@ -32,6 +32,7 @@ COMMANDS = {
     "pr-policy": ["scripts/check_pr_review_policy.py"],
     "pr-triage": ["scripts/review_open_prs.py"],
     "readiness-report": ["scripts/generate_final_readiness_report.py"],
+    "refresh-visual-assets": ["scripts/refresh_visual_assets.py"],
     "replay": ["scripts/replay_demo.py"],
     "replay-artifact": ["scripts/export_demo_replay_artifact.py"],
     "scenario-data": ["scripts/check_scenario_data_integrity.py"],
@@ -59,7 +60,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; api-docs/architecture/assets/claims/container-release/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/github-launch-setup/github-readiness/governance/model-gateway-safety/observability/otel-traces/pr-policy/pr-triage/readiness-report/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
+            "start: run both demo servers; api-docs/architecture/assets/claims/container-release/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/github-launch-setup/github-readiness/governance/model-gateway-safety/observability/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )
