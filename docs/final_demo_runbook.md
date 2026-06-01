@@ -21,6 +21,13 @@ Health check:
 python -B scripts/dev.py health
 ```
 
+Verify the documented API surface and runtime response contracts:
+
+```bash
+python -B scripts/dev.py api-docs
+python -B scripts/dev.py contracts
+```
+
 Run all evals:
 
 ```bash

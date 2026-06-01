@@ -60,6 +60,7 @@ Useful commands:
 
 ```bash
 python -B scripts/dev.py assets
+python -B scripts/dev.py api-docs
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
 python -B scripts/dev.py dependency-surface
@@ -116,7 +117,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, both `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
 | Error hygiene | `scripts/check_error_hygiene.py`, both `app.py` files | unexpected exceptions return generic JSON errors without leaking paths, stack details, or secret-like strings |
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
-| API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
+| API contracts | `scripts/check_api_contracts.py`, `scripts/check_api_documentation.py`, `docs/api_contracts.md` | runtime response shapes and public API documentation stay aligned with source routes |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
 | Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
@@ -284,6 +285,7 @@ fde_portfolio/
 - [GitHub Initial Issues](docs/github_initial_issues.md)
 - [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md)
 - [Fresh Clone Experience](docs/fresh_clone_experience.md)
+- [API Contracts](docs/api_contracts.md)
 - [PR Review Security](docs/pr_review_security.md)
 - [Pull Request Review Runbook](docs/pr_review_runbook.md)
 - [GitHub Release Commands](docs/github_release_commands.md)

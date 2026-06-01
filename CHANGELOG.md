@@ -20,6 +20,7 @@ All notable changes to this repository will be documented here.
 - Fresh clone experience check through `python -B scripts/dev.py fresh-clone`.
 - GitHub public-readiness report through `python -B scripts/dev.py github-readiness`.
 - API contract checks for UI-facing endpoints through `python -B scripts/dev.py contracts`.
+- API documentation consistency gate through `python -B scripts/dev.py api-docs`.
 - Final launch and interview readiness report through `python -B scripts/dev.py readiness-report`.
 - Dry-run/apply GitHub launch setup for repository metadata, topics, branch protection, and first release through `python -B scripts/dev.py github-launch-setup`.
 - Public PR triage and risky-diff review runbook through `python -B scripts/dev.py pr-triage`.

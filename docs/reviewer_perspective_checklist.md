@@ -18,6 +18,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 - The command entrypoint is cross-platform.
 - Runtime artifacts are ignored.
 - The user can open two local URLs and see meaningful UI.
+- The backend API surface is documented and verified with `python -B scripts/dev.py api-docs`.
 - Error messages are not raw stack traces in the browser.
 - Trace IDs, audit events, approval records, and blocked actions can be verified with `python -B scripts/dev.py observability`.
 - Threats, deterministic controls, evidence files, and proof commands can be verified with `python -B scripts/dev.py threat-model`.
