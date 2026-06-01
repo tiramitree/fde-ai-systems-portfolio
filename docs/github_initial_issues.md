@@ -57,7 +57,7 @@ Acceptance criteria:
 
 - New script lives under scripts/.
 - CSV includes project, total cases, passed cases, pass rate, and unsafe failure counts.
-- The script does not modify runtime state.
+- The script documents any eval runtime state writes and keeps generated artifacts ignored.
 - python -B scripts/dev.py verify still passes.
 ```
 
@@ -140,4 +140,3 @@ Acceptance criteria:
 - It prints Project 1 and Project 2 demo evidence.
 - python -B scripts/dev.py verify still passes.
 ```
-

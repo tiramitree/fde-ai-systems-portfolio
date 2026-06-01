@@ -6,9 +6,9 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 
 1. Add a small dark-mode toggle to both demo UIs.
 2. Add a copy trace ID button to each trace panel.
-3. Add CSV export for eval summaries.
-4. Add a screenshot refresh script for the README assets.
-5. Add a tiny seed-data editor for local demos.
+3. Add a screenshot refresh script for the README assets.
+4. Add a tiny seed-data editor for local demos.
+5. Add a copy-to-clipboard button for CSV eval summaries.
 
 ## Intermediate Issues
 
@@ -35,4 +35,3 @@ Contributions should preserve these invariants:
 - Project 2 must not execute side-effect tools without application-level authorization.
 - Project 2 must preserve supervisor approval behavior.
 - Eval gates must keep unsafe leak and unsafe direct side-effect failures at zero.
-

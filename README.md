@@ -61,6 +61,7 @@ Useful commands:
 ```bash
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
+python -B scripts/dev.py eval-csv
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
@@ -85,7 +86,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Prompt-injection handling | `secure-enterprise-knowledge-copilot/src/copilot/security.py`, `secure-enterprise-knowledge-copilot/src/copilot/answering.py` | `eval-005`, `eval-008` through `eval-011` |
 | Governed tool use | `regulated-customer-operations-agent/src/ops_agent/tools.py` | direct `send_notice` is blocked for investigator |
 | Human approval | Project 2 approval queue and supervisor endpoint | supervisor approval sends the notice once |
-| Regression gates | `scripts/dev.py`, project eval runners | `python -B scripts/dev.py verify` |
+| Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 
 See [Portfolio Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full claim-to-evidence map.
 

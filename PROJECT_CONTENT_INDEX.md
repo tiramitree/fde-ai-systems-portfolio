@@ -27,6 +27,7 @@ python -B scripts/dev.py verify
 python -B scripts/dev.py start
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
+python -B scripts/dev.py eval-csv
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
@@ -82,10 +83,11 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, health, evals, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, health, evals, eval-csv, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_health.py`: verifies both service health endpoints.
 - `scripts/run_all_evals.py`: runs both project eval suites.
+- `scripts/export_eval_csv.py`: exports portfolio eval summary rows to `eval_summaries.csv`.
 - `scripts/smoke_test_demo_flows.py`: exercises the critical demo paths end to end.
 - `scripts/generate_demo_report.py`: writes `docs/demo_report.md`.
 - `scripts/public_safety_scan.py`: scans public files for secret-like tokens, personal identifiers, local paths, and tracked runtime artifacts.
