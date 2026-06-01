@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from urllib.request import urlopen
 
 
 URLS = [
-    "http://127.0.0.1:8765/api/health",
-    "http://127.0.0.1:8770/api/health",
+    f"{os.getenv('FDE_PROJECT_1_URL', 'http://127.0.0.1:8765').rstrip('/')}/api/health",
+    f"{os.getenv('FDE_PROJECT_2_URL', 'http://127.0.0.1:8770').rstrip('/')}/api/health",
 ]
 
 
@@ -26,4 +27,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

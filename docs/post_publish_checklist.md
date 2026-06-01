@@ -25,6 +25,7 @@ The post-publish check must prove:
 - the observability integrity script and documentation are published.
 - the threat model script and documentation are published.
 - the PR review policy script and documentation are published.
+- the fresh clone script and documentation are published.
 
 ## Manual GitHub Checks
 
@@ -39,6 +40,7 @@ After the automated check passes:
 7. Add repository social preview using `docs/assets/github-preview.png`.
 8. Create a GitHub release page for `v0.1.0`.
 9. Pin the repository on the GitHub profile.
+10. Run `python -B scripts/dev.py fresh-clone` after the push is visible.
 
 ## Optional Backlog Seeding
 

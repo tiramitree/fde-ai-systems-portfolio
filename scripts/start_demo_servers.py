@@ -3,6 +3,7 @@ from __future__ import annotations
 import subprocess
 import sys
 import time
+import os
 from pathlib import Path
 from urllib.request import urlopen
 
@@ -12,16 +13,17 @@ SERVICES = [
     {
         "name": "Secure Enterprise Knowledge Copilot",
         "path": ROOT / "secure-enterprise-knowledge-copilot",
-        "port": 8765,
-        "health": "http://127.0.0.1:8765/api/health",
+        "port": int(os.getenv("FDE_PROJECT_1_PORT", "8765")),
     },
     {
         "name": "Regulated Customer Operations Agent",
         "path": ROOT / "regulated-customer-operations-agent",
-        "port": 8770,
-        "health": "http://127.0.0.1:8770/api/health",
+        "port": int(os.getenv("FDE_PROJECT_2_PORT", "8770")),
     },
 ]
+
+for service in SERVICES:
+    service["health"] = f"http://127.0.0.1:{service['port']}/api/health"
 
 
 def wait_for_health(url: str, seconds: int = 10) -> bool:
@@ -68,8 +70,8 @@ def main() -> int:
         print(f"{service['name']}: {'ok' if ok else 'failed'}")
 
     print("\nDemo URLs:")
-    print("Project 1: http://127.0.0.1:8765")
-    print("Project 2: http://127.0.0.1:8770")
+    print(f"Project 1: http://127.0.0.1:{SERVICES[0]['port']}")
+    print(f"Project 2: http://127.0.0.1:{SERVICES[1]['port']}")
     print("\nPress Ctrl+C to stop both demo servers.")
 
     if not all_healthy:
@@ -89,4 +91,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
