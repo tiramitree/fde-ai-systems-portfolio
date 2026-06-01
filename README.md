@@ -63,6 +63,7 @@ python -B scripts/dev.py assets
 python -B scripts/dev.py claims
 python -B scripts/dev.py dependency-surface
 python -B scripts/dev.py contracts
+python -B scripts/dev.py frontend
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
@@ -99,6 +100,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Human approval | Project 2 approval queue and supervisor endpoint | supervisor approval sends the notice once |
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 | Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
+| Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, and quick actions stay intact |
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
 | API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
