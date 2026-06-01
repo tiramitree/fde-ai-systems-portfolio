@@ -37,6 +37,7 @@ python -B scripts/dev.py governance
 python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
@@ -66,8 +67,9 @@ python -B scripts/dev.py verify
 12. Run the error hygiene check.
 13. Run the frontend integrity check.
 14. Run the threat model check.
-15. Run the runtime UI contract check.
-16. Update docs and demo report if behavior changed.
+15. Run the PR review policy check.
+16. Run the runtime UI contract check.
+17. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -84,6 +86,7 @@ python -B scripts/dev.py verify
 - [ ] Error hygiene check passes.
 - [ ] Frontend integrity check passes.
 - [ ] Threat model check passes.
+- [ ] PR review policy check passes.
 - [ ] Runtime UI contract check passes.
 - [ ] Security or governance behavior is not weakened.
 - [ ] README or docs are updated if the user-facing workflow changed.

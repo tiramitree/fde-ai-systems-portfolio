@@ -31,6 +31,7 @@ REQUIRED_CODEOWNER_PATTERNS = {
     "scripts/quality_gate.py": "@tiramitree",
     "scripts/ci_quality_gate.py": "@tiramitree",
     "scripts/check_github_readiness.py": "@tiramitree",
+    "scripts/check_pr_review_policy.py": "@tiramitree",
     "scripts/review_open_prs.py": "@tiramitree",
     "scripts/configure_github_launch.py": "@tiramitree",
     "docs/github_branch_protection.json": "@tiramitree",

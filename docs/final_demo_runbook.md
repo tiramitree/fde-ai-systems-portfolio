@@ -51,6 +51,12 @@ Verify the portfolio threat model maps each risk to deterministic controls and e
 python -B scripts/dev.py threat-model
 ```
 
+Verify public PR review heuristics, the maintainer policy, the runbook, and the PR template still preserve malicious-contribution checks:
+
+```bash
+python -B scripts/dev.py pr-policy
+```
+
 ## 2. Optional Docker Run
 
 Docker was not available in the current local environment, so this config is prepared but not runtime-verified here.

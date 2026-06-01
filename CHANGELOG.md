@@ -36,6 +36,7 @@ All notable changes to this repository will be documented here.
 - Model gateway safety gate through `python -B scripts/dev.py model-gateway-safety`.
 - Observability integrity gate through `python -B scripts/dev.py observability`.
 - Threat model consistency gate through `python -B scripts/dev.py threat-model`.
+- PR review policy gate through `python -B scripts/dev.py pr-policy`.
 - Scenario data integrity gate through `python -B scripts/dev.py scenario-data`.
 - Error hygiene gate through `python -B scripts/dev.py error-hygiene`.
 

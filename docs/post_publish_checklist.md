@@ -24,6 +24,7 @@ The post-publish check must prove:
 - key documentation files are published.
 - the observability integrity script and documentation are published.
 - the threat model script and documentation are published.
+- the PR review policy script and documentation are published.
 
 ## Manual GitHub Checks
 
