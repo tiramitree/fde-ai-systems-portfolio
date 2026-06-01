@@ -56,6 +56,7 @@ REQUIRED_FILES = [
     "docs/maintainer_review_policy.md",
     "docs/assets/github-preview.svg",
     "docs/assets/architecture-overview.svg",
+    "docs/assets/demo-walkthrough.gif",
     "docs/assets/secure-knowledge-copilot-screenshot.png",
     "docs/assets/regulated-ops-agent-screenshot.png",
     "scripts/dev.py",
