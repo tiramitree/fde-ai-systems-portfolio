@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 import time
+import http.client
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -45,7 +46,7 @@ def url_exists_once(url: str) -> tuple[bool, str]:
         return False, str(exc.code)
     except urllib.error.URLError as exc:
         return False, str(exc.reason)
-    except TimeoutError as exc:
+    except (TimeoutError, ConnectionError, http.client.RemoteDisconnected) as exc:
         return False, str(exc)
 
 
