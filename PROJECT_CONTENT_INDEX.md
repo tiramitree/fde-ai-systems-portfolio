@@ -29,6 +29,7 @@ python -B scripts/dev.py assets
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py github-readiness
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
@@ -86,10 +87,11 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, assets, health, evals, eval-csv, otel-traces, replay, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, assets, health, evals, eval-csv, github-readiness, otel-traces, replay, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_health.py`: verifies both service health endpoints.
+- `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/run_all_evals.py`: runs both project eval suites.
 - `scripts/export_eval_csv.py`: exports portfolio eval summary rows to `eval_summaries.csv`.
 - `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload.

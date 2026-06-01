@@ -25,6 +25,7 @@ python -B scripts/dev.py assets
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py github-readiness
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py replay
 python -B scripts/dev.py smoke

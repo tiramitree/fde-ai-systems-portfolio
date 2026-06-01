@@ -62,6 +62,7 @@ REQUIRED_FILES = [
     "scripts/dev.py",
     "scripts/public_safety_scan.py",
     "scripts/check_public_assets.py",
+    "scripts/check_github_readiness.py",
     "scripts/replay_demo.py",
     "scripts/export_eval_csv.py",
     "scripts/export_traces_otel.py",
