@@ -63,6 +63,7 @@ python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
+python -B scripts/dev.py safety
 python -B scripts/dev.py quality
 python -B scripts/post_publish_check.py
 ```

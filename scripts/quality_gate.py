@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from public_safety_scan import check_forbidden_content, check_runtime_artifacts
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -49,54 +51,19 @@ REQUIRED_FILES = [
     "docs/launch_copy_pack.md",
     "docs/reviewer_perspective_checklist.md",
     "docs/github_release_commands.md",
+    "docs/maintainer_review_policy.md",
     "docs/assets/github-preview.svg",
     "docs/assets/architecture-overview.svg",
     "docs/assets/secure-knowledge-copilot-screenshot.png",
     "docs/assets/regulated-ops-agent-screenshot.png",
     "scripts/dev.py",
+    "scripts/public_safety_scan.py",
     "scripts/post_publish_check.py",
     "secure-enterprise-knowledge-copilot/.dockerignore",
     "secure-enterprise-knowledge-copilot/README.md",
     "regulated-customer-operations-agent/.dockerignore",
     "regulated-customer-operations-agent/README.md",
 ]
-
-FORBIDDEN_PATTERNS = [
-    "sk-",
-    "CV_Runze",
-    "Runze Zheng",
-    "C:\\NYU",
-    "C:\\Users",
-    "C:/Users",
-    "OneDrive",
-    "xwechat",
-    "wxid_",
-    "11758",
-    "github_pat_",
-    "ghp_",
-    "gho_",
-    "ghu_",
-    "ghs_",
-    "ghr_",
-    "AKIA",
-    "BEGIN PRIVATE KEY",
-    "BEGIN OPENSSH PRIVATE KEY",
-]
-
-TEXT_EXTENSIONS = {
-    ".md",
-    ".py",
-    ".json",
-    ".yml",
-    ".yaml",
-    ".html",
-    ".css",
-    ".js",
-    ".example",
-    ".dockerignore",
-    ".gitignore",
-    "",
-}
 
 
 def run(args: list[str]) -> tuple[bool, str]:
@@ -111,64 +78,6 @@ def check_required_files() -> list[str]:
         if not (ROOT / rel_path).exists():
             failures.append(f"missing required file: {rel_path}")
     return failures
-
-
-def check_forbidden_content() -> list[str]:
-    failures = []
-    for path in ROOT.rglob("*"):
-        if not path.is_file():
-            continue
-        rel = path.relative_to(ROOT).as_posix()
-        if ".git/" in rel:
-            continue
-        if path.suffix not in TEXT_EXTENSIONS and path.name not in {".env.example", "Dockerfile", "LICENSE"}:
-            continue
-        try:
-            text = path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            continue
-        for pattern in FORBIDDEN_PATTERNS:
-            if pattern in text and rel != "scripts/quality_gate.py":
-                failures.append(f"forbidden pattern {pattern!r} in {rel}")
-    return failures
-
-
-def check_runtime_artifacts() -> list[str]:
-    failures = []
-    git_files = tracked_files()
-    if git_files is None:
-        return failures
-    forbidden_names = {
-        "runtime_state.json",
-        "eval_runtime_state.json",
-        "runtime_state.tmp",
-        "server.log",
-        "server.err.log",
-        "server.job.log",
-        "write-test.txt",
-    }
-    forbidden_suffixes = {".pyc", ".sqlite", ".sqlite-journal"}
-    for rel in git_files:
-        parts = rel.split("/")
-        name = parts[-1]
-        if "__pycache__" in parts:
-            failures.append(f"runtime artifact present: {rel}")
-        elif name in forbidden_names:
-            failures.append(f"runtime artifact present: {rel}")
-        elif any(name.endswith(suffix) for suffix in forbidden_suffixes):
-            failures.append(f"runtime artifact present: {rel}")
-    return failures
-
-
-def tracked_files() -> set[str] | None:
-    result = subprocess.run(
-        ["git", "-C", str(ROOT), "ls-files"],
-        text=True,
-        capture_output=True,
-    )
-    if result.returncode != 0:
-        return None
-    return {line.strip() for line in result.stdout.splitlines() if line.strip()}
 
 
 def main() -> int:

@@ -88,6 +88,7 @@ Answer:
 Run:
 
 ```bash
+python -B scripts/dev.py safety
 python -B scripts/dev.py verify
 ```
 
