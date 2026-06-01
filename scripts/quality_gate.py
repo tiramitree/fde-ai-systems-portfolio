@@ -103,6 +103,7 @@ REQUIRED_FILES = [
     "scripts/check_architecture_boundaries.py",
     "scripts/check_workflow_security.py",
     "scripts/check_model_gateway_safety.py",
+    "scripts/check_openai_live_mode.py",
     "scripts/check_observability_integrity.py",
     "scripts/check_threat_model.py",
     "scripts/check_scenario_data_integrity.py",

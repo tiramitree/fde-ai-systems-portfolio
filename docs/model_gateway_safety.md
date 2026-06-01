@@ -8,6 +8,12 @@ Run the model gateway safety gate with:
 python -B scripts/dev.py model-gateway-safety
 ```
 
+With a real API key, run the live mode proof with:
+
+```bash
+python -B scripts/dev.py openai-live
+```
+
 ## Safety Contract
 
 The gate verifies that:
@@ -21,6 +27,7 @@ The gate verifies that:
 - provider/router environment variables must explicitly opt in to OpenAI mode
 - failed API calls, malformed responses, or timeouts return `None` and fall back to deterministic local behavior
 - the gateways do not print, log, shell out, dynamically execute code, or re-raise API/parse failures
+- the live check requires OpenAI mode to be observed in API responses and still preserve grounded answers, approval requests, and side-effect blocking
 
 ## Boundary Statement
 
@@ -36,5 +43,5 @@ The model never becomes the authority for permissions, evidence access, approval
 Use this answer when challenged on API keys or model dependency:
 
 ```text
-The verified default path is local and deterministic. The optional OpenAI gateway is opt-in through environment variables, the API key stays outside the repo, and failures return None so the app falls back to local behavior. Permissions and side-effect authorization are enforced before or after the model call in application code, so changing the model provider does not weaken the security invariants.
+The verified default path is local and deterministic. The optional OpenAI gateway is opt-in through environment variables, the API key stays outside the repo, and failures return None so the app falls back to local behavior. Permissions and side-effect authorization are enforced before or after the model call in application code, so changing the model provider does not weaken the security invariants. When a key is available, `python -B scripts/dev.py openai-live` proves the model-backed path was actually used.
 ```

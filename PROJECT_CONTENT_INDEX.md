@@ -44,6 +44,7 @@ python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
 python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
+python -B scripts/dev.py openai-live
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
@@ -111,11 +112,12 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
 - `scripts/check_model_gateway_safety.py`: verifies optional OpenAI gateways stay opt-in, key references remain constrained, structured outputs are required, and failures fall back locally.
+- `scripts/check_openai_live_mode.py`: optionally proves live OpenAI mode with a real API key while preserving citations, approval requests, and side-effect blocking.
 - `scripts/check_observability_integrity.py`: starts isolated services and verifies trace, audit, approval, blocked-action, and unauthorized-query evidence stay consistent with demo outcomes.
 - `scripts/check_threat_model.py`: verifies portfolio threat IDs map to deterministic controls, source files, supporting docs, and evidence commands.
 - `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent.
@@ -322,7 +324,7 @@ These are not local code blockers, but they should not be claimed as completed u
 1. Add repository description, topics, branch protection, and social preview in GitHub settings.
 2. Create a GitHub release page for `v0.1.0`.
 3. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; the static container release hygiene gate is already included.
-4. Verify optional OpenAI mode with a valid API key.
+4. Verify optional OpenAI mode with a valid API key by running `python -B scripts/dev.py openai-live`.
 5. Record an optional narrated demo video; the README GIF is already included.
 6. Collect real launch feedback and star-growth evidence.
 

@@ -55,6 +55,7 @@ ALLOWED_OPENAI_KEY_REFERENCES = {
     "secure-enterprise-knowledge-copilot/README.md",
     "regulated-customer-operations-agent/README.md",
     "scripts/check_model_gateway_safety.py",
+    "scripts/check_openai_live_mode.py",
     "scripts/check_container_release.py",
     "scripts/check_pr_review_policy.py",
     "scripts/review_open_prs.py",

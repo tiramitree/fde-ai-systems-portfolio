@@ -78,6 +78,7 @@ python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
 python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
+python -B scripts/dev.py openai-live
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
@@ -128,7 +129,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
 | Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
-| Model gateway safety | `scripts/check_model_gateway_safety.py`, project `model_gateway.py` files | OpenAI mode is opt-in, key references are constrained, structured outputs are required, and failures fall back locally |
+| Model gateway safety | `scripts/check_model_gateway_safety.py`, `scripts/check_openai_live_mode.py`, project `model_gateway.py` files | OpenAI mode is opt-in, key references are constrained, structured outputs are required, failures fall back locally, and live mode can be verified when a key is available |
 | Observability integrity | `scripts/check_observability_integrity.py`, project trace/audit/approval endpoints | response trace IDs, audit events, approval records, blocked actions, and unauthorized-query evidence stay internally consistent |
 | Threat model | `docs/threat_model.md`, `scripts/check_threat_model.py` | threat IDs map to deterministic controls, source files, and evidence commands |
 | Scenario data integrity | `scripts/check_scenario_data_integrity.py`, project `data/` folders | fictional seed data, roles, references, and eval expectations remain internally consistent |
@@ -231,6 +232,14 @@ Security boundaries remain outside the model:
 
 - Project 1 filters permissions and unsafe retrieved content before generation.
 - Project 2 enforces approval gates in deterministic application code.
+
+With a real API key, verify live OpenAI mode without changing the default local path:
+
+```powershell
+python -B scripts/dev.py openai-live
+```
+
+The check starts both apps with OpenAI mode enabled, requires Project 1 to return `model_provider=openai`, requires Project 2 to return `model_router=openai`, and still verifies citations, approvals, and side-effect blocking.
 
 ## Docker
 

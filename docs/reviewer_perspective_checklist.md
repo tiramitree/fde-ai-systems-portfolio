@@ -28,6 +28,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 - Release-attachable replay evidence can be generated with `python -B scripts/dev.py replay-artifact`.
 - Docker/Compose release hygiene can be verified without a local Docker daemon with `python -B scripts/dev.py container-release`.
 - Docker runtime can be verified on a Docker-enabled machine with `python -B scripts/dev.py docker-runtime`.
+- OpenAI live mode can be verified in an API-key environment with `python -B scripts/dev.py openai-live`.
 
 ## Interviewer Skepticism
 
@@ -37,6 +38,7 @@ Expected challenges:
 - "The prompt-injection detection is simple."
 - "The model is optional."
 - "Docker runtime was not verified here."
+- "OpenAI live mode was not verified here."
 
 Approved answer:
 
@@ -45,6 +47,10 @@ Approved answer:
 For Docker specifically, add:
 
 > The container files are statically gated for ports, health checks, commands, env defaults, and ignored build-context state. The repo also has `python -B scripts/dev.py docker-runtime` for Docker-enabled machines; I would run that before claiming Docker runtime verification.
+
+For OpenAI specifically, add:
+
+> The default path is local and deterministic. The repo has `python -B scripts/dev.py openai-live` for API-key environments; I would run that before claiming live OpenAI verification.
 
 ## Star-Worthiness
 

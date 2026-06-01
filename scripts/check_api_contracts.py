@@ -288,6 +288,7 @@ def project_2_contracts(base_url: str) -> list[Check]:
         },
     )
     checks.append(check(status == 200 and has_keys(investigation, agent_keys) and ok, "P2 agent response contract", detail))
+    checks.append(check(investigation.get("model_router") == "local", "P2 default router source contract", f"model_router={investigation.get('model_router')}"))
     approval_id = investigation["approvals"][0]["id"] if investigation.get("approvals") else ""
     checks.append(check(bool(approval_id) and investigation.get("blocked_actions"), "P2 approval plus blocked-side-effect contract", f"approval={approval_id}"))
 

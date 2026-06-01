@@ -113,9 +113,10 @@ $env:OPENAI_API_KEY="..."
 $env:OPENAI_MODEL="gpt-5.2"
 $env:COPILOT_MODEL_PROVIDER="openai"
 $env:OPS_AGENT_MODEL_ROUTER="openai"
+python -B scripts/dev.py openai-live
 ```
 
-Then restart the demo servers.
+The live proof starts isolated OpenAI-mode demo services, requires API responses to report OpenAI usage, and still verifies citations, approvals, and side-effect blocking.
 
 Application-layer controls stay deterministic:
 
