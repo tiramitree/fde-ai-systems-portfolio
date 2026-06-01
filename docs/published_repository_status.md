@@ -110,6 +110,6 @@ Confirmed:
 - Create a GitHub release page for `v0.1.0`; `python -B scripts/configure_github_launch.py --apply` can do this after `gh auth login`.
 - Pin repository on profile.
 - Record demo GIF/video.
-- Verify Docker runtime; static Docker/Compose release hygiene is already gated.
+- Verify Docker runtime with `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; static Docker/Compose release hygiene is already gated.
 - Verify optional OpenAI mode with a live API key.
 - Collect launch feedback and star-growth evidence.

@@ -49,7 +49,7 @@ Create issues for:
 - add PostgreSQL adapter
 - add OpenAI Agents SDK branch
 - add trace grading examples
-- add Docker verification
+- run and publish Docker verification from `python -B scripts/dev.py docker-runtime`
 - add red-team eval pack
 
 These make the repo look alive and give contributors clear entry points.

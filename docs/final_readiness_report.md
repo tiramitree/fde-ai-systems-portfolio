@@ -33,6 +33,7 @@ python -B scripts/dev.py api-docs
 python -B scripts/dev.py replay
 python -B scripts/dev.py replay-artifact
 python -B scripts/dev.py container-release
+python -B scripts/dev.py docker-runtime  # Docker-enabled machines only
 python -B scripts/dev.py visual-assets
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py governance
@@ -65,7 +66,7 @@ python -B scripts/check_github_readiness.py --strict
 | main branch protection enabled | WARN | not protected |
 | stars observed at generation | PASS | 3 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26783231299 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26784840450 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
@@ -81,7 +82,7 @@ python -B scripts/check_github_readiness.py --strict
 - GitHub release page exists for v0.1.0: missing
 - social preview configured: GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md
 - profile repository pin configured: Requires account profile settings
-- Docker Compose runtime: not verified on this machine because Docker is not installed; static container release hygiene is gated.
+- Docker Compose runtime: not verified on this machine because Docker is not installed; static container release hygiene is gated and `python -B scripts/dev.py docker-runtime` is available for Docker-enabled machines.
 - Optional OpenAI live mode: not verified without a valid API key.
 - Star growth: cannot be claimed as achieved until real launch feedback accumulates.
 
@@ -98,15 +99,16 @@ python -B scripts/configure_github_launch.py --apply
 3. Run `python -B scripts/dev.py replay` to show the end-to-end demo path without relying on browser state.
 4. Run `python -B scripts/dev.py replay-artifact` to generate release-attachable Markdown and JSON evidence under `out/`.
 5. Run `python -B scripts/dev.py container-release` to prove Docker/Compose release hygiene without claiming Docker runtime verification.
-6. Run `python -B scripts/dev.py visual-assets` to prove README screenshots are tied to current frontend source hashes.
-7. Open Project 1 and show permission-aware retrieval, citations, abstention, and prompt-injection handling.
-8. Open Project 2 and show investigation, approval queue, supervisor approval, trace, and audit log evidence.
-9. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
-10. Run `python -B scripts/dev.py threat-model` to show threats map to controls, files, and evidence commands.
-11. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
-12. Run `python -B scripts/dev.py api-docs` and show `docs/api_contracts.md` to map UI behavior to backend endpoints.
-13. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
-14. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
+6. On a Docker-enabled machine, run `python -B scripts/dev.py docker-runtime` before claiming Compose runtime verification.
+7. Run `python -B scripts/dev.py visual-assets` to prove README screenshots are tied to current frontend source hashes.
+8. Open Project 1 and show permission-aware retrieval, citations, abstention, and prompt-injection handling.
+9. Open Project 2 and show investigation, approval queue, supervisor approval, trace, and audit log evidence.
+10. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
+11. Run `python -B scripts/dev.py threat-model` to show threats map to controls, files, and evidence commands.
+12. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
+13. Run `python -B scripts/dev.py api-docs` and show `docs/api_contracts.md` to map UI behavior to backend endpoints.
+14. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
+15. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
 
 ## Quality Bar
 

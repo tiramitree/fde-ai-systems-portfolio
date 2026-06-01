@@ -128,6 +128,7 @@ def main() -> int:
         "docs/assets/demo-walkthrough.gif",
         "scripts/check_claim_consistency.py",
         "scripts/check_container_release.py",
+        "scripts/check_docker_runtime.py",
         "scripts/check_architecture_boundaries.py",
         "scripts/check_workflow_security.py",
         "scripts/check_model_gateway_safety.py",

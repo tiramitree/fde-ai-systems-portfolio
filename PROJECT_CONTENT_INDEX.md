@@ -30,6 +30,7 @@ python -B scripts/dev.py assets
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
 python -B scripts/dev.py container-release
+python -B scripts/dev.py docker-runtime
 python -B scripts/dev.py dependency-surface
 python -B scripts/dev.py contracts
 python -B scripts/dev.py error-hygiene
@@ -110,7 +111,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -124,6 +125,7 @@ Local Git state:
 - `scripts/refresh_visual_assets.py`: starts live local apps, captures README screenshots with a local browser, and rewrites the visual asset manifest.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.
+- `scripts/check_docker_runtime.py`: optionally builds the Compose stack, waits for container health, runs smoke flows, and tears the stack down on Docker-enabled machines.
 - `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, and quick-action controls.
 - `scripts/check_fresh_clone_experience.py`: clones the repository into a temporary directory, runs release-facing static checks, starts both demos on isolated ports, and runs health/smoke flows.
 - `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, content types, security headers, 404s, and traversal blocking.
@@ -319,7 +321,7 @@ These are not local code blockers, but they should not be claimed as completed u
 
 1. Add repository description, topics, branch protection, and social preview in GitHub settings.
 2. Create a GitHub release page for `v0.1.0`.
-3. Verify Docker Compose runtime on a machine with Docker installed; the static container release hygiene gate is already included.
+3. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; the static container release hygiene gate is already included.
 4. Verify optional OpenAI mode with a valid API key.
 5. Record an optional narrated demo video; the README GIF is already included.
 6. Collect real launch feedback and star-growth evidence.

@@ -60,7 +60,7 @@ Potential criticism:
 
 Answer:
 
-> The config is included for standard deployment shape. The current verified path is Python local runtime because Docker is unavailable in this environment. The README states this explicitly.
+> The config is included for standard deployment shape. The current verified path is Python local runtime because Docker is unavailable in this environment. The repo now has `python -B scripts/dev.py docker-runtime` as the tracked Docker-enabled runtime proof.
 
 ## 5. No Real Auth Provider
 

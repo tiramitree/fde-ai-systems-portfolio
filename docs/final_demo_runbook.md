@@ -82,6 +82,12 @@ Verify Docker/Compose release hygiene without requiring a local Docker daemon:
 python -B scripts/dev.py container-release
 ```
 
+On a Docker-enabled machine, prove the actual Compose runtime:
+
+```bash
+python -B scripts/dev.py docker-runtime
+```
+
 Verify README screenshots still match the recorded frontend source hashes:
 
 ```bash
@@ -90,10 +96,10 @@ python -B scripts/dev.py visual-assets
 
 ## 2. Optional Docker Run
 
-Docker was not available in the current local environment, so this config is statically gated but not runtime-verified here.
+Docker was not available in the current local environment, so this config is statically gated here. The tracked runtime command for a Docker-enabled machine is:
 
 ```bash
-docker compose up --build
+python -B scripts/dev.py docker-runtime
 ```
 
 ## 3. Optional OpenAI Responses API Mode

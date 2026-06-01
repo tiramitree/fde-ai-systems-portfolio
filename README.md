@@ -64,6 +64,7 @@ python -B scripts/dev.py api-docs
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
 python -B scripts/dev.py container-release
+python -B scripts/dev.py docker-runtime
 python -B scripts/dev.py dependency-surface
 python -B scripts/dev.py contracts
 python -B scripts/dev.py error-hygiene
@@ -122,7 +123,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, both `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
 | Error hygiene | `scripts/check_error_hygiene.py`, both `app.py` files | unexpected exceptions return generic JSON errors without leaking paths, stack details, or secret-like strings |
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
-| Container release hygiene | `scripts/check_container_release.py`, `docs/container_release_hygiene.md` | Dockerfiles, compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned |
+| Container release hygiene | `scripts/check_container_release.py`, `scripts/check_docker_runtime.py`, `docs/container_release_hygiene.md` | Dockerfiles, compose ports, health checks, startup commands, env handling, build-context ignores, and optional runtime smoke checks stay aligned |
 | API contracts | `scripts/check_api_contracts.py`, `scripts/check_api_documentation.py`, `docs/api_contracts.md` | runtime response shapes and public API documentation stay aligned with source routes |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
@@ -245,7 +246,13 @@ Docker release hygiene is statically gated:
 python -B scripts/dev.py container-release
 ```
 
-Docker config is included for Docker-enabled machines. The local Python runtime is the fully verified path in this environment.
+On a Docker-enabled machine, run the runtime proof:
+
+```powershell
+python -B scripts/dev.py docker-runtime
+```
+
+This builds both images through Compose, waits for health endpoints, runs the same smoke flows against the containers, and tears the Compose project down. Docker is not installed in this environment, so the local Python runtime is the fully verified path here.
 
 ## Repository Structure
 

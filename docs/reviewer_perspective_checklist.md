@@ -27,6 +27,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 - Public PR review rules and malicious-contribution heuristics can be verified with `python -B scripts/dev.py pr-policy`.
 - Release-attachable replay evidence can be generated with `python -B scripts/dev.py replay-artifact`.
 - Docker/Compose release hygiene can be verified without a local Docker daemon with `python -B scripts/dev.py container-release`.
+- Docker runtime can be verified on a Docker-enabled machine with `python -B scripts/dev.py docker-runtime`.
 
 ## Interviewer Skepticism
 
@@ -43,7 +44,7 @@ Approved answer:
 
 For Docker specifically, add:
 
-> The container files are statically gated for ports, health checks, commands, env defaults, and ignored build-context state. I would still run `docker compose up --build` on a Docker-enabled machine before claiming Docker runtime verification.
+> The container files are statically gated for ports, health checks, commands, env defaults, and ignored build-context state. The repo also has `python -B scripts/dev.py docker-runtime` for Docker-enabled machines; I would run that before claiming Docker runtime verification.
 
 ## Star-Worthiness
 
