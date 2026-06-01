@@ -1,0 +1,96 @@
+{
+  "users": [
+    {
+      "id": "ivy",
+      "name": "Ivy Investigator",
+      "role": "investigator"
+    },
+    {
+      "id": "sam",
+      "name": "Sam Supervisor",
+      "role": "supervisor"
+    }
+  ],
+  "policies": [
+    {
+      "id": "recall-marketplace-enforcement-2026",
+      "title": "Recall Marketplace Enforcement Policy",
+      "version": "2026.05",
+      "body": "Active marketplace listings for recalled products must be removed. An investigator may create a violation record and draft a seller notice when product recall evidence and an active listing are present. Sending the seller notice is an external side-effect action and requires supervisor approval. Escalating a case also requires supervisor approval. Every action must be logged with case ID, listing ID, seller ID, policy citation, tool call, and idempotency key."
+    },
+    {
+      "id": "seller-communication-standard-2026",
+      "title": "Seller Communication Standard",
+      "version": "2026.02",
+      "body": "Seller notices must include product name, recall identifier, listing URL, required action, response deadline, and policy citation. The notice must not be sent until approval is recorded. Follow-up should be scheduled for five business days after notice creation."
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-rx900",
+      "name": "RX-900 Smart Blender",
+      "recall_id": "RCL-2026-014",
+      "recall_status": "active",
+      "hazard": "overheating and burn risk"
+    },
+    {
+      "id": "prod-kettle-safe",
+      "name": "Kettle Safe 2L",
+      "recall_id": "",
+      "recall_status": "none",
+      "hazard": ""
+    }
+  ],
+  "sellers": [
+    {
+      "id": "seller-market-blue",
+      "name": "Market Blue",
+      "risk_tier": "high"
+    },
+    {
+      "id": "seller-homehub",
+      "name": "HomeHub Outlet",
+      "risk_tier": "medium"
+    }
+  ],
+  "listings": [
+    {
+      "id": "lst-1001",
+      "seller_id": "seller-market-blue",
+      "product_id": "prod-rx900",
+      "status": "active",
+      "url": "marketplace://market-blue/rx-900-smart-blender"
+    },
+    {
+      "id": "lst-1002",
+      "seller_id": "seller-homehub",
+      "product_id": "prod-rx900",
+      "status": "removed",
+      "url": "marketplace://homehub/rx-900-smart-blender-removed"
+    },
+    {
+      "id": "lst-1003",
+      "seller_id": "seller-homehub",
+      "product_id": "prod-kettle-safe",
+      "status": "active",
+      "url": "marketplace://homehub/kettle-safe-2l"
+    }
+  ],
+  "cases": [
+    {
+      "id": "case-1001",
+      "seller_id": "seller-market-blue",
+      "product_id": "prod-rx900",
+      "status": "open",
+      "summary": "Check whether Market Blue is still selling recalled RX-900 Smart Blender."
+    },
+    {
+      "id": "case-1002",
+      "seller_id": "seller-homehub",
+      "product_id": "prod-rx900",
+      "status": "monitoring",
+      "summary": "HomeHub removed recalled RX-900 listing; monitor for recurrence."
+    }
+  ]
+}
+

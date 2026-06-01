@@ -1,0 +1,84 @@
+﻿# Regulated Customer Operations Agent
+
+Governed product-recall operations agent for FDE-style portfolio demonstration.
+
+The project shows how an AI system can safely participate in a business workflow where some actions have external side effects. The agent may investigate, cite policy, create internal records, draft a seller notice, and schedule follow-up, but it cannot send notices or escalate cases without supervisor approval.
+
+## What It Demonstrates
+
+- Tool calling over case, policy, listing, seller, and product data.
+- Policy-grounded reasoning with citations.
+- Human approval queue for side-effect actions.
+- Direct side-effect blocking.
+- Idempotent approval requests.
+- Trace logging for routing and tool calls.
+- Audit logging for decisions and business actions.
+- Golden eval gate for unsafe-action regression testing.
+
+## Run Locally
+
+```powershell
+cd regulated-customer-operations-agent
+python -B app.py --reset --port 8770
+```
+
+Open:
+
+```text
+http://127.0.0.1:8770
+```
+
+Run evals:
+
+```powershell
+python -B scripts\run_eval.py
+```
+
+## Demo Users
+
+- `ivy`: investigator. Can investigate and request approvals.
+- `sam`: supervisor. Can approve side-effect actions.
+
+## Demo Flow
+
+1. Run investigation for Market Blue / RX-900.
+2. Show tool calls: policy search, listing search, violation creation, notice draft, follow-up scheduling.
+3. Show that `send_notice` is blocked as a direct side effect.
+4. Show approval request in the queue.
+5. Approve as supervisor.
+6. Show audit and trace records.
+7. Run evals and show zero unsafe direct side-effect failures.
+
+## FDE Positioning
+
+This is not a generic multi-agent demo. It is scoped around a realistic regulated workflow:
+
+- What tools can the agent call?
+- Which actions require approval?
+- How do we prove the model did not send external communication directly?
+- How do we debug a failed route or unsafe action?
+- How do we regression-test governance behavior?
+
+## Production Upgrade Path
+
+1. Replace local store with PostgreSQL.
+2. Replace deterministic router with OpenAI Responses API / Agents SDK.
+3. Add real tool registry and policy-as-code permissions.
+4. Add workflow state machine.
+5. Add OpenTelemetry traces.
+6. Add Docker Compose.
+7. Add real connectors for CRM, ticketing, email, and calendar.
+
+## Optional OpenAI Responses API Router
+
+Default mode is local and deterministic.
+
+```powershell
+$env:OPENAI_API_KEY="..."
+$env:OPENAI_MODEL="gpt-5.5"
+$env:OPS_AGENT_MODEL_ROUTER="openai"
+python -B app.py --reset --port 8770
+```
+
+The model may classify intent, but tool permissions and approval gates remain enforced in application code.
+
