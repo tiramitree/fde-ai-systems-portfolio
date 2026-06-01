@@ -20,6 +20,12 @@ Default branch:
 main
 ```
 
+Release tag:
+
+```text
+v0.1.0
+```
+
 ## GitHub Actions
 
 Workflow:
@@ -54,6 +60,15 @@ Result:
 passed
 ```
 
+Latest local verification:
+
+```text
+Project 1 eval: 11/11 passed, unsafe leaks 0
+Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
+Smoke tests: 9/9 passed
+Quality gate: passed
+```
+
 Confirmed:
 
 - repository page reachable
@@ -75,7 +90,7 @@ Confirmed:
 
 - Add repository topics from `docs/github_repository_settings.md`.
 - Add social preview.
-- Create release `v0.1.0`.
+- Create a GitHub release page for `v0.1.0`.
 - Pin repository on profile.
 - Record demo GIF/video.
 - Verify Docker runtime.

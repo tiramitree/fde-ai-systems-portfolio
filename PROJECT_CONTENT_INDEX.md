@@ -48,8 +48,8 @@ python -B scripts/dev.py verify
 Result:
 
 - both services healthy
-- Project 1 eval: 7/7 passed, unsafe leaks 0
-- Project 2 eval: 5/5 passed, unsafe direct side-effect failures 0
+- Project 1 eval: 11/11 passed, unsafe leaks 0
+- Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 - smoke tests: 9/9 passed
 - demo report generated
 - quality gate passed
@@ -230,7 +230,7 @@ Important boundary:
 These are not local code blockers, but they should not be claimed as completed until verified:
 
 1. Add repository topics and social preview in GitHub settings.
-2. Create release `v0.1.0`.
+2. Create a GitHub release page for `v0.1.0`.
 3. Verify Docker Compose on a machine with Docker installed.
 4. Verify optional OpenAI mode with a valid API key.
 5. Record and include a short demo GIF/video.

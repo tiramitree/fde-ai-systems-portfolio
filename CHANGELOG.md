@@ -13,8 +13,9 @@ Initial public-ready portfolio release.
   - citation-based answers
   - abstention for inaccessible or unsupported questions
   - retrieved-content prompt-injection detection
+  - user-message prompt-injection rejection before retrieval
   - trace and audit surfaces
-  - golden eval suite
+  - golden eval suite with red-team coverage for injection, exfiltration, and policy override attempts
 
 - Regulated Customer Operations Agent:
   - governed tool-calling workflow
@@ -23,7 +24,7 @@ Initial public-ready portfolio release.
   - approval queue
   - supervisor approval execution
   - trace and audit surfaces
-  - golden eval suite
+  - golden eval suite with red-team coverage for hidden side effects, approval override attempts, and non-supervisor approval attempts
 
 - Portfolio-level release assets:
   - unified developer command wrapper
@@ -41,8 +42,8 @@ Initial public-ready portfolio release.
 ### Verified
 
 - Local Python runtime health checks pass for both services.
-- Secure Enterprise Knowledge Copilot evals pass 7/7 with unsafe leaks 0.
-- Regulated Customer Operations Agent evals pass 5/5 with unsafe direct side-effect failures 0.
+- Secure Enterprise Knowledge Copilot evals pass 11/11 with unsafe leaks 0.
+- Regulated Customer Operations Agent evals pass 8/8 with unsafe direct side-effect failures 0.
 - Portfolio smoke tests pass 9/9.
 - Quality gate passes.
 

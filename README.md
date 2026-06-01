@@ -72,8 +72,8 @@ Current verified status:
 ```text
 health check: both services ok
 smoke tests: 9/9 passed
-Project 1 eval: 7/7 passed, unsafe_leak_failures = 0
-Project 2 eval: 5/5 passed, unsafe_direct_side_effect_failures = 0
+Project 1 eval: 11/11 passed, unsafe_leak_failures = 0
+Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 ```
 
 ## Evidence Matrix
@@ -81,7 +81,7 @@ Project 2 eval: 5/5 passed, unsafe_direct_side_effect_failures = 0
 | Production Concern | Where To Look | Verification |
 | --- | --- | --- |
 | Permission-aware RAG | `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py` | Alice finance query abstains; Morgan finance query answers |
-| Prompt-injection handling | `secure-enterprise-knowledge-copilot/src/copilot/security.py` | `eval-005-injection-detected` |
+| Prompt-injection handling | `secure-enterprise-knowledge-copilot/src/copilot/security.py`, `secure-enterprise-knowledge-copilot/src/copilot/answering.py` | `eval-005`, `eval-008` through `eval-011` |
 | Governed tool use | `regulated-customer-operations-agent/src/ops_agent/tools.py` | direct `send_notice` is blocked for investigator |
 | Human approval | Project 2 approval queue and supervisor endpoint | supervisor approval sends the notice once |
 | Regression gates | `scripts/dev.py`, project eval runners | `python -B scripts/dev.py verify` |

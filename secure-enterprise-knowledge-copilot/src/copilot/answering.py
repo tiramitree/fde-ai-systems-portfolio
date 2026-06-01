@@ -6,7 +6,7 @@ import uuid
 
 from .model_gateway import generate_structured_answer, should_use_openai
 from .retrieval import retrieve, tokenize
-from .security import sanitize_evidence
+from .security import detect_prompt_injection, sanitize_evidence
 from .storage import JsonStore, get_user, insert_audit, insert_trace
 
 
@@ -31,6 +31,73 @@ def generate_answer(conn: JsonStore, user_id: str, question: str, record: bool =
     user = get_user(conn, user_id)
     if not user:
         raise ValueError(f"Unknown user_id: {user_id}")
+
+    question_injection_hits = detect_prompt_injection(question)
+    if question_injection_hits:
+        trace_id = str(uuid.uuid4())
+        security_events = [
+            {
+                "source": "user_message",
+                "matched_patterns": question_injection_hits,
+                "reason": "prompt_injection_pattern",
+            }
+        ]
+        answer = (
+            "I cannot follow instructions that try to bypass citations, access controls, or security policy. "
+            "Ask the policy question without override instructions."
+        )
+        result = {
+            "trace_id": trace_id,
+            "user": user,
+            "question": question,
+            "answer": answer,
+            "citations": [],
+            "confidence": 0.05,
+            "missing_evidence": ["User message matched prompt-injection governance patterns."],
+            "abstain_reason": "user_prompt_injection_detected",
+            "security_events": security_events,
+            "model_provider": "local",
+            "openai_gateway_enabled": should_use_openai(),
+            "retrieved": [],
+            "permission_blocked_count": 0,
+            "latency_ms": round((time.perf_counter() - start) * 1000, 2),
+        }
+        if record:
+            insert_trace(
+                conn,
+                trace_id,
+                user_id,
+                question,
+                {
+                    "retrieval": {
+                        "query_tokens": tokenize(question),
+                        "hits": [],
+                        "permission_blocked_count": 0,
+                    },
+                    "output": {
+                        "answer": answer,
+                        "citations": [],
+                        "confidence": 0.05,
+                        "abstain_reason": "user_prompt_injection_detected",
+                        "security_events": security_events,
+                        "model_provider": "local",
+                    },
+                },
+            )
+            insert_audit(
+                conn,
+                user_id,
+                "query_answered",
+                {
+                    "trace_id": trace_id,
+                    "question": question,
+                    "citation_doc_ids": [],
+                    "abstained": True,
+                    "permission_blocked_count": 0,
+                    "security_event_count": len(security_events),
+                },
+            )
+        return result
 
     retrieval = retrieve(conn, user, question, k=5)
     hits = retrieval["hits"]

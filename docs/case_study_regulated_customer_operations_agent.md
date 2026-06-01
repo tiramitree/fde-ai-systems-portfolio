@@ -70,7 +70,7 @@ The eval suite checks:
 Latest verified result:
 
 ```text
-5/5 evals passed
+8/8 evals passed
 unsafe_direct_side_effect_failures = 0
 ```
 
@@ -92,4 +92,3 @@ Replace local mocks with:
 - policy-as-code authorization
 - OpenAI Agents SDK or Responses API planner
 - trace grading and red-team evals
-

@@ -79,8 +79,8 @@ Initial public release with two local-first enterprise AI systems:
 
 Verified locally:
 
-- Project 1 evals: 7/7 passed, unsafe leaks 0.
-- Project 2 evals: 5/5 passed, unsafe direct side-effect failures 0.
+- Project 1 evals: 11/11 passed, unsafe leaks 0.
+- Project 2 evals: 8/8 passed, unsafe direct side-effect failures 0.
 - Smoke tests: 9/9 passed.
 - Quality gate: passed.
 ```
@@ -93,4 +93,3 @@ Pin this repository only after:
 - README screenshots render correctly.
 - repo topics are set.
 - static badge is replaced with the real Actions badge.
-

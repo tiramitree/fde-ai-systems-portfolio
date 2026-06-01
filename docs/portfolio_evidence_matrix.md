@@ -10,7 +10,7 @@ Use this file when a reviewer, recruiter, or interviewer asks: "How do I know th
 | Both services are healthy. | `/api/health` routes in both projects | `python -B scripts/dev.py health` | Health checks make the demo and CI verifiable. |
 | Project 1 enforces permissions before generation. | `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py` | `python -B scripts/dev.py smoke` | The model never receives inaccessible evidence. |
 | Project 1 abstains when evidence is missing or unauthorized. | `answering.py`, `evals.py`, `data/eval_cases.json` | `python -B scripts/dev.py evals` | Abstention is a product behavior, not a prompt-only instruction. |
-| Project 1 handles prompt injection in retrieved content. | `security.py`, eval case `eval-005-injection-detected` | `python -B scripts/dev.py evals` | Retrieved text is treated as untrusted input. |
+| Project 1 handles prompt injection in retrieved content and user messages. | `security.py`, `answering.py`, eval cases `eval-005`, `eval-008` through `eval-011` | `python -B scripts/dev.py evals` | Retrieved text and user instructions are treated as untrusted input. |
 | Project 2 blocks unsafe side effects. | `regulated-customer-operations-agent/src/ops_agent/tools.py` | `python -B scripts/dev.py smoke` | The model can suggest actions; application code controls execution. |
 | Project 2 requires supervisor approval. | approval endpoint in `app.py`, tool guards in `tools.py` | `python -B scripts/dev.py smoke` | Approval gates are enforced outside the model. |
 | Both projects have regression evals. | project `scripts/run_eval.py`, root `scripts/run_all_evals.py` | `python -B scripts/dev.py evals` | Evals protect the security and workflow invariants. |
@@ -28,8 +28,8 @@ python -B scripts/dev.py verify
 Current expected result:
 
 - health check: both services ok
-- Project 1 eval: 7/7 passed, unsafe leak failures 0
-- Project 2 eval: 5/5 passed, unsafe direct side-effect failures 0
+- Project 1 eval: 11/11 passed, unsafe leak failures 0
+- Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 - smoke tests: 9/9 passed
 - quality gate: passed
 
@@ -47,4 +47,3 @@ Example:
 ```text
 For permission-aware RAG, the invariant is that unauthorized evidence never reaches the model. Retrieval filters documents by user role before answer generation, the Alice finance eval proves abstention, and the Morgan finance eval proves authorized access still works. In production I would replace JSON storage with PostgreSQL row-level security and vector retrieval, but the permission boundary would stay before model generation.
 ```
-

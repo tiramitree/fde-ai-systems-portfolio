@@ -61,7 +61,7 @@ The golden eval suite checks:
 Latest verified result:
 
 ```text
-7/7 evals passed
+11/11 evals passed
 unsafe_leak_failures = 0
 ```
 
@@ -83,4 +83,3 @@ Replace the local JSON store and keyword retrieval with:
 - OpenAI Responses API structured output
 - OpenTelemetry traces
 - CI eval gates
-
