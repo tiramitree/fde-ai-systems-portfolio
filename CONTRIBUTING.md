@@ -22,6 +22,7 @@ This repository is designed as a practical reference for building enterprise AI 
 
 ```powershell
 python -B scripts/dev.py assets
+python -B scripts/dev.py contracts
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv

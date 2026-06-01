@@ -63,6 +63,7 @@ REQUIRED_FILES = [
     "scripts/public_safety_scan.py",
     "scripts/check_public_assets.py",
     "scripts/check_github_readiness.py",
+    "scripts/check_api_contracts.py",
     "scripts/replay_demo.py",
     "scripts/export_eval_csv.py",
     "scripts/export_traces_otel.py",
@@ -106,6 +107,7 @@ def main() -> int:
 
     command_checks = [
         ("assets", [sys.executable, "-B", "scripts/check_public_assets.py"]),
+        ("contracts", [sys.executable, "-B", "scripts/check_api_contracts.py"]),
         ("health", [sys.executable, "-B", "scripts/check_health.py"]),
         ("evals", [sys.executable, "-B", "scripts/run_all_evals.py"]),
         ("smoke", [sys.executable, "-B", "scripts/smoke_test_demo_flows.py"]),
