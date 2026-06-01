@@ -11,6 +11,7 @@ Both demos keep the frontend deliberately simple: first-party HTML, CSS, and ES 
 - required DOM ids exist and are unique.
 - form controls used in the demo have labels.
 - quick-action buttons are wired through data attributes.
+- trace panels expose a copy trace ID command backed by a local clipboard module.
 - local ES module imports resolve inside the project `web/js` directory.
 - every `byId(...)` target used by JavaScript exists in the HTML.
 

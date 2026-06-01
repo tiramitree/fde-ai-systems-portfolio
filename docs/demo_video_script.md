@@ -53,6 +53,7 @@ Point out:
 - tool calls
 - approval request
 - blocked direct side effect
+- trace ID copy button for connecting the UI result to audit evidence
 
 Approve as supervisor:
 

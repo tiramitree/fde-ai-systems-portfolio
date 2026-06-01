@@ -117,12 +117,13 @@ Project 1:
 1. Select Alice.
 2. Ask: `How many days per week can employees work remotely?`
 3. Show citation.
-4. Ask: `What is the finance retention plan?`
-5. Show abstention and permission-blocked count.
-6. Select Morgan.
-7. Ask the same finance question.
-8. Show allowed finance citation.
-9. Run evals.
+4. Use Copy ID on the trace panel when you want to connect the answer to trace/audit evidence.
+5. Ask: `What is the finance retention plan?`
+6. Show abstention and permission-blocked count.
+7. Select Morgan.
+8. Ask the same finance question.
+9. Show allowed finance citation.
+10. Run evals.
 
 Project 2:
 
@@ -130,9 +131,10 @@ Project 2:
 2. Run investigation.
 3. Show violation, draft notice, follow-up, and pending approval.
 4. Show direct `send_notice` blocked.
-5. Approve as supervisor.
-6. Show audit event.
-7. Run evals.
+5. Use Copy ID on the trace panel to preserve the investigation trace ID.
+6. Approve as supervisor.
+7. Show audit event.
+8. Run evals.
 
 ## 5. Closing Narrative
 

@@ -114,7 +114,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 | Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
 | Architecture boundaries | `scripts/check_architecture_boundaries.py`, `docs/architecture_boundaries.md` | app shells, API classes, backend packages, and frontend modules preserve separation of concerns |
-| Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, and quick actions stay intact |
+| Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, trace-copy controls, and quick actions stay intact |
 | Fresh clone experience | `scripts/check_fresh_clone_experience.py`, `docs/fresh_clone_experience.md` | clone the public repo into a temp directory, run release-facing checks, start both apps on isolated ports, and run smoke flows |
 | Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, both `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
 | Error hygiene | `scripts/check_error_hygiene.py`, both `app.py` files | unexpected exceptions return generic JSON errors without leaking paths, stack details, or secret-like strings |

@@ -5,7 +5,7 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a small dark-mode toggle to both demo UIs.
-2. Add a copy trace ID button to each trace panel.
+2. Add per-trace deep links for sharing a specific audit trail in demos.
 3. Add a screenshot refresh script for the README assets.
 4. Add a tiny seed-data editor for local demos.
 5. Add a narrated demo video using the walkthrough GIF as the storyboard.
