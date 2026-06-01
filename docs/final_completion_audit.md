@@ -107,6 +107,8 @@ GitHub/open-source readiness is now partially achieved:
 - `python -B scripts/dev.py verify` passes.
 - `python -B scripts/dev.py verify` no longer dirties tracked files.
 - GitHub Actions workflow exists.
+- Published GitHub repository exists at `https://github.com/tiramitree/fde-ai-systems-portfolio`.
+- GitHub Actions `quality-gate` run completed successfully.
 - README visual assets and real UI screenshots exist.
 - Case studies, demo video script, and star growth plan exist.
 - `PROJECT_CONTENT_INDEX.md` exists as the compact context-recovery map.
@@ -117,14 +119,13 @@ Full objective should not be marked complete yet because these evidence items re
 1. Docker runtime verification.
 2. Optional OpenAI mode verification with an API key.
 3. Recorded demo video/GIF is not yet included.
-4. GitHub remote publication and GitHub Actions status.
-5. Actual star growth cannot be proven locally.
+4. Actual star growth cannot be proven immediately after publication.
 
 Next step:
 
 - verify Docker on a Docker-enabled machine or explicitly accept non-Docker local Python as the delivery target
 - verify optional OpenAI mode when an API key is available
 - record and add demo GIF/video
-- add GitHub remote, push `main`, confirm Actions, and iterate on launch feedback
+- create initial issues, release `v0.1.0`, record GIF/video, and iterate on launch feedback
 
 

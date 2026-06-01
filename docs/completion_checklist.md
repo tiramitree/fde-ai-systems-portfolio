@@ -113,4 +113,7 @@ Date: 2026-06-01
 - project content index added.
 - local Git repository initialized on branch `main`.
 - deterministic demo report added so validation does not dirty tracked files.
+- GitHub repository published at `https://github.com/tiramitree/fde-ai-systems-portfolio`.
+- GitHub Actions `quality-gate` completed successfully.
+- README quality badge now points to the real GitHub Actions workflow.
 - CI quality gate verified again after adding screenshots and case studies.

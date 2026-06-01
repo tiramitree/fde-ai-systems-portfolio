@@ -30,10 +30,9 @@ After the automated check passes:
 1. Confirm the README renders correctly.
 2. Confirm screenshots render.
 3. Confirm the `quality-gate` workflow completes successfully.
-4. Replace the static README quality badge with the real GitHub Actions badge.
+4. Confirm the README quality badge points to the real GitHub Actions workflow.
 5. Apply repository topics from `docs/github_repository_settings.md`.
 6. Add repository social preview.
 7. Create issues from `docs/github_initial_issues.md`.
 8. Create release `v0.1.0`.
 9. Pin the repository on the GitHub profile.
-
