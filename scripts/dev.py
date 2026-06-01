@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 COMMANDS = {
+    "architecture": ["scripts/check_architecture_boundaries.py"],
     "start": ["scripts/start_demo_servers.py"],
     "assets": ["scripts/check_public_assets.py"],
     "claims": ["scripts/check_claim_consistency.py"],
@@ -46,7 +47,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; assets/claims/dependency-surface/contracts/health/evals/eval-csv/frontend/github-launch-setup/github-readiness/governance/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality/ui-contracts: run individual gates; "
+            "start: run both demo servers; architecture/assets/claims/dependency-surface/contracts/health/evals/eval-csv/frontend/github-launch-setup/github-readiness/governance/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality/ui-contracts: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

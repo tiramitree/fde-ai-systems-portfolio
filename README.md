@@ -60,6 +60,7 @@ Useful commands:
 
 ```bash
 python -B scripts/dev.py assets
+python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
 python -B scripts/dev.py dependency-surface
 python -B scripts/dev.py contracts
@@ -101,6 +102,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Human approval | Project 2 approval queue and supervisor endpoint | supervisor approval sends the notice once |
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 | Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
+| Architecture boundaries | `scripts/check_architecture_boundaries.py`, `docs/architecture_boundaries.md` | app shells, API classes, backend packages, and frontend modules preserve separation of concerns |
 | Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, and quick actions stay intact |
 | Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, both `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
@@ -237,6 +239,7 @@ fde_portfolio/
 - [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md)
 - [OpenTelemetry Trace Export](docs/otel_trace_export.md)
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
+- [Architecture Boundaries](docs/architecture_boundaries.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
 - [Published Repository Status](docs/published_repository_status.md)
