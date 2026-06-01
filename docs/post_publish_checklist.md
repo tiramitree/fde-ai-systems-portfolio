@@ -33,7 +33,7 @@ After the automated check passes:
 4. Confirm the README quality badge points to the real GitHub Actions workflow.
 5. Apply repository description and topics from `docs/github_repository_settings.md`.
 6. Enable branch protection on `main` using `docs/github_branch_protection.json`.
-7. Add repository social preview.
+7. Add repository social preview using `docs/assets/github-preview.png`.
 8. Create issues from `docs/github_initial_issues.md`.
 9. Create a GitHub release page for `v0.1.0`.
 10. Pin the repository on the GitHub profile.

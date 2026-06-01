@@ -59,6 +59,7 @@ REQUIRED_FILES = [
     "docs/github_release_notes_v0.1.0.md",
     "docs/maintainer_review_policy.md",
     "docs/pr_review_runbook.md",
+    "docs/assets/github-preview.png",
     "docs/assets/github-preview.svg",
     "docs/assets/architecture-overview.svg",
     "docs/assets/demo-walkthrough.gif",

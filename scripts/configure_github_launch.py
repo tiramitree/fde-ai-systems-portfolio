@@ -176,7 +176,7 @@ def main() -> int:
             print(display_command(command))
         print()
         print("Manual after --apply:")
-        print("- Upload social preview from docs/assets/github-preview.svg or a PNG export.")
+        print("- Upload social preview from docs/assets/github-preview.png.")
         print("- Pin the repository on the GitHub profile.")
         print("- Re-run: python -B scripts/dev.py github-readiness")
         return 0

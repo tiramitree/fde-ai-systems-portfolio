@@ -49,7 +49,7 @@ python -B scripts/dev.py github-launch-setup
 python -B scripts/configure_github_launch.py --apply
 ```
 
-5. Upload the social preview and pin the repo on your profile.
+5. Upload `docs/assets/github-preview.png` as the social preview and pin the repo on your profile.
 6. Re-run:
 
 ```powershell

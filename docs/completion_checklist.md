@@ -18,6 +18,7 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 - Production upgrade notes exist.
 - Final completion audit exists.
 - Real UI screenshots are stored under `docs/assets/`.
+- Upload-ready social preview PNG is stored at `docs/assets/github-preview.png`.
 - `PROJECT_CONTENT_INDEX.md` exists as the compact context-recovery map.
 - `CHANGELOG.md` exists for public release history.
 - Local Git repository is initialized on branch `main`.
@@ -99,6 +100,7 @@ Date: 2026-06-01
 - `scripts/ci_quality_gate.py` added for GitHub Actions and clean-checkout validation.
 - README badges added without owner/repo template values.
 - `docs/assets/github-preview.svg` added.
+- `docs/assets/github-preview.png` added for GitHub social preview upload.
 - `docs/assets/architecture-overview.svg` added.
 - real UI screenshots added:
   - `docs/assets/secure-knowledge-copilot-screenshot.png`

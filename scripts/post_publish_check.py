@@ -104,6 +104,7 @@ def main() -> int:
         "docs/otel_trace_export.md",
         "docs/final_readiness_report.md",
         "docs/pr_review_runbook.md",
+        "docs/assets/github-preview.png",
         "docs/assets/demo-walkthrough.gif",
         "scripts/configure_github_launch.py",
         "scripts/check_repository_governance.py",

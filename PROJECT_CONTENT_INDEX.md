@@ -165,6 +165,7 @@ Release and growth:
 - `docs/launch_copy_pack.md`: copy-ready launch posts for GitHub, LinkedIn, X, Hacker News, and communities.
 - `docs/differentiation_strategy.md`: why this differs from ordinary AI demos.
 - `docs/assets/demo-walkthrough.gif`: README walkthrough animation for the two demo flows.
+- `docs/assets/github-preview.png`: upload-ready GitHub social preview image.
 
 Architecture decisions:
 
@@ -175,6 +176,7 @@ Architecture decisions:
 Visual assets:
 
 - `docs/assets/github-preview.svg`
+- `docs/assets/github-preview.png`
 - `docs/assets/architecture-overview.svg`
 - `docs/assets/secure-knowledge-copilot-screenshot.png`
 - `docs/assets/regulated-ops-agent-screenshot.png`
