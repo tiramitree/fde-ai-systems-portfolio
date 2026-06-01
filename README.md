@@ -210,6 +210,7 @@ fde_portfolio/
 - [Demo Report](docs/demo_report.md)
 - [Resume And Interview Package](docs/resume_and_interview_package.md)
 - [Production Upgrade Notes](docs/production_upgrade_notes.md)
+- [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md)
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
