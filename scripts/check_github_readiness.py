@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -59,12 +60,16 @@ def repo_from_remote(remote: str) -> str | None:
 
 def api_get(repo: str, endpoint: str) -> tuple[int, dict | list | None, str]:
     url = f"https://api.github.com/repos/{repo}{endpoint}"
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "fde-portfolio-github-readiness",
+    }
+    token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
     request = urllib.request.Request(
         url,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "fde-portfolio-github-readiness",
-        },
+        headers=headers,
     )
     try:
         with urllib.request.urlopen(request, timeout=20) as response:
@@ -82,6 +87,10 @@ def check(ok: bool, name: str, detail: str = "", warn: bool = False) -> Check:
     return Check(name, "WARN" if warn else "FAIL", detail)
 
 
+def is_rate_limited(error: str) -> bool:
+    return "rate limit" in error.lower()
+
+
 def collect_checks(strict: bool) -> list[Check]:
     checks: list[Check] = []
 
@@ -93,7 +102,16 @@ def collect_checks(strict: bool) -> list[Check]:
 
     status, repo_data, error = api_get(repo, "")
     if status != 200 or not isinstance(repo_data, dict):
-        checks.append(check(False, "GitHub repository metadata reachable", error or str(status)))
+        checks.append(
+            check(
+                False,
+                "GitHub repository metadata reachable",
+                "API rate-limited; authenticate with GH_TOKEN, GITHUB_TOKEN, or gh auth login"
+                if is_rate_limited(error)
+                else error or str(status),
+                warn=not strict and is_rate_limited(error),
+            )
+        )
         return checks
     checks.append(check(True, "GitHub repository metadata reachable", f"https://github.com/{repo}"))
 
