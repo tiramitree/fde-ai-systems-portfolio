@@ -153,11 +153,15 @@ def collect_checks(strict: bool) -> list[Check]:
     checks.append(check(True, "stars observed", str(repo_data.get("stargazers_count", 0))))
     checks.append(check(True, "forks observed", str(repo_data.get("forks_count", 0))))
 
-    status, runs_data, error = api_get(repo, "/actions/runs?per_page=5")
+    status, runs_data, error = api_get(repo, "/actions/runs?branch=main&event=push&per_page=5")
     latest_main = None
     if status == 200 and isinstance(runs_data, dict):
         latest_main = next(
-            (run for run in runs_data.get("workflow_runs", []) if run.get("head_branch") == "main"),
+            (
+                run
+                for run in runs_data.get("workflow_runs", [])
+                if run.get("head_branch") == "main" and run.get("event") == "push"
+            ),
             None,
         )
     checks.append(

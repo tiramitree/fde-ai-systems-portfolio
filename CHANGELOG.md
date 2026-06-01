@@ -26,6 +26,7 @@ All notable changes to this repository will be documented here.
 - CODEOWNERS and repository-governance gate through `python -B scripts/dev.py governance`.
 - Public claim-consistency gate through `python -B scripts/dev.py claims`.
 - Dependency-surface gate, Dependabot config, and digest-pinned Docker base images through `python -B scripts/dev.py dependency-surface`.
+- GitHub readiness now checks the latest `main` push workflow run directly so Dependabot PR runs do not create false failures.
 
 ### Verified
 
