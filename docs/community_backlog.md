@@ -8,7 +8,7 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 2. Add a copy trace ID button to each trace panel.
 3. Add a screenshot refresh script for the README assets.
 4. Add a tiny seed-data editor for local demos.
-5. Add a copy-to-clipboard button for CSV eval summaries.
+5. Add a narrated demo video using the walkthrough GIF as the storyboard.
 
 ## Intermediate Issues
 

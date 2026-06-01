@@ -145,6 +145,7 @@ Release and growth:
 - `docs/star_growth_plan.md`: plan for distribution and feedback loops.
 - `docs/launch_copy_pack.md`: copy-ready launch posts for GitHub, LinkedIn, X, Hacker News, and communities.
 - `docs/differentiation_strategy.md`: why this differs from ordinary AI demos.
+- `docs/assets/demo-walkthrough.gif`: README walkthrough animation for the two demo flows.
 
 Architecture decisions:
 

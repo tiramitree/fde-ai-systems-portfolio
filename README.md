@@ -96,6 +96,8 @@ See [Portfolio Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full 
 
 ## Screenshots
 
+![Demo walkthrough](docs/assets/demo-walkthrough.gif)
+
 | Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent |
 | --- | --- |
 | ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png) | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png) |
