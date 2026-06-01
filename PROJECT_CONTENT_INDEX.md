@@ -45,6 +45,7 @@ python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
 python -B scripts/dev.py ui-contracts
+python -B scripts/dev.py workflow-security
 python -B scripts/dev.py quality
 ```
 
@@ -97,9 +98,10 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, architecture, assets, claims, dependency-surface, contracts, health, evals, eval-csv, frontend, github-launch-setup, github-readiness, governance, otel-traces, pr-triage, readiness-report, replay, smoke, report, safety, quality, ui-contracts, verify.
+- `scripts/dev.py`: single developer entrypoint for start, architecture, assets, claims, dependency-surface, contracts, health, evals, eval-csv, frontend, github-launch-setup, github-readiness, governance, otel-traces, pr-triage, readiness-report, replay, smoke, report, safety, quality, ui-contracts, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
+- `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, and quick-action controls.
@@ -152,6 +154,7 @@ Interview preparation:
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and interview framing.
+- `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
 - `docs/frontend_integrity.md`: frontend wiring, no-build local UI posture, and interview framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.

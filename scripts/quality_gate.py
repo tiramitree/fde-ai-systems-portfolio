@@ -37,6 +37,7 @@ REQUIRED_FILES = [
     "docs/model_runtime_configuration.md",
     "docs/supply_chain_security.md",
     "docs/architecture_boundaries.md",
+    "docs/workflow_security.md",
     "docs/frontend_integrity.md",
     "docs/runtime_ui_contracts.md",
     "docs/public_release_audit.md",
@@ -72,6 +73,7 @@ REQUIRED_FILES = [
     "docs/assets/regulated-ops-agent-screenshot.png",
     "scripts/dev.py",
     "scripts/check_architecture_boundaries.py",
+    "scripts/check_workflow_security.py",
     "scripts/check_claim_consistency.py",
     "scripts/check_frontend_integrity.py",
     "scripts/check_runtime_ui_contracts.py",
@@ -127,6 +129,7 @@ def main() -> int:
 
     command_checks = [
         ("architecture", [sys.executable, "-B", "scripts/check_architecture_boundaries.py"]),
+        ("workflow-security", [sys.executable, "-B", "scripts/check_workflow_security.py"]),
         ("assets", [sys.executable, "-B", "scripts/check_public_assets.py"]),
         ("frontend", [sys.executable, "-B", "scripts/check_frontend_integrity.py"]),
         ("ui-contracts", [sys.executable, "-B", "scripts/check_runtime_ui_contracts.py"]),
