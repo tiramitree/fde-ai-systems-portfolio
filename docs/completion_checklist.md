@@ -20,6 +20,8 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 - Real UI screenshots are stored under `docs/assets/`.
 - `PROJECT_CONTENT_INDEX.md` exists as the compact context-recovery map.
 - `CHANGELOG.md` exists for public release history.
+- Local Git repository is initialized on branch `main`.
+- `python -B scripts/dev.py verify` does not dirty tracked files.
 
 ## Still Not Fully Verified
 
@@ -33,7 +35,9 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 2. Optionally verify OpenAI Responses API mode with a valid `OPENAI_API_KEY`.
 3. Record a short demo video/GIF.
 4. Do one final browser walkthrough of both projects from a clean reset.
-5. Update this checklist with final evidence.
+5. Add GitHub remote and push `main`.
+6. Confirm GitHub Actions passes on the published repository.
+7. Update this checklist with final evidence.
 
 ## Latest Verification
 
@@ -107,4 +111,6 @@ Date: 2026-06-01
 - demo video script added.
 - star growth plan added.
 - project content index added.
+- local Git repository initialized on branch `main`.
+- deterministic demo report added so validation does not dirty tracked files.
 - CI quality gate verified again after adding screenshots and case studies.
