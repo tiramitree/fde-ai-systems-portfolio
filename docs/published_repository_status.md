@@ -70,6 +70,7 @@ Observability integrity: 30/30 passed
 Threat model: 12/12 mapped
 PR review policy: passed
 Fresh clone experience: command published; run after each public push
+Fresh clone static checks include launch asset hygiene
 API documentation gate: passed
 Demo replay artifact: command published; writes ignored files under `out/`
 Container release hygiene: passed

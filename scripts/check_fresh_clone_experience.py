@@ -21,6 +21,7 @@ STATIC_COMMANDS = [
     "container-release",
     "dependency-surface",
     "governance",
+    "launch-assets",
     "model-gateway-safety",
     "pr-policy",
     "threat-model",

@@ -20,6 +20,7 @@ The command verifies:
 - Docker/Compose release hygiene
 - dependency-surface policy
 - repository governance files
+- launch asset hygiene
 - model gateway safety
 - PR review policy
 - threat model mapping
