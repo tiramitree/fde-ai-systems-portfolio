@@ -18,6 +18,7 @@ COMMANDS = {
     "github-launch-setup": ["scripts/configure_github_launch.py"],
     "github-readiness": ["scripts/check_github_readiness.py"],
     "otel-traces": ["scripts/export_traces_otel.py"],
+    "pr-triage": ["scripts/review_open_prs.py"],
     "readiness-report": ["scripts/generate_final_readiness_report.py"],
     "replay": ["scripts/replay_demo.py"],
     "smoke": ["scripts/smoke_test_demo_flows.py"],
@@ -40,7 +41,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; assets/contracts/health/evals/eval-csv/github-launch-setup/github-readiness/otel-traces/readiness-report/replay/smoke/report/safety/quality: run individual gates; "
+            "start: run both demo servers; assets/contracts/health/evals/eval-csv/github-launch-setup/github-readiness/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

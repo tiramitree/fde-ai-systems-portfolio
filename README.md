@@ -67,6 +67,7 @@ python -B scripts/dev.py eval-csv
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
@@ -96,6 +97,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 | API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, and release commands |
+| Public PR triage | `scripts/review_open_prs.py` | inspect open PRs and flag risky diffs before running code |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
 | Observability export | `scripts/export_traces_otel.py` | local traces convert to OTLP/JSON-compatible `resourceSpans` |
 | Final readiness report | `scripts/generate_final_readiness_report.py` | compact launch, blocker, and interview walkthrough status |
@@ -246,6 +248,7 @@ fde_portfolio/
 - [Launch Copy Pack](docs/launch_copy_pack.md)
 - [GitHub Initial Issues](docs/github_initial_issues.md)
 - [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md)
+- [Pull Request Review Runbook](docs/pr_review_runbook.md)
 - [GitHub Release Commands](docs/github_release_commands.md)
 - [Post-Publish Checklist](docs/post_publish_checklist.md)
 - [Roadmap](ROADMAP.md)

@@ -93,6 +93,7 @@ def render() -> str:
         "python -B scripts/dev.py replay",
         "python -B scripts/dev.py eval-csv",
         "python -B scripts/dev.py otel-traces",
+        "python -B scripts/dev.py pr-triage",
         "python -B scripts/dev.py github-launch-setup",
         "python -B scripts/dev.py github-readiness",
         "python -B scripts/post_publish_check.py",

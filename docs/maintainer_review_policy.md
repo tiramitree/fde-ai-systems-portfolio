@@ -37,16 +37,24 @@ Before merging any external PR:
 
 1. Read the diff before running it.
 2. Check for secret exfiltration, local file reads, network calls, subprocess calls, dependency installs, generated artifacts, and environment variable access.
-3. Run:
+3. Run triage before running contributor code:
+
+```bash
+python -B scripts/dev.py pr-triage
+```
+
+4. Run:
 
 ```bash
 python -B scripts/dev.py safety
 python -B scripts/dev.py verify
 ```
 
-4. Confirm no tracked runtime state, logs, caches, local paths, or personal identifiers were added.
-5. Confirm GitHub Actions is green. External PR workflows that require approval should be approved only after the diff review is clean.
-6. Merge only if the contribution strengthens the public portfolio or an explicit roadmap item.
+5. Confirm no tracked runtime state, logs, caches, local paths, or personal identifiers were added.
+6. Confirm GitHub Actions is green. External PR workflows that require approval should be approved only after the diff review is clean.
+7. Merge only if the contribution strengthens the public portfolio or an explicit roadmap item.
+
+See [Pull Request Review Runbook](pr_review_runbook.md) for the concrete review sequence.
 
 ## Current External PR Rule
 
