@@ -17,6 +17,7 @@ COMMANDS = {
     "health": ["scripts/check_health.py"],
     "evals": ["scripts/run_all_evals.py"],
     "eval-csv": ["scripts/export_eval_csv.py"],
+    "frontend": ["scripts/check_frontend_integrity.py"],
     "github-launch-setup": ["scripts/configure_github_launch.py"],
     "github-readiness": ["scripts/check_github_readiness.py"],
     "governance": ["scripts/check_repository_governance.py"],
@@ -44,7 +45,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; assets/claims/dependency-surface/contracts/health/evals/eval-csv/github-launch-setup/github-readiness/governance/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality: run individual gates; "
+            "start: run both demo servers; assets/claims/dependency-surface/contracts/health/evals/eval-csv/frontend/github-launch-setup/github-readiness/governance/otel-traces/pr-triage/readiness-report/replay/smoke/report/safety/quality: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

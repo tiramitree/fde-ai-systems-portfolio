@@ -32,6 +32,7 @@ python -B scripts/dev.py contracts
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
+python -B scripts/dev.py frontend
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
@@ -94,10 +95,11 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, assets, claims, dependency-surface, contracts, health, evals, eval-csv, github-launch-setup, github-readiness, governance, otel-traces, pr-triage, readiness-report, replay, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, assets, claims, dependency-surface, contracts, health, evals, eval-csv, frontend, github-launch-setup, github-readiness, governance, otel-traces, pr-triage, readiness-report, replay, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
+- `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, and quick-action controls.
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
@@ -146,6 +148,7 @@ Interview preparation:
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
+- `docs/frontend_integrity.md`: frontend wiring, no-build local UI posture, and interview framing.
 - `docs/portfolio_evidence_matrix.md`: claim-to-evidence map for reviewers and interviewers.
 - `docs/case_study_secure_enterprise_knowledge_copilot.md`: Project 1 case study.
 - `docs/case_study_regulated_customer_operations_agent.md`: Project 2 case study.

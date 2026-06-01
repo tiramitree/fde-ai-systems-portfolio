@@ -28,6 +28,7 @@ All notable changes to this repository will be documented here.
 - Dependency-surface gate, Dependabot config, and digest-pinned Docker base images through `python -B scripts/dev.py dependency-surface`.
 - GitHub readiness now checks the latest `main` push workflow run directly so Dependabot PR runs do not create false failures.
 - GitHub launch setup now attempts secret scanning and push protection as a best-effort authenticated setup step.
+- Frontend integrity gate through `python -B scripts/dev.py frontend`.
 
 ### Verified
 

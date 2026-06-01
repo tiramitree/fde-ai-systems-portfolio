@@ -1,0 +1,242 @@
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from html.parser import HTMLParser
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+@dataclass(frozen=True)
+class FrontendProject:
+    name: str
+    root: Path
+    title: str
+    required_ids: set[str]
+    required_data_attribute: str
+    minimum_quick_actions: int
+
+
+PROJECTS = [
+    FrontendProject(
+        name="secure-enterprise-knowledge-copilot",
+        root=ROOT / "secure-enterprise-knowledge-copilot",
+        title="Secure Enterprise Knowledge Copilot",
+        required_ids={
+            "health",
+            "userSelect",
+            "userMeta",
+            "documents",
+            "runEval",
+            "evalOutput",
+            "question",
+            "ask",
+            "answer",
+            "citations",
+            "trace",
+            "audit",
+            "traces",
+        },
+        required_data_attribute="data-question",
+        minimum_quick_actions=4,
+    ),
+    FrontendProject(
+        name="regulated-customer-operations-agent",
+        root=ROOT / "regulated-customer-operations-agent",
+        title="Regulated Customer Operations Agent",
+        required_ids={
+            "health",
+            "userSelect",
+            "caseSelect",
+            "caseSummary",
+            "runEval",
+            "evalOutput",
+            "message",
+            "runAgent",
+            "decision",
+            "approvals",
+            "trace",
+            "audit",
+            "traces",
+        },
+        required_data_attribute="data-message",
+        minimum_quick_actions=4,
+    ),
+]
+
+
+class FrontendHtmlParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.ids: list[str] = []
+        self.labels_for: set[str] = set()
+        self.links: list[str] = []
+        self.scripts: list[dict[str, str]] = []
+        self.data_attributes: list[str] = []
+        self.title_parts: list[str] = []
+        self._in_title = False
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attr_map = {name: value or "" for name, value in attrs}
+        if "id" in attr_map:
+            self.ids.append(attr_map["id"])
+        if tag == "label" and "for" in attr_map:
+            self.labels_for.add(attr_map["for"])
+        if tag == "link" and attr_map.get("rel") == "stylesheet" and "href" in attr_map:
+            self.links.append(attr_map["href"])
+        if tag == "script" and "src" in attr_map:
+            self.scripts.append(attr_map)
+        for name in attr_map:
+            if name.startswith("data-"):
+                self.data_attributes.append(name)
+        if tag == "title":
+            self._in_title = True
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "title":
+            self._in_title = False
+
+    def handle_data(self, data: str) -> None:
+        if self._in_title:
+            self.title_parts.append(data)
+
+
+def parse_html(path: Path) -> FrontendHtmlParser:
+    parser = FrontendHtmlParser()
+    parser.feed(path.read_text(encoding="utf-8"))
+    return parser
+
+
+def local_asset_path(project: FrontendProject, src: str) -> Path | None:
+    if src.startswith(("http://", "https://", "//")):
+        return None
+    normalized = src.split("?", 1)[0].split("#", 1)[0]
+    if normalized.startswith("/"):
+        return project.root / "web" / normalized.lstrip("/")
+    return project.root / "web" / normalized
+
+
+def check_html(project: FrontendProject, parser: FrontendHtmlParser) -> list[str]:
+    failures: list[str] = []
+    title = "".join(parser.title_parts).strip()
+    if title != project.title:
+        failures.append(f"{project.name}: expected title {project.title!r}, found {title!r}")
+
+    ids = set(parser.ids)
+    duplicates = sorted({item for item in parser.ids if parser.ids.count(item) > 1})
+    if duplicates:
+        failures.append(f"{project.name}: duplicate DOM id(s): {', '.join(duplicates)}")
+
+    missing_ids = sorted(project.required_ids - ids)
+    if missing_ids:
+        failures.append(f"{project.name}: missing required DOM id(s): {', '.join(missing_ids)}")
+
+    missing_input_labels = sorted(
+        field_id
+        for field_id in ("userSelect", "caseSelect", "question", "message")
+        if field_id in project.required_ids and field_id not in parser.labels_for
+    )
+    if missing_input_labels:
+        failures.append(f"{project.name}: missing label for input id(s): {', '.join(missing_input_labels)}")
+
+    quick_actions = parser.data_attributes.count(project.required_data_attribute)
+    if quick_actions < project.minimum_quick_actions:
+        failures.append(
+            f"{project.name}: expected at least {project.minimum_quick_actions} quick actions, found {quick_actions}"
+        )
+
+    if "/styles.css" not in parser.links:
+        failures.append(f"{project.name}: missing /styles.css stylesheet link")
+    for link in parser.links:
+        asset = local_asset_path(project, link)
+        if asset is None:
+            failures.append(f"{project.name}: remote stylesheet is not allowed: {link}")
+        elif not asset.exists():
+            failures.append(f"{project.name}: stylesheet target missing: {link}")
+
+    module_scripts = [script for script in parser.scripts if script.get("type") == "module"]
+    if len(module_scripts) != 1 or module_scripts[0].get("src") != "/js/app.js":
+        failures.append(f"{project.name}: expected exactly one module script at /js/app.js")
+    for script in parser.scripts:
+        asset = local_asset_path(project, script["src"])
+        if asset is None:
+            failures.append(f"{project.name}: remote script is not allowed: {script['src']}")
+        elif not asset.exists():
+            failures.append(f"{project.name}: script target missing: {script['src']}")
+    return failures
+
+
+def imported_modules(js_path: Path) -> list[str]:
+    text = js_path.read_text(encoding="utf-8")
+    return re.findall(r"^\s*import\s+.*?\s+from\s+[\"'](\./[^\"']+)[\"'];", text, flags=re.MULTILINE)
+
+
+def by_id_calls(js_path: Path) -> set[str]:
+    return set(re.findall(r"\bbyId\([\"']([^\"']+)[\"']\)", js_path.read_text(encoding="utf-8")))
+
+
+def api_paths(js_path: Path) -> set[str]:
+    text = js_path.read_text(encoding="utf-8")
+    literal_paths = set(re.findall(r"\bapi\([\"'](/api/[^\"']*)[\"']", text))
+    template_paths = set(re.findall(r"\bapi\(`(/api/[^`$]*)", text))
+    return literal_paths | template_paths
+
+
+def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
+    failures: list[str] = []
+    js_dir = project.root / "web" / "js"
+    expected_modules = {"api.js", "app.js", "dom.js", "renderers.js"}
+    present_modules = {path.name for path in js_dir.glob("*.js")}
+    missing_modules = sorted(expected_modules - present_modules)
+    if missing_modules:
+        failures.append(f"{project.name}: missing JS module(s): {', '.join(missing_modules)}")
+
+    for js_path in sorted(js_dir.glob("*.js")):
+        rel = js_path.relative_to(ROOT).as_posix()
+        for imported in imported_modules(js_path):
+            target = (js_path.parent / imported).resolve()
+            if js_path.parent.resolve() not in target.parents and target != js_path.parent.resolve():
+                failures.append(f"{rel}: import escapes module directory: {imported}")
+            elif not target.exists():
+                failures.append(f"{rel}: missing imported module: {imported}")
+
+        missing_dom_ids = sorted(by_id_calls(js_path) - html_ids)
+        if missing_dom_ids:
+            failures.append(f"{rel}: byId target(s) missing from HTML: {', '.join(missing_dom_ids)}")
+
+        for path in sorted(api_paths(js_path)):
+            if not path.startswith("/api/"):
+                failures.append(f"{rel}: API path must be rooted under /api/: {path}")
+    return failures
+
+
+def check_project(project: FrontendProject) -> list[str]:
+    html_path = project.root / "web" / "index.html"
+    if not html_path.exists():
+        return [f"{project.name}: missing web/index.html"]
+    parser = parse_html(html_path)
+    failures = []
+    failures.extend(check_html(project, parser))
+    failures.extend(check_javascript(project, set(parser.ids)))
+    return failures
+
+
+def main() -> int:
+    failures: list[str] = []
+    for project in PROJECTS:
+        failures.extend(check_project(project))
+
+    if failures:
+        print("Frontend integrity check failed:")
+        for failure in failures:
+            print(f"- {failure}")
+        return 1
+
+    print("Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, and quick actions are intact.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
