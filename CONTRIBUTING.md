@@ -25,6 +25,7 @@ python -B scripts/dev.py api-docs
 python -B scripts/dev.py assets
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
+python -B scripts/dev.py container-release
 python -B scripts/dev.py dependency-surface
 python -B scripts/dev.py contracts
 python -B scripts/dev.py error-hygiene
@@ -61,21 +62,22 @@ python -B scripts/dev.py verify
 3. Run evals.
 4. Run smoke tests.
 5. Run the public safety scan.
-6. Run the dependency-surface check.
-7. Run the architecture boundary check.
-8. Run the workflow security check.
-9. Run the model gateway safety check.
-10. Run the observability integrity check.
-11. Run the scenario data integrity check.
-12. Run the error hygiene check.
-13. Run the frontend integrity check.
-14. Run the threat model check.
-15. Run the PR review policy check.
-16. Run the runtime UI contract check.
-17. Run the API documentation check.
-18. Run the replay artifact export before release updates.
-19. Run the fresh clone check before broad external sharing or release updates.
-20. Update docs and demo report if behavior changed.
+6. Run the container release hygiene check.
+7. Run the dependency-surface check.
+8. Run the architecture boundary check.
+9. Run the workflow security check.
+10. Run the model gateway safety check.
+11. Run the observability integrity check.
+12. Run the scenario data integrity check.
+13. Run the error hygiene check.
+14. Run the frontend integrity check.
+15. Run the threat model check.
+16. Run the PR review policy check.
+17. Run the runtime UI contract check.
+18. Run the API documentation check.
+19. Run the replay artifact export before release updates.
+20. Run the fresh clone check before broad external sharing or release updates.
+21. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -83,6 +85,7 @@ python -B scripts/dev.py verify
 - [ ] Evals pass.
 - [ ] Smoke tests pass.
 - [ ] Public safety scan passes.
+- [ ] Container release hygiene check passes.
 - [ ] Dependency-surface check passes.
 - [ ] Architecture boundary check passes.
 - [ ] Workflow security check passes.

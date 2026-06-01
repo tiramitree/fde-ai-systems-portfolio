@@ -47,6 +47,7 @@ REQUIRED_FILES = [
     "docs/final_readiness_report.md",
     "docs/demo_report.md",
     "docs/demo_replay_artifact.md",
+    "docs/container_release_hygiene.md",
     "docs/resume_and_interview_package.md",
     "docs/production_upgrade_notes.md",
     "docs/postgres_pgvector_adapter_design.md",
@@ -105,6 +106,7 @@ REQUIRED_FILES = [
     "scripts/check_scenario_data_integrity.py",
     "scripts/check_error_hygiene.py",
     "scripts/check_claim_consistency.py",
+    "scripts/check_container_release.py",
     "scripts/check_frontend_integrity.py",
     "scripts/check_fresh_clone_experience.py",
     "scripts/check_runtime_ui_contracts.py",
@@ -222,6 +224,7 @@ def main() -> int:
         ("replay-artifact", [sys.executable, "-B", "scripts/export_demo_replay_artifact.py"]),
         ("report", [sys.executable, "-B", "scripts/generate_demo_report.py"]),
         ("claims", [sys.executable, "-B", "scripts/check_claim_consistency.py"]),
+        ("container-release", [sys.executable, "-B", "scripts/check_container_release.py"]),
     ]
     try:
         for service in SERVICES:
