@@ -209,6 +209,7 @@ fde_portfolio/
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
+- [Published Repository Status](docs/published_repository_status.md)
 - [GitHub Repository Settings](docs/github_repository_settings.md)
 - [Community Backlog](docs/community_backlog.md)
 - [Public Release Audit](docs/public_release_audit.md)

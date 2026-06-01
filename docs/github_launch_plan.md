@@ -25,7 +25,7 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
 
 ## Launch Checklist
 
-- [ ] Confirm README renders well on GitHub.
+- [x] Confirm README renders well on GitHub.
 - [x] Add visual README assets.
 - [x] Replace static quality badge with GitHub Actions badge after publishing.
 - [x] Add screenshots.
@@ -40,9 +40,9 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
   - `openai`
   - `agentic-workflows`
 - [ ] Apply repository settings from `docs/github_repository_settings.md`.
-- [ ] Run `python -B scripts/post_publish_check.py`.
+- [x] Run `python -B scripts/post_publish_check.py`.
 - [ ] Convert `docs/community_backlog.md` into initial public issues.
-- [ ] Create the first public issues from `docs/github_initial_issues.md`.
+- [x] Create the first public issues from `docs/github_initial_issues.md`.
 - [ ] Record the first demo using `docs/demo_recording_checklist.md`.
 - [ ] Publish launch copy from `docs/launch_copy_pack.md`.
 - [ ] Publish a short technical post.

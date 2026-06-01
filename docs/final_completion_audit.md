@@ -109,6 +109,8 @@ GitHub/open-source readiness is now partially achieved:
 - GitHub Actions workflow exists.
 - Published GitHub repository exists at `https://github.com/tiramitree/fde-ai-systems-portfolio`.
 - GitHub Actions `quality-gate` run completed successfully.
+- Post-publish verification passed.
+- Initial public issues #1-#5 exist.
 - README visual assets and real UI screenshots exist.
 - Case studies, demo video script, and star growth plan exist.
 - `PROJECT_CONTENT_INDEX.md` exists as the compact context-recovery map.
@@ -126,6 +128,6 @@ Next step:
 - verify Docker on a Docker-enabled machine or explicitly accept non-Docker local Python as the delivery target
 - verify optional OpenAI mode when an API key is available
 - record and add demo GIF/video
-- create initial issues, release `v0.1.0`, record GIF/video, and iterate on launch feedback
+- create release `v0.1.0`, record GIF/video, verify Docker/OpenAI live modes, and iterate on launch feedback
 
 

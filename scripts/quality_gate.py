@@ -40,6 +40,7 @@ REQUIRED_FILES = [
     "docs/community_backlog.md",
     "docs/github_initial_issues.md",
     "docs/post_publish_checklist.md",
+    "docs/published_repository_status.md",
     "docs/case_study_secure_enterprise_knowledge_copilot.md",
     "docs/case_study_regulated_customer_operations_agent.md",
     "docs/demo_video_script.md",
