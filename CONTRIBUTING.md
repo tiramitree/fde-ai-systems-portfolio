@@ -22,6 +22,7 @@ This repository is designed as a practical reference for building enterprise AI 
 
 ```powershell
 python -B scripts/dev.py assets
+python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
 python -B scripts/dev.py dependency-surface
 python -B scripts/dev.py contracts
@@ -51,9 +52,10 @@ python -B scripts/dev.py verify
 4. Run smoke tests.
 5. Run the public safety scan.
 6. Run the dependency-surface check.
-7. Run the frontend integrity check.
-8. Run the runtime UI contract check.
-9. Update docs and demo report if behavior changed.
+7. Run the architecture boundary check.
+8. Run the frontend integrity check.
+9. Run the runtime UI contract check.
+10. Update docs and demo report if behavior changed.
 
 ## Pull Request Checklist
 
@@ -62,6 +64,7 @@ python -B scripts/dev.py verify
 - [ ] Smoke tests pass.
 - [ ] Public safety scan passes.
 - [ ] Dependency-surface check passes.
+- [ ] Architecture boundary check passes.
 - [ ] Frontend integrity check passes.
 - [ ] Runtime UI contract check passes.
 - [ ] Security or governance behavior is not weakened.
