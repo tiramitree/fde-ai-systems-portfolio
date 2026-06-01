@@ -27,6 +27,7 @@ COMMANDS = {
     "github-launch-setup": ["scripts/configure_github_launch.py"],
     "github-readiness": ["scripts/check_github_readiness.py"],
     "governance": ["scripts/check_repository_governance.py"],
+    "launch-assets": ["scripts/check_launch_assets.py"],
     "model-gateway-safety": ["scripts/check_model_gateway_safety.py"],
     "observability": ["scripts/check_observability_integrity.py"],
     "openai-live": ["scripts/check_openai_live_mode.py"],
@@ -62,7 +63,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/github-launch-setup/github-readiness/governance/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
+            "start: run both demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/github-launch-setup/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

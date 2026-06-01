@@ -42,6 +42,7 @@ python -B scripts/dev.py fresh-clone
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
+python -B scripts/dev.py launch-assets
 python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
 python -B scripts/dev.py openai-live
@@ -112,7 +113,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -138,6 +139,7 @@ Local Git state:
 - `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, merge policy, best-effort security settings, branch protection, and first-release setup through `gh`.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/check_repository_governance.py`: validates CODEOWNERS, branch-protection payload, and PR-template safeguards.
+- `scripts/check_launch_assets.py`: verifies launch copy, star-growth materials, initial issue pack, public-doc links, and anti-hype boundaries.
 - `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and interview walkthrough report.
 - `scripts/check_pr_review_policy.py`: verifies malicious-contribution triage heuristics, runbook, maintainer policy, and PR template safeguards remain intact.
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
@@ -214,6 +216,7 @@ Release and growth:
 - `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.
 - `docs/pr_review_runbook.md`: concrete PR review command sequence and merge bar.
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
+- `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: initial issue titles, labels, and bodies for launch.
 - `docs/demo_video_script.md`: short video/GIF script.

@@ -44,6 +44,7 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
 - [x] Convert `docs/community_backlog.md` into initial public issues.
 - [x] Create the first public issues from `docs/github_initial_issues.md`.
 - [x] Record the first lightweight demo GIF using `docs/demo_recording_checklist.md`.
+- [x] Add a deterministic launch asset hygiene gate through `python -B scripts/dev.py launch-assets`.
 - [ ] Publish launch copy from `docs/launch_copy_pack.md`.
 - [ ] Publish a short technical post.
 - [ ] Pin the repo on GitHub profile.

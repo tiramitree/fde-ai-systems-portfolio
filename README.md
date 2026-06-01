@@ -76,6 +76,7 @@ python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py fresh-clone
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
+python -B scripts/dev.py launch-assets
 python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
 python -B scripts/dev.py openai-live
@@ -127,6 +128,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | Container release hygiene | `scripts/check_container_release.py`, `scripts/check_docker_runtime.py`, `docs/container_release_hygiene.md` | Dockerfiles, compose ports, health checks, startup commands, env handling, build-context ignores, and optional runtime smoke checks stay aligned |
 | API contracts | `scripts/check_api_contracts.py`, `scripts/check_api_documentation.py`, `docs/api_contracts.md` | runtime response shapes and public API documentation stay aligned with source routes |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
+| Launch asset hygiene | `scripts/check_launch_assets.py`, `docs/launch_assets_hygiene.md` | launch copy, star-growth plan, public issue pack, and anti-hype boundaries stay complete and honest |
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
 | Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
 | Model gateway safety | `scripts/check_model_gateway_safety.py`, `scripts/check_openai_live_mode.py`, project `model_gateway.py` files | OpenAI mode is opt-in, key references are constrained, structured outputs are required, failures fall back locally, and live mode can be verified when a key is available |
@@ -287,6 +289,7 @@ fde_portfolio/
 - [OpenTelemetry Trace Export](docs/otel_trace_export.md)
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Model Gateway Safety](docs/model_gateway_safety.md)
+- [Launch Assets Hygiene](docs/launch_assets_hygiene.md)
 - [Observability Integrity](docs/observability_integrity.md)
 - [Threat Model](docs/threat_model.md)
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)

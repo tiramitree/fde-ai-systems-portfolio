@@ -37,6 +37,7 @@ python -B scripts/dev.py docker-runtime  # Docker-enabled machines only
 python -B scripts/dev.py visual-assets
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py governance
+python -B scripts/dev.py launch-assets
 python -B scripts/dev.py observability
 python -B scripts/dev.py openai-live  # API-key environments only
 python -B scripts/dev.py threat-model
@@ -67,7 +68,7 @@ python -B scripts/check_github_readiness.py --strict
 | main branch protection enabled | WARN | not protected |
 | stars observed at generation | PASS | 3 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26785461005 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26785932223 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
@@ -107,10 +108,11 @@ python -B scripts/configure_github_launch.py --apply
 10. Open Project 2 and show investigation, approval queue, supervisor approval, trace, and audit log evidence.
 11. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
 12. Run `python -B scripts/dev.py threat-model` to show threats map to controls, files, and evidence commands.
-13. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
-14. Run `python -B scripts/dev.py api-docs` and show `docs/api_contracts.md` to map UI behavior to backend endpoints.
-15. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
-16. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
+13. Run `python -B scripts/dev.py launch-assets` to prove the public launch materials are complete without claiming unfinished external blockers.
+14. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
+15. Run `python -B scripts/dev.py api-docs` and show `docs/api_contracts.md` to map UI behavior to backend endpoints.
+16. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
+17. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
 
 ## Quality Bar
 
@@ -118,5 +120,6 @@ python -B scripts/configure_github_launch.py --apply
 - If `fresh-clone` fails, fix clone-path assumptions before sending the repository to reviewers.
 - If `replay-artifact` fails, do not attach stale release evidence.
 - If `github-readiness --strict` fails only on manual/account settings, do not call the launch complete.
+- If `launch-assets` fails, fix public copy and growth docs before publishing launch posts.
 - If an external PR appears, run `python -B scripts/dev.py pr-policy` and follow `docs/maintainer_review_policy.md` before merging.
 - If generated runtime files appear in Git status, investigate `.gitignore` and the safety scan before publishing.

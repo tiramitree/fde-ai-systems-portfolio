@@ -1,6 +1,6 @@
 # Launch Copy Pack
 
-Use this after the GitHub repository is public and GitHub Actions is green.
+Use this after the GitHub repository is public and GitHub Actions is green. Before posting, run `python -B scripts/dev.py launch-assets` to check that the launch copy remains complete and does not claim unfinished external blockers.
 
 ## One-Line Pitch
 
@@ -146,4 +146,3 @@ Outline:
 7. Evals as deployment gates.
 8. What changes in production: storage, connectors, telemetry.
 9. What should not change: security boundaries.
-
