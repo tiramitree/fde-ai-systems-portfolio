@@ -101,7 +101,7 @@ Local Git state:
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
-- `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, branch protection, and first-release setup through `gh`.
+- `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, merge policy, best-effort security settings, branch protection, and first-release setup through `gh`.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/check_repository_governance.py`: validates CODEOWNERS, branch-protection payload, and PR-template safeguards.
 - `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and interview walkthrough report.

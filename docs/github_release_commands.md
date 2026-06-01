@@ -43,7 +43,7 @@ After publishing:
 python -B scripts/dev.py github-launch-setup
 ```
 
-4. After `gh auth login`, apply repository description, topics, branch protection, and the `v0.1.0` release:
+4. After `gh auth login`, apply repository description, topics, merge policy, best-effort security settings, branch protection, and the `v0.1.0` release:
 
 ```powershell
 python -B scripts/configure_github_launch.py --apply

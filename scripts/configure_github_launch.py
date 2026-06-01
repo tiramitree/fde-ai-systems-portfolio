@@ -5,6 +5,7 @@ import json
 import shutil
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from check_github_readiness import (
@@ -19,6 +20,13 @@ ROOT = Path(__file__).resolve().parents[1]
 RELEASE_NOTES = ROOT / "docs" / "github_release_notes_v0.1.0.md"
 BRANCH_PROTECTION = ROOT / "docs" / "github_branch_protection.json"
 RELEASE_TITLE = "FDE AI Systems Portfolio v0.1.0"
+
+
+@dataclass(frozen=True)
+class LaunchCommand:
+    name: str
+    command: list[str]
+    required: bool = True
 
 
 def find_gh() -> str | None:
@@ -73,7 +81,7 @@ def get_repo() -> str:
     return repo
 
 
-def build_commands(gh: str, repo: str) -> list[tuple[str, list[str]]]:
+def build_commands(gh: str, repo: str) -> list[LaunchCommand]:
     topics = sorted(EXPECTED_TOPICS)
     repo_edit = [
         gh,
@@ -114,10 +122,19 @@ def build_commands(gh: str, repo: str) -> list[tuple[str, list[str]]]:
         "--input",
         BRANCH_PROTECTION.relative_to(ROOT).as_posix(),
     ]
+    security_features = [
+        gh,
+        "repo",
+        "edit",
+        repo,
+        "--enable-secret-scanning",
+        "--enable-secret-scanning-push-protection",
+    ]
     return [
-        ("repository metadata and topics", repo_edit),
-        ("main branch protection", branch_protection),
-        ("release", release),
+        LaunchCommand("repository metadata, topics, and merge policy", repo_edit),
+        LaunchCommand("repository secret scanning and push protection", security_features, required=False),
+        LaunchCommand("main branch protection", branch_protection),
+        LaunchCommand("release", release),
     ]
 
 
@@ -167,13 +184,14 @@ def main() -> int:
     repo = get_repo()
     commands = build_commands(gh, repo)
     if args.skip_release:
-        commands = [(name, command) for name, command in commands if name != "release"]
+        commands = [command for command in commands if command.name != "release"]
 
     if not args.apply:
         print("Dry run. Review these commands, then run with --apply after `gh auth login`:")
-        for name, command in commands:
-            print(f"# {name}")
-            print(display_command(command))
+        for item in commands:
+            suffix = "" if item.required else " (best effort; may depend on account plan)"
+            print(f"# {item.name}{suffix}")
+            print(display_command(item.command))
         print()
         print("Manual after --apply:")
         print("- Upload social preview from docs/assets/github-preview.png.")
@@ -186,12 +204,15 @@ def main() -> int:
         print("GitHub CLI is not authenticated. Run `gh auth login`, then retry with --apply.")
         return auth_status.returncode
 
-    for name, command in commands:
-        if name == "release" and release_exists(gh, repo):
+    for item in commands:
+        if item.name == "release" and release_exists(gh, repo):
             print(f"Release {EXPECTED_RELEASE_TAG} already exists; skipping release creation.")
             continue
-        code = run_command(command)
+        code = run_command(item.command)
         if code != 0:
+            if not item.required:
+                print(f"Optional launch command failed; continuing: {item.name}")
+                continue
             return code
 
     print()

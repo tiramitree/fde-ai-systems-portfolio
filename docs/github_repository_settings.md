@@ -61,6 +61,8 @@ Automated path after `gh auth login`:
 python -B scripts/configure_github_launch.py --apply --skip-release
 ```
 
+The setup script also tries to enable secret scanning and push protection through `gh repo edit`. That step is best effort because availability can depend on account and repository security settings.
+
 The branch-protection API payload is tracked in:
 
 ```text
@@ -85,7 +87,7 @@ After publishing, enable the repository security features available in the GitHu
 
 - Dependabot alerts
 - Dependabot security updates
-- secret scanning and push protection, if the account plan exposes them
+- secret scanning and push protection, if they were not already enabled by `python -B scripts/configure_github_launch.py --apply`
 
 ## First Release
 
