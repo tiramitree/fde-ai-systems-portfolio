@@ -26,6 +26,7 @@ From the repository root:
 python -B scripts/dev.py verify
 python -B scripts/dev.py start
 python -B scripts/dev.py assets
+python -B scripts/dev.py contracts
 python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
@@ -87,9 +88,10 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, assets, health, evals, eval-csv, github-readiness, otel-traces, replay, smoke, report, quality, verify.
+- `scripts/dev.py`: single developer entrypoint for start, assets, contracts, health, evals, eval-csv, github-readiness, otel-traces, replay, smoke, report, quality, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
+- `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies both service health endpoints.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/run_all_evals.py`: runs both project eval suites.
