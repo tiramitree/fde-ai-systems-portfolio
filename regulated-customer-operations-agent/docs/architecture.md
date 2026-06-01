@@ -1,8 +1,13 @@
 # Architecture
 
 ```text
-Static HTML/JS UI
+Static ES-module UI
+  -> api.js: HTTP client
+  -> dom.js: safe DOM helpers
+  -> renderers.js: UI rendering
+  -> app.js: screen orchestration
   -> Python HTTP API
+    -> api.py: application API layer
     -> JSON runtime state
     -> agent.py: intent classification and orchestration
     -> tools.py: policy search, listing search, violation, notice draft, approval, follow-up
@@ -39,4 +44,3 @@ Next.js case workspace
   -> CRM / ticketing / email connectors
   -> Trace and eval service
 ```
-

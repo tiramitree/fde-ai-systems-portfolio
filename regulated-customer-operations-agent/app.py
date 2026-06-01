@@ -6,7 +6,7 @@ import mimetypes
 import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 
 ROOT = Path(__file__).resolve().parent
@@ -14,30 +14,12 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from ops_agent.agent import process_message
-from ops_agent.evals import run_evals
-from ops_agent.storage import (
-    connect,
-    get_user,
-    init_state,
-    latest_eval_run,
-    list_approvals,
-    list_audit,
-    list_cases,
-    list_traces,
-    list_users,
-)
-from ops_agent.tools import approve_action
+from ops_agent.api import ApiError, OpsAgentApi
+from ops_agent.storage import init_state
 
 
 WEB_DIR = ROOT / "web"
-
-
-class ApiError(Exception):
-    def __init__(self, status: int, message: str):
-        self.status = status
-        self.message = message
-        super().__init__(message)
+API = OpsAgentApi()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -47,7 +29,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             parsed = urlparse(self.path)
             if parsed.path.startswith("/api/"):
-                self.handle_api_get(parsed.path, parse_qs(parsed.query))
+                self.send_json(API.get(parsed.path, API.parse_query(parsed.query)))
             else:
                 self.serve_static(parsed.path)
         except ApiError as exc:
@@ -61,62 +43,13 @@ class Handler(BaseHTTPRequestHandler):
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length).decode("utf-8") if length else "{}"
             body = json.loads(raw or "{}")
-            with connect() as store:
-                if parsed.path == "/api/agent":
-                    result = process_message(
-                        store,
-                        body.get("user_id", ""),
-                        body.get("message", ""),
-                        body.get("case_id"),
-                    )
-                    self.send_json(result)
-                    return
-                if parsed.path == "/api/approval/approve":
-                    approver_id = body.get("approver_id", "")
-                    user = get_user(store, approver_id)
-                    if not user or user["role"] != "supervisor":
-                        raise ApiError(403, "Only supervisors can approve actions.")
-                    result = approve_action(store, body.get("approval_id", ""), approver_id)
-                    self.send_json(result)
-                    return
-                if parsed.path == "/api/eval/run":
-                    init_state(reset=True)
-                    store.load()
-                    result = run_evals(store)
-                    self.send_json(result)
-                    return
-            raise ApiError(404, f"Unknown endpoint: {parsed.path}")
+            self.send_json(API.post(parsed.path, body))
         except json.JSONDecodeError:
             self.send_json({"error": "Invalid JSON body"}, 400)
         except ApiError as exc:
             self.send_json({"error": exc.message}, exc.status)
         except Exception as exc:
             self.send_json({"error": str(exc)}, 500)
-
-    def handle_api_get(self, path: str, query: dict[str, list[str]]) -> None:
-        with connect() as store:
-            if path == "/api/health":
-                self.send_json({"status": "ok", "app": "regulated-customer-operations-agent"})
-                return
-            if path == "/api/users":
-                self.send_json({"users": list_users(store)})
-                return
-            if path == "/api/cases":
-                self.send_json({"cases": list_cases(store)})
-                return
-            if path == "/api/approvals":
-                self.send_json({"approvals": list_approvals(store)})
-                return
-            if path == "/api/traces":
-                self.send_json({"traces": list_traces(store, int(query.get("limit", ["25"])[0]))})
-                return
-            if path == "/api/audit":
-                self.send_json({"events": list_audit(store, int(query.get("limit", ["50"])[0]))})
-                return
-            if path == "/api/eval/latest":
-                self.send_json({"eval_run": latest_eval_run(store)})
-                return
-        raise ApiError(404, f"Unknown endpoint: {path}")
 
     def serve_static(self, path: str) -> None:
         file_path = WEB_DIR / "index.html" if path in ("", "/") else (WEB_DIR / path.lstrip("/")).resolve()
@@ -160,4 +93,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
