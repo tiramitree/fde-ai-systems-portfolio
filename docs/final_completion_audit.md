@@ -45,6 +45,8 @@ Evidence:
 - Saved screenshots:
   - `docs/assets/secure-knowledge-copilot-screenshot.png`
   - `docs/assets/regulated-ops-agent-screenshot.png`
+- README walkthrough GIF:
+  - `docs/assets/demo-walkthrough.gif`
 - Browser verification already performed for:
   - Project 1 permission difference between Alice and Morgan
   - Project 1 eval button
@@ -56,7 +58,7 @@ Status: achieved for live local demo.
 
 Not fully verified:
 
-- Recorded demo video/GIF is not yet included.
+- A README GIF is included; a narrated demo video is not yet recorded.
 
 ## 4. FDE 职责对齐
 
@@ -120,14 +122,14 @@ Full objective should not be marked complete yet because these evidence items re
 
 1. Docker runtime verification.
 2. Optional OpenAI mode verification with an API key.
-3. Recorded demo video/GIF is not yet included.
+3. A narrated demo video is not yet recorded; the README GIF is included.
 4. Actual star growth cannot be proven immediately after publication.
 
 Next step:
 
 - verify Docker on a Docker-enabled machine or explicitly accept non-Docker local Python as the delivery target
 - verify optional OpenAI mode when an API key is available
-- record and add demo GIF/video
-- create a GitHub release page for `v0.1.0`, record GIF/video, verify Docker/OpenAI live modes, and iterate on launch feedback
+- record an optional narrated demo video
+- create a GitHub release page for `v0.1.0`, record an optional narrated video, verify Docker/OpenAI live modes, and iterate on launch feedback
 
 

@@ -27,13 +27,13 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 
 - Docker runtime was not verified because `docker` is not installed in the current environment.
 - Optional OpenAI mode was not called because no API key was provided.
-- Recorded demo video/GIF is not yet stored as a file.
+- A README demo GIF is stored at `docs/assets/demo-walkthrough.gif`; a narrated demo video is not yet recorded.
 
 ## Remaining Work Before Marking Goal Complete
 
 1. Verify Docker Compose on a machine with Docker.
 2. Optionally verify OpenAI Responses API mode with a valid `OPENAI_API_KEY`.
-3. Record a short demo video/GIF.
+3. Record an optional short narrated demo video, or use the README GIF as the lightweight visual proof.
 4. Do one final browser walkthrough of both projects from a clean reset.
 5. Add repository topics and social preview on GitHub.
 6. Create a GitHub release page for `v0.1.0`.
@@ -103,6 +103,8 @@ Date: 2026-06-01
 - real UI screenshots added:
   - `docs/assets/secure-knowledge-copilot-screenshot.png`
   - `docs/assets/regulated-ops-agent-screenshot.png`
+- README walkthrough GIF added:
+  - `docs/assets/demo-walkthrough.gif`
 - reviewer perspective checklist added.
 - GitHub release commands added.
 - case studies added:

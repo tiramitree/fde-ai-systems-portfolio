@@ -18,6 +18,7 @@ All notable changes to this repository will be documented here.
 - Public asset and Markdown-link quality check through `python -B scripts/dev.py assets`.
 - GitHub public-readiness report through `python -B scripts/dev.py github-readiness`.
 - API contract checks for UI-facing endpoints through `python -B scripts/dev.py contracts`.
+- Final launch and interview readiness report through `python -B scripts/dev.py readiness-report`.
 
 ### Verified
 

@@ -66,6 +66,7 @@ python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py readiness-report
 python -B scripts/dev.py replay
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
@@ -95,6 +96,7 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 | API contracts | `scripts/check_api_contracts.py` | stable response shapes for UI-facing endpoints |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
 | Observability export | `scripts/export_traces_otel.py` | local traces convert to OTLP/JSON-compatible `resourceSpans` |
+| Final readiness report | `scripts/generate_final_readiness_report.py` | compact launch, blocker, and interview walkthrough status |
 
 See [Portfolio Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full claim-to-evidence map.
 
