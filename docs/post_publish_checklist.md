@@ -29,6 +29,7 @@ The post-publish check must prove:
 - the API documentation script and documentation are published.
 - the demo replay artifact script and documentation are published.
 - the container release hygiene script and documentation are published.
+- the visual asset manifest script, documentation, and manifest are published.
 
 ## Manual GitHub Checks
 
@@ -46,6 +47,7 @@ After the automated check passes:
 10. Run `python -B scripts/dev.py fresh-clone` after the push is visible.
 11. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
 12. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
+13. Run `python -B scripts/dev.py visual-assets` after refreshing README screenshots.
 
 ## Optional Backlog Seeding
 

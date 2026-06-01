@@ -73,6 +73,7 @@ Fresh clone experience: command published; run after each public push
 API documentation gate: passed
 Demo replay artifact: command published; writes ignored files under `out/`
 Container release hygiene: passed
+Visual asset manifest: passed
 Quality gate: passed
 ```
 
@@ -89,6 +90,7 @@ Confirmed:
 - API documentation script and documentation published
 - demo replay artifact script and documentation published
 - container release hygiene script and documentation published
+- visual asset manifest script, documentation, and manifest published
 - remote `main` exists
 - local tracked worktree clean
 

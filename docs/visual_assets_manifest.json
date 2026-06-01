@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "purpose": "Keep README screenshots tied to the frontend source files they were captured from.",
+  "capture": {
+    "date": "2026-06-02",
+    "viewport": [1400, 900],
+    "method": "Chrome headless after local demo services reached /api/health"
+  },
+  "assets": [
+    {
+      "path": "docs/assets/secure-knowledge-copilot-screenshot.png",
+      "kind": "readme_screenshot",
+      "size": [1400, 900],
+      "sha256": "d47f5dcc5e6269176c1c6206216198ff2c2d37f6b302d230ffa69525dbbdce5b",
+      "source_files": [
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/index.html",
+          "sha256": "92946f3e5d22c7fc03573c7b01463ce5b7b3333b233b97a8389dac83b18253a4"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/styles.css",
+          "sha256": "a6b772f4f60d7b04609350f38f3b9013149e047a6bb83dc3e22a8d4147933c95"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
+          "sha256": "69de5001fe599587b9687179d383ac4c6bb1513a6057a6b0aca477e0d44d3e7d"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
+          "sha256": "d1284bf442f8082c2f0e1d3a6496a9b81f5067bccdd66efa68785d116297eab0"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
+          "sha256": "03d8207b3dba4f8aa2ccbab08767d5b0c090c46937f564434846bafed48d9321"
+        }
+      ]
+    },
+    {
+      "path": "docs/assets/regulated-ops-agent-screenshot.png",
+      "kind": "readme_screenshot",
+      "size": [1400, 900],
+      "sha256": "ad9f08a00a6e7abc7fb51b273745ad5b5e6c800ae5806d4762c8a5dd59880cc7",
+      "source_files": [
+        {
+          "path": "regulated-customer-operations-agent/web/index.html",
+          "sha256": "1a831c66a408c6a8a9de114da3f15cb6a6727e27ca0e8c7a4e3ddab1dee040dd"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/styles.css",
+          "sha256": "9b5bbadb92129735d5b3d2942fe085d8e874426b2c6a0df948199351d7716eba"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/app.js",
+          "sha256": "cc9f2476139a588086d1758dc647443e64f8b51858cc5d2d6eeca5e5adf56dfb"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/clipboard.js",
+          "sha256": "d1284bf442f8082c2f0e1d3a6496a9b81f5067bccdd66efa68785d116297eab0"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/renderers.js",
+          "sha256": "3e082a0d607ed2023011a03e1fc9696678a0b0ee98cf6fbfd7b3ef4f462726ef"
+        }
+      ]
+    }
+  ]
+}

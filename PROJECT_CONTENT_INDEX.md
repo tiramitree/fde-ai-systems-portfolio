@@ -55,6 +55,7 @@ python -B scripts/dev.py report
 python -B scripts/dev.py safety
 python -B scripts/dev.py threat-model
 python -B scripts/dev.py ui-contracts
+python -B scripts/dev.py visual-assets
 python -B scripts/dev.py workflow-security
 python -B scripts/dev.py quality
 ```
@@ -108,7 +109,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, model-gateway-safety, observability, otel-traces, pr-policy, pr-triage, readiness-report, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts both local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -118,6 +119,7 @@ Local Git state:
 - `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent.
 - `scripts/check_error_hygiene.py`: verifies unexpected backend exceptions return generic JSON errors without leaking internals.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
+- `scripts/check_visual_asset_manifest.py`: verifies README screenshots match recorded asset hashes, dimensions, and frontend source hashes.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.
 - `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, and quick-action controls.
@@ -180,6 +182,7 @@ Interview preparation:
 - `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and interview framing.
 - `docs/error_hygiene.md`: generic error response contract for unexpected backend failures.
 - `docs/container_release_hygiene.md`: Docker/Compose release hygiene gate and honest runtime-verification framing.
+- `docs/visual_asset_hygiene.md`: README screenshot manifest, source-hash drift protection, and interview framing.
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and interview framing.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
