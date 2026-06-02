@@ -1,6 +1,6 @@
 # OpenTelemetry Trace Export
 
-The local demos already record trace records for retrieval, governance decisions, tool calls, approvals, and blocked side effects. `scripts/export_traces_otel.py` converts those local records into an OTLP/JSON-compatible shape:
+The local demos already record trace records for retrieval, governance decisions, tool calls, approvals, blocked side effects, eval regressions, and release triage decisions. `scripts/export_traces_otel.py` converts those local records into an OTLP/JSON-compatible shape:
 
 ```text
 resourceSpans
@@ -75,11 +75,44 @@ Important events:
 - `governance.blocked_action`
 - `policy.cited`
 
+Project 3 traces become `reliability.release_triage` spans.
+
+Important attributes:
+
+- `app.project`
+- `app.trace_type`
+- `app.user_id`
+- `app.release_id`
+- `app.release_status`
+- `app.release_traffic_percent`
+- `app.incident_id`
+- `app.incident_status`
+- `app.incident_severity`
+- `app.incident_category`
+- `app.eval_run_id`
+- `app.failed_eval_count`
+- `app.recommendation`
+- `app.release_blocked`
+- `app.runbook_count`
+- `app.signal_count`
+- `app.audit_event_count`
+
+Important events:
+
+- `release.triage_decision`
+- `release.context`
+- `release.rollout_blocked`
+- `release.rollout_monitored`
+- `incident.signal`
+- `eval.failure.linked`
+- `runbook.linked`
+- `audit.linked`
+
 ## Production Path
 
 In production, this local exporter would become one of two paths:
 
-1. Native OpenTelemetry SDK instrumentation around API handlers, retrieval, model calls, tool calls, approval writes, and audit writes.
+1. Native OpenTelemetry SDK instrumentation around API handlers, retrieval, model calls, tool calls, approval writes, release decisions, eval gates, and audit writes.
 2. A batch bridge that converts persisted trace records into OTLP JSON and sends them to an OpenTelemetry Collector.
 
 The production design should preserve the same invariants:
@@ -87,6 +120,7 @@ The production design should preserve the same invariants:
 - permission checks happen before evidence reaches the model
 - approval gates happen before external side effects
 - blocked actions are observable events, not hidden failures
+- release rollout decisions link incidents, failed eval cases, runbooks, and audit events
 - trace IDs connect UI output, audit events, eval cases, and logs
 - eval and demo traces are tagged separately from production traffic
 

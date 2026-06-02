@@ -258,6 +258,7 @@ def main() -> int:
         ("contracts", [sys.executable, "-B", "scripts/check_api_contracts.py"]),
         ("health", [sys.executable, "-B", "scripts/check_health.py"]),
         ("smoke", [sys.executable, "-B", "scripts/smoke_test_demo_flows.py"]),
+        ("otel-traces", [sys.executable, "-B", "scripts/export_traces_otel.py"]),
         ("report", [sys.executable, "-B", "scripts/generate_demo_report.py"]),
         ("evals", [sys.executable, "-B", "scripts/run_all_evals.py"]),
         ("replay-artifact", [sys.executable, "-B", "scripts/export_demo_replay_artifact.py"]),

@@ -25,6 +25,11 @@ PROJECTS = [
         "kind": "ops_agent",
         "state_path": ROOT / "regulated-customer-operations-agent" / "data" / "runtime_state.json",
     },
+    {
+        "name": "ai-reliability-incident-console",
+        "kind": "reliability_console",
+        "state_path": ROOT / "ai-reliability-incident-console" / "data" / "runtime_state.json",
+    },
 ]
 
 
@@ -83,6 +88,36 @@ def load_state(path: Path) -> dict:
     if not path.exists():
         return {"traces": []}
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def find_by_id(items: list[dict], item_id: str) -> dict | None:
+    return next((item for item in items if item.get("id") == item_id), None)
+
+
+def latest_eval_for_release(state: dict, release_id: str) -> dict:
+    runs = [run for run in state.get("eval_runs", []) if run.get("release_id") == release_id]
+    if not runs:
+        return {}
+    return sorted(runs, key=lambda run: run.get("created_at", ""), reverse=True)[0]
+
+
+def linked_failed_cases(eval_run: dict, incident: dict) -> list[dict]:
+    linked_ids = set(incident.get("linked_eval_case_ids", []))
+    failed = [case for case in eval_run.get("cases", []) if not case.get("passed")]
+    if linked_ids:
+        linked = [case for case in failed if case.get("id") in linked_ids]
+        if linked:
+            return linked
+    return failed
+
+
+def audit_events_for_trace(state: dict, trace: dict) -> list[dict]:
+    trace_id = str(trace.get("id", ""))
+    return [
+        item
+        for item in state.get("audit_events", [])
+        if item.get("details", {}).get("trace_id") == trace_id
+    ]
 
 
 def copilot_span(project: str, trace: dict) -> dict:
@@ -174,6 +209,109 @@ def ops_agent_span(project: str, trace: dict) -> dict:
     return build_span(project, trace, "ops_agent.process_message", attributes, events, start, end)
 
 
+def reliability_console_span(project: str, trace: dict, state: dict) -> dict:
+    result = trace.get("result", {})
+    release_id = trace.get("release_id", "")
+    incident_id = trace.get("incident_id", "")
+    release = find_by_id(state.get("releases", []), release_id) or {}
+    incident = find_by_id(state.get("incidents", []), incident_id) or {}
+    eval_run = latest_eval_for_release(state, release_id)
+    failed_cases = linked_failed_cases(eval_run, incident)
+    runbooks = [
+        find_by_id(state.get("runbooks", []), runbook_id) or {"id": runbook_id}
+        for runbook_id in incident.get("runbook_ids", [])
+    ]
+    linked_audits = audit_events_for_trace(state, trace)
+    start = unix_nano(trace.get("created_at", ""))
+    end = start + 1_000_000
+
+    attributes = {
+        "app.project": project,
+        "app.trace_type": "release_triage",
+        "app.user_id": trace.get("user_id", ""),
+        "app.release_id": release_id,
+        "app.release_status": release.get("status", ""),
+        "app.release_traffic_percent": release.get("traffic_percent", 0),
+        "app.incident_id": incident_id,
+        "app.incident_status": incident.get("status", ""),
+        "app.incident_severity": incident.get("severity", ""),
+        "app.incident_category": incident.get("category", ""),
+        "app.eval_run_id": eval_run.get("id", ""),
+        "app.failed_eval_count": result.get("failed_eval_count", len(failed_cases)),
+        "app.recommendation": result.get("recommendation", ""),
+        "app.release_blocked": result.get("release_blocked", False),
+        "app.runbook_count": len(runbooks),
+        "app.signal_count": len(incident.get("signals", [])),
+        "app.audit_event_count": len(linked_audits),
+    }
+
+    events = [
+        event(
+            start,
+            "release.triage_decision",
+            {
+                "release_id": release_id,
+                "incident_id": incident_id,
+                "recommendation": result.get("recommendation", ""),
+                "release_blocked": result.get("release_blocked", False),
+                "failed_eval_count": result.get("failed_eval_count", len(failed_cases)),
+            },
+        ),
+        event(
+            start,
+            "release.context",
+            {
+                "release_status": release.get("status", ""),
+                "owner": release.get("owner", ""),
+                "traffic_percent": release.get("traffic_percent", 0),
+            },
+        ),
+    ]
+    rollout_event = "release.rollout_blocked" if result.get("release_blocked") else "release.rollout_monitored"
+    events.append(event(start, rollout_event, {"recommendation": result.get("recommendation", "")}))
+    for signal in incident.get("signals", []):
+        events.append(event(start, "incident.signal", {"signal": signal}))
+    for case in failed_cases:
+        events.append(
+            event(
+                start,
+                "eval.failure.linked",
+                {
+                    "case_id": case.get("id", ""),
+                    "category": case.get("category", ""),
+                    "severity": case.get("severity", ""),
+                    "details": case.get("details", ""),
+                },
+            )
+        )
+    for runbook in runbooks:
+        events.append(
+            event(
+                start,
+                "runbook.linked",
+                {
+                    "runbook_id": runbook.get("id", ""),
+                    "title": runbook.get("title", ""),
+                    "step_count": len(runbook.get("steps", [])),
+                },
+            )
+        )
+    for audit_item in linked_audits:
+        events.append(
+            event(
+                start,
+                "audit.linked",
+                {
+                    "audit_id": audit_item.get("id", ""),
+                    "action": audit_item.get("action", ""),
+                    "user_id": audit_item.get("user_id", ""),
+                },
+            )
+        )
+
+    return build_span(project, trace, "reliability.release_triage", attributes, events, start, end)
+
+
 def build_span(
     project: str,
     trace: dict,
@@ -217,9 +355,10 @@ def resource_span(project: dict, spans: list[dict]) -> dict:
     }
 
 
-def collect_resource_spans() -> tuple[list[dict], int]:
+def collect_resource_spans() -> tuple[list[dict], int, dict[str, int]]:
     output = []
     total = 0
+    counts = {}
     for project in PROJECTS:
         state = load_state(project["state_path"])
         traces = sorted(state.get("traces", []), key=lambda item: (item.get("created_at", ""), item.get("id", "")))
@@ -227,11 +366,16 @@ def collect_resource_spans() -> tuple[list[dict], int]:
         for trace in traces:
             if project["kind"] == "copilot":
                 spans.append(copilot_span(project["name"], trace))
-            else:
+            elif project["kind"] == "ops_agent":
                 spans.append(ops_agent_span(project["name"], trace))
+            elif project["kind"] == "reliability_console":
+                spans.append(reliability_console_span(project["name"], trace, state))
+            else:
+                raise ValueError(f"Unknown project kind: {project['kind']}")
         total += len(spans)
+        counts[project["name"]] = len(spans)
         output.append(resource_span(project, spans))
-    return output, total
+    return output, total, counts
 
 
 def main() -> int:
@@ -241,14 +385,21 @@ def main() -> int:
     parser.add_argument("output", nargs="?", default=str(DEFAULT_OUTPUT))
     args = parser.parse_args()
 
-    resource_spans, total = collect_resource_spans()
+    resource_spans, total, counts = collect_resource_spans()
     payload = {"resourceSpans": resource_spans}
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    print(f"Wrote {total} span(s) to {output}")
-    if total == 0:
-        print("No traces found. Run python -B scripts/dev.py replay or smoke first.", file=sys.stderr)
+    covered = sum(1 for count in counts.values() if count > 0)
+    print(f"Wrote {total} span(s) across {covered}/{len(counts)} project(s) to {output}")
+    missing = [name for name, count in counts.items() if count == 0]
+    if missing:
+        print(
+            "Missing spans for: "
+            + ", ".join(missing)
+            + ". Run python -B scripts/dev.py replay or smoke first.",
+            file=sys.stderr,
+        )
         return 1
     return 0
 
