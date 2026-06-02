@@ -19,7 +19,7 @@ from check_github_readiness import (
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE_NOTES = ROOT / "docs" / "github_release_notes_v0.1.0.md"
 BRANCH_PROTECTION = ROOT / "docs" / "github_branch_protection.json"
-RELEASE_TITLE = "FDE AI Systems Portfolio v0.1.0"
+RELEASE_TITLE = "FDE AI Systems Reference v0.1.0"
 
 
 @dataclass(frozen=True)

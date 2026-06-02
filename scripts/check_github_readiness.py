@@ -249,7 +249,7 @@ def print_checks(checks: list[Check]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Report GitHub repository readiness for public launch and technical reviews.")
+    parser = argparse.ArgumentParser(description="Report GitHub repository readiness for public launch and engineering review.")
     parser.add_argument("--strict", action="store_true", help="Treat warnings and manual blockers as failures.")
     args = parser.parse_args()
 
