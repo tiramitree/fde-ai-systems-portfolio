@@ -41,6 +41,14 @@ FORBIDDEN_POSITIONING_PATTERNS = [
     "个人" + "发展",
 ]
 
+FORBIDDEN_POSITIONING_PATTERNS.extend(
+    [
+        "\u9762" + "\u8bd5\u5b98",
+        "\u62db" + "\u8058",
+        "\u804c\u4e1a" + "\u89c4\u5212",
+    ]
+)
+
 TEXT_EXTENSIONS = {
     ".md",
     ".py",
