@@ -16,6 +16,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PROJECT_1_PORT = 8866
 DEFAULT_PROJECT_2_PORT = 8871
+DEFAULT_PROJECT_3_PORT = 8878
 
 
 @dataclass
@@ -50,7 +51,7 @@ def reserve_port(preferred: int) -> int:
             return int(sock.getsockname()[1])
 
 
-def services(project_1_port: int, project_2_port: int) -> list[dict]:
+def services(project_1_port: int, project_2_port: int, project_3_port: int) -> list[dict]:
     return [
         {
             "name": "secure-enterprise-knowledge-copilot",
@@ -63,6 +64,12 @@ def services(project_1_port: int, project_2_port: int) -> list[dict]:
             "path": ROOT / "regulated-customer-operations-agent",
             "port": project_2_port,
             "health": f"http://127.0.0.1:{project_2_port}/api/health",
+        },
+        {
+            "name": "ai-reliability-incident-console",
+            "path": ROOT / "ai-reliability-incident-console",
+            "port": project_3_port,
+            "health": f"http://127.0.0.1:{project_3_port}/api/health",
         },
     ]
 
@@ -330,19 +337,168 @@ def project_2_contracts(base_url: str) -> list[Check]:
     return checks
 
 
+def project_3_contracts(base_url: str) -> list[Check]:
+    checks: list[Check] = []
+
+    status, health = get_json(f"{base_url}/api/health")
+    checks.append(check(status == 200 and health == {"status": "ok", "app": "ai-reliability-incident-console"}, "P3 health contract", json.dumps(health)))
+
+    status, users = get_json(f"{base_url}/api/users")
+    checks.append(check(status == 200 and isinstance(users.get("users"), list) and users["users"], "P3 users list contract", f"users={len(users.get('users', []))}"))
+    if users.get("users"):
+        ok, detail = expect_types(users["users"][0], {"id": str, "name": str, "role": str})
+        checks.append(check(ok, "P3 user shape contract", detail))
+
+    status, releases = get_json(f"{base_url}/api/releases")
+    checks.append(check(status == 200 and isinstance(releases.get("releases"), list) and releases["releases"], "P3 releases list contract", f"releases={len(releases.get('releases', []))}"))
+    if releases.get("releases"):
+        ok, detail = expect_types(
+            releases["releases"][0],
+            {"id": str, "name": str, "created_at": str, "status": str, "owner": str, "change_summary": str, "traffic_percent": int},
+        )
+        checks.append(check(ok, "P3 release shape contract", detail))
+
+    status, incidents = get_json(f"{base_url}/api/incidents")
+    checks.append(check(status == 200 and isinstance(incidents.get("incidents"), list) and incidents["incidents"], "P3 incidents list contract", f"incidents={len(incidents.get('incidents', []))}"))
+    if incidents.get("incidents"):
+        ok, detail = expect_types(
+            incidents["incidents"][0],
+            {
+                "id": str,
+                "release_id": str,
+                "opened_at": str,
+                "status": str,
+                "severity": str,
+                "category": str,
+                "title": str,
+                "summary": str,
+                "signals": list,
+                "linked_eval_case_ids": list,
+                "runbook_ids": list,
+            },
+        )
+        checks.append(check(ok, "P3 incident shape contract", detail))
+
+    status, runbooks = get_json(f"{base_url}/api/runbooks")
+    checks.append(check(status == 200 and isinstance(runbooks.get("runbooks"), list) and runbooks["runbooks"], "P3 runbooks list contract", f"runbooks={len(runbooks.get('runbooks', []))}"))
+    if runbooks.get("runbooks"):
+        ok, detail = expect_types(runbooks["runbooks"][0], {"id": str, "title": str, "steps": list})
+        checks.append(check(ok, "P3 runbook shape contract", detail))
+
+    status, eval_runs = get_json(f"{base_url}/api/eval-runs")
+    checks.append(check(status == 200 and isinstance(eval_runs.get("eval_runs"), list) and eval_runs["eval_runs"], "P3 eval-runs list contract", f"eval_runs={len(eval_runs.get('eval_runs', []))}"))
+
+    status, latest_eval = get_json(f"{base_url}/api/eval/latest")
+    eval_run = latest_eval.get("eval_run")
+    ok = isinstance(eval_run, dict) and isinstance(eval_run.get("metrics"), dict) and isinstance(eval_run.get("cases"), list)
+    checks.append(check(status == 200 and ok, "P3 latest eval shape contract", f"cases={len(eval_run.get('cases', [])) if isinstance(eval_run, dict) else 0}"))
+
+    status, unsafe = post_json(
+        f"{base_url}/api/triage",
+        {
+            "user_id": "maya",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-014",
+        },
+    )
+    triage_keys = {"trace_id", "release", "incident", "decision", "failed_evals", "remediation_steps", "evidence"}
+    ok, detail = expect_types(
+        unsafe,
+        {
+            "trace_id": str,
+            "release": dict,
+            "incident": dict,
+            "decision": dict,
+            "failed_evals": list,
+            "remediation_steps": list,
+            "evidence": dict,
+        },
+    )
+    checks.append(check(status == 200 and has_keys(unsafe, triage_keys) and ok, "P3 triage response contract", detail))
+    decision = unsafe.get("decision", {})
+    checks.append(
+        check(
+            isinstance(decision, dict)
+            and decision.get("recommendation") == "block_release"
+            and decision.get("release_blocked") is True
+            and decision.get("severity") == "critical",
+            "P3 unsafe rollout block contract",
+            f"recommendation={decision.get('recommendation')}; blocked={decision.get('release_blocked')}",
+        )
+    )
+    evidence = unsafe.get("evidence", {})
+    checks.append(
+        check(
+            bool(unsafe.get("failed_evals"))
+            and isinstance(evidence, dict)
+            and isinstance(evidence.get("linked_eval_case_ids"), list)
+            and evidence["linked_eval_case_ids"],
+            "P3 failed eval evidence contract",
+            f"failed_evals={len(unsafe.get('failed_evals', []))}; linked={len(evidence.get('linked_eval_case_ids', [])) if isinstance(evidence, dict) else 0}",
+        )
+    )
+
+    status, latency = post_json(
+        f"{base_url}/api/triage",
+        {
+            "user_id": "maya",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-015",
+        },
+    )
+    latency_decision = latency.get("decision", {})
+    checks.append(
+        check(
+            status == 200
+            and isinstance(latency_decision, dict)
+            and latency_decision.get("recommendation") == "monitor"
+            and latency_decision.get("release_blocked") is False,
+            "P3 latency monitor contract",
+            f"recommendation={latency_decision.get('recommendation')}; blocked={latency_decision.get('release_blocked')}",
+        )
+    )
+
+    status, error = post_json(
+        f"{base_url}/api/triage",
+        {
+            "user_id": "missing-user",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-014",
+        },
+    )
+    checks.append(check(status == 404 and isinstance(error.get("error"), str), "P3 triage error contract", json.dumps(error)))
+
+    status, traces = get_json(f"{base_url}/api/traces?limit=3")
+    checks.append(check(status == 200 and isinstance(traces.get("traces"), list) and len(traces["traces"]) <= 3, "P3 traces list contract", f"traces={len(traces.get('traces', []))}"))
+    if traces.get("traces"):
+        ok, detail = expect_types(traces["traces"][0], {"id": str, "created_at": str, "user_id": str, "release_id": str, "incident_id": str, "result": dict})
+        checks.append(check(ok, "P3 trace shape contract", detail))
+
+    status, audit = get_json(f"{base_url}/api/audit?limit=3")
+    checks.append(check(status == 200 and isinstance(audit.get("events"), list), "P3 audit list contract", f"events={len(audit.get('events', []))}"))
+    if audit.get("events"):
+        ok, detail = expect_types(audit["events"][0], {"id": int, "created_at": str, "user_id": str, "action": str, "details": dict})
+        checks.append(check(ok, "P3 audit shape contract", detail))
+
+    return checks
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Start isolated demo services and verify stable API response contracts.",
     )
     parser.add_argument("--project1-port", type=int, default=DEFAULT_PROJECT_1_PORT)
     parser.add_argument("--project2-port", type=int, default=DEFAULT_PROJECT_2_PORT)
+    parser.add_argument("--project3-port", type=int, default=DEFAULT_PROJECT_3_PORT)
     args = parser.parse_args()
 
     project_1_port = reserve_port(args.project1_port)
     project_2_port = reserve_port(args.project2_port)
+    project_3_port = reserve_port(args.project3_port)
     project_1_url = f"http://127.0.0.1:{project_1_port}"
     project_2_url = f"http://127.0.0.1:{project_2_port}"
-    service_list = services(project_1_port, project_2_port)
+    project_3_url = f"http://127.0.0.1:{project_3_port}"
+    service_list = services(project_1_port, project_2_port, project_3_port)
 
     checks: list[Check] = []
     started: list[subprocess.Popen] = []
@@ -356,6 +512,7 @@ def main() -> int:
 
         checks.extend(project_1_contracts(project_1_url))
         checks.extend(project_2_contracts(project_2_url))
+        checks.extend(project_3_contracts(project_3_url))
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
         print(f"API contract check failed with exception: {exc}", file=sys.stderr)
         return 1

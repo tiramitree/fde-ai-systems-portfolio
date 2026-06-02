@@ -108,10 +108,65 @@ Security contract:
 - bypass instructions create blocked-action evidence instead of side effects
 - `model_router` reports the actual routing source for the intent classification path, not just whether OpenAI mode was configured
 
+## AI Reliability Incident Console
+
+Source:
+
+- `ai-reliability-incident-console/src/reliability_console/api.py`
+- Runtime gate: `scripts/check_api_contracts.py`
+
+### Routes
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/health` | Service health and app name. |
+| GET | `/api/users` | Demo users with `id`, `name`, and `role`. |
+| GET | `/api/releases` | Release records and canary rollout state. |
+| GET | `/api/incidents` | Release incident records with severity, category, signals, linked eval cases, and runbooks. |
+| GET | `/api/eval-runs` | Release eval run history. |
+| GET | `/api/runbooks` | Remediation runbooks referenced by incidents. |
+| GET | `/api/traces?limit=25` | Recent triage trace records. |
+| GET | `/api/audit?limit=50` | Recent audit events. |
+| GET | `/api/eval/latest` | Latest release reliability eval run record. |
+| POST | `/api/triage` | Triage an incident against a release and produce rollout decision evidence. |
+| POST | `/api/eval/run` | Reset state and run the project eval suite. |
+
+### Triage Response Shape
+
+`POST /api/triage` returns:
+
+- `trace_id`
+- `release`
+- `incident`
+- `decision`
+- `failed_evals`
+- `remediation_steps`
+- `evidence`
+
+The `decision` object includes:
+
+- `trace_id`
+- `user_id`
+- `release_id`
+- `incident_id`
+- `severity`
+- `recommendation`
+- `release_blocked`
+- `root_cause`
+- `confidence`
+
+Release reliability contract:
+
+- unsafe rollout incidents return `block_release`
+- latency-only incidents can return `monitor`
+- failed eval cases are returned as `failed_evals`
+- evidence includes linked eval case IDs, runbook IDs, and incident signals
+- trace and audit records are created for triage decisions
+
 ## Technical Review Framing
 
 Use this answer:
 
 ```text
-The browser talks to a small documented API surface. I verify the response shapes at runtime with `contracts`, and I verify the public API documentation with `api-docs` so a reviewer can map UI behavior to backend responsibilities. The important boundary is that permissions and side effects are enforced before the JSON response, not by trusting model text.
+The browser talks to a small documented API surface. I verify the response shapes at runtime with `contracts`, and I verify the public API documentation with `api-docs` so a reviewer can map UI behavior to backend responsibilities. The important boundary is that permissions and side effects are enforced before the JSON response, while rollout decisions are backed by deterministic eval and incident evidence instead of trusting model text.
 ```
