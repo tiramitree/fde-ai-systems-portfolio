@@ -16,6 +16,7 @@ The GitHub Actions workflow keeps these rules:
 - declare `permissions: contents: read`
 - set `actions/checkout` `persist-credentials: false`
 - use only approved first-party GitHub actions
+- use only approved action major refs for those actions
 - do not reference `secrets.*`
 - do not authenticate `gh` inside CI
 - do not push from CI
