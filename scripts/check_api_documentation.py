@@ -71,6 +71,37 @@ PROJECTS = {
             "non-supervisors receive `403`",
         },
     },
+    "AI Reliability Incident Console": {
+        "source": ROOT / "ai-reliability-incident-console" / "src" / "reliability_console" / "api.py",
+        "get": {
+            "/api/health",
+            "/api/users",
+            "/api/releases",
+            "/api/incidents",
+            "/api/eval-runs",
+            "/api/runbooks",
+            "/api/traces",
+            "/api/audit",
+            "/api/eval/latest",
+        },
+        "post": {
+            "/api/triage",
+            "/api/eval/run",
+        },
+        "fields": {
+            "trace_id",
+            "release",
+            "incident",
+            "decision",
+            "failed_evals",
+            "remediation_steps",
+            "evidence",
+            "release_blocked",
+            "recommendation",
+            "unsafe rollout incidents return `block_release`",
+            "latency-only incidents can return `monitor`",
+        },
+    },
 }
 
 CROSS_REFERENCES = {
