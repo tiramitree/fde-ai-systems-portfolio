@@ -11,13 +11,19 @@ PROJECTS = [
         "name": "secure-enterprise-knowledge-copilot",
         "path": "secure-enterprise-knowledge-copilot",
         "port": "8765",
-        "router_env": "COPILOT_MODEL_PROVIDER",
+        "env_markers": ["COPILOT_MODEL_PROVIDER: ${COPILOT_MODEL_PROVIDER:-local}"],
     },
     {
         "name": "regulated-customer-operations-agent",
         "path": "regulated-customer-operations-agent",
         "port": "8770",
-        "router_env": "OPS_AGENT_MODEL_ROUTER",
+        "env_markers": ["OPS_AGENT_MODEL_ROUTER: ${OPS_AGENT_MODEL_ROUTER:-local}"],
+    },
+    {
+        "name": "ai-reliability-incident-console",
+        "path": "ai-reliability-incident-console",
+        "port": "8780",
+        "env_markers": [],
     },
 ]
 
@@ -133,7 +139,8 @@ def check_compose() -> list[str]:
         path = project["path"]
         require_contains(text, f"  {name}:\n", rel, failures)
         require_contains(text, f"      context: ./{path}", rel, failures)
-        require_contains(text, f"      {project['router_env']}: ${{{project['router_env']}:-local}}", rel, failures)
+        for env_marker in project["env_markers"]:
+            require_contains(text, f"      {env_marker}", rel, failures)
         require_contains(text, f'      - "{port}:{port}"', rel, failures)
         require_contains(
             text,

@@ -30,3 +30,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  ai-reliability-incident-console:
+    build:
+      context: ./ai-reliability-incident-console
+    ports:
+      - "8780:8780"
+    command: ["python", "-B", "app.py", "--reset", "--host", "0.0.0.0", "--port", "8780"]
+    healthcheck:
+      test: ["CMD", "python", "-B", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8780/api/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

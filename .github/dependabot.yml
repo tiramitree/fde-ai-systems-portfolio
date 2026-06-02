@@ -14,3 +14,8 @@ updates:
     directory: "/regulated-customer-operations-agent"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "docker"
+    directory: "/ai-reliability-incident-console"
+    schedule:
+      interval: "weekly"

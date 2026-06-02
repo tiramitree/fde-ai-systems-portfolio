@@ -23,6 +23,11 @@ SERVICES = [
         "port": 8770,
         "health": "http://127.0.0.1:8770/api/health",
     },
+    {
+        "name": "ai-reliability-incident-console",
+        "port": 8780,
+        "health": "http://127.0.0.1:8780/api/health",
+    },
 ]
 
 
@@ -96,6 +101,7 @@ def smoke_env() -> dict[str, str]:
     env = os.environ.copy()
     env["FDE_PROJECT_1_URL"] = "http://127.0.0.1:8765"
     env["FDE_PROJECT_2_URL"] = "http://127.0.0.1:8770"
+    env["FDE_PROJECT_3_URL"] = "http://127.0.0.1:8780"
     return env
 
 

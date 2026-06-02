@@ -140,6 +140,7 @@ def check_dependabot() -> list[str]:
         'package-ecosystem: "docker"',
         'directory: "/secure-enterprise-knowledge-copilot"',
         'directory: "/regulated-customer-operations-agent"',
+        'directory: "/ai-reliability-incident-console"',
         'interval: "weekly"',
     ]
     return [f".github/dependabot.yml: missing {item}" for item in required if item not in text]
