@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from urllib.request import urlopen
 
-from public_safety_scan import check_forbidden_content, check_runtime_artifacts
+from public_safety_scan import run_scan
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -234,8 +234,7 @@ def check_required_files() -> list[str]:
 def main() -> int:
     failures = []
     failures.extend(check_required_files())
-    failures.extend(check_forbidden_content())
-    failures.extend(check_runtime_artifacts())
+    failures.extend(run_scan())
     started: list[subprocess.Popen] = []
 
     command_checks = [
