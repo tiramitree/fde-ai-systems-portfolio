@@ -43,7 +43,7 @@ https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml
 Latest observed successful main run:
 
 ```text
-https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26813390168
+https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26813784405
 ```
 
 Current expected result:
