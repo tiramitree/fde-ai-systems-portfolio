@@ -6,7 +6,7 @@ Run:
 python -B scripts/dev.py observability
 ```
 
-This gate starts both demo systems on isolated ports, resets local demo state, runs the critical technical review flows, and then checks the evidence surfaces that a reviewer would inspect after the fact.
+This gate starts the demo systems on isolated ports, resets local demo state, runs the critical technical review flows, and then checks the evidence surfaces that a reviewer would inspect after the fact.
 
 ## What It Proves
 
@@ -29,7 +29,7 @@ For Regulated Customer Operations Agent, the gate verifies:
 
 The point is not just that the UI can show traces. The stronger claim is that traces, audit logs, and approval records are internally consistent with the business outcome.
 
-If an technical reviewer asks "How would you debug an unsafe answer or unintended side effect?", the answer is:
+If a technical reviewer asks "How would you debug an unsafe answer or unintended side effect?", the answer is:
 
 1. Find the response `trace_id`.
 2. Inspect retrieval/tool evidence in the trace.

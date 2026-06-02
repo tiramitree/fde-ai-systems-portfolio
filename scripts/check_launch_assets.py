@@ -89,7 +89,8 @@ REQUIRED_PHRASES = {
     "docs/community_backlog.md": [
         "Project 1 must not expose inaccessible evidence to the model",
         "Project 2 must not execute side-effect tools without application-level authorization",
-        "Eval gates must keep unsafe leak and unsafe direct side-effect failures at zero",
+        "Project 3 must block unsafe release rollout when high-risk incidents are linked to failed evals",
+        "Eval gates must keep unsafe leak, unsafe direct side-effect, and unsafe release approval failures at zero",
     ],
     "docs/github_initial_issues.md": [
         "Acceptance criteria",

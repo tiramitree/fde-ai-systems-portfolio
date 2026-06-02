@@ -1,6 +1,6 @@
-﻿# Portfolio Evidence Matrix
+# System Evidence Matrix
 
-Use this file when a reviewer asks: "How do I know this is not just a chatbot demo?"
+Use this file when a technical reader asks: "How do I know this is not just a chatbot demo?"
 
 ## Core Claims
 

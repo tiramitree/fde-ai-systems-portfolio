@@ -165,7 +165,7 @@ def api_get(path: str) -> tuple[int, Any, str]:
         "https://api.github.com" + path,
         headers={
             "Accept": "application/vnd.github+json",
-            "User-Agent": "fde-portfolio-pr-triage",
+            "User-Agent": "fde-reference-pr-triage",
         },
     )
     try:
@@ -196,7 +196,7 @@ def scrape_open_pr_numbers(repo: str) -> list[int] | None:
     encoded_query = urllib.parse.urlencode({"q": "is:pr is:open"})
     request = urllib.request.Request(
         f"https://github.com/{repo}/pulls?{encoded_query}",
-        headers={"User-Agent": "fde-portfolio-pr-triage"},
+        headers={"User-Agent": "fde-reference-pr-triage"},
     )
     try:
         with urllib.request.urlopen(request, timeout=20) as response:

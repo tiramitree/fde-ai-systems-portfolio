@@ -12,8 +12,8 @@ python -B scripts/dev.py container-release
 
 The check verifies:
 
-- both project Dockerfiles use digest-pinned Python bases
-- both images use the expected `app.py --reset --host 0.0.0.0 --port ...` command
+- all project Dockerfiles use digest-pinned Python bases
+- all service images use the expected `app.py --reset --host 0.0.0.0 --port ...` command
 - exposed ports match the compose ports and service health checks
 - compose defaults to local model behavior while allowing optional OpenAI runtime configuration through environment variables
 - build contexts ignore local env files, runtime state, logs, SQLite files, caches, and temporary write-test files
@@ -25,7 +25,7 @@ On a Docker-enabled machine, run the runtime proof:
 python -B scripts/dev.py docker-runtime
 ```
 
-That command verifies Docker CLI and Compose availability, runs the static container release gate, brings the Compose stack up with a dedicated project name, waits for both health endpoints, runs the smoke flows against the containerized services, and then tears the stack down. It is intentionally not part of `quality` because Docker availability is environment-specific.
+That command verifies Docker CLI and Compose availability, runs the static container release gate, brings the Compose stack up with a dedicated project name, waits for all health endpoints, runs the smoke flows against the containerized services, and then tears the stack down. It is intentionally not part of `quality` because Docker availability is environment-specific.
 
 ## Technical Review Framing
 

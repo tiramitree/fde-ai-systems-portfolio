@@ -137,7 +137,7 @@ Acceptance criteria:
 
 - Script runs from the repository root.
 - It starts services if needed or fails with a clear message.
-- It prints Project 1 and Project 2 demo evidence.
+- It prints Project 1, Project 2, and Project 3 demo evidence.
 - It prints trace IDs and approval IDs for inspection.
 - python -B scripts/dev.py verify still passes.
 ```

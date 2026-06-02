@@ -1,4 +1,4 @@
-﻿# Portfolio Threat Model
+# System Threat Model
 
 This repository is a local-first demonstration of enterprise AI control boundaries. It is not production software, but the security model is intentionally explicit so a reviewer can ask, "What can go wrong, and what proves the control still works?"
 
