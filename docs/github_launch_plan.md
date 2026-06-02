@@ -17,7 +17,7 @@ Three runnable enterprise AI systems showing secure RAG, governed agents, AI rel
 ## Why People Might Star It
 
 - It is not another chatbot template.
-- It shows two complete enterprise AI workflows.
+- It shows three complete enterprise AI systems.
 - It runs locally without paid APIs.
 - It includes evals and smoke tests.
 - It demonstrates security, governance, and reliability patterns reviewers can inspect directly.

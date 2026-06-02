@@ -46,6 +46,7 @@ REQUIRED_CODEOWNER_PATTERNS = {
     "docs/github_branch_protection.json": "@tiramitree",
     "secure-enterprise-knowledge-copilot/src/copilot/": "@tiramitree",
     "regulated-customer-operations-agent/src/ops_agent/": "@tiramitree",
+    "ai-reliability-incident-console/src/reliability_console/": "@tiramitree",
 }
 
 
@@ -133,6 +134,7 @@ def check_dependabot() -> list[str]:
         'package-ecosystem: "docker"',
         'directory: "/secure-enterprise-knowledge-copilot"',
         'directory: "/regulated-customer-operations-agent"',
+        'directory: "/ai-reliability-incident-console"',
     ]
     for phrase in required_phrases:
         if phrase not in text:

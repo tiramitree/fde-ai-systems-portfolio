@@ -159,6 +159,8 @@ REQUIRED_FILES = [
     "regulated-customer-operations-agent/web/js/renderers.js",
     "ai-reliability-incident-console/README.md",
     "ai-reliability-incident-console/app.py",
+    "ai-reliability-incident-console/Dockerfile",
+    "ai-reliability-incident-console/.dockerignore",
     "ai-reliability-incident-console/data/seed_state.json",
     "ai-reliability-incident-console/data/eval_cases.json",
     "ai-reliability-incident-console/docs/architecture.md",

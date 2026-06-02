@@ -39,6 +39,7 @@ docs/github_branch_protection.json @tiramitree
 # AI safety boundaries.
 secure-enterprise-knowledge-copilot/src/copilot/ @tiramitree
 regulated-customer-operations-agent/src/ops_agent/ @tiramitree
+ai-reliability-incident-console/src/reliability_console/ @tiramitree
 
 # Public positioning and release materials.
 README.md @tiramitree

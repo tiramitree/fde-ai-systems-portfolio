@@ -159,6 +159,8 @@ def main() -> int:
         "scripts/review_open_prs.py",
         "ai-reliability-incident-console/README.md",
         "ai-reliability-incident-console/app.py",
+        "ai-reliability-incident-console/Dockerfile",
+        "ai-reliability-incident-console/.dockerignore",
         "ai-reliability-incident-console/docs/architecture.md",
         "ai-reliability-incident-console/docs/technical_review_notes.md",
         "ai-reliability-incident-console/src/reliability_console/api.py",
