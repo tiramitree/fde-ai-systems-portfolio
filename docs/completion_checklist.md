@@ -1,127 +1,82 @@
-﻿# Completion Checklist
+# Completion Checklist
 
-Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
+This checklist tracks the repository evidence needed before claiming a public release is complete.
 
 ## Current Verified State
 
 - Project 1 local service runs on `8765`.
 - Project 2 local service runs on `8770`.
+- Project 3 local service runs on `8780`.
 - `scripts/check_health.py` passes for all services.
 - `scripts/run_all_evals.py` passes:
-  - Project 1: 11/11, unsafe leaks 0
-  - Project 2: 8/8, unsafe direct side-effect failures 0
-- All three projects have README, architecture docs, demo scripts, threat models, implementation status files.
-- Repository-level README, run-all eval, health check, start-demo script, project case notes, and final demo runbook exist.
+  - Project 1: 11/11, unsafe leaks 0.
+  - Project 2: 8/8, unsafe direct side-effect failures 0.
+  - Project 3: 6/6, unsafe release approval failures 0.
+- `scripts/smoke_test_demo_flows.py` passes 13/13 smoke checks.
+- `scripts/check_api_contracts.py` passes 23/23 API contract checks.
+- `scripts/check_runtime_ui_contracts.py` passes 123/123 runtime UI contract checks.
+- `scripts/check_observability_integrity.py` passes 30/30 trace, audit, approval, and blocked-action checks.
+- `scripts/check_threat_model.py` maps 12/12 threats to controls, files, and evidence commands.
+- `scripts/check_pr_review_policy.py` passes.
+- `scripts/check_launch_assets.py` passes.
+- `scripts/quality_gate.py` passes.
+- All three projects have README files, architecture docs, demo scripts, threat models, implementation status files, and technical review notes.
 - Optional OpenAI Responses API gateway code exists but is disabled by default.
-- Dockerfile and compose files exist.
+- Dockerfiles and Compose files exist.
 - Project-level `.dockerignore` files exist.
 - Production upgrade notes exist.
-- Final completion audit exists.
-- Real UI screenshots are stored under `docs/assets/`.
-- Upload-ready social preview PNG is stored at `docs/assets/github-preview.png`.
+- Real UI screenshots, an architecture diagram, a demo walkthrough GIF, and the GitHub social preview image are stored under `docs/assets/`.
 - `PROJECT_CONTENT_INDEX.md` exists as the compact context-recovery map.
 - `CHANGELOG.md` exists for public release history.
-- Local Git repository is initialized on branch `main`.
-- `python -B scripts/dev.py verify` does not dirty tracked files.
+- The repository is public at `https://github.com/tiramitree/fde-ai-systems-portfolio`.
+- The default branch is `main`.
+- The release tag `v0.1.0` exists.
+- The latest observed `quality-gate` run on `main` passed.
+- The latest post-publish check passed.
+- Open PRs observed: 0.
+- Open issues observed: 0.
 
 ## Still Not Fully Verified
 
-- Docker runtime was not verified because `docker` is not installed in the current environment; `python -B scripts/dev.py docker-runtime` is the tracked runtime proof for Docker-enabled machines.
+- Docker runtime was not verified because Docker is not installed in the current environment; `python -B scripts/dev.py docker-runtime` is the tracked runtime proof for Docker-enabled machines.
 - Optional OpenAI mode was not called because no API key was provided; `python -B scripts/dev.py openai-live` is the tracked live proof for API-key environments.
-- A README demo GIF is stored at `docs/assets/demo-walkthrough.gif`; a narrated demo video is not yet recorded.
+- Repository description, topics, branch protection, social preview upload, release page creation, and profile pinning still require authenticated GitHub setup.
+- Star growth cannot be claimed until real launch feedback accumulates.
 
-## Remaining Work Before Marking Goal Complete
+## Remaining Work Before Claiming Release Completion
 
 1. Verify Docker Compose on a machine with Docker by running `python -B scripts/dev.py docker-runtime`.
 2. Optionally verify OpenAI Responses API mode with a valid key by running `python -B scripts/dev.py openai-live`.
-3. Record an optional short narrated demo video, or use the README GIF as the lightweight visual proof.
-4. Do one final browser walkthrough of all projects from a clean reset.
-5. Add repository description, topics, branch protection, and social preview on GitHub.
-6. Create a GitHub release page for `v0.1.0`.
-7. Update this checklist with final evidence.
+3. Do one final browser walkthrough of all projects from a clean reset.
+4. Apply repository description, topics, branch protection, and the GitHub release page after `gh auth login` by running `python -B scripts/configure_github_launch.py --apply`.
+5. Upload the social preview from `docs/assets/github-preview.png`.
+6. Pin the repository on the GitHub profile after GitHub readiness is clean.
+7. Re-run `python -B scripts/check_github_readiness.py --strict`.
+8. Re-run `python -B scripts/post_publish_check.py`.
+9. Re-run `python -B scripts/review_open_prs.py` before merging or responding to any external contribution.
 
 ## Latest Verification
 
-Date: 2026-06-01
+Date: 2026-06-02
 
 ```text
-python -B scripts\check_health.py
-python -B scripts\run_all_evals.py
+python -B scripts/dev.py quality
+python -B scripts/post_publish_check.py
+python -B scripts/check_github_readiness.py
+python -B scripts/review_open_prs.py
 ```
 
 Result:
 
-- health check passed for all services
-- Project 1 eval passed 11/11
-- Project 2 eval passed 8/8
+- Quality gate passed.
+- Post-publish check passed.
+- GitHub readiness has 0 failures and 6 warning/manual items.
+- No open PRs are awaiting review.
 
-## Public Release Gate
+## Quality Bar
 
-Date: 2026-06-01
-
-```text
-python -B scripts\quality_gate.py
-python -B scripts/dev.py verify
-```
-
-Result:
-
-- required GitHub/open-source files present
-- no public docs contain local machine paths or obvious secret patterns
-- health check passed
-- evals passed
-- smoke tests passed 13/13
-- demo report generated
-- CI workflow exists
-- README visual assets exist
-
-## Latest Full Verify
-
-Date: 2026-06-01
-
-```text
-python -B scripts/dev.py verify
-```
-
-Result:
-
-- all services healthy
-- Project 1 eval passed 11/11 with unsafe leaks 0
-- Project 2 eval passed 8/8 with unsafe direct side-effect failures 0
-- smoke tests passed 13/13
-- demo report generated
-- quality gate passed
-
-## GitHub Readiness Additions
-
-Date: 2026-06-01
-
-- `.github/workflows/ci.yml` added.
-- `scripts/ci_quality_gate.py` added for GitHub Actions and clean-checkout validation.
-- README badges added without owner/repo template values.
-- `docs/assets/github-preview.svg` added.
-- `docs/assets/github-preview.png` added for GitHub social preview upload.
-- `docs/assets/architecture-overview.svg` added.
-- real UI screenshots added:
-  - `docs/assets/secure-knowledge-copilot-screenshot.png`
-  - `docs/assets/regulated-ops-agent-screenshot.png`
-- README walkthrough GIF added:
-  - `docs/assets/demo-walkthrough.gif`
-- reviewer perspective checklist added.
-- GitHub release commands added.
-- case studies added:
-  - `docs/case_study_secure_enterprise_knowledge_copilot.md`
-  - `docs/case_study_regulated_customer_operations_agent.md`
-- demo video script added.
-- star growth plan added.
-- project content index added.
-- local Git repository initialized on branch `main`.
-- deterministic demo report added so validation does not dirty tracked files.
-- GitHub repository published at `https://github.com/tiramitree/fde-ai-systems-portfolio`.
-- GitHub Actions `quality-gate` completed successfully.
-- README quality badge now points to the real GitHub Actions workflow.
-- Post-publish verification passed.
-- Initial public issues #1-#5 created.
-- CI quality gate verified again after adding screenshots and case studies.
-- Red-team eval coverage expanded to Project 1 11/11 and Project 2 8/8.
-- Project 1 now rejects user-message prompt injection before retrieval.
+- If `quality` fails, fix behavior before changing public copy.
+- If `post_publish_check` fails, do not treat the pushed repository as ready.
+- If `github-readiness --strict` fails on account-level setup, close the setup item before claiming launch completion.
+- If external PRs appear, run `python -B scripts/dev.py pr-policy` and follow `docs/maintainer_review_policy.md` before merging.
+- If generated runtime files appear in Git status, investigate `.gitignore` and the safety scan before publishing.

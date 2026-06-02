@@ -1,6 +1,6 @@
 # Published Repository Status
 
-Date: 2026-06-01
+Date: 2026-06-02
 
 ## Repository
 
@@ -40,6 +40,12 @@ Actions page:
 https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml
 ```
 
+Latest observed successful main run:
+
+```text
+https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26813390168
+```
+
 Current expected result:
 
 ```text
@@ -65,8 +71,10 @@ Latest local verification:
 ```text
 Project 1 eval: 11/11 passed, unsafe leaks 0
 Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
-Smoke tests: 13/13 passed
 Project 3 eval: 6/6 passed, unsafe release approval failures 0
+Smoke tests: 13/13 passed
+API contract checks: 23/23 passed
+Runtime UI contracts: 123/123 passed
 Observability integrity: 30/30 passed
 Threat model: 12/12 mapped
 PR review policy: passed
@@ -94,11 +102,14 @@ Confirmed:
 - demo replay artifact script and documentation published
 - container release hygiene script and documentation published
 - visual asset manifest script, documentation, and manifest published
+- README screenshots and demo walkthrough GIF are tracked and published
 - launch copy and star-growth materials published with a deterministic anti-hype gate
 - remote `main` exists
 - local tracked worktree clean
+- open issues observed: 0
+- open PRs observed: 0
 
-## Initial Public Issues
+## Initial Public Issues Created
 
 - https://github.com/tiramitree/fde-ai-systems-portfolio/issues/1
 - https://github.com/tiramitree/fde-ai-systems-portfolio/issues/2
@@ -113,7 +124,6 @@ Confirmed:
 - Add social preview using `docs/assets/github-preview.png`.
 - Create a GitHub release page for `v0.1.0`; `python -B scripts/configure_github_launch.py --apply` can do this after `gh auth login`.
 - Pin repository on profile.
-- Record demo GIF/video.
 - Verify Docker runtime with `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; static Docker/Compose release hygiene is already gated.
 - Verify optional OpenAI mode with `python -B scripts/dev.py openai-live` and a live API key.
 - Collect launch feedback and star-growth evidence.
