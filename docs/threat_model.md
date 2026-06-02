@@ -34,7 +34,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 | T08 | Public PR or CI workflow abuse | GitHub Actions run with read-only permissions, safe triggers, hardened checkout, no secrets, and CODEOWNERS/governance plus PR-review-policy checks. | `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py pr-triage` |
 | T09 | Dependency or supply-chain drift | Local runtime stays stdlib-first; Docker bases are digest-pinned; Dependabot covers allowed update surfaces. | `python -B scripts/dev.py dependency-surface` |
 | T10 | Optional model gateway weakens controls or leaks keys | OpenAI mode is opt-in, key references are constrained, structured outputs are required, and failures fall back locally. | `python -B scripts/dev.py model-gateway-safety` |
-| T11 | Trace, audit, or approval evidence does not explain behavior | Observability integrity checks connect responses to persisted trace IDs, audit events, blocked actions, and approval records. | `python -B scripts/dev.py observability`, `python -B scripts/dev.py otel-traces` |
+| T11 | Trace, audit, approval, or release-decision evidence does not explain behavior | Observability integrity checks connect responses to persisted trace IDs, audit events, blocked actions, approval records, and release decisions. | `python -B scripts/dev.py observability`, `python -B scripts/dev.py otel-traces` |
 | T12 | Browser/static route surprises | Runtime UI contracts verify content types, basic safety headers, JSON 404s, and traversal blocking. | `python -B scripts/dev.py ui-contracts` |
 
 ## Trust Boundaries

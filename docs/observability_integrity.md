@@ -25,15 +25,23 @@ For Regulated Customer Operations Agent, the gate verifies:
 - supervisor approval updates the approval queue and emits an audit event
 - audit logs include workflow actions, refusal actions, and trace-linked processing events
 
+For AI Reliability Incident Console, the gate verifies:
+
+- unsafe canary incidents persist `block_release` trace and audit evidence
+- latency-only incidents persist `monitor` trace and audit evidence
+- failed eval cases remain linked to the unsafe release decision
+- runbook IDs and incident signals are attached to release triage evidence
+- each triage decision has exactly one linked audit event for its trace
+
 ## Technical Review Framing
 
-The point is not just that the UI can show traces. The stronger claim is that traces, audit logs, and approval records are internally consistent with the business outcome.
+The point is not just that the UI can show traces. The stronger claim is that traces, audit logs, approval records, and release decisions are internally consistent with the business outcome.
 
 If a technical reviewer asks "How would you debug an unsafe answer or unintended side effect?", the answer is:
 
 1. Find the response `trace_id`.
 2. Inspect retrieval/tool evidence in the trace.
-3. Inspect linked audit events for user, action, approval, and blocked-side-effect records.
+3. Inspect linked audit events for user, action, approval, release decision, and blocked-side-effect records.
 4. Re-run the observability gate to prove the evidence contract still holds after code changes.
 
 ## Production Upgrade Path
@@ -43,6 +51,7 @@ The local JSON store is intentionally simple. In production, the same evidence c
 - OpenTelemetry spans for request, retrieval, model, and tool steps
 - append-only audit/event tables
 - approval workflow tables with idempotency keys
+- release decision tables linked to eval run IDs and incident IDs
 - redaction and retention policies
 - trace search by user, case, document, approval, and incident
 

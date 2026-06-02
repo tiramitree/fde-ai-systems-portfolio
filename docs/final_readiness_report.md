@@ -107,7 +107,7 @@ python -B scripts/configure_github_launch.py --apply
 9. Open Project 1 and show permission-aware retrieval, citations, abstention, and prompt-injection handling.
 10. Open Project 2 and show investigation, approval queue, supervisor approval, trace, and audit log evidence.
 11. Open Project 3 and show failed eval evidence, blocked rollout, remediation steps, trace records, and audit log evidence.
-12. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
+12. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, blocked actions, and release decisions line up.
 13. Run `python -B scripts/dev.py threat-model` to show threats map to controls, files, and evidence commands.
 14. Run `python -B scripts/dev.py launch-assets` to prove the public launch materials are complete without claiming unfinished external blockers.
 15. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
