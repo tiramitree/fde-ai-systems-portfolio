@@ -78,7 +78,7 @@ def main() -> int:
     print(f"Project 1: http://127.0.0.1:{SERVICES[0]['port']}")
     print(f"Project 2: http://127.0.0.1:{SERVICES[1]['port']}")
     print(f"Project 3: http://127.0.0.1:{SERVICES[2]['port']}")
-    print("\nPress Ctrl+C to stop both demo servers.")
+    print("\nPress Ctrl+C to stop all demo servers.")
 
     if not all_healthy:
         for process in processes:

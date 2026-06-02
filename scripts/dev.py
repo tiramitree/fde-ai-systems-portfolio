@@ -57,13 +57,13 @@ def run_script(script: str) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Cross-platform developer entrypoint for the FDE AI Systems Portfolio.",
+        description="Cross-platform developer entrypoint for the FDE AI Systems Reference repository.",
     )
     parser.add_argument(
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run both demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/github-launch-setup/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
+            "start: run all demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/github-launch-setup/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )
