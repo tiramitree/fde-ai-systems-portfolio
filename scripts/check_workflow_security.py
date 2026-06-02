@@ -13,6 +13,12 @@ ALLOWED_ACTIONS = {
     "actions/upload-artifact",
 }
 
+APPROVED_ACTION_REFS = {
+    "actions/checkout": {"v6"},
+    "actions/setup-python": {"v6"},
+    "actions/upload-artifact": {"v7"},
+}
+
 FORBIDDEN_TEXT_PATTERNS = {
     "dangerous pull_request_target trigger": r"\bpull_request_target\s*:",
     "workflow_run trigger can chain privileged workflows": r"\bworkflow_run\s*:",
@@ -72,6 +78,11 @@ def check_actions(text: str, rel_path: str) -> list[str]:
             failures.append(f"{rel_path}: unapproved third-party action: {action}")
         if not version:
             failures.append(f"{rel_path}: action has empty version: {raw}")
+            continue
+        approved_versions = APPROVED_ACTION_REFS.get(action)
+        if approved_versions is not None and version not in approved_versions:
+            expected = ", ".join(sorted(approved_versions))
+            failures.append(f"{rel_path}: action {action} must use approved ref(s) {expected}, got {version}")
     return failures
 
 
