@@ -19,7 +19,7 @@ python -B scripts/dev.py openai-live
 The gate verifies that:
 
 - `.env.example` keeps `OPENAI_API_KEY` blank
-- both project model routes default to local mode
+- both model-facing project routes default to local mode
 - Docker Compose passes `OPENAI_API_KEY` only as an optional environment value
 - `OPENAI_API_KEY` references stay in an explicit allowlist
 - both model gateways use the Responses API endpoint
