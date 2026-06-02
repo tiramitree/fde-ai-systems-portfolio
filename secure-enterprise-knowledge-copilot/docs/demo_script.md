@@ -1,4 +1,4 @@
-# Demo Script
+﻿# Demo Script
 
 ## Opening
 
@@ -72,7 +72,7 @@ Expected:
 - The eval output includes total cases, pass rate, unsafe leak failures, and per-case trace IDs.
 - A deploy decision could be based on pass rate and zero unsafe leaks.
 
-## Interview Close
+## Demo Close
 
 The important part is the deployment pattern:
 

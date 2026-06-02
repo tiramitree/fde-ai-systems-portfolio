@@ -1,4 +1,4 @@
-# GitHub Launch Plan
+﻿# GitHub Launch Plan
 
 ## Repository Positioning
 
@@ -11,7 +11,7 @@ fde-ai-systems-portfolio
 Suggested tagline:
 
 ```text
-Two runnable enterprise AI systems showing secure RAG, governed agents, evals, traces, audit logs, and approval gates.
+Three runnable enterprise AI systems showing secure RAG, governed agents, AI release reliability, evals, traces, audit logs, and approval gates.
 ```
 
 ## Why People Might Star It
@@ -20,7 +20,7 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
 - It shows two complete enterprise AI workflows.
 - It runs locally without paid APIs.
 - It includes evals and smoke tests.
-- It demonstrates security and governance patterns interviewers ask about.
+- It demonstrates security, governance, and reliability patterns reviewers can inspect directly.
 - It includes production upgrade notes.
 
 ## Launch Checklist
@@ -53,11 +53,11 @@ Two runnable enterprise AI systems showing secure RAG, governed agents, evals, t
 
 Lead with the problem:
 
-> Most AI app demos stop at chat. Real enterprise deployments need permissions, citations, approval gates, audit logs, traces, and evals. This repo implements those patterns in two runnable systems.
+> Most AI app demos stop at chat. Real enterprise deployments need permissions, citations, approval gates, release gates, audit logs, traces, and evals. This repo implements those patterns in three runnable systems.
 
 ## Launch Post Draft
 
-I built a small open-source portfolio of enterprise AI systems:
+Open-source reference systems for enterprise AI controls:
 
 - Secure Enterprise Knowledge Copilot: permission-aware RAG with citations, abstention, prompt-injection handling, traces, audit logs, and evals.
 - Regulated Customer Operations Agent: governed tool-calling workflow with approval queues, side-effect blocking, supervisor approval, audit logs, traces, and unsafe-action evals.

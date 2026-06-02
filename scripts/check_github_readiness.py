@@ -12,8 +12,8 @@ from dataclasses import dataclass
 
 
 EXPECTED_DESCRIPTION = (
-    "Two runnable enterprise AI systems showing secure RAG, governed agents, "
-    "evals, traces, audit logs, and approval gates."
+    "Three runnable enterprise AI systems showing secure RAG, governed agents, "
+    "AI release reliability, evals, traces, audit logs, and approval gates."
 )
 
 EXPECTED_TOPICS = {
@@ -249,7 +249,7 @@ def print_checks(checks: list[Check]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Report GitHub repository readiness for public launch and interviews.")
+    parser = argparse.ArgumentParser(description="Report GitHub repository readiness for public launch and technical reviews.")
     parser.add_argument("--strict", action="store_true", help="Treat warnings and manual blockers as failures.")
     args = parser.parse_args()
 

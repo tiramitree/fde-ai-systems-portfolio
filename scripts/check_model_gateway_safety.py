@@ -197,6 +197,8 @@ def check_docker_compose() -> list[str]:
 def check_openai_key_references() -> list[str]:
     failures: list[str] = []
     for path in git_files():
+        if not path.exists():
+            continue
         rel = path.relative_to(ROOT).as_posix()
         if "OPENAI_API_KEY" not in path.read_text(encoding="utf-8", errors="ignore"):
             continue

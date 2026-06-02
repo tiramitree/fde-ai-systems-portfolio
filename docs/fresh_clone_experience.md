@@ -1,4 +1,4 @@
-# Fresh Clone Experience
+﻿# Fresh Clone Experience
 
 Run:
 
@@ -6,7 +6,7 @@ Run:
 python -B scripts/dev.py fresh-clone
 ```
 
-This command clones the configured GitHub `origin` into a temporary directory, runs release-facing static checks in that clone, starts both demo services on isolated local ports, and runs the user-facing health and smoke paths against those ports.
+This command clones the configured GitHub `origin` into a temporary directory, runs release-facing static checks in that clone, starts all demo services on isolated local ports, and runs the user-facing health and smoke paths against those ports.
 
 ## Why It Exists
 
@@ -24,13 +24,13 @@ The command verifies:
 - model gateway safety
 - PR review policy
 - threat model mapping
-- both demo health endpoints on isolated ports
-- the critical Project 1 and Project 2 smoke flows
+- all demo health endpoints on isolated ports
+- the critical Project 1, Project 2, and Project 3 smoke flows
 
-## Interview Framing
+## Technical Review Framing
 
 Use this answer:
 
 ```text
-I treat the public repository as the product surface. The fresh-clone check clones GitHub into a temp directory, runs the release-facing gates there, starts both apps on isolated ports, and exercises the core user flows. That catches hidden local-state assumptions before a reviewer does.
+The public repository is treated as the product surface. The fresh-clone check clones GitHub into a temp directory, runs the release-facing gates there, starts all apps on isolated ports, and exercises the core user flows. That catches hidden local-state assumptions before a reviewer does.
 ```

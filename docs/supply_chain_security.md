@@ -1,6 +1,6 @@
-# Supply Chain Security
+﻿# Supply Chain Security
 
-This portfolio is intentionally local-first and dependency-light. The current runtime uses Python standard library modules, first-party browser assets, and no npm or pip package manifest.
+This repository is intentionally local-first and dependency-light. The current runtime uses Python standard library modules, first-party browser assets, and no npm or pip package manifest.
 
 ## Current Posture
 
@@ -34,6 +34,6 @@ Required steps before accepting a dependency PR:
 4. Update `scripts/check_dependency_surface.py` so the dependency is explicit instead of accidental.
 5. Run `python -B scripts/dev.py verify`.
 
-## Interview Framing
+## Technical Review Framing
 
-The point is not that production systems should avoid every library forever. The point is that a portfolio demo should be easy to clone, audit, and run. Keeping the local path dependency-light reduces setup friction and makes safety claims easier to inspect.
+The point is not that production systems should avoid every library forever. The point is that a local reference demo should be easy to clone, audit, and run. Keeping the local path dependency-light reduces setup friction and makes safety claims easier to inspect.

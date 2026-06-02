@@ -1,14 +1,14 @@
-# Star Growth Plan
+﻿# Star Growth Plan
 
-Goal: make the repository useful and differentiated enough that engineers star it as a reference, not just as a personal portfolio.
+Goal: make the repository useful and differentiated enough that engineers star it as a practical reference.
 
 ## Audience
 
 - engineers building enterprise AI pilots
-- FDE candidates
-- AI application engineer candidates
+- forward-deployed engineering practitioners
+- AI application engineers
 - solution engineers
-- technical interviewers
+- technical reviewers
 
 ## Core Message
 
@@ -28,14 +28,14 @@ Most AI app repos show model calls. This repo shows the missing enterprise contr
 - X / Twitter thread
 - Hacker News Show HN
 - Reddit communities focused on LLM apps and AI engineering
-- school/career project portfolio
+- learning project reference
 
 ## Content Pieces
 
 1. README with diagrams and screenshots.
 2. 3 to 5 minute demo video.
 3. Technical blog post: "The model is not the security boundary."
-4. Short post: "Two enterprise AI demos that run without paid APIs."
+4. Short post: "Three enterprise AI reference systems that run without paid APIs."
 5. Red-team eval pack follow-up.
 
 Ready-to-use copy lives in `docs/launch_copy_pack.md`.

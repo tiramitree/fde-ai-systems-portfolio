@@ -1,18 +1,18 @@
 # Final Readiness Report
 
-This file is the compact launch and interview status report for the portfolio.
+This file is the compact launch and release review status report for the repository.
 Regenerate it with `python -B scripts/dev.py readiness-report` after meaningful publication or evidence changes.
 
 ## Executive Status
 
-- Overall status: ready for technical review with manual launch blockers.
-- The portfolio has two runnable enterprise AI systems with evals, traces, approval gates, API contracts, and public docs.
-- The repository is suitable for interview walkthroughs after the commands below pass.
+- Overall status: not ready until hard GitHub failures are fixed.
+- The repository has three runnable enterprise AI systems with evals, traces, approval gates, release gates, API contracts, and public docs.
+- The repository is suitable for technical review after the commands below pass.
 - Do not claim full launch completion until the manual/account and environment blockers are closed.
 
 ## Local Git Checks
 
-Before publishing or interviewing from a fresh checkout:
+Before publishing or reviewing from a fresh checkout:
 
 ```bash
 git status --short
@@ -24,7 +24,7 @@ Expected result: empty status output, branch `main`, and a latest commit that ma
 
 ## Commands To Prove The Project
 
-Run these from the repository root before sending the project to an interviewer or reviewer:
+Run these from the repository root before sending the project to a reviewer:
 
 ```bash
 python -B scripts/dev.py verify
@@ -60,30 +60,11 @@ python -B scripts/check_github_readiness.py --strict
 | Check | Status | Detail |
 | --- | --- | --- |
 | origin points to GitHub | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio.git |
-| GitHub repository metadata reachable | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio |
-| repository description set | WARN | missing |
-| repository topics set | WARN | missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling |
-| license detected as MIT | PASS | mit |
-| default branch is main | PASS | main |
-| main branch protection enabled | WARN | not protected |
-| stars observed at generation | PASS | 3 |
-| forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26785932223 |
-| no open issues | PASS | 0 |
-| no open PRs awaiting review | PASS | 0 |
-| tag v0.1.0 exists | PASS | ok |
-| GitHub release page exists for v0.1.0 | WARN | missing |
-| social preview configured | MANUAL | GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md |
-| profile repository pin configured | MANUAL | Requires account profile settings |
+| GitHub repository metadata reachable | FAIL | [WinError 10061] No connection could be made because the target machine actively refused it |
 
 ## Remaining Blockers
 
-- repository description set: missing
-- repository topics set: missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling
-- main branch protection enabled: not protected
-- GitHub release page exists for v0.1.0: missing
-- social preview configured: GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md
-- profile repository pin configured: Requires account profile settings
+- GitHub repository metadata reachable: [WinError 10061] No connection could be made because the target machine actively refused it
 - Docker Compose runtime: not verified on this machine because Docker is not installed; static container release hygiene is gated and `python -B scripts/dev.py docker-runtime` is available for Docker-enabled machines.
 - Optional OpenAI live mode: not verified without a valid API key; `python -B scripts/dev.py openai-live` is available for API-key environments.
 - Star growth: cannot be claimed as achieved until real launch feedback accumulates.
@@ -94,9 +75,9 @@ Repository description, topics, branch protection, and the first release can be 
 python -B scripts/configure_github_launch.py --apply
 ```
 
-## Interview Walkthrough Order
+## Review Walkthrough Order
 
-1. Start with the README and evidence matrix to frame the two-system portfolio.
+1. Start with the README and evidence matrix to frame the three-system repository.
 2. Run `python -B scripts/dev.py fresh-clone` to prove the public clone path works without hidden local state.
 3. Run `python -B scripts/dev.py replay` to show the end-to-end demo path without relying on browser state.
 4. Run `python -B scripts/dev.py replay-artifact` to generate release-attachable Markdown and JSON evidence under `out/`.
@@ -106,13 +87,14 @@ python -B scripts/configure_github_launch.py --apply
 8. Run `python -B scripts/dev.py visual-assets` to prove README screenshots are tied to current frontend source hashes.
 9. Open Project 1 and show permission-aware retrieval, citations, abstention, and prompt-injection handling.
 10. Open Project 2 and show investigation, approval queue, supervisor approval, trace, and audit log evidence.
-11. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
-12. Run `python -B scripts/dev.py threat-model` to show threats map to controls, files, and evidence commands.
-13. Run `python -B scripts/dev.py launch-assets` to prove the public launch materials are complete without claiming unfinished external blockers.
-14. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
-15. Run `python -B scripts/dev.py api-docs` and show `docs/api_contracts.md` to map UI behavior to backend endpoints.
-16. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
-17. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, and approval governance.
+11. Open Project 3 and show failed eval evidence, blocked rollout, remediation steps, trace records, and audit log evidence.
+12. Run `python -B scripts/dev.py observability` to prove response trace IDs, audit events, approvals, and blocked actions line up.
+13. Run `python -B scripts/dev.py threat-model` to show threats map to controls, files, and evidence commands.
+14. Run `python -B scripts/dev.py launch-assets` to prove the public launch materials are complete without claiming unfinished external blockers.
+15. Run `python -B scripts/dev.py pr-policy` before reviewing external contributions to prove the PR triage policy itself has not been weakened.
+16. Run `python -B scripts/dev.py api-docs` and show `docs/api_contracts.md` to map UI behavior to backend endpoints.
+17. Show `scripts/check_api_contracts.py`, eval files, and the safety scan to prove this is not only a UI demo.
+18. Explain the upgrade path: OpenAI runtime adapters, PostgreSQL/pgvector design, OpenTelemetry export, Docker packaging, approval governance, and release reliability gates.
 
 ## Quality Bar
 

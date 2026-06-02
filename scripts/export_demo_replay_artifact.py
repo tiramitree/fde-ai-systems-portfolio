@@ -13,6 +13,7 @@ from replay_demo import (
     Evidence,
     replay_project_1,
     replay_project_2,
+    replay_project_3,
     reserve_port,
     start_service,
     wait_for_health,
@@ -57,12 +58,14 @@ def render_markdown(created_at: str, urls: list[str], evidence: list[Evidence]) 
             "",
             f"- Secure Enterprise Knowledge Copilot: `{urls[0]}`",
             f"- Regulated Customer Operations Agent: `{urls[1]}`",
+            f"- AI Reliability Incident Console: `{urls[2]}`",
             "",
             "## Summary",
             "",
             f"- Replay checks: {passed}/{len(evidence)} passed",
             "- Project 1 proves permission-aware RAG, citation-backed answers, abstention, and prompt-injection handling.",
             "- Project 2 proves governed tool use, approval queue behavior, side-effect blocking, and audit surfaces.",
+            "- Project 3 proves release incident triage, eval regression linkage, rollout blocking, remediation evidence, and trace/audit surfaces.",
             "",
             "## Evidence",
             "",
@@ -70,7 +73,7 @@ def render_markdown(created_at: str, urls: list[str], evidence: list[Evidence]) 
             "",
             "## Release Use",
             "",
-            "Attach this artifact to a release or paste it into interview notes after regenerating it from the same commit.",
+            "Attach this artifact to a release or paste it into technical review notes after regenerating it from the same commit.",
             "The generated files live under `out/`, which is intentionally ignored by Git.",
             "",
         ]
@@ -85,6 +88,7 @@ def write_artifacts(out_dir: Path, created_at: str, urls: list[str], evidence: l
         "urls": {
             "secure-enterprise-knowledge-copilot": urls[0],
             "regulated-customer-operations-agent": urls[1],
+            "ai-reliability-incident-console": urls[2],
         },
         "passed": sum(1 for item in evidence if item.passed),
         "total": len(evidence),
@@ -106,10 +110,15 @@ def main() -> int:
     )
     parser.add_argument("--project1-port", type=int, default=SERVICES[0].preferred_port)
     parser.add_argument("--project2-port", type=int, default=SERVICES[1].preferred_port)
+    parser.add_argument("--project3-port", type=int, default=SERVICES[2].preferred_port)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     args = parser.parse_args()
 
-    ports = [reserve_port(args.project1_port), reserve_port(args.project2_port)]
+    ports = [
+        reserve_port(args.project1_port),
+        reserve_port(args.project2_port),
+        reserve_port(args.project3_port),
+    ]
     urls = [f"http://127.0.0.1:{port}" for port in ports]
     processes: list[subprocess.Popen] = []
     evidence: list[Evidence] = []
@@ -127,6 +136,7 @@ def main() -> int:
 
         evidence.extend(replay_project_1(urls[0]))
         evidence.extend(replay_project_2(urls[1]))
+        evidence.extend(replay_project_3(urls[2]))
         write_artifacts(args.out_dir, created_at, urls, evidence)
     finally:
         stop_processes(processes)

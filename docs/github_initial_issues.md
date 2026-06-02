@@ -131,7 +131,7 @@ automation, demo
 Body:
 
 ```text
-Add a script that resets both demos, runs the expected business flows, and prints the exact trace IDs to inspect.
+Add a script that resets all demos, runs the expected business flows, and prints the exact trace IDs to inspect.
 
 Acceptance criteria:
 

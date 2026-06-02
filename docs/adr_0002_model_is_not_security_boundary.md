@@ -1,4 +1,4 @@
-# ADR 0002: The Model Is Not The Security Boundary
+﻿# ADR 0002: The Model Is Not The Security Boundary
 
 Status: accepted
 
@@ -24,7 +24,7 @@ Benefits:
 - permissions are testable
 - side-effect controls are auditable
 - evals can catch regressions
-- interview explanation is defensible
+- technical review explanation is defensible
 
 Tradeoffs:
 
@@ -32,7 +32,7 @@ Tradeoffs:
 - model autonomy is intentionally constrained
 - production systems still need stronger policy engines and auth providers
 
-## Interview Explanation
+## Design Review Explanation
 
 The model can reason, draft, and classify. It should not decide whether confidential evidence is visible or whether an external notice can be sent.
 

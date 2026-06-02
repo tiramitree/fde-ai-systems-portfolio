@@ -157,7 +157,7 @@ def main() -> int:
 
         verify_project_1(urls[0])
         verify_project_2(urls[1])
-        print("OpenAI live mode check passed: both apps used OpenAI mode and kept safety behavior intact.")
+        print("OpenAI live mode check passed: both model-facing apps used OpenAI mode and kept safety behavior intact.")
         return 0
     except Exception as exc:
         print(f"OpenAI live mode check failed: {exc}", file=sys.stderr)

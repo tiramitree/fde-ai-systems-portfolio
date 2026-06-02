@@ -1,6 +1,6 @@
-# PostgreSQL And pgvector Adapter Design
+﻿# PostgreSQL And pgvector Adapter Design
 
-This design note describes how to replace the local JSON stores with PostgreSQL and pgvector without changing the core security principle of the portfolio:
+This design note describes how to replace the local JSON stores with PostgreSQL and pgvector without changing the core security principle of the repository:
 
 > The model is not the security boundary. Permissions, side effects, audit, traces, and eval expectations stay in application code and database policy.
 
@@ -37,7 +37,7 @@ HTTP/API layer
   -> model gateway only after authorized evidence/actions are selected
 ```
 
-Both projects should use repository interfaces so local JSON stores and PostgreSQL adapters can coexist:
+Projects with persistent application state should use repository interfaces so local JSON stores and PostgreSQL adapters can coexist:
 
 - `DocumentRepository`
 - `TraceRepository`
@@ -365,7 +365,7 @@ Persist these records:
 - `eval_runs`: suite id, git sha, environment, metrics.
 - `eval_cases`: case id, input, expected behavior, pass/fail, failure reason.
 
-This keeps the interview story inspectable: a reviewer can connect an answer or agent action to the exact retrieved chunks, policy checks, tool decisions, approval request, audit event, and eval case.
+This keeps the technical review story inspectable: a reviewer can connect an answer or agent action to the exact retrieved chunks, policy checks, tool decisions, approval request, audit event, and eval case.
 
 ## Phased Implementation Plan
 

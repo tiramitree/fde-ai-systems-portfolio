@@ -1,6 +1,6 @@
-# Scenario Data Integrity
+﻿# Scenario Data Integrity
 
-The portfolio uses small fictional datasets so the demos are understandable, repeatable, and safe to publish. The scenario data integrity gate makes sure those datasets keep supporting the claims made in the README and interview materials.
+The repository uses small fictional datasets so the demos are understandable, repeatable, and safe to publish. The scenario data integrity gate makes sure those datasets keep supporting the claims made in the README and release materials.
 
 Run it with:
 
@@ -41,6 +41,6 @@ Project 2 checks:
 
 The gate also scans the seed and eval JSON for local paths, private artifacts, obvious secret markers, and personal identifiers that should never appear in public fixtures.
 
-## Interview Framing
+## Technical Review Framing
 
-The data is deliberately small, but it is not arbitrary. Each fixture exists to demonstrate a production invariant: permission filtering before generation, citation-backed answers, abstention, retrieved-content injection handling, deterministic tools, approval gates, and blocked side effects. The integrity gate prevents future edits from making the demo story inconsistent or accidentally publishing private artifacts.
+The data is deliberately small, but it is not arbitrary. Each fixture exists to demonstrate a production invariant: permission filtering before generation, citation-backed answers, abstention, retrieved-content injection handling, deterministic tools, approval gates, blocked side effects, and release triage. The integrity gate prevents future edits from making the demo story inconsistent or accidentally publishing private artifacts.

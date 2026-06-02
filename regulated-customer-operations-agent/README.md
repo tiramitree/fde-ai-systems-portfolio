@@ -1,6 +1,6 @@
 ﻿# Regulated Customer Operations Agent
 
-Governed product-recall operations agent for FDE-style portfolio demonstration.
+Governed product-recall operations agent reference system for controlled workflow automation.
 
 The project shows how an AI system can safely participate in a business workflow where some actions have external side effects. The agent may investigate, cite policy, create internal records, draft a seller notice, and schedule follow-up, but it cannot send notices or escalate cases without supervisor approval.
 

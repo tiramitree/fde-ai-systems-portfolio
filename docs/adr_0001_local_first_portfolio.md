@@ -1,10 +1,10 @@
-# ADR 0001: Local-First Portfolio Runtime
+﻿# ADR 0001: Local-First Reference Runtime
 
 Status: accepted
 
 ## Context
 
-The repository needs to be usable by GitHub readers, recruiters, and interviewers without API keys, Docker, cloud credentials, or paid services.
+The repository needs to be usable by GitHub readers and technical reviewers without API keys, Docker, cloud credentials, or paid services.
 
 ## Decision
 
@@ -25,7 +25,7 @@ Benefits:
 - fast local setup
 - no paid API dependency
 - deterministic eval behavior
-- easy interview demo
+- easy local review demo
 - easy CI verification
 
 Tradeoffs:
@@ -35,7 +35,7 @@ Tradeoffs:
 - no real vector database by default
 - Docker and OpenAI live modes require external verification
 
-## Interview Explanation
+## Design Review Explanation
 
 The goal is not to claim production readiness. The goal is to demonstrate production control boundaries in a runnable form: permissions, approval gates, traces, audit logs, and evals.
 

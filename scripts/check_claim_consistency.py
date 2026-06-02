@@ -13,12 +13,13 @@ ROOT = Path(__file__).resolve().parents[1]
 class ExpectedClaims:
     project_1_evals: int
     project_2_evals: int
+    project_3_evals: int
     smoke_checks: int
     api_contract_checks: int
 
     @property
     def total_evals(self) -> int:
-        return self.project_1_evals + self.project_2_evals
+        return self.project_1_evals + self.project_2_evals + self.project_3_evals
 
 
 def read_text(rel_path: str) -> str:
@@ -46,6 +47,7 @@ def expected_claims() -> ExpectedClaims:
     return ExpectedClaims(
         project_1_evals=count_eval_cases("secure-enterprise-knowledge-copilot/data/eval_cases.json"),
         project_2_evals=count_eval_cases("regulated-customer-operations-agent/data/eval_cases.json"),
+        project_3_evals=count_eval_cases("ai-reliability-incident-console/data/eval_cases.json"),
         smoke_checks=count_smoke_checks(),
         api_contract_checks=count_api_contract_checks(),
     )
@@ -64,6 +66,7 @@ def check_expected_absent(rel_path: str, patterns: list[str], expected: Expected
     allowed = {
         f"{expected.project_1_evals}/{expected.project_1_evals}",
         f"{expected.project_2_evals}/{expected.project_2_evals}",
+        f"{expected.project_3_evals}/{expected.project_3_evals}",
         f"{expected.total_evals}/{expected.total_evals}",
         f"{expected.smoke_checks}/{expected.smoke_checks}",
         f"{expected.api_contract_checks}/{expected.api_contract_checks}",
@@ -94,6 +97,7 @@ def check_demo_report(expected: ExpectedClaims) -> list[str]:
     )
     failures.extend(require_contains(rel_path, "unsafe_leak_failures = 0"))
     failures.extend(require_contains(rel_path, "unsafe_direct_side_effect_failures = 0"))
+    failures.extend(require_contains(rel_path, "unsafe_release_approval_failures = 0"))
     failures.extend(require_contains(rel_path, f"Smoke tests: {expected.smoke_checks}/{expected.smoke_checks} passed"))
     return failures
 
@@ -105,21 +109,25 @@ def check_public_claims(expected: ExpectedClaims) -> list[str]:
             f"smoke tests: {expected.smoke_checks}/{expected.smoke_checks} passed",
             f"Project 1 eval: {expected.project_1_evals}/{expected.project_1_evals} passed, unsafe_leak_failures = 0",
             f"Project 2 eval: {expected.project_2_evals}/{expected.project_2_evals} passed, unsafe_direct_side_effect_failures = 0",
+            f"Project 3 eval: {expected.project_3_evals}/{expected.project_3_evals} passed, unsafe_release_approval_failures = 0",
         ],
         "docs/portfolio_evidence_matrix.md": [
             f"Project 1 eval: {expected.project_1_evals}/{expected.project_1_evals} passed",
             f"Project 2 eval: {expected.project_2_evals}/{expected.project_2_evals} passed",
+            f"Project 3 eval: {expected.project_3_evals}/{expected.project_3_evals} passed",
             f"smoke tests: {expected.smoke_checks}/{expected.smoke_checks} passed",
         ],
         "docs/github_release_notes_v0.1.0.md": [
             f"Project 1 evals: {expected.project_1_evals}/{expected.project_1_evals} passed",
             f"Project 2 evals: {expected.project_2_evals}/{expected.project_2_evals} passed",
+            f"Project 3 evals: {expected.project_3_evals}/{expected.project_3_evals} passed",
             f"Smoke tests: {expected.smoke_checks}/{expected.smoke_checks} passed",
             f"API contract checks: {expected.api_contract_checks}/{expected.api_contract_checks} passed",
         ],
         "docs/github_repository_settings.md": [
             f"Project 1 evals: {expected.project_1_evals}/{expected.project_1_evals} passed",
             f"Project 2 evals: {expected.project_2_evals}/{expected.project_2_evals} passed",
+            f"Project 3 evals: {expected.project_3_evals}/{expected.project_3_evals} passed",
             f"Smoke tests: {expected.smoke_checks}/{expected.smoke_checks} passed",
         ],
         "docs/case_study_secure_enterprise_knowledge_copilot.md": [
@@ -163,6 +171,7 @@ def main() -> int:
         "Claim consistency check passed: "
         f"Project 1 {expected.project_1_evals}/{expected.project_1_evals}, "
         f"Project 2 {expected.project_2_evals}/{expected.project_2_evals}, "
+        f"Project 3 {expected.project_3_evals}/{expected.project_3_evals}, "
         f"smoke {expected.smoke_checks}/{expected.smoke_checks}, "
         f"total evals {expected.total_evals}/{expected.total_evals}, "
         f"API contracts {expected.api_contract_checks}/{expected.api_contract_checks}."

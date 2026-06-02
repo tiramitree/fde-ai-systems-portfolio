@@ -28,6 +28,19 @@ FORBIDDEN_PATTERNS = [
     "BEGIN OPENSSH PRIVATE KEY",
 ]
 
+FORBIDDEN_POSITIONING_PATTERNS = [
+    "inter" + "view",
+    "res" + "ume",
+    "car" + "eer",
+    "job" + " search",
+    "hir" + "ing",
+    "personal" + " development",
+    "面" + "试",
+    "简" + "历",
+    "求" + "职",
+    "个人" + "发展",
+]
+
 TEXT_EXTENSIONS = {
     ".md",
     ".py",
@@ -53,6 +66,12 @@ SELF_ALLOWLIST = {
     "scripts/public_safety_scan.py",
 }
 
+LOCAL_BROWSER_PROFILE_PREFIXES = (
+    "out/",
+    "tmp-chrome-preview-profile/",
+    "tmp-edge-preview-profile/",
+)
+
 
 def is_text_candidate(path: Path) -> bool:
     return path.suffix in TEXT_EXTENSIONS or path.name in TEXT_FILE_NAMES
@@ -77,6 +96,8 @@ def check_forbidden_content(root: Path = ROOT) -> list[str]:
         rel = path.relative_to(root).as_posix()
         if ".git/" in rel or rel in SELF_ALLOWLIST:
             continue
+        if any(rel.startswith(prefix) for prefix in LOCAL_BROWSER_PROFILE_PREFIXES):
+            continue
         if not is_text_candidate(path):
             continue
         try:
@@ -86,6 +107,30 @@ def check_forbidden_content(root: Path = ROOT) -> list[str]:
         for pattern in FORBIDDEN_PATTERNS:
             if pattern in text:
                 failures.append(f"forbidden public-safety pattern {pattern!r} in {rel}")
+    return failures
+
+
+def check_public_positioning(root: Path = ROOT) -> list[str]:
+    failures = []
+    for path in root.rglob("*"):
+        rel = path.relative_to(root).as_posix()
+        if ".git/" in rel or rel in SELF_ALLOWLIST:
+            continue
+        if any(rel.startswith(prefix) for prefix in LOCAL_BROWSER_PROFILE_PREFIXES):
+            continue
+        lowered_rel = rel.lower()
+        for pattern in FORBIDDEN_POSITIONING_PATTERNS:
+            if pattern in lowered_rel:
+                failures.append(f"non-industrial positioning term {pattern!r} in file path {rel}")
+        if not path.is_file() or not is_text_candidate(path):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8").lower()
+        except UnicodeDecodeError:
+            continue
+        for pattern in FORBIDDEN_POSITIONING_PATTERNS:
+            if pattern in text:
+                failures.append(f"non-industrial positioning term {pattern!r} in {rel}")
     return failures
 
 
@@ -119,6 +164,7 @@ def check_runtime_artifacts(root: Path = ROOT) -> list[str]:
 def run_scan(root: Path = ROOT) -> list[str]:
     failures = []
     failures.extend(check_forbidden_content(root))
+    failures.extend(check_public_positioning(root))
     failures.extend(check_runtime_artifacts(root))
     return failures
 

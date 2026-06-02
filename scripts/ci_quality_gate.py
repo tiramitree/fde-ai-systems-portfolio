@@ -21,6 +21,12 @@ SERVICES = [
         "port": 8770,
         "health": "http://127.0.0.1:8770/api/health",
     },
+    {
+        "name": "ai-reliability-incident-console",
+        "path": ROOT / "ai-reliability-incident-console",
+        "port": 8780,
+        "health": "http://127.0.0.1:8780/api/health",
+    },
 ]
 
 
@@ -92,4 +98,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

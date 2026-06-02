@@ -1,6 +1,6 @@
-# Reviewer Perspective Checklist
+﻿# Reviewer Perspective Checklist
 
-Use this before showing the repo to an interviewer, recruiter, or GitHub audience.
+Use this before showing the repo to an technical reviewer, technical reviewer, or GitHub audience.
 
 ## First 30 Seconds
 
@@ -30,7 +30,7 @@ Use this before showing the repo to an interviewer, recruiter, or GitHub audienc
 - Docker runtime can be verified on a Docker-enabled machine with `python -B scripts/dev.py docker-runtime`.
 - OpenAI live mode can be verified in an API-key environment with `python -B scripts/dev.py openai-live`.
 
-## Interviewer Skepticism
+## Technical Reviewer Skepticism
 
 Expected challenges:
 
@@ -42,15 +42,15 @@ Expected challenges:
 
 Approved answer:
 
-> Correct. The repo is a local-first portfolio that demonstrates the control boundaries. The production path is documented. The important thing is that permissions, approval gates, audit, traces, and evals are explicit and testable instead of hidden inside prompts.
+> Correct. The repo is a local-first reference implementation that demonstrates the control boundaries. The production path is documented. The important thing is that permissions, approval gates, audit, traces, and evals are explicit and testable instead of hidden inside prompts.
 
 For Docker specifically, add:
 
-> The container files are statically gated for ports, health checks, commands, env defaults, and ignored build-context state. The repo also has `python -B scripts/dev.py docker-runtime` for Docker-enabled machines; I would run that before claiming Docker runtime verification.
+> The container files are statically gated for ports, health checks, commands, env defaults, and ignored build-context state. The repo also has `python -B scripts/dev.py docker-runtime` for Docker-enabled machines; run that before claiming Docker runtime verification.
 
 For OpenAI specifically, add:
 
-> The default path is local and deterministic. The repo has `python -B scripts/dev.py openai-live` for API-key environments; I would run that before claiming live OpenAI verification.
+> The default path is local and deterministic. The repo has `python -B scripts/dev.py openai-live` for API-key environments; run that before claiming live OpenAI verification.
 
 ## Star-Worthiness
 

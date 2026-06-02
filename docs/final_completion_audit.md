@@ -1,137 +1,96 @@
-﻿# Final Completion Audit
+# Release Completion Audit
 
-Date: 2026-06-01
+Date: 2026-06-02
 
-Objective:
+This audit records the current release-facing evidence for the repository. It is intentionally conservative: unverified external integrations are listed as remaining blockers instead of being claimed as complete.
 
-```text
-把项目完整结合需求落地到能运行能讲能展示的程度
+## Runtime
+
+Evidence commands:
+
+```bash
+python -B scripts/dev.py health
+python -B scripts/dev.py smoke
+python -B scripts/dev.py replay
 ```
 
-## Requirement Breakdown
+Expected local services:
 
-## 1. 能运行
+- Secure Enterprise Knowledge Copilot: `http://127.0.0.1:8765`
+- Regulated Customer Operations Agent: `http://127.0.0.1:8770`
+- AI Reliability Incident Console: `http://127.0.0.1:8780`
 
-Evidence:
+Status: local Python runtime is the verified primary path.
 
-- `python -B scripts\check_health.py`
-- Current result:
-  - `http://127.0.0.1:8765/api/health`: ok
-  - `http://127.0.0.1:8770/api/health`: ok
+Remaining external blocker:
 
-Status: achieved for local Python runtime.
+- Docker runtime must be verified on a Docker-enabled machine with `python -B scripts/dev.py docker-runtime`.
 
-Not fully verified:
-
-- Docker Compose runtime, because Docker is not installed in the current environment.
-
-## 2. 能讲
+## System Scope
 
 Evidence:
 
-- Portfolio README: `<repo-root>\README.md`
-- Resume/interview package: `<repo-root>\docs\resume_and_interview_package.md`
-- Final demo runbook: `<repo-root>\docs\final_demo_runbook.md`
-- Per-project architecture, threat model, demo script, and talking points.
+- `README.md`
+- `PROJECT_CONTENT_INDEX.md`
+- `docs/project_case_notes.md`
+- `docs/technical_review_playbook.md`
+- per-project architecture, threat model, demo script, and technical review notes
 
-Status: achieved.
+Status: the repository documents three enterprise AI control systems: secure RAG, governed workflow automation, and release reliability triage.
 
-## 3. 能展示
+## Eval Gates
 
-Evidence:
+Evidence command:
 
-- Project 1 browser UI: `http://127.0.0.1:8765`
-- Project 2 browser UI: `http://127.0.0.1:8770`
-- Saved screenshots:
-  - `docs/assets/secure-knowledge-copilot-screenshot.png`
-  - `docs/assets/regulated-ops-agent-screenshot.png`
-- README walkthrough GIF:
-  - `docs/assets/demo-walkthrough.gif`
-- GitHub social preview:
-  - `docs/assets/github-preview.png`
-- Browser verification already performed for:
-  - Project 1 permission difference between Alice and Morgan
-  - Project 1 eval button
-  - Project 2 investigation flow
-  - Project 2 approval queue and supervisor approval
-  - Project 2 eval button
+```bash
+python -B scripts/dev.py evals
+```
 
-Status: achieved for live local demo.
+Expected result:
 
-Not fully verified:
+- Project 1: 11/11 passed, unsafe leak failures 0
+- Project 2: 8/8 passed, unsafe direct side-effect failures 0
+- Project 3: 6/6 passed, unsafe release approval failures 0
 
-- A README GIF is included; a narrated demo video is not yet recorded.
+Status: eval gates cover permission safety, approval safety, and release reliability decisions.
 
-## 4. FDE 职责对齐
+## Public Repository Hygiene
 
-Evidence:
+Evidence commands:
 
-- Project 1 covers enterprise RAG, permissions, citations, abstention, prompt-injection handling, trace, audit, evals.
-- Project 2 covers tool calling, business workflow, approval gates, side-effect blocking, supervisor approval, trace, audit, evals.
-- Production upgrade notes exist.
+```bash
+python -B scripts/dev.py safety
+python -B scripts/dev.py launch-assets
+python -B scripts/dev.py governance
+python -B scripts/dev.py workflow-security
+python -B scripts/dev.py pr-policy
+```
 
-Status: achieved at portfolio-demo level.
+Status: public content, contribution policy, workflow security, and review policy are gated by scripts.
 
-## 5. Eval Gates
+## Model Runtime
 
-Evidence:
+Default mode is deterministic and local-first. Optional OpenAI Responses API integration exists for the two model-facing systems:
 
-- `python -B scripts\run_all_evals.py`
-- Current result:
-  - Project 1: 11/11 passed, unsafe leak failures 0
-  - Project 2: 8/8 passed, unsafe direct side-effect failures 0
+- `secure-enterprise-knowledge-copilot/src/copilot/model_gateway.py`
+- `regulated-customer-operations-agent/src/ops_agent/model_gateway.py`
 
-Status: achieved.
+Remaining external blocker:
 
-## 6. Optional GPT-5.2 / OpenAI Integration
+- Live OpenAI mode requires a valid API key and should be verified with `python -B scripts/dev.py openai-live` before being claimed as runtime evidence.
 
-Evidence:
+## Current Release Decision
 
-- Project 1 optional gateway: `src/copilot/model_gateway.py`
-- Project 2 optional gateway: `src/ops_agent/model_gateway.py`
-- Environment controls:
-  - `COPILOT_MODEL_PROVIDER=openai`
-  - `OPS_AGENT_MODEL_ROUTER=openai`
-  - `OPENAI_MODEL=gpt-5.2`
-  - `OPENAI_API_KEY=...`
+The repository is suitable for local technical review after the full local gate passes:
 
-Status: code path exists but live API call is not verified because no API key was supplied.
+```bash
+python -B scripts/dev.py verify
+```
 
-## Completion Decision
+Do not claim these items as complete until separately verified:
 
-Local portfolio-demo completion is substantially achieved.
-
-GitHub/open-source readiness is now partially achieved:
-
-- README has public positioning and quickstart.
-- LICENSE, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, ROADMAP, issue templates, and PR template exist.
-- GitHub launch plan, public release audit, differentiation strategy, hard interview playbook, and system design deep dive exist.
-- `python -B scripts\quality_gate.py` passes.
-- `python -B scripts\ci_quality_gate.py` passes.
-- `python -B scripts/dev.py verify` passes.
-- `python -B scripts/dev.py verify` no longer dirties tracked files.
-- GitHub Actions workflow exists.
-- Published GitHub repository exists at `https://github.com/tiramitree/fde-ai-systems-portfolio`.
-- GitHub Actions `quality-gate` run completed successfully.
-- Post-publish verification passed.
-- Initial public issues #1-#5 exist.
-- README visual assets and real UI screenshots exist.
-- Case studies, demo video script, and star growth plan exist.
-- `PROJECT_CONTENT_INDEX.md` exists as the compact context-recovery map.
-- Local Git repository is initialized on branch `main`.
-
-Full objective should not be marked complete yet because these evidence items remain externally unverified:
-
-1. Docker runtime verification with `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine.
-2. Optional OpenAI mode verification with `python -B scripts/dev.py openai-live` and an API key.
-3. A narrated demo video is not yet recorded; the README GIF is included.
-4. Actual star growth cannot be proven immediately after publication.
-
-Next step:
-
-- verify Docker on a Docker-enabled machine with `python -B scripts/dev.py docker-runtime` or explicitly accept non-Docker local Python as the delivery target
-- verify optional OpenAI mode with `python -B scripts/dev.py openai-live` when an API key is available
-- record an optional narrated demo video
-- apply GitHub description, topics, branch protection, and release page for `v0.1.0`; record an optional narrated video; verify Docker/OpenAI live modes; and iterate on launch feedback
-
-
+1. Docker runtime proof.
+2. Live OpenAI mode proof.
+3. GitHub branch protection and release page setup.
+4. Social preview configured in GitHub UI.
+5. Real launch feedback or star-growth evidence.

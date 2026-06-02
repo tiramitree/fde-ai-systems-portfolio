@@ -2,7 +2,7 @@
 
 ## Why The Current Version Is Structured This Way
 
-The local portfolio uses dependency-free Python and static frontend assets so the demos run reliably on the current machine. The core FDE behavior is implemented now:
+The local repository uses dependency-free Python and static frontend assets so the demos run reliably on the current machine. The core FDE behavior is implemented now:
 
 - permissions before retrieval answer generation
 - citations and abstention

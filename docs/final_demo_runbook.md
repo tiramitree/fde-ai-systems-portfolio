@@ -64,7 +64,7 @@ Verify response trace IDs, linked audit events, approval records, and blocked-ac
 python -B scripts/dev.py observability
 ```
 
-Verify the portfolio threat model maps each risk to deterministic controls and evidence:
+Verify the repository threat model maps each risk to deterministic controls and evidence:
 
 ```bash
 python -B scripts/dev.py threat-model
@@ -151,7 +151,7 @@ Project 2:
 
 ## 5. Closing Narrative
 
-These two projects demonstrate the core FDE pattern:
+These three projects demonstrate the core FDE pattern:
 
 - translate a business workflow into a deployable AI system
 - implement the application, not just prompts

@@ -1,4 +1,4 @@
-# Observability Integrity Gate
+﻿# Observability Integrity Gate
 
 Run:
 
@@ -6,7 +6,7 @@ Run:
 python -B scripts/dev.py observability
 ```
 
-This gate starts both demo systems on isolated ports, resets local demo state, runs the critical interview flows, and then checks the evidence surfaces that a reviewer would inspect after the fact.
+This gate starts both demo systems on isolated ports, resets local demo state, runs the critical technical review flows, and then checks the evidence surfaces that a reviewer would inspect after the fact.
 
 ## What It Proves
 
@@ -25,11 +25,11 @@ For Regulated Customer Operations Agent, the gate verifies:
 - supervisor approval updates the approval queue and emits an audit event
 - audit logs include workflow actions, refusal actions, and trace-linked processing events
 
-## Interview Framing
+## Technical Review Framing
 
 The point is not just that the UI can show traces. The stronger claim is that traces, audit logs, and approval records are internally consistent with the business outcome.
 
-If an interviewer asks "How would you debug an unsafe answer or unintended side effect?", the answer is:
+If an technical reviewer asks "How would you debug an unsafe answer or unintended side effect?", the answer is:
 
 1. Find the response `trace_id`.
 2. Inspect retrieval/tool evidence in the trace.
@@ -46,4 +46,4 @@ The local JSON store is intentionally simple. In production, the same evidence c
 - redaction and retention policies
 - trace search by user, case, document, approval, and incident
 
-The local gate keeps the portfolio honest by proving the semantics before swapping in hosted observability infrastructure.
+The local gate keeps the repository honest by proving the semantics before swapping in hosted observability infrastructure.

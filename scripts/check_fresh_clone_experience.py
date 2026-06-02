@@ -36,6 +36,10 @@ SERVICES = [
         "name": "regulated-customer-operations-agent",
         "path": "regulated-customer-operations-agent",
     },
+    {
+        "name": "ai-reliability-incident-console",
+        "path": "ai-reliability-incident-console",
+    },
 ]
 
 
@@ -130,7 +134,10 @@ def run_runtime_smoke(clone_dir: Path) -> list[str]:
     second_port = free_port()
     while second_port == first_port:
         second_port = free_port()
-    ports = [first_port, second_port]
+    third_port = free_port()
+    while third_port in {first_port, second_port}:
+        third_port = free_port()
+    ports = [first_port, second_port, third_port]
     urls = [f"http://127.0.0.1:{port}" for port in ports]
     processes: list[subprocess.Popen] = []
 
@@ -152,6 +159,7 @@ def run_runtime_smoke(clone_dir: Path) -> list[str]:
         env = os.environ.copy()
         env["FDE_PROJECT_1_URL"] = urls[0]
         env["FDE_PROJECT_2_URL"] = urls[1]
+        env["FDE_PROJECT_3_URL"] = urls[2]
 
         print("\n=== fresh clone: health ===")
         ok, output = run([sys.executable, "-B", "scripts/dev.py", "health"], clone_dir, env=env)

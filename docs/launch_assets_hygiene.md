@@ -1,6 +1,6 @@
-# Launch Assets Hygiene
+﻿# Launch Assets Hygiene
 
-This gate keeps the public launch materials complete and honest before the repository is sent to interviewers or shared for feedback.
+This gate keeps the public launch materials complete and honest before the repository is sent to technical reviewers or shared for feedback.
 
 Run it with:
 
@@ -31,7 +31,7 @@ They should not claim these as complete until real evidence exists:
 - launch feedback or star-growth success
 - production readiness
 
-Use "reference implementation", "control pattern", and "local-first portfolio" language. Avoid presenting the project as a finished enterprise platform.
+Use "reference implementation", "control pattern", and "local-first repository" language. Avoid presenting the project as a finished enterprise platform.
 
 ## When To Run
 

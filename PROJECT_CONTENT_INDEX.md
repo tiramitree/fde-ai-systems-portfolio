@@ -1,10 +1,10 @@
-# Project Content Index
+﻿# Project Content Index
 
-This file is the compact map of the portfolio. Use it when context is lost, when preparing a demo, or before publishing the repository.
+This file is the compact map of the repository. Use it when context is lost, when preparing a release review, or before publishing the repository.
 
 ## Current Scope
 
-The repository contains two runnable FDE-style AI systems:
+The repository contains three runnable FDE-style AI reference systems:
 
 1. `secure-enterprise-knowledge-copilot`
    - Demonstrates permission-aware enterprise RAG.
@@ -16,7 +16,12 @@ The repository contains two runnable FDE-style AI systems:
    - Core behaviors: intent routing, operational tools, approval queue, side-effect blocking, supervisor approval, traces, audit logs, golden evals.
    - Local URL: `http://127.0.0.1:8770`
 
-The design target is not "chatbot demo". The design target is an interview-ready and GitHub-ready portfolio showing how to build AI systems around model calls: product workflow, safety boundaries, evals, observability, and deployment paths.
+3. `ai-reliability-incident-console`
+   - Demonstrates AI release reliability and eval regression triage.
+   - Core behaviors: canary release incident triage, linked failed eval evidence, rollout blocking, remediation steps, traces, audit logs, golden evals.
+   - Local URL: `http://127.0.0.1:8780`
+
+The design target is not "chatbot demo". The design target is an operational reference repository showing how to build AI systems around model calls: product workflow, safety boundaries, evals, observability, and deployment paths.
 
 ## How To Run
 
@@ -68,6 +73,7 @@ Verified local demo URLs:
 
 - Secure Enterprise Knowledge Copilot: `http://127.0.0.1:8765`
 - Regulated Customer Operations Agent: `http://127.0.0.1:8770`
+- AI Reliability Incident Console: `http://127.0.0.1:8780`
 
 ## Verified State
 
@@ -79,10 +85,11 @@ python -B scripts/dev.py verify
 
 Result:
 
-- both services healthy
+- all services healthy
 - Project 1 eval: 11/11 passed, unsafe leaks 0
 - Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
-- smoke tests: 9/9 passed
+- Project 3 eval: 6/6 passed, unsafe release approval failures 0
+- smoke tests: 13/13 passed
 - demo report generated
 - quality gate passed
 
@@ -114,7 +121,7 @@ Local Git state:
 ## Automation And Quality Scripts
 
 - `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
-- `scripts/start_demo_servers.py`: starts both local demos.
+- `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
 - `scripts/check_model_gateway_safety.py`: verifies optional OpenAI gateways stay opt-in, key references remain constrained, structured outputs are required, and failures fall back locally.
@@ -130,23 +137,23 @@ Local Git state:
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.
 - `scripts/check_docker_runtime.py`: optionally builds the Compose stack, waits for container health, runs smoke flows, and tears the stack down on Docker-enabled machines.
 - `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, and quick-action controls.
-- `scripts/check_fresh_clone_experience.py`: clones the repository into a temporary directory, runs release-facing static checks, starts both demos on isolated ports, and runs health/smoke flows.
+- `scripts/check_fresh_clone_experience.py`: clones the repository into a temporary directory, runs release-facing static checks, starts all demos on isolated ports, and runs health/smoke flows.
 - `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, content types, security headers, 404s, and traversal blocking.
 - `scripts/check_api_documentation.py`: verifies API source routes, public API contract documentation, README, index, and evidence matrix stay aligned.
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
-- `scripts/check_health.py`: verifies both service health endpoints.
+- `scripts/check_health.py`: verifies all service health endpoints.
 - `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, merge policy, best-effort security settings, branch protection, and first-release setup through `gh`.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/check_repository_governance.py`: validates CODEOWNERS, branch-protection payload, and PR-template safeguards.
 - `scripts/check_launch_assets.py`: verifies launch copy, star-growth materials, initial issue pack, public-doc links, and anti-hype boundaries.
-- `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and interview walkthrough report.
+- `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and technical review walkthrough report.
 - `scripts/check_pr_review_policy.py`: verifies malicious-contribution triage heuristics, runbook, maintainer policy, and PR template safeguards remain intact.
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
-- `scripts/run_all_evals.py`: runs both project eval suites.
+- `scripts/run_all_evals.py`: runs all project eval suites.
 - `scripts/export_eval_csv.py`: exports portfolio eval summary rows to `eval_summaries.csv`.
 - `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload.
-- `scripts/replay_demo.py`: starts clean reset demo services, runs the interview demo path, and prints trace/approval evidence.
+- `scripts/replay_demo.py`: starts clean reset demo services, runs the release validation path, and prints trace/approval evidence.
 - `scripts/export_demo_replay_artifact.py`: writes release-attachable Markdown and JSON replay evidence under ignored `out/`.
 - `scripts/smoke_test_demo_flows.py`: exercises the critical demo paths end to end.
 - `scripts/generate_demo_report.py`: writes `docs/demo_report.md`.
@@ -170,42 +177,42 @@ Local Git state:
 Start here:
 
 - `docs/final_demo_runbook.md`: exact live demo order.
-- `docs/final_readiness_report.md`: compact launch, blocker, and interview walkthrough status.
+- `docs/final_readiness_report.md`: compact launch, blocker, and release review status.
 - `docs/demo_report.md`: generated verification report.
-- `docs/demo_replay_artifact.md`: release-attachable replay evidence artifact instructions and interview framing.
+- `docs/demo_replay_artifact.md`: release-attachable replay evidence artifact instructions and review framing.
 - `docs/completion_checklist.md`: current status and remaining blockers.
 - `docs/final_completion_audit.md`: objective-by-objective audit.
 
-Interview preparation:
+Design Review Docs:
 
-- `docs/resume_and_interview_package.md`: resume bullets and interview framing.
-- `docs/hard_interview_playbook.md`: difficult interviewer questions and answers.
+- `docs/project_case_notes.md`: project impact notes and review framing.
+- `docs/technical_review_playbook.md`: difficult system-design questions and answers.
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/model_gateway_safety.md`: optional model gateway key-safety, fallback, and boundary contract.
 - `docs/observability_integrity.md`: trace, audit, approval, and refusal evidence contract for the critical demo flows.
-- `docs/threat_model.md`: portfolio threat matrix, trust boundaries, control owners, evidence commands, and interview framing.
-- `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and interview framing.
+- `docs/threat_model.md`: repository threat matrix, trust boundaries, control owners, evidence commands, and review framing.
+- `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and review framing.
 - `docs/error_hygiene.md`: generic error response contract for unexpected backend failures.
 - `docs/container_release_hygiene.md`: Docker/Compose release hygiene gate and honest runtime-verification framing.
-- `docs/visual_asset_hygiene.md`: README screenshot manifest, source-hash drift protection, and interview framing.
-- `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and interview framing.
+- `docs/visual_asset_hygiene.md`: README screenshot manifest, source-hash drift protection, and review framing.
+- `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
-- `docs/frontend_integrity.md`: frontend wiring, trace-copy controls, no-build local UI posture, and interview framing.
-- `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and interview framing.
+- `docs/frontend_integrity.md`: frontend wiring, trace-copy controls, no-build local UI posture, and review framing.
+- `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and review framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
-- `docs/api_contracts.md`: documented backend API surface, response-shape boundaries, and interview framing.
-- `docs/portfolio_evidence_matrix.md`: claim-to-evidence map for reviewers and interviewers.
+- `docs/api_contracts.md`: documented backend API surface, response-shape boundaries, and review framing.
+- `docs/portfolio_evidence_matrix.md`: claim-to-evidence map for reviewers.
 - `docs/case_study_secure_enterprise_knowledge_copilot.md`: Project 1 case study.
 - `docs/case_study_regulated_customer_operations_agent.md`: Project 2 case study.
 
 Release and growth:
 
 - `docs/public_release_audit.md`: public-readiness audit.
-- `docs/reviewer_perspective_checklist.md`: checks from user and interviewer perspectives.
+- `docs/reviewer_perspective_checklist.md`: checks from user and reviewer perspectives.
 - `docs/pr_review_security.md`: PR review policy gate and malicious-contribution review framing.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
@@ -229,7 +236,7 @@ Release and growth:
 
 Architecture decisions:
 
-- `docs/adr_0001_local_first_portfolio.md`: local-first runtime decision.
+- `docs/adr_0001_local_first_portfolio.md`: local-first reference runtime decision.
 - `docs/adr_0002_model_is_not_security_boundary.md`: security boundaries live outside the model.
 - `docs/adr_0003_eval_state_isolated_from_demo_state.md`: evals do not mutate live demo state.
 
@@ -262,7 +269,7 @@ Important files:
 - `docs/architecture.md`: project architecture.
 - `docs/threat_model.md`: threat model and security assumptions.
 - `docs/demo_script.md`: exact project demo script.
-- `docs/interview_talking_points.md`: talking points for interviews.
+- `docs/technical_review_notes.md`: project review notes.
 - `docs/implementation_status.md`: implementation notes.
 
 Key demo claims:
@@ -292,7 +299,7 @@ Important files:
 - `docs/architecture.md`: project architecture.
 - `docs/threat_model.md`: threat model and safety assumptions.
 - `docs/demo_script.md`: exact project demo script.
-- `docs/interview_talking_points.md`: talking points for interviews.
+- `docs/technical_review_notes.md`: project review notes.
 - `docs/implementation_status.md`: implementation notes.
 
 Key demo claims:
@@ -301,6 +308,34 @@ Key demo claims:
 - Direct side effects are blocked unless the application authorization layer allows them.
 - Investigator role creates approval requests; supervisor role executes approved actions.
 - Eval cases prove investigation flow, approval requirement, bypass refusal, escalation approval, and irrelevant-query no-op behavior.
+
+## Project 3 Contents
+
+Path: `ai-reliability-incident-console`
+
+Important files:
+
+- `app.py`: Python HTTP server and API routes.
+- `src/reliability_console/api.py`: application API layer for HTTP-facing release reliability use cases.
+- `src/reliability_console/triage.py`: deterministic incident triage and rollout-blocking logic.
+- `src/reliability_console/storage.py`: thread-safe JSON state, traces, audit log, and triage decisions.
+- `src/reliability_console/evals.py`: golden eval definitions and assertions.
+- `scripts/run_eval.py`: project-level eval runner using reset local state.
+- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, renderers, and app orchestration.
+- `data/seed_state.json`: fictional release, incident, eval, and runbook data.
+- `data/eval_cases.json`: eval cases.
+- `docs/architecture.md`: project architecture.
+- `docs/threat_model.md`: threat model and safety assumptions.
+- `docs/demo_script.md`: exact project demo script.
+- `docs/technical_review_notes.md`: project review notes.
+- `docs/implementation_status.md`: implementation notes.
+
+Key demo claims:
+
+- High-risk incidents linked to failed evals block rollout.
+- Latency-only incidents can stay monitor-only without weakening safety gates.
+- Triage decisions produce trace and audit evidence.
+- Eval cases prove unsafe rollout blocking and monitor-only behavior.
 
 ## Optional OpenAI Mode
 
@@ -331,10 +366,10 @@ These are not local code blockers, but they should not be claimed as completed u
 5. Record an optional narrated demo video; the README GIF is already included.
 6. Collect real launch feedback and star-growth evidence.
 
-## Interview Narrative
+## System Narrative
 
 Use this compact framing:
 
 ```text
-I built two local-first enterprise AI systems around the model rather than just a chatbot. The first proves secure RAG with permission filtering, citations, abstention, prompt-injection handling, traces, audit logs, and evals. The second proves governed agentic workflow automation with deterministic tools, approval gates, blocked side effects, supervisor execution, traces, audit logs, and evals. The key design principle is that the model is not the security boundary; application code enforces permissions and side effects, while evals prove the expected behavior.
+Three local-first enterprise AI systems demonstrate controls around the model rather than only chatbot behavior. The first proves secure RAG with permission filtering, citations, abstention, prompt-injection handling, traces, audit logs, and evals. The second proves governed agentic workflow automation with deterministic tools, approval gates, blocked side effects, supervisor execution, traces, audit logs, and evals. The third proves AI release reliability with canary incident triage, linked eval regressions, rollout blocking, remediation plans, traces, audit logs, and evals. The key design principle is that the model is not the security boundary; application code enforces permissions, side effects, and rollout decisions, while evals prove the expected behavior.
 ```

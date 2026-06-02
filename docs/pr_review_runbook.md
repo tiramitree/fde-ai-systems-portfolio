@@ -1,4 +1,4 @@
-# Pull Request Review Runbook
+﻿# Pull Request Review Runbook
 
 Use this before approving external PR workflows, running contributor code, or merging a public contribution.
 
@@ -32,7 +32,7 @@ If unauthenticated GitHub API rate limits are hit, the script falls back to the 
 2. Read the diff before running code.
 3. Treat workflow changes, safety-gate changes, dependency changes, shell commands, environment access, outbound network calls, and binary files as high scrutiny.
 4. Run local safety and verify gates only after the diff review is clean.
-5. Merge only if the change strengthens a public portfolio claim, closes a real issue, or improves reliability without weakening governance.
+5. Merge only if the change strengthens a public repository claim, closes a real issue, or improves reliability without weakening governance.
 
 ## Close Or Ignore
 
@@ -42,7 +42,7 @@ Close, ignore, or mark spam when a PR:
 - weakens permission checks, approval gates, traces, audit logs, evals, or public safety scans
 - adds hidden network calls, install scripts, binaries, or obfuscated code
 - changes CI to hide failures or bypass quality gates
-- is unrelated to the portfolio purpose
+- is unrelated to the repository purpose
 
 ## Merge Bar
 
@@ -54,4 +54,4 @@ Before merge:
 - `python -B scripts/dev.py safety` passes.
 - `python -B scripts/dev.py verify` passes.
 - GitHub Actions is green.
-- The diff is narrow and explainable in interview terms.
+- The diff is narrow and explainable in technical review terms.

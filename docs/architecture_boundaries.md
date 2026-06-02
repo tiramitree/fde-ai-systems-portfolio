@@ -1,4 +1,4 @@
-# Architecture Boundaries
+﻿# Architecture Boundaries
 
 This repository is designed to look simple during a demo while keeping the implementation boundaries inspectable.
 
@@ -8,7 +8,7 @@ The architecture boundary gate is:
 python -B scripts/dev.py architecture
 ```
 
-It checks that the two portfolio applications preserve the same separation of concerns that would be expected in a production service.
+It checks that the three applications preserve the same separation of concerns that would be expected in a production service.
 
 ## Boundary Contract
 
@@ -35,9 +35,9 @@ The gate fails if:
 - frontend JavaScript imports external modules, missing modules, non-JS modules, or files outside its `web/` boundary.
 - required public symbols such as `CopilotApi`, `OpsAgentApi`, `generate_answer`, `process_message`, `request_approval`, and eval runners disappear.
 
-## Interview Framing
+## Technical Review Framing
 
-The point is not to claim this local portfolio is a full production microservice platform. The point is to show production instincts:
+The point is not to claim this local repository is a full production microservice platform. The point is to show production instincts:
 
 - the browser is a thin client over stable API contracts
 - local HTTP code is replaceable by FastAPI or another framework without rewriting domain logic

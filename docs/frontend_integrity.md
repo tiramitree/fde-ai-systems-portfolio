@@ -1,12 +1,12 @@
-# Frontend Integrity
+﻿# Frontend Integrity
 
-Both demos keep the frontend deliberately simple: first-party HTML, CSS, and ES modules that call backend API routes. There is no build step, CDN, npm dependency, or hidden generated bundle in the local demo path.
+All demos keep the frontend deliberately simple: first-party HTML, CSS, and ES modules that call backend API routes. There is no build step, CDN, npm dependency, or hidden generated bundle in the local demo path.
 
 ## Verified Surface
 
 `python -B scripts/dev.py frontend` checks:
 
-- `web/index.html` exists for both projects.
+- `web/index.html` exists for all projects.
 - the expected page title, stylesheet, and `/js/app.js` module are present.
 - required DOM ids exist and are unique.
 - form controls used in the demo have labels.
@@ -21,6 +21,6 @@ The full release gate runs the same check through:
 python -B scripts/dev.py verify
 ```
 
-## Interview Framing
+## Technical Review Framing
 
-The frontend is intentionally boring in the best sense: it is a thin operational surface over separately testable backend APIs. That keeps the demo inspectable, avoids supply-chain noise, and makes the important product behavior visible: permissions, citations, abstention, traces, audit logs, evals, side-effect blocking, and approvals.
+The frontend is intentionally boring in the best sense: it is a thin operational surface over separately testable backend APIs. That keeps the demo inspectable, avoids supply-chain noise, and makes the important product behavior visible: permissions, citations, abstention, traces, audit logs, evals, side-effect blocking, approvals, and rollout decisions.
