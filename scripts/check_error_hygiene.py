@@ -39,6 +39,12 @@ PROJECTS = [
         module_name="regulated_ops_error_hygiene_app",
         port_hint=8892,
     ),
+    Project(
+        name="AI Reliability Incident Console",
+        path=ROOT / "ai-reliability-incident-console",
+        module_name="reliability_console_error_hygiene_app",
+        port_hint=8893,
+    ),
 ]
 
 
