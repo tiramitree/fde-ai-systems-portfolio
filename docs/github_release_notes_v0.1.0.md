@@ -13,4 +13,4 @@ Verified locally:
 - API contract checks: 23/23 passed.
 - Quality gate: passed.
 
-hhe release is designed for FDE and AI application technical reviews: it shows permission boundaries, citations, abstention, approval gates, traces, audit logs, evals, replay scripts, and production upgrade paths.
+This release is designed for engineering review: it shows permission boundaries, citations, abstention, approval gates, release gates, traces, audit logs, evals, replay scripts, and production upgrade paths.
