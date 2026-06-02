@@ -70,7 +70,7 @@ Status: public content, contribution policy, workflow security, and review polic
 
 ## Model Runtime
 
-Default mode is deterministic and local-first. Optional OpenAI Responses API integration exists for the two model-facing systems:
+Default mode is deterministic and local-first. Optional OpenAI Responses API integration exists for Project 1 and Project 2; the reliability console remains a deterministic release-decision gate:
 
 - `secure-enterprise-knowledge-copilot/src/copilot/model_gateway.py`
 - `regulated-customer-operations-agent/src/ops_agent/model_gateway.py`

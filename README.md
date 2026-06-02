@@ -248,6 +248,7 @@ Security boundaries remain outside the model:
 
 - Project 1 filters permissions and unsafe retrieved content before generation.
 - Project 2 enforces approval gates in deterministic application code.
+- Project 3 links eval regressions to release decisions without a model dependency.
 
 With a real API key, verify live OpenAI mode without changing the default local path:
 
@@ -255,7 +256,7 @@ With a real API key, verify live OpenAI mode without changing the default local 
 python -B scripts/dev.py openai-live
 ```
 
-The check starts both apps with OpenAI mode enabled, requires Project 1 to return `model_provider=openai`, requires Project 2 to return `model_router=openai`, and still verifies citations, approvals, and side-effect blocking.
+The check starts both model-facing apps with OpenAI mode enabled, requires Project 1 to return `model_provider=openai`, requires Project 2 to return `model_router=openai`, and still verifies citations, approvals, and side-effect blocking.
 
 ## Docker
 
