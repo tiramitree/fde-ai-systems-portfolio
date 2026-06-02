@@ -5,7 +5,7 @@ Regenerate it with `python -B scripts/dev.py readiness-report` after meaningful 
 
 ## Executive Status
 
-- Overall status: not ready until hard GitHub failures are fixed.
+- Overall status: ready for technical review with manual launch blockers.
 - The repository has three runnable enterprise AI systems with evals, traces, approval gates, release gates, API contracts, and public docs.
 - The repository is suitable for technical review after the commands below pass.
 - Do not claim full launch completion until the manual/account and environment blockers are closed.
@@ -60,11 +60,30 @@ python -B scripts/check_github_readiness.py --strict
 | Check | Status | Detail |
 | --- | --- | --- |
 | origin points to GitHub | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio.git |
-| GitHub repository metadata reachable | FAIL | [WinError 10061] No connection could be made because the target machine actively refused it |
+| GitHub repository metadata reachable | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio |
+| repository description set | WARN | missing |
+| repository topics set | WARN | missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling |
+| license detected as MIT | PASS | mit |
+| default branch is main | PASS | main |
+| main branch protection enabled | WARN | not protected |
+| stars observed at generation | PASS | 5 |
+| forks observed at generation | PASS | 1 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26809172494 |
+| no open issues | PASS | 0 |
+| no open PRs awaiting review | PASS | 0 |
+| tag v0.1.0 exists | PASS | ok |
+| GitHub release page exists for v0.1.0 | WARN | missing |
+| social preview configured | MANUAL | GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md |
+| profile repository pin configured | MANUAL | Requires account profile settings |
 
 ## Remaining Blockers
 
-- GitHub repository metadata reachable: [WinError 10061] No connection could be made because the target machine actively refused it
+- repository description set: missing
+- repository topics set: missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling
+- main branch protection enabled: not protected
+- GitHub release page exists for v0.1.0: missing
+- social preview configured: GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md
+- profile repository pin configured: Requires account profile settings
 - Docker Compose runtime: not verified on this machine because Docker is not installed; static container release hygiene is gated and `python -B scripts/dev.py docker-runtime` is available for Docker-enabled machines.
 - Optional OpenAI live mode: not verified without a valid API key; `python -B scripts/dev.py openai-live` is available for API-key environments.
 - Star growth: cannot be claimed as achieved until real launch feedback accumulates.
