@@ -87,6 +87,45 @@
           "sha256": "3e082a0d607ed2023011a03e1fc9696678a0b0ee98cf6fbfd7b3ef4f462726ef"
         }
       ]
+    },
+    {
+      "path": "docs/assets/ai-reliability-incident-console-screenshot.png",
+      "kind": "readme_screenshot",
+      "size": [
+        1400,
+        900
+      ],
+      "sha256": "91fb0f603d0027fc996b4a61be3a3eedab830d78982e0c0bd32e208b41974fff",
+      "source_files": [
+        {
+          "path": "ai-reliability-incident-console/web/index.html",
+          "sha256": "d26263845c0038343ab300f6f467d13770ba8431dc18a33e5c5a24a551e59b60"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/styles.css",
+          "sha256": "3b55ecfef316c223e6edc13225d309a2dde37fe49fc314393c8d9c22aafa806f"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/api.js",
+          "sha256": "8af3bcca52c8cc85752300d2ea5c2b6d0b2c0863f0e93773631950703e914860"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/app.js",
+          "sha256": "58e2cfc145e94d28ff1041d92394e1e28dd638311c56facce240695e2038e347"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/clipboard.js",
+          "sha256": "d1284bf442f8082c2f0e1d3a6496a9b81f5067bccdd66efa68785d116297eab0"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/dom.js",
+          "sha256": "dc2ef305519a67ed67391f59d16d06c173dddf9d679b311bc1bac7c96cd9652d"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/renderers.js",
+          "sha256": "b0b475e2216ea1ef742e277cf0410e86539945f098799adeba17be24ccdd4511"
+        }
+      ]
     }
   ]
 }

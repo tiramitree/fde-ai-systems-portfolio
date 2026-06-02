@@ -155,9 +155,9 @@ See [System Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full cla
 
 ![Demo walkthrough](docs/assets/demo-walkthrough.gif)
 
-| Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent |
-| --- | --- |
-| ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png) | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png) |
+| Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
+| --- | --- | --- |
+| ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png) | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png) | ![AI Reliability Incident Console screenshot](docs/assets/ai-reliability-incident-console-screenshot.png) |
 
 ## Project 1: Secure Enterprise Knowledge Copilot
 

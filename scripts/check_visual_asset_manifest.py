@@ -11,6 +11,7 @@ MANIFEST = ROOT / "docs" / "visual_assets_manifest.json"
 REQUIRED_ASSETS = {
     "docs/assets/secure-knowledge-copilot-screenshot.png",
     "docs/assets/regulated-ops-agent-screenshot.png",
+    "docs/assets/ai-reliability-incident-console-screenshot.png",
 }
 
 

@@ -32,6 +32,12 @@ PROJECTS = [
         "preferred_port": 8770,
         "asset": ROOT / "docs" / "assets" / "regulated-ops-agent-screenshot.png",
     },
+    {
+        "name": "ai-reliability-incident-console",
+        "path": ROOT / "ai-reliability-incident-console",
+        "preferred_port": 8780,
+        "asset": ROOT / "docs" / "assets" / "ai-reliability-incident-console-screenshot.png",
+    },
 ]
 
 
