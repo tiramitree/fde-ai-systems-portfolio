@@ -38,7 +38,7 @@ def repo_from_remote(remote: str) -> str | None:
 
 
 def url_exists_once(url: str) -> tuple[bool, str]:
-    request = urllib.request.Request(url, headers={"User-Agent": "fde-portfolio-post-publish-check"})
+    request = urllib.request.Request(url, headers={"User-Agent": "fde-reference-post-publish-check"})
     try:
         with urllib.request.urlopen(request, timeout=15) as response:
             return 200 <= response.status < 400, str(response.status)

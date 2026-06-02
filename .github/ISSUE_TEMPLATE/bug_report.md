@@ -10,7 +10,7 @@ assignees: ""
 
 - [ ] Secure Enterprise Knowledge Copilot
 - [ ] Regulated Customer Operations Agent
-- [ ] Portfolio scripts/docs
+- [ ] Repository scripts/docs
 
 ## What Happened?
 
@@ -29,4 +29,3 @@ Describe what should happen.
 ## Evidence
 
 Paste command output, trace ID, or screenshot.
-

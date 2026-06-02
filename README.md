@@ -149,7 +149,7 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | Observability export | `scripts/export_traces_otel.py` | local traces convert to OTLP/JSON-compatible `resourceSpans` |
 | Final readiness report | `scripts/generate_final_readiness_report.py` | compact launch, blocker, and technical review walkthrough status |
 
-See [Portfolio Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full claim-to-evidence map.
+See [System Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full claim-to-evidence map.
 
 ## Screenshots
 
@@ -208,7 +208,7 @@ Core claim:
 ![Architecture overview](docs/assets/architecture-overview.svg)
 
 ```text
-Portfolio
+Reference Systems
   +-- Secure Enterprise Knowledge Copilot
   |   +-- role-aware retrieval
   |   +-- citation answer shape
@@ -277,12 +277,12 @@ On a Docker-enabled machine, run the runtime proof:
 python -B scripts/dev.py docker-runtime
 ```
 
-This builds both images through Compose, waits for health endpoints, runs the same smoke flows against the containers, and tears the Compose project down. Docker is not installed in this environment, so the local Python runtime is the fully verified path here.
+This builds all service images through Compose, waits for health endpoints, runs the same smoke flows against the containers, and tears the Compose project down. Docker is not installed in this environment, so the local Python runtime is the fully verified path here.
 
 ## Repository Structure
 
 ```text
-fde_portfolio/
+repository/
   secure-enterprise-knowledge-copilot/
   regulated-customer-operations-agent/
   ai-reliability-incident-console/
@@ -322,7 +322,7 @@ fde_portfolio/
 - [Differentiation Strategy](docs/differentiation_strategy.md)
 - [Technical Review Playbook](docs/technical_review_playbook.md)
 - [System Design Deep Dive](docs/system_design_deep_dive.md)
-- [Portfolio Evidence Matrix](docs/portfolio_evidence_matrix.md)
+- [System Evidence Matrix](docs/portfolio_evidence_matrix.md)
 - [ADR 0001: Local-First Reference Runtime](docs/adr_0001_local_first_portfolio.md)
 - [ADR 0002: The Model Is Not The Security Boundary](docs/adr_0002_model_is_not_security_boundary.md)
 - [ADR 0003: Eval State Isolated From Demo State](docs/adr_0003_eval_state_isolated_from_demo_state.md)

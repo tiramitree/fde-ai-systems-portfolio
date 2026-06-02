@@ -127,7 +127,7 @@ Local Git state:
 - `scripts/check_model_gateway_safety.py`: verifies optional OpenAI gateways stay opt-in, key references remain constrained, structured outputs are required, and failures fall back locally.
 - `scripts/check_openai_live_mode.py`: optionally proves live OpenAI mode with a real API key while preserving citations, approval requests, and side-effect blocking.
 - `scripts/check_observability_integrity.py`: starts isolated services and verifies trace, audit, approval, blocked-action, and unauthorized-query evidence stay consistent with demo outcomes.
-- `scripts/check_threat_model.py`: verifies portfolio threat IDs map to deterministic controls, source files, supporting docs, and evidence commands.
+- `scripts/check_threat_model.py`: verifies repository threat IDs map to deterministic controls, source files, supporting docs, and evidence commands.
 - `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent.
 - `scripts/check_error_hygiene.py`: verifies unexpected backend exceptions return generic JSON errors without leaking internals.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
@@ -151,7 +151,7 @@ Local Git state:
 - `scripts/check_pr_review_policy.py`: verifies malicious-contribution triage heuristics, runbook, maintainer policy, and PR template safeguards remain intact.
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
 - `scripts/run_all_evals.py`: runs all project eval suites.
-- `scripts/export_eval_csv.py`: exports portfolio eval summary rows to `eval_summaries.csv`.
+- `scripts/export_eval_csv.py`: exports repository eval summary rows to `eval_summaries.csv`.
 - `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload.
 - `scripts/replay_demo.py`: starts clean reset demo services, runs the release validation path, and prints trace/approval evidence.
 - `scripts/export_demo_replay_artifact.py`: writes release-attachable Markdown and JSON replay evidence under ignored `out/`.
@@ -172,7 +172,7 @@ Local Git state:
 - `.github/ISSUE_TEMPLATE/eval_case.md`: eval regression template.
 - `.github/ISSUE_TEMPLATE/feature_request.md`: feature request template.
 
-## Portfolio Docs
+## Reference Docs
 
 Start here:
 
@@ -205,7 +205,7 @@ Design Review Docs:
 - `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and review framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
 - `docs/api_contracts.md`: documented backend API surface, response-shape boundaries, and review framing.
-- `docs/portfolio_evidence_matrix.md`: claim-to-evidence map for reviewers.
+- `docs/portfolio_evidence_matrix.md`: system claim-to-evidence map.
 - `docs/case_study_secure_enterprise_knowledge_copilot.md`: Project 1 case study.
 - `docs/case_study_regulated_customer_operations_agent.md`: Project 2 case study.
 
@@ -231,7 +231,7 @@ Release and growth:
 - `docs/star_growth_plan.md`: plan for distribution and feedback loops.
 - `docs/launch_copy_pack.md`: copy-ready launch posts for GitHub, LinkedIn, X, Hacker News, and communities.
 - `docs/differentiation_strategy.md`: why this differs from ordinary AI demos.
-- `docs/assets/demo-walkthrough.gif`: README walkthrough animation for the two demo flows.
+- `docs/assets/demo-walkthrough.gif`: README walkthrough animation for the core demo flows.
 - `docs/assets/github-preview.png`: upload-ready GitHub social preview image.
 
 Architecture decisions:

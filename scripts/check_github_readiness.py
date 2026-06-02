@@ -62,7 +62,7 @@ def api_get(repo: str, endpoint: str) -> tuple[int, dict | list | None, str]:
     url = f"https://api.github.com/repos/{repo}{endpoint}"
     headers = {
         "Accept": "application/vnd.github+json",
-        "User-Agent": "fde-portfolio-github-readiness",
+        "User-Agent": "fde-reference-github-readiness",
     }
     token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if token:

@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run portfolio quality gate
+      - name: Run reference quality gate
         run: python -B scripts/ci_quality_gate.py
 
       - name: Upload demo report

@@ -1,11 +1,11 @@
 ﻿# Reviewer Perspective Checklist
 
-Use this before showing the repo to an technical reviewer, technical reviewer, or GitHub audience.
+Use this before showing the repo to a technical reviewer or GitHub audience.
 
 ## First 30 Seconds
 
 - The README says what the repo is without hype.
-- The visual preview shows two distinct systems.
+- The visual preview shows three distinct systems.
 - The first paragraph explains why this is different from chatbot demos.
 - The quickstart is visible without scrolling too far.
 - The project does not claim to be production-ready.
@@ -17,11 +17,11 @@ Use this before showing the repo to an technical reviewer, technical reviewer, o
 - The local demo does not require OpenAI API keys.
 - The command entrypoint is cross-platform.
 - Runtime artifacts are ignored.
-- The user can open two local URLs and see meaningful UI.
+- The user can open three local URLs and see meaningful UI.
 - The backend API surface is documented and verified with `python -B scripts/dev.py api-docs`.
 - Error messages are not raw stack traces in the browser.
 - Trace IDs, audit events, approval records, and blocked actions can be verified with `python -B scripts/dev.py observability`.
-- Trace IDs can be copied from both demo UIs without selecting raw JSON.
+- Trace IDs can be copied from the demo UIs without selecting raw JSON.
 - README screenshots are checked against the visual asset manifest with `python -B scripts/dev.py visual-assets`.
 - Threats, deterministic controls, evidence files, and proof commands can be verified with `python -B scripts/dev.py threat-model`.
 - Public PR review rules and malicious-contribution heuristics can be verified with `python -B scripts/dev.py pr-policy`.
