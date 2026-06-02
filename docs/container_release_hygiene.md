@@ -1,4 +1,4 @@
-# Container Release Hygiene
+﻿# Container Release Hygiene
 
 This project keeps Docker support as a release path for reviewers who prefer containerized demos, while the default verified path remains local Python. The container release gate makes the Docker files inspectable even on machines where Docker is not installed.
 
@@ -27,7 +27,7 @@ python -B scripts/dev.py docker-runtime
 
 That command verifies Docker CLI and Compose availability, runs the static container release gate, brings the Compose stack up with a dedicated project name, waits for both health endpoints, runs the smoke flows against the containerized services, and then tears the stack down. It is intentionally not part of `quality` because Docker availability is environment-specific.
 
-## Interview Framing
+## Technical Review Framing
 
 The honest claim is:
 

@@ -47,7 +47,7 @@ def tracked_files() -> list[Path]:
 
 
 def local_import_roots(files: list[Path]) -> set[str]:
-    roots = {"copilot", "ops_agent"}
+    roots = {"copilot", "ops_agent", "reliability_console"}
     for path in files:
         if path.suffix == ".py":
             roots.add(path.stem)

@@ -9,6 +9,7 @@ from urllib.request import urlopen
 URLS = [
     f"{os.getenv('FDE_PROJECT_1_URL', 'http://127.0.0.1:8765').rstrip('/')}/api/health",
     f"{os.getenv('FDE_PROJECT_2_URL', 'http://127.0.0.1:8770').rstrip('/')}/api/health",
+    f"{os.getenv('FDE_PROJECT_3_URL', 'http://127.0.0.1:8780').rstrip('/')}/api/health",
 ]
 
 

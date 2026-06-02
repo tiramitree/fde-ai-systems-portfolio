@@ -14,6 +14,7 @@ Open:
 
 - `http://127.0.0.1:8765`
 - `http://127.0.0.1:8770`
+- `http://127.0.0.1:8780`
 
 Browser setup:
 
@@ -32,7 +33,7 @@ Show README first.
 Say:
 
 ```text
-This is a local-first portfolio of enterprise AI control patterns: secure RAG, governed agents, evals, traces, audit logs, and approval gates.
+This is a local-first repository of enterprise AI control patterns: secure RAG, governed agents, release reliability, evals, traces, audit logs, and approval gates.
 ```
 
 ### 2. Project 1
@@ -99,7 +100,35 @@ Show:
 - notice sent once
 - audit record
 
-### 4. Quality Gate
+### 4. Project 3
+
+Open Project 3.
+
+Run triage for:
+
+```text
+inc-2026-014
+```
+
+Show:
+
+- linked failed evals
+- blocked rollout decision
+- remediation steps
+- trace/audit evidence
+
+Switch to:
+
+```text
+inc-2026-015
+```
+
+Show:
+
+- latency-only monitor decision
+- no unsafe rollout block
+
+### 5. Quality Gate
 
 Show terminal:
 
@@ -111,7 +140,8 @@ Show final lines:
 
 - Project 1 eval 11/11
 - Project 2 eval 8/8
-- smoke tests 9/9
+- Project 3 eval 6/6
+- smoke tests 13/13
 - quality gate passed
 
 ## After Recording

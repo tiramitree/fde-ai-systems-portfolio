@@ -1,4 +1,4 @@
-# Model Gateway Safety
+﻿# Model Gateway Safety
 
 The repository runs locally by default. OpenAI mode is an optional gateway, not a security boundary and not a required dependency for the demo.
 
@@ -38,7 +38,7 @@ OpenAI mode changes only the model-facing part of each workflow:
 
 The model never becomes the authority for permissions, evidence access, approval execution, audit logging, or eval success.
 
-## Interview Framing
+## Technical Review Framing
 
 Use this answer when challenged on API keys or model dependency:
 

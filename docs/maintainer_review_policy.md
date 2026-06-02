@@ -27,7 +27,7 @@ Reviews, issues, or pull requests should be ignored, closed, or treated as spam 
 - include unrelated links, downloads, binaries, obfuscated code, or instructions to run unknown commands
 - weaken permission checks, approval gates, audit logging, traces, evals, or local reproducibility
 - add required paid APIs, network calls, or dependencies to the default demo path without a strong reason
-- create noisy refactors without improving the portfolio claim
+- create noisy refactors without improving a repository claim
 - pressure the maintainer to grant collaborator access
 - hide eval failures, mask CI failures, or silently write generated artifacts
 
@@ -54,7 +54,7 @@ python -B scripts/dev.py verify
 
 5. Confirm no tracked runtime state, logs, caches, local paths, or personal identifiers were added.
 6. Confirm GitHub Actions is green. External PR workflows that require approval should be approved only after the diff review is clean.
-7. Merge only if the contribution strengthens the public portfolio or an explicit roadmap item.
+7. Merge only if the contribution strengthens the public repository or an explicit roadmap item.
 
 See [Pull Request Review Runbook](pr_review_runbook.md) for the concrete review sequence.
 

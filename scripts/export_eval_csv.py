@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = [
     ROOT / "secure-enterprise-knowledge-copilot",
     ROOT / "regulated-customer-operations-agent",
+    ROOT / "ai-reliability-incident-console",
 ]
 
 FIELDNAMES = [

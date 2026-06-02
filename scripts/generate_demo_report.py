@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from quality_gate import SERVICES, healthy, start_service, wait_for_health
+
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT_PATH = ROOT / "docs" / "demo_report.md"
@@ -37,6 +39,8 @@ def parse_eval_summaries(output: str) -> list[str]:
             parts.append(
                 f"unsafe_direct_side_effect_failures = {metrics['unsafe_direct_side_effect_failures']}"
             )
+        if "unsafe_release_approval_failures" in metrics:
+            parts.append(f"unsafe_release_approval_failures = {metrics['unsafe_release_approval_failures']}")
         summaries.append("- " + ", ".join(parts))
         current_name = None
         current_lines = []
@@ -60,12 +64,45 @@ def parse_smoke_summary(output: str) -> str:
     return "Smoke test summary unavailable"
 
 
-def main() -> int:
-    health_code, health_out, health_err = run_command([sys.executable, "-B", "scripts/check_health.py"])
-    eval_code, eval_out, eval_err = run_command([sys.executable, "-B", "scripts/run_all_evals.py"])
-    smoke_code, smoke_out, smoke_err = run_command([sys.executable, "-B", "scripts/smoke_test_demo_flows.py"])
+def ensure_services() -> list[subprocess.Popen]:
+    processes: list[subprocess.Popen] = []
+    for service in SERVICES:
+        if healthy(service["health"]):
+            continue
+        process = start_service(service)
+        if process is not None:
+            processes.append(process)
+        if not wait_for_health(service["health"]):
+            raise RuntimeError(f"service did not become healthy: {service['name']}")
+    return processes
 
-    status = "PASS" if health_code == 0 and eval_code == 0 and smoke_code == 0 else "FAIL"
+
+def stop_processes(processes: list[subprocess.Popen]) -> None:
+    for process in processes:
+        if process.poll() is None:
+            process.terminate()
+    for process in processes:
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=5)
+
+
+def main() -> int:
+    processes: list[subprocess.Popen] = []
+    startup_error = ""
+    try:
+        processes = ensure_services()
+    except RuntimeError as exc:
+        startup_error = str(exc)
+
+    health_code, health_out, health_err = run_command([sys.executable, "-B", "scripts/check_health.py"])
+    smoke_code, smoke_out, smoke_err = run_command([sys.executable, "-B", "scripts/smoke_test_demo_flows.py"])
+    eval_code, eval_out, eval_err = run_command([sys.executable, "-B", "scripts/run_all_evals.py"])
+    stop_processes(processes)
+
+    status = "PASS" if not startup_error and health_code == 0 and eval_code == 0 and smoke_code == 0 else "FAIL"
     eval_summaries = parse_eval_summaries(eval_out) if eval_code == 0 else []
     smoke_summary = parse_smoke_summary(smoke_out)
     failure_details = ""
@@ -76,6 +113,7 @@ def main() -> int:
 ### Health
 
 ```text
+{startup_error}
 {health_out.strip()}
 {health_err.strip()}
 ```
@@ -105,6 +143,7 @@ Overall status: **{status}**
 
 - Secure Enterprise Knowledge Copilot: http://127.0.0.1:8765
 - Regulated Customer Operations Agent: http://127.0.0.1:8770
+- AI Reliability Incident Console: http://127.0.0.1:8780
 
 ## Health Check
 
@@ -144,7 +183,15 @@ Project 2 proves governed agentic operations:
 - supervisor-only approval
 - trace and audit records
 
-## Recommended Interview Flow
+Project 3 proves AI release reliability:
+
+- canary release incident triage
+- eval regression evidence
+- rollout blocking for unsafe regressions
+- monitor-only handling for latency-only incidents
+- trace and audit records for release decisions
+
+## Recommended Review Flow
 
 1. Open Project 1 and show Alice remote-work answer with HR citation.
 2. Ask Alice for the finance plan and show abstention.
@@ -154,6 +201,10 @@ Project 2 proves governed agentic operations:
 6. Show approval request and blocked direct `send_notice`.
 7. Approve as supervisor and show audit.
 8. Run Project 2 evals.
+9. Open Project 3 and triage the unsafe canary incident.
+10. Show linked failed evals and blocked rollout recommendation.
+11. Switch to the latency incident and show monitor-only handling.
+12. Run Project 3 evals.
 
 """
     REPORT_PATH.write_text(report, encoding="utf-8")

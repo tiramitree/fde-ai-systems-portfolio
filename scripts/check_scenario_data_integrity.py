@@ -10,9 +10,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 P1_ROOT = ROOT / "secure-enterprise-knowledge-copilot"
 P2_ROOT = ROOT / "regulated-customer-operations-agent"
+P3_ROOT = ROOT / "ai-reliability-incident-console"
 
 P1_ROLES = {"employee", "manager", "admin"}
 P2_ROLES = {"investigator", "supervisor"}
+P3_ROLES = {"reliability_lead", "product_manager"}
 P1_BEHAVIORS = {"answer", "abstain"}
 P2_INTENTS = {"approve_action", "request_escalation", "request_notice_send", "investigate_listing", "general"}
 
@@ -235,10 +237,75 @@ def check_p2() -> list[str]:
     return failures
 
 
+def check_p3() -> list[str]:
+    failures: list[str] = []
+    seed = read_json(P3_ROOT / "data" / "seed_state.json")
+    eval_cases = read_json(P3_ROOT / "data" / "eval_cases.json")
+    check_text_safety(seed, "P3 seed_state.json", failures)
+    check_text_safety(eval_cases, "P3 eval_cases.json", failures)
+
+    users = seed.get("users", [])
+    releases = seed.get("releases", [])
+    incidents = seed.get("incidents", [])
+    eval_runs = seed.get("eval_runs", [])
+    runbooks = seed.get("runbooks", [])
+
+    user_ids = ids(users, "P3 users", failures)
+    release_ids = ids(releases, "P3 releases", failures)
+    incident_ids = ids(incidents, "P3 incidents", failures)
+    runbook_ids = ids(runbooks, "P3 runbooks", failures)
+    roles = {user.get("role") for user in users}
+    require(P3_ROLES.issubset(roles), failures, "P3: reliability lead and product manager roles must both exist")
+
+    eval_case_ids_by_release: dict[str, set[str]] = {}
+    for run in eval_runs:
+        release_id = run.get("release_id")
+        require(release_id in release_ids, failures, f"P3 eval run {run.get('id')}: missing release {release_id}")
+        cases = run.get("cases", [])
+        case_ids = ids(cases, f"P3 eval run {run.get('id')} cases", failures)
+        eval_case_ids_by_release.setdefault(str(release_id), set()).update(case_ids)
+        metrics = run.get("metrics", {})
+        require(metrics.get("total_cases") == len(cases), failures, f"P3 eval run {run.get('id')}: total_cases mismatch")
+        require(metrics.get("passed_cases", 0) <= metrics.get("total_cases", 0), failures, f"P3 eval run {run.get('id')}: passed_cases exceeds total")
+
+    require(isinstance(incidents, list) and incidents, failures, "P3: incidents must be a non-empty list")
+    for incident in incidents:
+        incident_id = incident.get("id")
+        release_id = incident.get("release_id")
+        require(release_id in release_ids, failures, f"P3 incident {incident_id}: missing release {release_id}")
+        require(incident.get("severity") in {"low", "medium", "high", "critical"}, failures, f"P3 incident {incident_id}: invalid severity")
+        require(incident.get("status") in {"open", "monitoring", "resolved"}, failures, f"P3 incident {incident_id}: invalid status")
+        for runbook_id in incident.get("runbook_ids", []):
+            require(runbook_id in runbook_ids, failures, f"P3 incident {incident_id}: missing runbook {runbook_id}")
+        known_cases = eval_case_ids_by_release.get(str(release_id), set())
+        for eval_case_id in incident.get("linked_eval_case_ids", []):
+            require(eval_case_id in known_cases, failures, f"P3 incident {incident_id}: missing linked eval {eval_case_id}")
+
+    require(isinstance(eval_cases, list) and eval_cases, failures, "P3: eval cases must be a non-empty list")
+    check_eval_ids(eval_cases, "P3 eval_cases.json", failures)
+    for case in eval_cases:
+        case_id = case.get("id")
+        user_id = case.get("user_id")
+        release_id = case.get("release_id")
+        incident_id = case.get("incident_id")
+        expected = case.get("expected", {})
+        require(user_id in user_ids, failures, f"P3 eval {case_id}: unknown user_id {user_id}")
+        require(release_id in release_ids, failures, f"P3 eval {case_id}: missing release {release_id}")
+        require(incident_id in incident_ids, failures, f"P3 eval {case_id}: missing incident {incident_id}")
+        require(expected.get("minimum_severity") in {"low", "medium", "high", "critical"}, failures, f"P3 eval {case_id}: invalid minimum_severity")
+        for eval_case_id in expected.get("must_link_eval_case_ids", []):
+            require(eval_case_id in eval_case_ids_by_release.get(str(release_id), set()), failures, f"P3 eval {case_id}: missing linked eval {eval_case_id}")
+        if expected.get("release_blocked") is True:
+            require(bool(expected.get("must_recommend_phrases")), failures, f"P3 eval {case_id}: blocked release cases need remediation phrases")
+
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_p1())
     failures.extend(check_p2())
+    failures.extend(check_p3())
 
     if failures:
         print("Scenario data integrity check failed:")

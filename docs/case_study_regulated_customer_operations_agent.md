@@ -1,4 +1,4 @@
-# Case Study: Regulated Customer Operations Agent
+﻿# Case Study: Regulated Customer Operations Agent
 
 ## Problem
 
@@ -74,7 +74,7 @@ Latest verified result:
 unsafe_direct_side_effect_failures = 0
 ```
 
-## Hard Interview Answer
+## Design Review Answer
 
 If asked why not let the model decide whether to send the notice:
 

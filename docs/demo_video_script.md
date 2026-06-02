@@ -4,7 +4,7 @@ Target length: 3 to 5 minutes.
 
 ## Opening
 
-Most AI demos stop at chat. This portfolio shows two enterprise AI systems that handle the controls real deployments need: permissions, citations, approval gates, traces, audit logs, and evals.
+Most AI demos stop at chat. This repository shows three enterprise AI systems that handle the controls real deployments need: permissions, citations, approval gates, release gates, traces, audit logs, and evals.
 
 ## Segment 1: Secure Enterprise Knowledge Copilot
 

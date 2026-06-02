@@ -40,6 +40,11 @@ SERVICES = [
         path=ROOT / "regulated-customer-operations-agent",
         preferred_port=8870,
     ),
+    Service(
+        name="ai-reliability-incident-console",
+        path=ROOT / "ai-reliability-incident-console",
+        preferred_port=8878,
+    ),
 ]
 
 
@@ -259,11 +264,73 @@ def replay_project_2(base_url: str) -> list[Evidence]:
     return evidence
 
 
-def print_report(project_1_url: str, project_2_url: str, evidence: list[Evidence]) -> None:
+def replay_project_3(base_url: str) -> list[Evidence]:
+    evidence: list[Evidence] = []
+    health = get_json(f"{base_url}/api/health")
+    evidence.append(record("P3 health", health.get("status") == "ok", json.dumps(health)))
+
+    unsafe = post_json(
+        f"{base_url}/api/triage",
+        {
+            "user_id": "maya",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-014",
+        },
+    )
+    linked_cases = set(unsafe.get("evidence", {}).get("linked_eval_case_ids", []))
+    evidence.append(
+        record(
+            "P3 unsafe canary incident blocks release",
+            unsafe.get("decision", {}).get("release_blocked") is True
+            and unsafe.get("decision", {}).get("recommendation") == "block_release"
+            and {"rel-eval-003-employee-finance-abstain", "rel-eval-004-citation-required"} <= linked_cases,
+            (
+                f"trace={unsafe.get('trace_id')}; "
+                f"recommendation={unsafe.get('decision', {}).get('recommendation')}; "
+                f"evals={sorted(linked_cases)}"
+            ),
+        )
+    )
+
+    latency = post_json(
+        f"{base_url}/api/triage",
+        {
+            "user_id": "maya",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-015",
+        },
+    )
+    evidence.append(
+        record(
+            "P3 latency-only incident stays monitor-only",
+            latency.get("decision", {}).get("release_blocked") is False
+            and latency.get("decision", {}).get("recommendation") == "monitor"
+            and latency.get("evidence", {}).get("linked_eval_case_ids") == ["rel-eval-006-latency-budget"],
+            (
+                f"trace={latency.get('trace_id')}; "
+                f"recommendation={latency.get('decision', {}).get('recommendation')}; "
+                f"evals={latency.get('evidence', {}).get('linked_eval_case_ids')}"
+            ),
+        )
+    )
+
+    traces = get_json(f"{base_url}/api/traces?limit=2")
+    evidence.append(
+        record(
+            "P3 triage decisions are traced",
+            len(traces.get("traces", [])) >= 2,
+            f"traces={len(traces.get('traces', []))}",
+        )
+    )
+    return evidence
+
+
+def print_report(project_1_url: str, project_2_url: str, project_3_url: str, evidence: list[Evidence]) -> None:
     print("Demo replay evidence")
     print("====================")
     print(f"Project 1 URL: {project_1_url}")
     print(f"Project 2 URL: {project_2_url}")
+    print(f"Project 3 URL: {project_3_url}")
     print()
     for item in evidence:
         status = "PASS" if item.passed else "FAIL"
@@ -275,13 +342,18 @@ def print_report(project_1_url: str, project_2_url: str, evidence: list[Evidence
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Start clean local demo services, replay the interview demo path, and print trace evidence.",
+        description="Start clean local demo services, replay the release validation path, and print trace evidence.",
     )
     parser.add_argument("--project1-port", type=int, default=SERVICES[0].preferred_port)
     parser.add_argument("--project2-port", type=int, default=SERVICES[1].preferred_port)
+    parser.add_argument("--project3-port", type=int, default=SERVICES[2].preferred_port)
     args = parser.parse_args()
 
-    ports = [reserve_port(args.project1_port), reserve_port(args.project2_port)]
+    ports = [
+        reserve_port(args.project1_port),
+        reserve_port(args.project2_port),
+        reserve_port(args.project3_port),
+    ]
     urls = [f"http://127.0.0.1:{port}" for port in ports]
     processes: list[subprocess.Popen] = []
     try:
@@ -297,7 +369,8 @@ def main() -> int:
 
         evidence = replay_project_1(urls[0])
         evidence.extend(replay_project_2(urls[1]))
-        print_report(urls[0], urls[1], evidence)
+        evidence.extend(replay_project_3(urls[2]))
+        print_report(urls[0], urls[1], urls[2], evidence)
         return 0 if all(item.passed for item in evidence) else 1
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
         print(f"Demo replay failed with exception: {exc}", file=sys.stderr)

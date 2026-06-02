@@ -1,4 +1,4 @@
-# Public Release Audit
+﻿# Public Release Audit
 
 Purpose: prevent the GitHub version from exposing weak, misleading, broken, or embarrassing details.
 
@@ -6,7 +6,7 @@ Purpose: prevent the GitHub version from exposing weak, misleading, broken, or e
 
 Do say:
 
-- This is a local-first enterprise AI systems portfolio.
+- This is a local-first enterprise AI systems reference repository.
 - It demonstrates secure RAG and governed agent workflows.
 - It runs without paid APIs.
 - Optional OpenAI Responses API integration points exist.
@@ -40,7 +40,7 @@ Potential criticism:
 
 Answer:
 
-> Correct. The default path is deterministic so demos and evals are stable without an API key. Optional OpenAI gateway code exists. More importantly, the security controls are intentionally outside the model, which is what I would preserve in production.
+> Correct. The default path is deterministic so demos and evals are stable without an API key. Optional OpenAI gateway code exists. More importantly, the security controls are intentionally outside the model, which should be preserved in production.
 
 ## 3. Prompt Injection Detection Is Simple
 
@@ -70,13 +70,13 @@ Potential criticism:
 
 Answer:
 
-> Yes. The portfolio focuses on system boundaries. Production would integrate an IdP and enforce tenant/role claims at the API and database level.
+> Yes. The repository focuses on system boundaries. Production would integrate an IdP and enforce tenant/role claims at the API and database level.
 
 ## Public Repo Must Not Include
 
 - API keys
-- real personal/company data, including legal names, phone numbers, personal email addresses, local usernames, chat export paths, or private resume files
-- private resume files
+- real personal/company data, including legal names, phone numbers, personal email addresses, local usernames, chat export paths, or private private community files
+- private private community files
 - temp SQLite files
 - runtime JSON state
 - logs

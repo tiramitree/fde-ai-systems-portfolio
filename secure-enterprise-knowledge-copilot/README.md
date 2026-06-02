@@ -1,6 +1,6 @@
 ﻿# Secure Enterprise Knowledge Copilot
 
-Permission-aware enterprise RAG system built for FDE-style portfolio demonstration.
+Permission-aware enterprise RAG reference system for secure knowledge access.
 
 This MVP is intentionally dependency-free so it can run on any local Python 3.12 environment. It implements the core delivery story now, while leaving clean upgrade paths to FastAPI, Next.js, PostgreSQL/pgvector, and managed OpenAI services.
 
@@ -13,7 +13,7 @@ This MVP is intentionally dependency-free so it can run on any local Python 3.12
 - Trace logging for retrieval and answer generation.
 - Audit logging for user actions and cited sources.
 - Golden eval gate for regression testing.
-- Static operational UI for demo and interview walkthrough.
+- Static operational UI for demo and technical review walkthrough.
 
 ## Run Locally
 
@@ -68,7 +68,7 @@ Browser UI
     -> evals.py: golden regression suite
 ```
 
-## FDE Positioning
+## Deployment Positioning
 
 This is not a toy chatbot. The project is scoped as an enterprise deployment problem:
 

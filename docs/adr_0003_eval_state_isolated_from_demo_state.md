@@ -1,4 +1,4 @@
-# ADR 0003: Eval State Isolated From Demo State
+﻿# ADR 0003: Eval State Isolated From Demo State
 
 Status: accepted
 
@@ -25,7 +25,7 @@ Tradeoffs:
 - local state is still not a production concurrency solution
 - production should use a real database and transactions
 
-## Interview Explanation
+## Design Review Explanation
 
 This was an actual reliability issue found during testing. The fix demonstrates why eval infrastructure should be isolated and repeatable.
 

@@ -1,4 +1,4 @@
-# PR Review Security Gate
+﻿# PR Review Security Gate
 
 Run:
 
@@ -33,12 +33,12 @@ For an external PR:
 2. Read the diff before running code.
 3. If high-risk findings appear, do not run contributor code until the diff is understood.
 4. Run `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py verify` before merge.
-5. Merge only if the change improves the portfolio without weakening permissions, approvals, audit, traces, evals, dependency posture, or local reproducibility.
+5. Merge only if the change improves the repository without weakening permissions, approvals, audit, traces, evals, dependency posture, or local reproducibility.
 
-## Interview Framing
+## Technical Review Framing
 
 Use this answer:
 
 ```text
-I treat public PRs as untrusted input. The live triage command inspects open PRs, and the PR-policy gate protects the triage rules, runbook, maintainer policy, and PR template from being quietly weakened. That means review process is itself tested, not just documented.
+Public PRs are treated as untrusted input. The live triage command inspects open PRs, and the PR-policy gate protects the triage rules, runbook, maintainer policy, and PR template from being quietly weakened. That means the review process is itself tested, not just documented.
 ```

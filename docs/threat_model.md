@@ -1,6 +1,6 @@
-# Portfolio Threat Model
+﻿# Portfolio Threat Model
 
-This portfolio is a local-first demonstration of enterprise AI control boundaries. It is not production software, but the security model is intentionally explicit so a reviewer can ask, "What can go wrong, and what proves the control still works?"
+This repository is a local-first demonstration of enterprise AI control boundaries. It is not production software, but the security model is intentionally explicit so a reviewer can ask, "What can go wrong, and what proves the control still works?"
 
 Core principle:
 
@@ -59,7 +59,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 - Connector-scoped credentials, rate limits, retry policies, and transactional outbox processing for external side effects.
 - Red-team eval ingestion from production incidents and support tickets.
 
-## Interview Framing
+## Technical Review Framing
 
 Use this concise answer:
 

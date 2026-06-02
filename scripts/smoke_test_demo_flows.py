@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 PROJECT_1 = os.getenv("FDE_PROJECT_1_URL", "http://127.0.0.1:8765").rstrip("/")
 PROJECT_2 = os.getenv("FDE_PROJECT_2_URL", "http://127.0.0.1:8770").rstrip("/")
+PROJECT_3 = os.getenv("FDE_PROJECT_3_URL", "http://127.0.0.1:8780").rstrip("/")
 
 
 @dataclass
@@ -170,11 +171,65 @@ def project_2_checks() -> list[Check]:
     return checks
 
 
+def project_3_checks() -> list[Check]:
+    checks: list[Check] = []
+    health = get_json(f"{PROJECT_3}/api/health")
+    checks.append(check(health.get("status") == "ok", "Project 3 health", json.dumps(health)))
+
+    unsafe = post_json(
+        f"{PROJECT_3}/api/triage",
+        {
+            "user_id": "maya",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-014",
+        },
+    )
+    checks.append(
+        check(
+            unsafe["decision"]["release_blocked"] is True
+            and unsafe["decision"]["recommendation"] == "block_release"
+            and {"rel-eval-003-employee-finance-abstain", "rel-eval-004-citation-required"}
+            <= set(unsafe["evidence"]["linked_eval_case_ids"]),
+            "Project 3 unsafe canary incident blocks release",
+            f"trace={unsafe['trace_id']}; evals={unsafe['evidence']['linked_eval_case_ids']}",
+        )
+    )
+
+    latency = post_json(
+        f"{PROJECT_3}/api/triage",
+        {
+            "user_id": "maya",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-015",
+        },
+    )
+    checks.append(
+        check(
+            latency["decision"]["release_blocked"] is False
+            and latency["decision"]["recommendation"] == "monitor"
+            and latency["evidence"]["linked_eval_case_ids"] == ["rel-eval-006-latency-budget"],
+            "Project 3 latency-only incident stays monitor-only",
+            f"trace={latency['trace_id']}; recommendation={latency['decision']['recommendation']}",
+        )
+    )
+
+    traces = get_json(f"{PROJECT_3}/api/traces?limit=2")
+    checks.append(
+        check(
+            len(traces.get("traces", [])) >= 2,
+            "Project 3 triage decisions are traced",
+            f"traces={len(traces.get('traces', []))}",
+        )
+    )
+    return checks
+
+
 def main() -> int:
     checks: list[Check] = []
     try:
         checks.extend(project_1_checks())
         checks.extend(project_2_checks())
+        checks.extend(project_3_checks())
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
         print(f"Smoke test failed with exception: {exc}", file=sys.stderr)
         return 1

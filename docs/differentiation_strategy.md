@@ -1,10 +1,10 @@
-# Differentiation Strategy
+﻿# Differentiation Strategy
 
 ## Core Differentiator
 
 This repository is not a chatbot template.
 
-It is a portfolio of enterprise AI control patterns:
+It is a repository of enterprise AI control patterns:
 
 - secure RAG
 - governed agents
@@ -33,17 +33,16 @@ This repo:
 - includes negative evals
 - blocks unsafe actions
 - uses approval queues
-- has docs for interview-grade tradeoffs
+- has docs for review-grade tradeoffs
 - runs locally without paid APIs
 - includes optional OpenAI integration without depending on it
 
 ## Target Audience
 
-- FDE candidates
 - AI application engineers
 - solution engineers
 - engineers building enterprise AI pilots
-- interviewers looking for applied systems judgment
+- technical reviewers looking for applied systems judgment
 
 ## GitHub Topics
 

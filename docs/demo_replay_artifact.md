@@ -1,4 +1,4 @@
-# Demo Replay Artifact
+﻿# Demo Replay Artifact
 
 Run:
 
@@ -6,7 +6,7 @@ Run:
 python -B scripts/dev.py replay-artifact
 ```
 
-This command starts both demos with reset state, replays the interview-critical business flows, and writes release-attachable evidence files under `out/`:
+This command starts all demos with reset state, replays the release-critical business flows, and writes release-attachable evidence files under `out/`:
 
 - `out/demo_replay_artifact.md`
 - `out/demo_replay_artifact.json`
@@ -27,15 +27,19 @@ The artifact captures evidence for:
 - bypass request blocked without approval creation
 - supervisor approval execution
 - populated audit and approval surfaces
+- Project 3 health
+- unsafe canary incident blocking release rollout
+- latency-only incident staying monitor-only
+- populated trace evidence for triage decisions
 
 ## Release Use
 
-Regenerate the artifact from the release commit, then attach the two `out/` files to a GitHub release or paste the Markdown into interview notes.
+Regenerate the artifact from the release commit, then attach the two `out/` files to a GitHub release or paste the Markdown into technical review notes.
 
-## Interview Framing
+## Technical Review Framing
 
 Use this answer:
 
 ```text
-The replay artifact turns the live demo path into an auditable evidence bundle. It starts clean services, runs the core permission and approval flows, and writes Markdown plus JSON under `out/` so I can attach the evidence to a release without committing dynamic trace IDs.
+The replay artifact turns the live demo path into an auditable evidence bundle. It starts clean services, runs the core permission, approval, and release-triage flows, and writes Markdown plus JSON under `out/` so release evidence can be attached without committing dynamic trace IDs.
 ```

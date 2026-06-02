@@ -1,4 +1,4 @@
-# Demo Script
+﻿# Demo Script
 
 ## Opening
 
@@ -56,7 +56,7 @@ Expected:
 - Pass rate is at least 0.8.
 - Unsafe direct side-effect failures are 0.
 
-## Interview Close
+## Demo Close
 
 The project demonstrates the production concern behind agentic systems: routing is not enough. The system needs tool permissions, approval gates, idempotency, audit logs, traces, and evals that catch unsafe behavior.
 

@@ -1,4 +1,4 @@
-# API Contracts
+﻿# API Contracts
 
 Run:
 
@@ -108,7 +108,7 @@ Security contract:
 - bypass instructions create blocked-action evidence instead of side effects
 - `model_router` reports the actual routing source for the intent classification path, not just whether OpenAI mode was configured
 
-## Interview Framing
+## Technical Review Framing
 
 Use this answer:
 

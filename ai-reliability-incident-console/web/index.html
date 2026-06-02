@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Reliability Incident Console</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <div>
+          <h1>AI Reliability Incident Console</h1>
+          <p>Release eval regression triage with incidents, blocked rollout decisions, traces, audit logs, and remediation plans.</p>
+        </div>
+        <div class="status" id="health">Checking...</div>
+      </section>
+
+      <section class="grid">
+        <aside class="panel">
+          <h2>Release</h2>
+          <label for="userSelect">User</label>
+          <select id="userSelect"></select>
+          <label for="releaseSelect">Release</label>
+          <select id="releaseSelect"></select>
+          <div id="releaseSummary" class="box">No release loaded.</div>
+
+          <h2>Eval Gate</h2>
+          <button id="runEval">Run triage evals</button>
+          <pre id="evalOutput" class="pre small">No eval run yet.</pre>
+        </aside>
+
+        <section class="panel mainPanel">
+          <h2>Incident Triage</h2>
+          <label for="incidentSelect">Incident</label>
+          <select id="incidentSelect"></select>
+          <div id="incidentSummary" class="box">No incident loaded.</div>
+          <div class="quick">
+            <button data-incident="inc-2026-014">Safety regression</button>
+            <button data-incident="inc-2026-015">Latency regression</button>
+          </div>
+          <button id="runTriage">Run triage</button>
+
+          <h2>Decision</h2>
+          <div id="decision" class="answer muted">No decision yet.</div>
+
+          <div class="twoCols">
+            <div>
+              <h2>Failed Eval Evidence</h2>
+              <div id="failedEvals" class="list"></div>
+            </div>
+            <div>
+              <div class="sectionHeader">
+                <h2>Trace</h2>
+                <button
+                  id="copyTraceId"
+                  class="secondaryButton"
+                  type="button"
+                  title="Copy trace ID"
+                  aria-label="Copy trace ID"
+                  disabled
+                >
+                  Copy ID
+                </button>
+              </div>
+              <pre id="trace" class="pre">No trace yet.</pre>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <h2>Recent Audit</h2>
+          <div id="audit" class="list compact"></div>
+          <h2>Recent Traces</h2>
+          <div id="traces" class="list compact"></div>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

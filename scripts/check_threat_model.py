@@ -176,7 +176,7 @@ def check_threat_model_doc() -> list[str]:
         "## Threat Matrix",
         "## Trust Boundaries",
         "## Production Controls To Add",
-        "## Interview Framing",
+        "## Technical Review Framing",
     ]
     for phrase in required_global_phrases:
         if phrase not in text:

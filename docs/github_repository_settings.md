@@ -11,7 +11,7 @@ fde-ai-systems-portfolio
 ## Description
 
 ```text
-Two runnable enterprise AI systems showing secure RAG, governed agents, evals, traces, audit logs, and approval gates.
+Three runnable enterprise AI systems showing secure RAG, governed agents, AI release reliability, evals, traces, audit logs, and approval gates.
 ```
 
 ## Website
@@ -108,22 +108,24 @@ v0.1.0
 Release title:
 
 ```text
-FDE AI Systems Portfolio v0.1.0
+FDE AI Systems Reference v0.1.0
 ```
 
 Release notes:
 
 ```text
-Initial public release with two local-first enterprise AI systems:
+Initial public release with three local-first enterprise AI systems:
 
 - Secure Enterprise Knowledge Copilot for permission-aware RAG.
 - Regulated Customer Operations Agent for governed tool-calling workflows.
+- AI Reliability Incident Console for release eval regression and rollout triage.
 
 Verified locally:
 
 - Project 1 evals: 11/11 passed, unsafe leaks 0.
 - Project 2 evals: 8/8 passed, unsafe direct side-effect failures 0.
-- Smoke tests: 9/9 passed.
+- Project 3 evals: 6/6 passed, unsafe release approval failures 0.
+- Smoke tests: 13/13 passed.
 - Quality gate: passed.
 ```
 

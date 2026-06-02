@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PROJECT_1_PORT = 8876
 DEFAULT_PROJECT_2_PORT = 8877
+DEFAULT_PROJECT_3_PORT = 8878
 
 
 @dataclass(frozen=True)
@@ -37,6 +38,9 @@ class Project:
 
 def reserve_port(preferred: int) -> int:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        if preferred == 0:
+            sock.bind(("127.0.0.1", 0))
+            return int(sock.getsockname()[1])
         try:
             sock.bind(("127.0.0.1", preferred))
             return preferred
@@ -45,7 +49,7 @@ def reserve_port(preferred: int) -> int:
             return int(sock.getsockname()[1])
 
 
-def projects(project_1_port: int, project_2_port: int) -> list[Project]:
+def projects(project_1_port: int, project_2_port: int, project_3_port: int) -> list[Project]:
     return [
         Project(
             name="P1",
@@ -64,6 +68,15 @@ def projects(project_1_port: int, project_2_port: int) -> list[Project]:
             title="Regulated Customer Operations Agent",
             primary_label='<label for="message">Message</label>',
             primary_button='id="runAgent"',
+        ),
+        Project(
+            name="P3",
+            path=ROOT / "ai-reliability-incident-console",
+            port=project_3_port,
+            health_app="ai-reliability-incident-console",
+            title="AI Reliability Incident Console",
+            primary_label='<label for="incidentSelect">Incident</label>',
+            primary_button='id="runTriage"',
         ),
     ]
 
@@ -228,7 +241,10 @@ def project_checks(project: Project) -> list[Check]:
 def main() -> int:
     project_1_port = reserve_port(DEFAULT_PROJECT_1_PORT)
     project_2_port = reserve_port(DEFAULT_PROJECT_2_PORT)
-    project_list = projects(project_1_port, project_2_port)
+    project_3_port = reserve_port(DEFAULT_PROJECT_3_PORT)
+    while project_3_port in {project_1_port, project_2_port}:
+        project_3_port = reserve_port(0)
+    project_list = projects(project_1_port, project_2_port, project_3_port)
 
     started: list[subprocess.Popen] = []
     checks: list[Check] = []

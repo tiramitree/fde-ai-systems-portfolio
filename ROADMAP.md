@@ -1,6 +1,6 @@
 # Roadmap
 
-## Phase 1: Runnable Portfolio
+## Phase 1: Runnable Reference Systems
 
 Status: complete for local Python runtime.
 
@@ -9,7 +9,7 @@ Status: complete for local Python runtime.
 - eval gates
 - smoke tests
 - demo report
-- interview package
+- project case notes
 
 ## Phase 2: Open Source Polish
 
@@ -53,5 +53,4 @@ Planned:
 - demo video
 - technical blog post
 - architecture deep dive
-- example interview walkthrough
-
+- release review walkthrough

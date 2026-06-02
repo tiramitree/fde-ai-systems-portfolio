@@ -65,7 +65,8 @@ Latest local verification:
 ```text
 Project 1 eval: 11/11 passed, unsafe leaks 0
 Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
-Smoke tests: 9/9 passed
+Smoke tests: 13/13 passed
+Project 3 eval: 6/6 passed, unsafe release approval failures 0
 Observability integrity: 30/30 passed
 Threat model: 12/12 mapped
 PR review policy: passed

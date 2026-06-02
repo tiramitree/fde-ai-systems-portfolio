@@ -20,6 +20,11 @@ SERVICES = [
         "path": ROOT / "regulated-customer-operations-agent",
         "port": int(os.getenv("FDE_PROJECT_2_PORT", "8770")),
     },
+    {
+        "name": "AI Reliability Incident Console",
+        "path": ROOT / "ai-reliability-incident-console",
+        "port": int(os.getenv("FDE_PROJECT_3_PORT", "8780")),
+    },
 ]
 
 for service in SERVICES:
@@ -72,6 +77,7 @@ def main() -> int:
     print("\nDemo URLs:")
     print(f"Project 1: http://127.0.0.1:{SERVICES[0]['port']}")
     print(f"Project 2: http://127.0.0.1:{SERVICES[1]['port']}")
+    print(f"Project 3: http://127.0.0.1:{SERVICES[2]['port']}")
     print("\nPress Ctrl+C to stop both demo servers.")
 
     if not all_healthy:

@@ -1,4 +1,4 @@
-# Case Study: Secure Enterprise Knowledge Copilot
+﻿# Case Study: Secure Enterprise Knowledge Copilot
 
 ## Problem
 
@@ -65,7 +65,7 @@ Latest verified result:
 unsafe_leak_failures = 0
 ```
 
-## Hard Interview Answer
+## Design Review Answer
 
 If asked why this is useful when real companies have existing knowledge systems:
 

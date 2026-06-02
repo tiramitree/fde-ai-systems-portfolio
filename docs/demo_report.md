@@ -8,12 +8,14 @@ Overall status: **PASS**
 
 - Secure Enterprise Knowledge Copilot: http://127.0.0.1:8765
 - Regulated Customer Operations Agent: http://127.0.0.1:8770
+- AI Reliability Incident Console: http://127.0.0.1:8780
 
 ## Health Check
 
 ```text
 http://127.0.0.1:8765/api/health: ok (secure-enterprise-knowledge-copilot)
 http://127.0.0.1:8770/api/health: ok (regulated-customer-operations-agent)
+http://127.0.0.1:8780/api/health: ok (ai-reliability-incident-console)
 
 ```
 
@@ -21,11 +23,12 @@ http://127.0.0.1:8770/api/health: ok (regulated-customer-operations-agent)
 
 - secure-enterprise-knowledge-copilot: 11/11 passed, pass_rate = 1.0, unsafe_leak_failures = 0
 - regulated-customer-operations-agent: 8/8 passed, pass_rate = 1.0, unsafe_direct_side_effect_failures = 0
+- ai-reliability-incident-console: 6/6 passed, pass_rate = 1.0, unsafe_release_approval_failures = 0
 
 ## Smoke Test Business Flows
 
 ```text
-Smoke tests: 9/9 passed
+Smoke tests: 13/13 passed
 ```
 
 
@@ -49,7 +52,15 @@ Project 2 proves governed agentic operations:
 - supervisor-only approval
 - trace and audit records
 
-## Recommended Interview Flow
+Project 3 proves AI release reliability:
+
+- canary release incident triage
+- eval regression evidence
+- rollout blocking for unsafe regressions
+- monitor-only handling for latency-only incidents
+- trace and audit records for release decisions
+
+## Recommended Review Flow
 
 1. Open Project 1 and show Alice remote-work answer with HR citation.
 2. Ask Alice for the finance plan and show abstention.
@@ -59,4 +70,8 @@ Project 2 proves governed agentic operations:
 6. Show approval request and blocked direct `send_notice`.
 7. Approve as supervisor and show audit.
 8. Run Project 2 evals.
+9. Open Project 3 and triage the unsafe canary incident.
+10. Show linked failed evals and blocked rollout recommendation.
+11. Switch to the latency incident and show monitor-only handling.
+12. Run Project 3 evals.
 

@@ -5,20 +5,21 @@ Use this after the GitHub repository is public and GitHub Actions is green. Befo
 ## One-Line Pitch
 
 ```text
-Two local-first enterprise AI systems showing secure RAG, governed agents, evals, traces, audit logs, and approval gates.
+Three local-first enterprise AI reference systems showing secure RAG, governed agents, AI release reliability, evals, traces, audit logs, and approval gates.
 ```
 
 ## Short Post
 
 ```text
-I open-sourced a small FDE-style AI systems portfolio:
+Open-source reference systems for enterprise AI controls:
 
 - Secure Enterprise Knowledge Copilot: permission-aware RAG with citations, abstention, prompt-injection handling, traces, audit logs, and evals.
 - Regulated Customer Operations Agent: governed tool-calling workflow with approval queues, side-effect blocking, supervisor approval, traces, audit logs, and unsafe-action evals.
+- AI Reliability Incident Console: canary incident triage, eval regression evidence, rollout blocking, remediation plans, traces, and audit logs.
 
-It runs locally without paid APIs, but includes optional OpenAI Responses API integration points and a production upgrade path.
+The systems run locally without paid APIs, with optional OpenAI Responses API integration points and a production upgrade path.
 
-The key design principle: the model is not the security boundary. Permissions, side-effect authorization, audit, traces, and evals live in application code.
+The key design principle: the model is not the security boundary. Permissions, side-effect authorization, rollout decisions, audit, traces, and evals live in application code.
 ```
 
 ## LinkedIn Post
@@ -26,7 +27,7 @@ The key design principle: the model is not the security boundary. Permissions, s
 ```text
 Most AI app demos stop at chat.
 
-I wanted a portfolio that shows the parts enterprise AI deployments actually need around the model, so I built two runnable systems:
+Enterprise deployments need the controls around the model:
 
 1. Secure Enterprise Knowledge Copilot
    - permission-aware retrieval
@@ -41,7 +42,14 @@ I wanted a portfolio that shows the parts enterprise AI deployments actually nee
    - supervisor-only execution
    - traces, audit logs, and unsafe-action evals
 
-Both run locally without paid APIs. The optional OpenAI path is configurable, but the important controls stay outside the model.
+3. AI Reliability Incident Console
+   - canary incident triage
+   - eval regression evidence
+   - rollout blocking
+   - remediation plans
+   - traces and audit logs
+
+All three run locally without paid APIs. Optional model-backed paths are configurable, but the important controls stay outside the model.
 
 The design principle is simple: the model is not the security boundary.
 
@@ -51,11 +59,12 @@ Repo: <repo-url>
 ## X / Twitter Thread
 
 ```text
-1/ I built a local-first enterprise AI systems portfolio.
+1/ Local-first enterprise AI reference systems.
 
-Not another chatbot template. Two runnable demos:
+Not another chatbot template:
 - secure RAG
 - governed agents
+- AI release reliability
 - evals
 - traces
 - audit logs
@@ -73,13 +82,15 @@ The agent can investigate a recalled product listing, create internal records, d
 It cannot send the notice directly.
 Supervisor approval is required.
 
-4/ The main design principle:
+4/ Project 3: AI Reliability Incident Console.
 
-The model is not the security boundary.
+It links canary incidents to failed eval cases, blocks unsafe rollout, keeps latency-only incidents monitor-only, and creates trace/audit evidence for release decisions.
 
-Permissions, side-effect authorization, audit, traces, and evals stay in application code.
+5/ The model is not the security boundary.
 
-5/ It runs locally without paid APIs and includes optional OpenAI Responses API integration points.
+Permissions, side-effect authorization, rollout decisions, audit, traces, and evals stay in application code.
+
+6/ The systems run locally without paid APIs and include optional OpenAI Responses API integration points.
 
 Repo: <repo-url>
 ```
@@ -89,40 +100,43 @@ Repo: <repo-url>
 Title:
 
 ```text
-Show HN: Local-first enterprise AI systems portfolio with secure RAG and governed agents
+Show HN: Local-first enterprise AI systems with secure RAG, governed agents, and release gates
 ```
 
 Body:
 
 ```text
-I built a small local-first portfolio of enterprise AI control patterns.
+This is a small local-first reference repository for enterprise AI control patterns.
 
-It contains two runnable systems:
+It contains three runnable systems:
 
 - Secure Enterprise Knowledge Copilot: permission-aware RAG with citations, abstention, prompt-injection handling, traces, audit logs, and evals.
 - Regulated Customer Operations Agent: governed tool-calling workflow with approval queues, side-effect blocking, supervisor approval, traces, audit logs, and unsafe-action evals.
+- AI Reliability Incident Console: canary incident triage, eval regression evidence, rollout blocking, remediation plans, traces, and audit logs.
 
-The repo is intentionally dependency-light so reviewers can run it locally without paid APIs. Optional OpenAI Responses API integration points are included, but the security and side-effect boundaries stay in application code.
+The repo is intentionally dependency-light so reviewers can run it locally without paid APIs. Optional OpenAI Responses API integration points are included, but security, side-effect, and release boundaries stay in application code.
 
 The core idea is: the model is not the security boundary.
 
-I would especially welcome feedback on the eval design, permission boundary, and governed-agent workflow.
+Feedback on the eval design, permission boundary, governed-agent workflow, and release reliability gate would be especially useful.
 ```
 
 ## Reddit / Community Post
 
 ```text
-I built a local-first enterprise AI reference repo focused on the controls around LLM apps:
+Local-first enterprise AI reference systems focused on the controls around LLM apps:
 
 - secure RAG with role-aware retrieval
 - citations and abstention
 - retrieved-content prompt-injection handling
 - governed tool-calling agent
 - approval gates for side effects
+- AI release incident triage
+- rollout blocking from eval regressions
 - traces and audit logs
 - eval and smoke-test gates
 
-It is intentionally not a production platform. It is a runnable reference implementation for patterns that come up in enterprise AI/FDE interviews and early AI product pilots.
+This is intentionally not a production platform. It is a runnable reference implementation for enterprise AI/FDE control patterns and early AI product pilots.
 
 Repo: <repo-url>
 ```
@@ -143,6 +157,7 @@ Outline:
 4. Retrieved text as untrusted input.
 5. Tool calling versus side-effect authorization.
 6. Approval gates and audit logs.
-7. Evals as deployment gates.
-8. What changes in production: storage, connectors, telemetry.
-9. What should not change: security boundaries.
+7. Release blocking from eval regressions.
+8. Evals as deployment gates.
+9. What changes in production: storage, connectors, telemetry.
+10. What should not change: security boundaries.

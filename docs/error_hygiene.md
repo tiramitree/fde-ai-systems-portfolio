@@ -1,4 +1,4 @@
-# Error Hygiene
+﻿# Error Hygiene
 
 Public demos should fail safely. Unexpected backend exceptions must not leak stack traces, local paths, secret-like strings, source file names, or internal implementation details into browser-visible JSON responses.
 
@@ -33,4 +33,4 @@ Expected user-visible payload:
 
 Typed application errors still return specific user-safe messages through `ApiError`, such as `Not found`, `Forbidden`, or validation errors. Only unexpected server exceptions are generalized.
 
-This keeps the demo useful for users while avoiding accidental leakage during interviews, public PR testing, or future refactors.
+This keeps the demo useful for users while avoiding accidental leakage during technical reviews, public PR testing, or future refactors.

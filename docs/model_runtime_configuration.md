@@ -1,8 +1,8 @@
-# Model Runtime Configuration
+﻿# Model Runtime Configuration
 
 Date reviewed: 2026-06-01
 
-This portfolio runs locally by default. The OpenAI path is optional and intentionally limited to model-facing work:
+This repository runs locally by default. The OpenAI path is optional and intentionally limited to model-facing work:
 
 - Project 1: grounded answer wording after permission filtering, unsafe-content filtering, citation selection, and abstention logic.
 - Project 2: intent classification before deterministic tool permission and approval checks.
@@ -23,7 +23,7 @@ Reason:
 
 - OpenAI's current model guide lists `gpt-5.2` as the best model for coding and agentic tasks across industries.
 - OpenAI's GPT-5.2 guide recommends the Responses API for reasoning, tool-calling, and multi-turn use cases.
-- The portfolio keeps the local deterministic mode as the verified default so demos do not depend on paid API access.
+- The repository keeps the local deterministic mode as the verified default so demos do not depend on paid API access.
 
 References:
 
@@ -49,7 +49,7 @@ With a real key, run the live proof:
 python -B scripts/dev.py openai-live
 ```
 
-That command starts both apps on isolated local ports with OpenAI mode enabled. It requires Project 1 to report `model_provider=openai`, Project 2 to report `model_router=openai`, and both workflows to keep their normal safety behavior.
+That command starts both model-facing apps on isolated local ports with OpenAI mode enabled. It requires Project 1 to report `model_provider=openai`, Project 2 to report `model_router=openai`, and both model-facing workflows to keep their normal safety behavior.
 
 Supported reasoning effort values:
 
@@ -93,10 +93,10 @@ Rationale:
 - The model returns only an enum intent.
 - Approval decisions and side effects remain deterministic application behavior.
 
-## Interview Positioning
+## Technical Review Positioning
 
 Use this wording:
 
 ```text
-I keep local deterministic mode as the verified default, then expose an optional OpenAI Responses API path for the model-facing part of each workflow. I tune model, reasoning effort, verbosity, and structured outputs through environment variables, but I do not move permissions or side-effect authorization into the model. When a key is available, `python -B scripts/dev.py openai-live` proves both apps actually used OpenAI mode while preserving citations, approvals, and side-effect blocking.
+Local deterministic mode remains the verified default, with an optional OpenAI Responses API path for the model-facing part of each workflow. Model, reasoning effort, verbosity, and structured outputs are tuned through environment variables, while permissions and side-effect authorization stay outside the model. When a key is available, `python -B scripts/dev.py openai-live` proves both model-facing apps used OpenAI mode while preserving citations, approvals, and side-effect blocking.
 ```

@@ -59,6 +59,20 @@ PROJECTS = [
         },
         forbidden_backend_imports=frozenset({"copilot", "scripts", "web", "docs", "app"}),
     ),
+    ProjectBoundary(
+        name="AI Reliability Incident Console",
+        root=ROOT / "ai-reliability-incident-console",
+        package="reliability_console",
+        app_allowed_modules=frozenset({"reliability_console.api", "reliability_console.storage"}),
+        required_symbols={
+            "app.py": frozenset({"Handler", "main"}),
+            "src/reliability_console/api.py": frozenset({"ApiError", "ReliabilityApi"}),
+            "src/reliability_console/triage.py": frozenset({"triage_incident", "failed_eval_cases"}),
+            "src/reliability_console/storage.py": frozenset({"JsonStore", "connect", "init_state"}),
+            "src/reliability_console/evals.py": frozenset({"run_evals"}),
+        },
+        forbidden_backend_imports=frozenset({"copilot", "ops_agent", "scripts", "web", "docs", "app"}),
+    ),
 ]
 
 
@@ -179,10 +193,11 @@ def check_frontend_module_boundaries(project: ProjectBoundary) -> list[str]:
 
 def check_project_isolation() -> list[str]:
     failures: list[str] = []
-    first, second = PROJECTS
     cross_pairs = [
-        (first.root, second.root.name),
-        (second.root, first.root.name),
+        (project.root, other.root.name)
+        for project in PROJECTS
+        for other in PROJECTS
+        if project != other
     ]
     for root, other_project_dir in cross_pairs:
         for path in sorted((root / "src").rglob("*.py")):

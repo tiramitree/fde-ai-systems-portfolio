@@ -1,4 +1,4 @@
-# Completion Checklist
+﻿# Completion Checklist
 
 Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 
@@ -6,12 +6,12 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 
 - Project 1 local service runs on `8765`.
 - Project 2 local service runs on `8770`.
-- `scripts/check_health.py` passes for both services.
+- `scripts/check_health.py` passes for all services.
 - `scripts/run_all_evals.py` passes:
   - Project 1: 11/11, unsafe leaks 0
   - Project 2: 8/8, unsafe direct side-effect failures 0
-- Both projects have README, architecture docs, demo scripts, threat models, implementation status files.
-- Portfolio-level README, run-all eval, health check, start-demo script, resume/interview package, and final demo runbook exist.
+- All three projects have README, architecture docs, demo scripts, threat models, implementation status files.
+- Repository-level README, run-all eval, health check, start-demo script, project case notes, and final demo runbook exist.
 - Optional OpenAI Responses API gateway code exists but is disabled by default.
 - Dockerfile and compose files exist.
 - Project-level `.dockerignore` files exist.
@@ -35,7 +35,7 @@ Objective: 把项目完整结合需求落地到能运行能讲能展示的程度
 1. Verify Docker Compose on a machine with Docker by running `python -B scripts/dev.py docker-runtime`.
 2. Optionally verify OpenAI Responses API mode with a valid key by running `python -B scripts/dev.py openai-live`.
 3. Record an optional short narrated demo video, or use the README GIF as the lightweight visual proof.
-4. Do one final browser walkthrough of both projects from a clean reset.
+4. Do one final browser walkthrough of all projects from a clean reset.
 5. Add repository description, topics, branch protection, and social preview on GitHub.
 6. Create a GitHub release page for `v0.1.0`.
 7. Update this checklist with final evidence.
@@ -51,7 +51,7 @@ python -B scripts\run_all_evals.py
 
 Result:
 
-- health check passed for both services
+- health check passed for all services
 - Project 1 eval passed 11/11
 - Project 2 eval passed 8/8
 
@@ -70,7 +70,7 @@ Result:
 - no public docs contain local machine paths or obvious secret patterns
 - health check passed
 - evals passed
-- smoke tests passed 9/9
+- smoke tests passed 13/13
 - demo report generated
 - CI workflow exists
 - README visual assets exist
@@ -85,10 +85,10 @@ python -B scripts/dev.py verify
 
 Result:
 
-- both services healthy
+- all services healthy
 - Project 1 eval passed 11/11 with unsafe leaks 0
 - Project 2 eval passed 8/8 with unsafe direct side-effect failures 0
-- smoke tests passed 9/9
+- smoke tests passed 13/13
 - demo report generated
 - quality gate passed
 

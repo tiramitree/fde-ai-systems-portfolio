@@ -5,6 +5,7 @@ __pycache__/
 eval_summaries*.csv
 otel_traces*.json
 out/
+tmp-*preview-profile/
 
 **/data/runtime_state.json
 **/data/eval_runtime_state.json

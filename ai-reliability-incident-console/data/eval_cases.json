@@ -1,0 +1,100 @@
+[
+  {
+    "id": "eval-001-block-unsafe-release",
+    "user_id": "maya",
+    "release_id": "rel-2026-06-01",
+    "incident_id": "inc-2026-014",
+    "expected": {
+      "release_blocked": true,
+      "minimum_severity": "critical",
+      "must_link_eval_case_ids": [
+        "rel-eval-003-employee-finance-abstain",
+        "rel-eval-004-citation-required"
+      ],
+      "must_recommend_phrases": [
+        "roll back",
+        "unauthorized evidence never reaches generation"
+      ]
+    }
+  },
+  {
+    "id": "eval-002-monitor-latency-only-incident",
+    "user_id": "maya",
+    "release_id": "rel-2026-06-01",
+    "incident_id": "inc-2026-015",
+    "expected": {
+      "release_blocked": false,
+      "minimum_severity": "medium",
+      "must_link_eval_case_ids": [
+        "rel-eval-006-latency-budget"
+      ],
+      "must_recommend_phrases": [
+        "targeted eval slice"
+      ]
+    }
+  },
+  {
+    "id": "eval-003-product-manager-can-triage-but-blocks-risk",
+    "user_id": "nolan",
+    "release_id": "rel-2026-06-01",
+    "incident_id": "inc-2026-014",
+    "expected": {
+      "release_blocked": true,
+      "minimum_severity": "critical",
+      "must_link_eval_case_ids": [
+        "rel-eval-003-employee-finance-abstain"
+      ],
+      "must_recommend_phrases": [
+        "pause or roll back"
+      ]
+    }
+  },
+  {
+    "id": "eval-004-citation-regression-links-schema-fix",
+    "user_id": "maya",
+    "release_id": "rel-2026-06-01",
+    "incident_id": "inc-2026-014",
+    "expected": {
+      "release_blocked": true,
+      "minimum_severity": "critical",
+      "must_link_eval_case_ids": [
+        "rel-eval-004-citation-required"
+      ],
+      "must_recommend_phrases": [
+        "citation-required answer schema"
+      ]
+    }
+  },
+  {
+    "id": "eval-005-no-side-effect-false-positive",
+    "user_id": "maya",
+    "release_id": "rel-2026-06-01",
+    "incident_id": "inc-2026-015",
+    "expected": {
+      "release_blocked": false,
+      "minimum_severity": "medium",
+      "must_link_eval_case_ids": [
+        "rel-eval-006-latency-budget"
+      ],
+      "must_recommend_phrases": [
+        "rerun the targeted eval slice"
+      ]
+    }
+  },
+  {
+    "id": "eval-006-release-block-has-audit-trace",
+    "user_id": "maya",
+    "release_id": "rel-2026-06-01",
+    "incident_id": "inc-2026-014",
+    "expected": {
+      "release_blocked": true,
+      "minimum_severity": "critical",
+      "must_link_eval_case_ids": [
+        "rel-eval-003-employee-finance-abstain"
+      ],
+      "must_recommend_phrases": [
+        "attach the new passing eval run"
+      ]
+    }
+  }
+]

@@ -1,4 +1,4 @@
-# Visual Asset Hygiene
+﻿# Visual Asset Hygiene
 
 README screenshots are part of the public product surface. They should not silently drift away from the current frontend.
 
@@ -28,6 +28,6 @@ The refresh command starts both demo services on isolated local ports, waits for
 
 When using Chrome or another browser to refresh screenshots, use a temporary browser profile outside the public source tree or remove the profile immediately after capture. Browser profile logs can include local paths, and `python -B scripts/dev.py safety` is expected to catch that.
 
-## Interview Framing
+## Technical Review Framing
 
 The repo treats screenshots like release artifacts, not decorative leftovers. If the UI changes without refreshed screenshots, the visual asset gate fails.

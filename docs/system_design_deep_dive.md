@@ -1,8 +1,8 @@
-# System Design Deep Dive
+﻿# System Design Deep Dive
 
 ## Problem Statement
 
-Design a portfolio-quality enterprise AI system that demonstrates:
+Design a reference-quality enterprise AI system that demonstrates:
 
 - secure knowledge access
 - governed tool execution
@@ -179,7 +179,7 @@ Project 2:
 - prompt-injection red-team suite
 - data retention policies
 
-## What Makes This Interview-Strong
+## What Makes This Technical Review-Strong
 
 The projects are not impressive because of model novelty. They are strong because they show production judgment:
 
@@ -189,4 +189,3 @@ The projects are not impressive because of model novelty. They are strong becaus
 - how to debug failures
 - how to explain tradeoffs
 - how to upgrade without changing safety boundaries
-

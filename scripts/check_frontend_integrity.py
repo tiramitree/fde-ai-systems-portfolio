@@ -66,6 +66,30 @@ PROJECTS = [
         required_data_attribute="data-message",
         minimum_quick_actions=4,
     ),
+    FrontendProject(
+        name="ai-reliability-incident-console",
+        root=ROOT / "ai-reliability-incident-console",
+        title="AI Reliability Incident Console",
+        required_ids={
+            "health",
+            "userSelect",
+            "releaseSelect",
+            "releaseSummary",
+            "incidentSelect",
+            "incidentSummary",
+            "runEval",
+            "evalOutput",
+            "runTriage",
+            "decision",
+            "failedEvals",
+            "trace",
+            "copyTraceId",
+            "audit",
+            "traces",
+        },
+        required_data_attribute="data-incident",
+        minimum_quick_actions=2,
+    ),
 ]
 
 

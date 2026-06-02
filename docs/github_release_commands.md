@@ -20,7 +20,7 @@ Initialize and publish:
 git init
 git status --short
 git add .
-git commit -m "Initial open-source FDE AI systems portfolio"
+git commit -m "Initial open-source FDE AI systems reference"
 git branch -M main
 git remote add origin https://github.com/<your-user>/fde-ai-systems-portfolio.git
 git push -u origin main
