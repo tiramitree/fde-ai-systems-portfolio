@@ -15,7 +15,7 @@ This checklist tracks the repository evidence needed before claiming a public re
 - `scripts/smoke_test_demo_flows.py` passes 13/13 smoke checks.
 - `scripts/check_api_contracts.py` passes 43/43 API contract checks.
 - `scripts/check_runtime_ui_contracts.py` passes 123/123 runtime UI contract checks.
-- `scripts/check_observability_integrity.py` passes 30/30 trace, audit, approval, and blocked-action checks.
+- `scripts/check_observability_integrity.py` passes 42/42 trace, audit, approval, blocked-action, and release-decision checks.
 - `scripts/check_threat_model.py` maps 12/12 threats to controls, files, and evidence commands.
 - `scripts/check_pr_review_policy.py` passes.
 - `scripts/check_launch_assets.py` passes.

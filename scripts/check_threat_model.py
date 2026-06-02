@@ -105,7 +105,7 @@ THREATS = {
         "commands": ["model-gateway-safety"],
     },
     "T11": {
-        "phrases": ["Trace, audit, or approval evidence", "persisted trace IDs", "approval records"],
+        "phrases": ["Trace, audit, approval, or release-decision evidence", "persisted trace IDs", "release decisions"],
         "files": [
             "scripts/check_observability_integrity.py",
             "scripts/export_traces_otel.py",

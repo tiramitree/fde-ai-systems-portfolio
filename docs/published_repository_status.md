@@ -75,7 +75,7 @@ Project 3 eval: 6/6 passed, unsafe release approval failures 0
 Smoke tests: 13/13 passed
 API contract checks: 43/43 passed
 Runtime UI contracts: 123/123 passed
-Observability integrity: 30/30 passed
+Observability integrity: 42/42 passed
 Threat model: 12/12 mapped
 PR review policy: passed
 Fresh clone experience: command published; run after each public push

@@ -17,6 +17,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PROJECT_1_PORT = 8886
 DEFAULT_PROJECT_2_PORT = 8887
+DEFAULT_PROJECT_3_PORT = 8888
 
 
 @dataclass(frozen=True)
@@ -48,7 +49,7 @@ def reserve_port(preferred: int) -> int:
             return int(sock.getsockname()[1])
 
 
-def services(project_1_port: int, project_2_port: int) -> list[Service]:
+def services(project_1_port: int, project_2_port: int, project_3_port: int) -> list[Service]:
     return [
         Service(
             name="secure-enterprise-knowledge-copilot",
@@ -61,6 +62,12 @@ def services(project_1_port: int, project_2_port: int) -> list[Service]:
             path=ROOT / "regulated-customer-operations-agent",
             port=project_2_port,
             health_app="regulated-customer-operations-agent",
+        ),
+        Service(
+            name="ai-reliability-incident-console",
+            path=ROOT / "ai-reliability-incident-console",
+            port=project_3_port,
+            health_app="ai-reliability-incident-console",
         ),
     ]
 
@@ -452,17 +459,138 @@ def project_2_checks(base_url: str) -> list[Check]:
     return checks
 
 
+def project_3_checks(base_url: str) -> list[Check]:
+    checks: list[Check] = []
+
+    status, health = get_json(f"{base_url}/api/health")
+    checks.append(check(status == 200 and health.get("status") == "ok", "P3 health", json.dumps(health)))
+
+    status, unsafe = post_json(
+        f"{base_url}/api/triage",
+        {
+            "user_id": "maya",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-014",
+        },
+    )
+    unsafe_decision = unsafe.get("decision", {})
+    unsafe_evidence = unsafe.get("evidence", {})
+    unsafe_linked = set(unsafe_evidence.get("linked_eval_case_ids", []))
+    checks.append(
+        check(
+            status == 200
+            and valid_uuid(unsafe.get("trace_id"))
+            and unsafe_decision.get("recommendation") == "block_release"
+            and unsafe_decision.get("release_blocked") is True
+            and {"rel-eval-003-employee-finance-abstain", "rel-eval-004-citation-required"}.issubset(unsafe_linked),
+            "P3 unsafe incident blocks rollout with eval evidence",
+            f"trace={unsafe.get('trace_id')}; evals={sorted(unsafe_linked)}",
+        )
+    )
+
+    status, latency = post_json(
+        f"{base_url}/api/triage",
+        {
+            "user_id": "maya",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-015",
+        },
+    )
+    latency_decision = latency.get("decision", {})
+    latency_evidence = latency.get("evidence", {})
+    checks.append(
+        check(
+            status == 200
+            and valid_uuid(latency.get("trace_id"))
+            and latency_decision.get("recommendation") == "monitor"
+            and latency_decision.get("release_blocked") is False
+            and latency_evidence.get("linked_eval_case_ids") == ["rel-eval-006-latency-budget"],
+            "P3 latency-only incident stays monitor-only",
+            f"trace={latency.get('trace_id')}; recommendation={latency_decision.get('recommendation')}",
+        )
+    )
+
+    status, traces_payload = get_json(f"{base_url}/api/traces?limit=20")
+    traces = traces_payload.get("traces", []) if status == 200 else []
+    checks.append(check(status == 200 and isinstance(traces, list), "P3 trace endpoint returns list", f"traces={len(traces)}"))
+
+    status, audit_payload = get_json(f"{base_url}/api/audit?limit=50")
+    events = audit_payload.get("events", []) if status == 200 else []
+    checks.append(check(status == 200 and isinstance(events, list), "P3 audit endpoint returns list", f"events={len(events)}"))
+
+    for label, result, expected_recommendation, expected_blocked in (
+        ("unsafe", unsafe, "block_release", True),
+        ("latency", latency, "monitor", False),
+    ):
+        trace_id = result.get("trace_id", "")
+        trace = find_by_id(traces, trace_id) or {}
+        trace_result = trace.get("result", {})
+        checks.append(
+            check(
+                trace.get("user_id") == "maya"
+                and trace.get("release_id") == "rel-2026-06-01"
+                and trace.get("incident_id") == result.get("incident", {}).get("id")
+                and trace_result.get("recommendation") == expected_recommendation
+                and trace_result.get("release_blocked") is expected_blocked,
+                f"P3 {label} trace persists release decision",
+                f"trace={trace_id}",
+            )
+        )
+
+        linked_events = events_for_trace(events, trace_id)
+        checks.append(
+            check(
+                bool(linked_events) and "incident_triaged" in action_names(linked_events),
+                f"P3 {label} audit event links trace",
+                f"trace={trace_id}; events={len(linked_events)}",
+            )
+        )
+
+    checks.append(
+        check(
+            len(unsafe.get("failed_evals", [])) >= 2
+            and all(case.get("passed") is False for case in unsafe.get("failed_evals", []))
+            and unsafe_evidence.get("eval_run_id") == "release-eval-2026-06-01",
+            "P3 unsafe decision carries failed eval details",
+            f"failed_evals={len(unsafe.get('failed_evals', []))}; eval_run={unsafe_evidence.get('eval_run_id')}",
+        )
+    )
+
+    checks.append(
+        check(
+            {"rb-secure-rag-regression", "rb-canary-rollback"}.issubset(set(unsafe_evidence.get("runbook_ids", [])))
+            and bool(unsafe_evidence.get("signals")),
+            "P3 unsafe decision carries runbook and signal evidence",
+            f"runbooks={unsafe_evidence.get('runbook_ids')}; signals={len(unsafe_evidence.get('signals', []))}",
+        )
+    )
+
+    checks.append(
+        check(
+            {"incident_triaged"}.issubset(action_names(events))
+            and len(events_for_trace(events, unsafe.get("trace_id", ""))) == 1
+            and len(events_for_trace(events, latency.get("trace_id", ""))) == 1,
+            "P3 audit log records one event per triage trace",
+            f"events={len(events)}",
+        )
+    )
+
+    return checks
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run demo flows and verify trace, audit, and approval evidence integrity.",
     )
     parser.add_argument("--project1-port", type=int, default=DEFAULT_PROJECT_1_PORT)
     parser.add_argument("--project2-port", type=int, default=DEFAULT_PROJECT_2_PORT)
+    parser.add_argument("--project3-port", type=int, default=DEFAULT_PROJECT_3_PORT)
     args = parser.parse_args()
 
     project_1_port = reserve_port(args.project1_port)
     project_2_port = reserve_port(args.project2_port)
-    service_list = services(project_1_port, project_2_port)
+    project_3_port = reserve_port(args.project3_port)
+    service_list = services(project_1_port, project_2_port, project_3_port)
 
     started: list[subprocess.Popen] = []
     checks: list[Check] = []
@@ -476,6 +604,7 @@ def main() -> int:
 
         checks.extend(project_1_checks(service_list[0].base_url))
         checks.extend(project_2_checks(service_list[1].base_url))
+        checks.extend(project_3_checks(service_list[2].base_url))
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError, IndexError) as exc:
         print(f"Observability integrity check failed with exception: {exc}", file=sys.stderr)
         return 1

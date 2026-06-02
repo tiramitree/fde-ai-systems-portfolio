@@ -126,7 +126,7 @@ Local Git state:
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
 - `scripts/check_model_gateway_safety.py`: verifies optional OpenAI gateways stay opt-in, key references remain constrained, structured outputs are required, and failures fall back locally.
 - `scripts/check_openai_live_mode.py`: optionally proves live OpenAI mode with a real API key while preserving citations, approval requests, and side-effect blocking.
-- `scripts/check_observability_integrity.py`: starts isolated services and verifies trace, audit, approval, blocked-action, and unauthorized-query evidence stay consistent with demo outcomes.
+- `scripts/check_observability_integrity.py`: starts isolated services and verifies trace, audit, approval, blocked-action, unauthorized-query, and release-decision evidence stay consistent with demo outcomes.
 - `scripts/check_threat_model.py`: verifies repository threat IDs map to deterministic controls, source files, supporting docs, and evidence commands.
 - `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent.
 - `scripts/check_error_hygiene.py`: verifies unexpected backend exceptions return generic JSON errors without leaking internals.
@@ -192,7 +192,7 @@ Design Review Docs:
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/model_gateway_safety.md`: optional model gateway key-safety, fallback, and boundary contract.
-- `docs/observability_integrity.md`: trace, audit, approval, and refusal evidence contract for the critical demo flows.
+- `docs/observability_integrity.md`: trace, audit, approval, refusal, and release-decision evidence contract for the critical demo flows.
 - `docs/threat_model.md`: repository threat matrix, trust boundaries, control owners, evidence commands, and review framing.
 - `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and review framing.
 - `docs/error_hygiene.md`: generic error response contract for unexpected backend failures.

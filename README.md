@@ -139,7 +139,7 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
 | Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
 | Model gateway safety | `scripts/check_model_gateway_safety.py`, `scripts/check_openai_live_mode.py`, project `model_gateway.py` files | OpenAI mode is opt-in, key references are constrained, structured outputs are required, failures fall back locally, and live mode can be verified when a key is available |
-| Observability integrity | `scripts/check_observability_integrity.py`, project trace/audit/approval endpoints | response trace IDs, audit events, approval records, blocked actions, and unauthorized-query evidence stay internally consistent |
+| Observability integrity | `scripts/check_observability_integrity.py`, project trace/audit/approval endpoints | response trace IDs, audit events, approval records, blocked actions, unauthorized-query evidence, and release decisions stay internally consistent |
 | Threat model | `docs/threat_model.md`, `scripts/check_threat_model.py` | threat IDs map to deterministic controls, source files, and evidence commands |
 | Scenario data integrity | `scripts/check_scenario_data_integrity.py`, project `data/` folders | fictional seed data, roles, references, and eval expectations remain internally consistent |
 | PR review policy | `scripts/check_pr_review_policy.py`, `docs/pr_review_security.md` | triage heuristics, runbook, maintainer policy, and PR template keep malicious-contribution checks intact |
