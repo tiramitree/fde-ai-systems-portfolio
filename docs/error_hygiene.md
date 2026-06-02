@@ -10,13 +10,13 @@ python -B scripts/dev.py error-hygiene
 
 ## What It Verifies
 
-The gate imports both local app shells, replaces each API object with a test double that raises an exception containing local-path and secret-like markers, starts each HTTP handler on an isolated port, and checks both `GET` and `POST` API paths.
+The gate imports all three local app shells, replaces each API object with a test double that raises an exception containing local-path and secret-like markers, starts each HTTP handler on an isolated port, and checks both `GET` and `POST` API paths.
 
 It fails if:
 
-- either `app.py` renders `str(exc)` for unexpected exceptions
-- either `app.py` imports or renders traceback output
-- either app lacks the generic `"Internal server error"` response
+- any `app.py` renders `str(exc)` for unexpected exceptions
+- any `app.py` imports or renders traceback output
+- any app lacks the generic `"Internal server error"` response
 - an unexpected exception returns a non-500 status
 - an unexpected exception returns a non-JSON response
 - the response body contains local paths, private machine markers, secret-like markers, or the raw exception message
