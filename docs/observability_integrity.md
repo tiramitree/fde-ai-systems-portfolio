@@ -48,7 +48,7 @@ If a technical reviewer asks "How would you debug an unsafe answer or unintended
 
 The local JSON store is intentionally simple. In production, the same evidence contract maps to:
 
-- OpenTelemetry spans for request, retrieval, model, and tool steps
+- OpenTelemetry spans for request, retrieval, model, tool, and release-triage steps
 - append-only audit/event tables
 - approval workflow tables with idempotency keys
 - release decision tables linked to eval run IDs and incident IDs
