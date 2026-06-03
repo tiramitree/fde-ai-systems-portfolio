@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import stat
 import socket
 import subprocess
 import sys
@@ -130,11 +131,22 @@ def make_temp_root() -> Path:
 
 
 def cleanup_temp_root(temp_root: Path) -> str | None:
+    def retry_writable(function, path, _exc_info) -> None:
+        os.chmod(path, stat.S_IWRITE)
+        function(path)
+
     try:
-        shutil.rmtree(temp_root)
+        shutil.rmtree(temp_root, onerror=retry_writable)
     except Exception as exc:
-        return f"left temporary clone at {temp_root} because cleanup failed: {exc}"
+        return f"left temporary clone at {display_path(temp_root)} because cleanup failed: {exc}"
     return None
+
+
+def display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
 
 
 def run_static_checks(clone_dir: Path) -> list[str]:
@@ -218,14 +230,14 @@ def main() -> int:
         temp_root = make_temp_root()
         clone_dir = temp_root / "repo"
         if args.keep:
-            print(f"Cloning {source} into {clone_dir}")
+            print(f"Cloning {source} into {display_path(clone_dir)}")
         else:
             print(f"Cloning {source} into a temporary directory")
         clone_repository(source, clone_dir)
         failures.extend(run_static_checks(clone_dir))
         failures.extend(run_runtime_smoke(clone_dir))
         if args.keep:
-            print(f"\nKept fresh clone at {clone_dir}")
+            print(f"\nKept fresh clone at {display_path(clone_dir)}")
     except Exception as exc:
         failures.append(str(exc))
     finally:
