@@ -43,6 +43,7 @@ python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py frontend
+python -B scripts/dev.py fresh-clone-local
 python -B scripts/dev.py fresh-clone
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-readiness
@@ -120,7 +121,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone, github-launch-setup, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-launch-setup, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.

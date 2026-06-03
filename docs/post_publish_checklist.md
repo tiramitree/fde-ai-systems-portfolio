@@ -45,7 +45,7 @@ After the automated check passes:
 7. Add repository social preview using `docs/assets/github-preview.png`.
 8. Create a GitHub release page for `v0.1.0`.
 9. Pin the repository on the GitHub profile.
-10. Run `python -B scripts/dev.py fresh-clone` after the push is visible.
+10. Run `python -B scripts/dev.py fresh-clone` after the push is visible. Use `python -B scripts/dev.py fresh-clone-local` before pushing when validating local-only commits.
 11. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
 12. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
 13. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.

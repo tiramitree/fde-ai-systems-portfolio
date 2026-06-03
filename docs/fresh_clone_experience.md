@@ -3,10 +3,13 @@
 Run:
 
 ```bash
+python -B scripts/dev.py fresh-clone-local
 python -B scripts/dev.py fresh-clone
 ```
 
-This command clones the configured GitHub `origin` into a temporary directory, runs release-facing static checks in that clone, starts all demo services on isolated local ports, and runs the user-facing health and smoke paths against those ports.
+`fresh-clone-local` clones the current local repository path, so it can verify committed local work before the next GitHub push. `fresh-clone` clones the configured GitHub `origin`, so it should be run again after the pushed commit is visible. Both commands run release-facing static checks in the clone, start all demo services on isolated local ports, and run the user-facing health and smoke paths against those ports.
+
+Temporary clones are created under the ignored `out/fresh-clone-tmp/` workspace. Cleanup is best-effort so Windows file handles or restricted local sandboxes cannot turn a successful fresh-clone verification into a false failure.
 
 ## Why It Exists
 
