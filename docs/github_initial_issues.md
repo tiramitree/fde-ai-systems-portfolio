@@ -83,7 +83,7 @@ Add per-case eval regression reports
 Labels:
 
 ```text
-enhancement, evals
+enhancement, eval
 ```
 
 Body:
@@ -112,7 +112,7 @@ Add red-team eval cases for retrieval and agent governance
 Labels:
 
 ```text
-security, evals
+security, eval
 ```
 
 Body:

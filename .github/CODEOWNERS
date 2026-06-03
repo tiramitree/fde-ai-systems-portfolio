@@ -33,9 +33,13 @@ scripts/check_github_readiness.py @tiramitree
 scripts/check_pr_review_policy.py @tiramitree
 scripts/review_open_prs.py @tiramitree
 scripts/maintain_github_state.py @tiramitree
+scripts/community_issue_pack.py @tiramitree
+scripts/check_community_issue_pack.py @tiramitree
+scripts/manage_community_issues.py @tiramitree
 scripts/export_demo_replay_artifact.py @tiramitree
 scripts/configure_github_launch.py @tiramitree
 docs/github_branch_protection.json @tiramitree
+docs/github_labels.json @tiramitree
 
 # AI safety boundaries.
 secure-enterprise-knowledge-copilot/src/copilot/ @tiramitree

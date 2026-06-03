@@ -34,6 +34,7 @@ python -B scripts/dev.py api-docs
 python -B scripts/dev.py assets
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
+python -B scripts/dev.py community-issues
 python -B scripts/dev.py container-release
 python -B scripts/dev.py docker-runtime
 python -B scripts/dev.py dependency-surface
@@ -45,6 +46,7 @@ python -B scripts/dev.py eval-csv
 python -B scripts/dev.py frontend
 python -B scripts/dev.py fresh-clone-local
 python -B scripts/dev.py fresh-clone
+python -B scripts/dev.py github-community
 python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py github-readiness
@@ -122,7 +124,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -150,6 +152,9 @@ Local Git state:
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/check_repository_governance.py`: validates CODEOWNERS, branch-protection payload, and PR-template safeguards.
 - `scripts/check_launch_assets.py`: verifies launch copy, star-growth materials, initial issue pack, public-doc links, and anti-hype boundaries.
+- `scripts/check_community_issue_pack.py`: verifies GitHub label manifest, issue templates, community issue pack, acceptance criteria, and verification commands.
+- `scripts/manage_community_issues.py`: dry-runs or applies GitHub label sync and optional community issue creation through `gh`.
+- `scripts/community_issue_pack.py`: shared parser for label and community issue automation.
 - `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and technical review walkthrough report.
 - `scripts/check_pr_review_policy.py`: verifies malicious-contribution triage heuristics, runbook, maintainer policy, and PR template safeguards remain intact.
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
@@ -231,6 +236,7 @@ Release and growth:
 - `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: completed launch issues and current community issue pack with labels, acceptance criteria, and guardrails.
+- `docs/github_labels.json`: GitHub label manifest used by community issue checks and optional `gh` sync.
 - `docs/demo_video_script.md`: short video/GIF script.
 - `docs/demo_recording_checklist.md`: operational checklist for recording the first demo video or GIF.
 - `docs/star_growth_plan.md`: plan for distribution and feedback loops.

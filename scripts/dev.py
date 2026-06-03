@@ -14,6 +14,7 @@ COMMANDS = {
     "start": ["scripts/start_demo_servers.py"],
     "assets": ["scripts/check_public_assets.py"],
     "claims": ["scripts/check_claim_consistency.py"],
+    "community-issues": ["scripts/check_community_issue_pack.py"],
     "container-release": ["scripts/check_container_release.py"],
     "docker-runtime": ["scripts/check_docker_runtime.py"],
     "dependency-surface": ["scripts/check_dependency_surface.py"],
@@ -26,6 +27,7 @@ COMMANDS = {
     "fresh-clone": ["scripts/check_fresh_clone_experience.py"],
     "fresh-clone-local": ["scripts/check_fresh_clone_experience.py", "--source", str(ROOT)],
     "github-launch-setup": ["scripts/configure_github_launch.py"],
+    "github-community": ["scripts/manage_community_issues.py"],
     "github-maintenance": ["scripts/maintain_github_state.py"],
     "github-readiness": ["scripts/check_github_readiness.py"],
     "governance": ["scripts/check_repository_governance.py"],
@@ -65,7 +67,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run all demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
+            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

@@ -69,6 +69,7 @@ python -B scripts/dev.py assets
 python -B scripts/dev.py api-docs
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
+python -B scripts/dev.py community-issues
 python -B scripts/dev.py container-release
 python -B scripts/dev.py docker-runtime
 python -B scripts/dev.py dependency-surface
@@ -79,6 +80,7 @@ python -B scripts/dev.py health
 python -B scripts/dev.py evals
 python -B scripts/dev.py eval-csv
 python -B scripts/dev.py github-launch-setup
+python -B scripts/dev.py github-community
 python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py fresh-clone-local
 python -B scripts/dev.py fresh-clone
@@ -137,6 +139,7 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | Container release hygiene | `scripts/check_container_release.py`, `scripts/check_docker_runtime.py`, `docs/container_release_hygiene.md` | Dockerfiles, compose ports, health checks, startup commands, env handling, build-context ignores, and optional runtime smoke checks stay aligned |
 | API contracts | `scripts/check_api_contracts.py`, `scripts/check_api_documentation.py`, `docs/api_contracts.md` | runtime response shapes and public API documentation stay aligned with source routes |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, and release commands |
+| Community issue pack | `scripts/check_community_issue_pack.py`, `scripts/manage_community_issues.py`, `docs/github_labels.json` | labels, issue templates, contributor issue pack, and optional GitHub issue creation stay aligned |
 | Launch asset hygiene | `scripts/check_launch_assets.py`, `docs/launch_assets_hygiene.md` | launch copy, star-growth plan, public issue pack, and anti-hype boundaries stay complete and honest |
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
 | Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
