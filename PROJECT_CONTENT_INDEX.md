@@ -178,6 +178,7 @@ Local Git state:
 Start here:
 
 - `docs/final_demo_runbook.md`: exact live demo order.
+- `docs/development_issue_solutions.md`: recurring development, GitHub, PR, and publication issues with current resolutions.
 - `docs/final_readiness_report.md`: compact launch, blocker, and release review status.
 - `docs/demo_report.md`: generated verification report.
 - `docs/demo_replay_artifact.md`: release-attachable replay evidence artifact instructions and review framing.
@@ -223,6 +224,7 @@ Release and growth:
 - `docs/github_release_notes_v0.1.0.md`: release notes used by `scripts/configure_github_launch.py`.
 - `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.
 - `docs/pr_review_runbook.md`: concrete PR review command sequence and merge bar.
+- `docs/development_issue_solutions.md`: issue and solution log for recurring local, GitHub, PR, and publication problems.
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
