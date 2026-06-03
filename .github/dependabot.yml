@@ -9,13 +9,25 @@ updates:
     directory: "/secure-enterprise-knowledge-copilot"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "python"
+        update-types:
+          - "version-update:semver-major"
 
   - package-ecosystem: "docker"
     directory: "/regulated-customer-operations-agent"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "python"
+        update-types:
+          - "version-update:semver-major"
 
   - package-ecosystem: "docker"
     directory: "/ai-reliability-incident-console"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "python"
+        update-types:
+          - "version-update:semver-major"
