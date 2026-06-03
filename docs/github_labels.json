@@ -1,0 +1,72 @@
+[
+  {
+    "name": "bug",
+    "color": "d73a4a",
+    "description": "Broken workflow, regression, or incorrect behavior"
+  },
+  {
+    "name": "enhancement",
+    "color": "a2eeef",
+    "description": "Feature, adapter, or product improvement"
+  },
+  {
+    "name": "eval",
+    "color": "5319e7",
+    "description": "Golden eval, red-team case, or regression coverage"
+  },
+  {
+    "name": "documentation",
+    "color": "0075ca",
+    "description": "Documentation, examples, release notes, or demo evidence"
+  },
+  {
+    "name": "design",
+    "color": "c5def5",
+    "description": "Architecture or production-upgrade design work"
+  },
+  {
+    "name": "production-upgrade",
+    "color": "0e8a16",
+    "description": "Optional production adapter or deployment-hardening path"
+  },
+  {
+    "name": "observability",
+    "color": "fbca04",
+    "description": "Traces, audit evidence, metrics, or debugging surfaces"
+  },
+  {
+    "name": "security",
+    "color": "b60205",
+    "description": "Permission, governance, injection, or supply-chain control"
+  },
+  {
+    "name": "frontend",
+    "color": "1d76db",
+    "description": "Browser UI, interaction, accessibility, or client module work"
+  },
+  {
+    "name": "docker",
+    "color": "006b75",
+    "description": "Dockerfile, Compose, image, or container runtime work"
+  },
+  {
+    "name": "release",
+    "color": "7057ff",
+    "description": "Release evidence, launch readiness, or publishing workflow"
+  },
+  {
+    "name": "automation",
+    "color": "bfdadc",
+    "description": "Scripts, checks, replay paths, or repository automation"
+  },
+  {
+    "name": "demo",
+    "color": "f9d0c4",
+    "description": "Demo flow, walkthrough, screenshots, or recording work"
+  },
+  {
+    "name": "good first issue",
+    "color": "7057ff",
+    "description": "Small, well-scoped contribution with clear acceptance criteria"
+  }
+]

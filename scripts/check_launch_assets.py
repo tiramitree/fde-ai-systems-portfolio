@@ -15,6 +15,7 @@ REQUIRED_FILES = [
     "docs/launch_copy_pack.md",
     "docs/community_backlog.md",
     "docs/github_initial_issues.md",
+    "docs/github_labels.json",
     "docs/demo_video_script.md",
     "docs/demo_recording_checklist.md",
     "docs/reviewer_perspective_checklist.md",

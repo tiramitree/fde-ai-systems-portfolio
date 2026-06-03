@@ -14,6 +14,7 @@ python -B scripts/dev.py launch-assets
 - the star-growth plan lists the intended audience, launch channels, content pieces, first issue labels, and anti-hype rule
 - the community issue pack records completed launch issues and proposes real follow-up work with labels and acceptance criteria
 - the community backlog preserves the key safety invariants for secure RAG, governed agents, and eval gates
+- the GitHub label manifest and community issue pack stay aligned through `python -B scripts/dev.py community-issues`
 - community materials avoid vanity activity framing; issues should reflect real engineering work
 - README, the project index, the evidence matrix, and post-publish docs link back to the launch materials
 

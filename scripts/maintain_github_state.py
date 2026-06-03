@@ -227,6 +227,17 @@ def print_dry_run(gh: str, repo: str, args: argparse.Namespace) -> int:
         print("Guarded runtime-bump PR closure is disabled. Add --close-runtime-bump-prs when applying that policy.")
 
     print()
+    print("# Community labels and issue pack")
+    community = ["python", "-B", "scripts/manage_community_issues.py"]
+    if args.sync_community:
+        community.append("--apply")
+    if args.create_community_issues:
+        community.append("--create-issues")
+    print(display_command(community))
+    if not args.sync_community:
+        print("Community label sync is disabled. Add --sync-community when applying that policy.")
+
+    print()
     print("After apply, run:")
     print("python -B scripts/dev.py github-readiness")
     print("python -B scripts/dev.py pr-triage")
@@ -244,6 +255,12 @@ def main() -> int:
         "--close-runtime-bump-prs",
         action="store_true",
         help="Close guarded Dependabot Docker runtime-baseline PRs after exact diff matching.",
+    )
+    parser.add_argument("--sync-community", action="store_true", help="Sync GitHub labels from docs/github_labels.json.")
+    parser.add_argument(
+        "--create-community-issues",
+        action="store_true",
+        help="Create missing community issues from docs/github_initial_issues.md. Requires --sync-community when applying.",
     )
     args = parser.parse_args()
 
@@ -277,6 +294,19 @@ def main() -> int:
                 return code
     else:
         print("Guarded runtime-bump PR closure skipped.")
+
+    if args.create_community_issues and not args.sync_community:
+        print("--create-community-issues requires --sync-community so labels exist before issue creation.")
+        return 1
+    if args.sync_community:
+        community = [sys.executable, "-B", "scripts/manage_community_issues.py", "--apply"]
+        if args.create_community_issues:
+            community.append("--create-issues")
+        code = run_command(community)
+        if code != 0:
+            return code
+    else:
+        print("Community label sync skipped.")
 
     print()
     print("Authenticated maintenance completed. Re-run github-readiness and pr-triage.")

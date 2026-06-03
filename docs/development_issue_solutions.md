@@ -11,6 +11,7 @@ Use this file before adding new code or touching GitHub settings. It records rec
 | Main branch protection | Open | Apply `docs/github_branch_protection.json` through `python -B scripts/maintain_github_state.py --apply` after GitHub CLI authentication. |
 | GitHub release page for `v0.1.0` | Open | Create with `python -B scripts/maintain_github_state.py --apply` after authentication. The tag already exists. |
 | Social preview and profile pin | Manual | Use `docs/assets/github-preview.png` for the social preview and pin the repository from GitHub account settings. |
+| GitHub labels and community issues | Open | Validate locally with `python -B scripts/dev.py community-issues`, dry-run with `python -B scripts/dev.py github-community`, and sync labels after authentication with `python -B scripts/manage_community_issues.py --apply`. Create roadmap issues only when open roadmap work should be visible. |
 | PR #12 Python Docker baseline bump | Closed, not merged | The PR changed `ai-reliability-incident-console/Dockerfile` from the pinned Python 3.12 baseline to Python 3.14 and failed `python -B scripts/dev.py container-release`. Future matching runtime-baseline Dependabot PRs can be closed after authentication with `python -B scripts/maintain_github_state.py --apply --skip-launch --close-runtime-bump-prs` unless the repository intentionally performs a coordinated runtime baseline upgrade. |
 
 ## Recurring Local Issues
@@ -108,6 +109,7 @@ Before merging any PR:
 
 ```bash
 python -B scripts/dev.py github-maintenance
+python -B scripts/dev.py github-community
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py governance
 python -B scripts/dev.py workflow-security
@@ -131,6 +133,7 @@ python -B scripts/dev.py fresh-clone
 python -B scripts/post_publish_check.py
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py github-maintenance
+python -B scripts/dev.py github-community
 python -B scripts/dev.py pr-triage
 ```
 

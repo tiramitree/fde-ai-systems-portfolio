@@ -89,6 +89,38 @@ After publishing, enable the repository security features available in the GitHu
 - Dependabot security updates
 - secret scanning and push protection, if they were not already enabled by `python -B scripts/maintain_github_state.py --apply`
 
+## Labels And Community Issues
+
+Repository labels are tracked in:
+
+```text
+docs/github_labels.json
+```
+
+Validate labels, issue templates, and the community issue pack with:
+
+```powershell
+python -B scripts/dev.py community-issues
+```
+
+Dry-run GitHub label sync:
+
+```powershell
+python -B scripts/manage_community_issues.py
+```
+
+After `gh auth login`, sync labels without creating roadmap issues:
+
+```powershell
+python -B scripts/manage_community_issues.py --apply
+```
+
+Create community issues only when the repository is intentionally ready to show open roadmap work:
+
+```powershell
+python -B scripts/manage_community_issues.py --apply --create-issues
+```
+
 ## First Release
 
 Automated path after `gh auth login`:

@@ -52,7 +52,8 @@ After the automated check passes:
 14. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
 15. Run `python -B scripts/dev.py visual-assets` after refreshing README screenshots.
 16. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
+17. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
 
 ## Optional Backlog Seeding
 
-Use `docs/github_initial_issues.md` only when you are ready to run the repository as an active public project. Creating those issues is useful for community planning, but it intentionally changes the readiness signal from "no open issues" to "open roadmap work exists." Every issue should map to real engineering work and include acceptance criteria.
+Use `docs/github_initial_issues.md` only when you are ready to run the repository as an active public project. Creating those issues is useful for community planning, but it intentionally changes the readiness signal from "no open issues" to "open roadmap work exists." Every issue should map to real engineering work and include acceptance criteria. Validate the pack with `python -B scripts/dev.py community-issues` first.
