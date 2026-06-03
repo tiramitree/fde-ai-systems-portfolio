@@ -27,6 +27,7 @@ Reviews, issues, or pull requests should be ignored, closed, or treated as spam 
 - include unrelated links, downloads, binaries, obfuscated code, or instructions to run unknown commands
 - weaken permission checks, approval gates, audit logging, traces, evals, or local reproducibility
 - add required paid APIs, network calls, or dependencies to the default demo path without a strong reason
+- change the pinned Python container runtime baseline without a coordinated release-policy update across Dockerfiles, docs, and verification evidence
 - create noisy refactors without improving a repository claim
 - pressure the maintainer to grant collaborator access
 - hide eval failures, mask CI failures, or silently write generated artifacts

@@ -128,6 +128,8 @@ MEDIUM_RISK_PATTERNS = {
     ],
 }
 
+PINNED_PYTHON_IMAGE_PREFIX = "FROM python:3.12-slim@sha256:"
+
 
 def git_output(args: list[str]) -> tuple[int, str]:
     result = subprocess.run(
@@ -271,6 +273,18 @@ def scan_file(file_info: dict[str, Any]) -> list[Finding]:
         return findings
 
     added = added_lines(patch)
+    if filename.endswith("Dockerfile"):
+        for line in added.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("FROM python:") and not stripped.startswith(PINNED_PYTHON_IMAGE_PREFIX):
+                findings.append(
+                    Finding(
+                        "HIGH",
+                        filename,
+                        "Python container runtime baseline changed; require coordinated release policy update",
+                    )
+                )
+                break
     findings.extend(find_patterns(added, HIGH_RISK_PATTERNS, "HIGH", filename))
     findings.extend(find_patterns(added, MEDIUM_RISK_PATTERNS, "MEDIUM", filename))
     return dedupe_findings(findings)
