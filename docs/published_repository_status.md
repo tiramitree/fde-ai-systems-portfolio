@@ -43,7 +43,7 @@ https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml
 Latest observed successful main run:
 
 ```text
-https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26813784405
+https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26861617523/job/79216313917
 ```
 
 Current expected result:
@@ -107,7 +107,7 @@ Confirmed:
 - remote `main` exists
 - local tracked worktree clean
 - open issues observed: 0
-- open PRs observed: 1 guarded Dependabot runtime-baseline PR awaiting authenticated closure
+- open PRs observed: 0
 
 ## Initial Public Issues Created
 
