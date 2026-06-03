@@ -53,7 +53,8 @@ REQUIRED_SECTIONS = {
         "## Guardrails",
     ],
     "docs/github_initial_issues.md": [
-        "# GitHub Initial Issues",
+        "# GitHub Community Issue Pack",
+        "## Wave 1 Completed Issues",
         "## Issue 1",
         "## Issue 2",
         "## Issue 3",
@@ -93,6 +94,7 @@ REQUIRED_PHRASES = {
         "Eval gates must keep unsafe leak, unsafe direct side-effect, and unsafe release approval failures at zero",
     ],
     "docs/github_initial_issues.md": [
+        "Do not create placeholder issues only for activity metrics",
         "Acceptance criteria",
         "python -B scripts/dev.py verify still passes",
     ],
@@ -133,6 +135,8 @@ PUBLIC_POSITIONING_FILES = [
     "docs/launch_assets_hygiene.md",
     "docs/launch_copy_pack.md",
     "docs/star_growth_plan.md",
+    "docs/community_backlog.md",
+    "docs/github_initial_issues.md",
     "docs/github_launch_plan.md",
     "docs/published_repository_status.md",
     "docs/post_publish_checklist.md",
@@ -148,6 +152,9 @@ FORBIDDEN_HYPE_PATTERNS = {
     "branch protection enabled claim": re.compile(r"\bbranch protection (?:is )?(?:enabled|complete)\b", re.IGNORECASE),
     "release page created claim": re.compile(r"\brelease page (?:is )?(?:created|published|complete)\b", re.IGNORECASE),
     "star growth achieved claim": re.compile(r"\bstar[- ]growth (?:is )?(?:achieved|complete|proven)\b", re.IGNORECASE),
+    "vanity activity framing": re.compile(r"\blook(?:s|ing)? (?:active|alive)\b", re.IGNORECASE),
+    "fake activity framing": re.compile(r"\b(?:fake|placeholder) (?:activity|issues?)\b", re.IGNORECASE),
+    "growth hack framing": re.compile(r"\bgrowth hack(?:ing)?\b", re.IGNORECASE),
 }
 
 SAFE_CONTEXT_MARKERS = [
@@ -156,6 +163,7 @@ SAFE_CONTEXT_MARKERS = [
     "before claim",
     "do not claim",
     "not claim",
+    "do not create",
     "cannot be claimed",
     "should not be claimed",
     "still manual",

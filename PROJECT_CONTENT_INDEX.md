@@ -230,7 +230,7 @@ Release and growth:
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
-- `docs/github_initial_issues.md`: initial issue titles, labels, and bodies for launch.
+- `docs/github_initial_issues.md`: completed launch issues and current community issue pack with labels, acceptance criteria, and guardrails.
 - `docs/demo_video_script.md`: short video/GIF script.
 - `docs/demo_recording_checklist.md`: operational checklist for recording the first demo video or GIF.
 - `docs/star_growth_plan.md`: plan for distribution and feedback loops.

@@ -41,8 +41,8 @@ Three runnable enterprise AI systems showing secure RAG, governed agents, AI rel
   - `agentic-workflows`
 - [ ] Apply repository settings from `docs/github_repository_settings.md`.
 - [x] Run `python -B scripts/post_publish_check.py`.
-- [x] Convert `docs/community_backlog.md` into initial public issues.
-- [x] Create the first public issues from `docs/github_initial_issues.md`.
+- [x] Convert `docs/community_backlog.md` into the first public issue wave.
+- [x] Create and complete the first public issues, then refresh `docs/github_initial_issues.md` into the current community issue pack.
 - [x] Record the first lightweight demo GIF using `docs/demo_recording_checklist.md`.
 - [x] Add a deterministic launch asset hygiene gate through `python -B scripts/dev.py launch-assets`.
 - [ ] Publish launch copy from `docs/launch_copy_pack.md`.

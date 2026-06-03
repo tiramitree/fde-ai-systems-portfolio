@@ -335,7 +335,7 @@ repository/
 - [Demo Recording Checklist](docs/demo_recording_checklist.md)
 - [Star Growth Plan](docs/star_growth_plan.md)
 - [Launch Copy Pack](docs/launch_copy_pack.md)
-- [GitHub Initial Issues](docs/github_initial_issues.md)
+- [GitHub Community Issue Pack](docs/github_initial_issues.md)
 - [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md)
 - [Fresh Clone Experience](docs/fresh_clone_experience.md)
 - [API Contracts](docs/api_contracts.md)

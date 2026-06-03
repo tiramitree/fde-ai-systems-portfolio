@@ -55,4 +55,4 @@ After the automated check passes:
 
 ## Optional Backlog Seeding
 
-Use `docs/github_initial_issues.md` only when you are ready to run the repository as an active public project. Creating those issues is useful for community planning, but it intentionally changes the readiness signal from "no open issues" to "open roadmap work exists."
+Use `docs/github_initial_issues.md` only when you are ready to run the repository as an active public project. Creating those issues is useful for community planning, but it intentionally changes the readiness signal from "no open issues" to "open roadmap work exists." Every issue should map to real engineering work and include acceptance criteria.
