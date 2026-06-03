@@ -146,6 +146,8 @@ def check_dependabot() -> list[str]:
     failures = [f".github/dependabot.yml: missing {item}" for item in required if item not in text]
     if text.count('dependency-name: "python"') < 3:
         failures.append('.github/dependabot.yml: missing Python Docker ignore rules for all service images')
+    if text.count('version-update:semver-minor') < 3:
+        failures.append('.github/dependabot.yml: missing Docker semver-minor ignore rules for all service images')
     if text.count('version-update:semver-major') < 3:
         failures.append('.github/dependabot.yml: missing Docker semver-major ignore rules for all service images')
     return failures

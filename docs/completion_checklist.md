@@ -33,7 +33,7 @@ This checklist tracks the repository evidence needed before claiming a public re
 - The release tag `v0.1.0` exists.
 - The latest observed `quality-gate` run on `main` passed.
 - The latest post-publish check passed.
-- Open PRs observed: 0.
+- Open PRs observed: 1 guarded Dependabot runtime-baseline PR marked do-not-merge until closed or replaced by a coordinated runtime upgrade.
 - Open issues observed: 0.
 
 ## Still Not Fully Verified
@@ -48,19 +48,20 @@ This checklist tracks the repository evidence needed before claiming a public re
 1. Verify Docker Compose on a machine with Docker by running `python -B scripts/dev.py docker-runtime`.
 2. Optionally verify OpenAI Responses API mode with a valid key by running `python -B scripts/dev.py openai-live`.
 3. Do one final browser walkthrough of all projects from a clean reset.
-4. Apply repository description, topics, branch protection, and the GitHub release page after `gh auth login` by running `python -B scripts/configure_github_launch.py --apply`.
+4. Apply repository description, topics, branch protection, and the GitHub release page after `gh auth login` by running `python -B scripts/maintain_github_state.py --apply`.
 5. Upload the social preview from `docs/assets/github-preview.png`.
 6. Pin the repository on the GitHub profile after GitHub readiness is clean.
 7. Re-run `python -B scripts/check_github_readiness.py --strict`.
 8. Re-run `python -B scripts/post_publish_check.py`.
-9. Re-run `python -B scripts/review_open_prs.py` before merging or responding to any external contribution.
+9. Re-run `python -B scripts/dev.py github-maintenance` and `python -B scripts/review_open_prs.py` before merging or responding to any external contribution.
 
 ## Latest Verification
 
-Date: 2026-06-02
+Date: 2026-06-03
 
 ```text
 python -B scripts/dev.py quality
+python -B scripts/dev.py github-maintenance
 python -B scripts/post_publish_check.py
 python -B scripts/check_github_readiness.py
 python -B scripts/review_open_prs.py
@@ -71,7 +72,7 @@ Result:
 - Quality gate passed.
 - Post-publish check passed.
 - GitHub readiness has 0 failures and 6 warning/manual items.
-- No open PRs are awaiting review.
+- One guarded Dependabot runtime-baseline PR is awaiting authenticated closure.
 
 ## Quality Bar
 

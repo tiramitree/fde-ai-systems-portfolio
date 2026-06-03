@@ -41,12 +41,13 @@ After publishing:
 
 ```powershell
 python -B scripts/dev.py github-launch-setup
+python -B scripts/dev.py github-maintenance
 ```
 
 4. After `gh auth login`, apply repository description, topics, merge policy, best-effort security settings, branch protection, and the `v0.1.0` release:
 
 ```powershell
-python -B scripts/configure_github_launch.py --apply
+python -B scripts/maintain_github_state.py --apply
 ```
 
 5. Upload `docs/assets/github-preview.png` as the social preview and pin the repo on your profile.

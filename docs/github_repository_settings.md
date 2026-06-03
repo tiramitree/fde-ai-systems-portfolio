@@ -58,10 +58,10 @@ Recommended for `main` after the first push:
 Automated path after `gh auth login`:
 
 ```powershell
-python -B scripts/configure_github_launch.py --apply --skip-release
+python -B scripts/maintain_github_state.py --apply --skip-release
 ```
 
-The setup script also tries to enable secret scanning and push protection through `gh repo edit`. That step is best effort because availability can depend on account and repository security settings.
+The maintenance script delegates launch setup to `scripts/configure_github_launch.py` and also provides the guarded PR-maintenance path. Secret scanning and push protection are best effort because availability can depend on account and repository security settings.
 
 The branch-protection API payload is tracked in:
 
@@ -87,14 +87,14 @@ After publishing, enable the repository security features available in the GitHu
 
 - Dependabot alerts
 - Dependabot security updates
-- secret scanning and push protection, if they were not already enabled by `python -B scripts/configure_github_launch.py --apply`
+- secret scanning and push protection, if they were not already enabled by `python -B scripts/maintain_github_state.py --apply`
 
 ## First Release
 
 Automated path after `gh auth login`:
 
 ```powershell
-python -B scripts/configure_github_launch.py --apply
+python -B scripts/maintain_github_state.py --apply
 ```
 
 Manual release details if using the GitHub UI:

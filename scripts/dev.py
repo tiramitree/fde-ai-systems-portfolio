@@ -26,6 +26,7 @@ COMMANDS = {
     "fresh-clone": ["scripts/check_fresh_clone_experience.py"],
     "fresh-clone-local": ["scripts/check_fresh_clone_experience.py", "--source", str(ROOT)],
     "github-launch-setup": ["scripts/configure_github_launch.py"],
+    "github-maintenance": ["scripts/maintain_github_state.py"],
     "github-readiness": ["scripts/check_github_readiness.py"],
     "governance": ["scripts/check_repository_governance.py"],
     "launch-assets": ["scripts/check_launch_assets.py"],
@@ -64,7 +65,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run all demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-launch-setup/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
+            "start: run all demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )
