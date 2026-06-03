@@ -46,6 +46,7 @@ python -B scripts/dev.py frontend
 python -B scripts/dev.py fresh-clone-local
 python -B scripts/dev.py fresh-clone
 python -B scripts/dev.py github-launch-setup
+python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
 python -B scripts/dev.py launch-assets
@@ -121,7 +122,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-launch-setup, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -145,6 +146,7 @@ Local Git state:
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies all service health endpoints.
 - `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, merge policy, best-effort security settings, branch protection, and first-release setup through `gh`.
+- `scripts/maintain_github_state.py`: dry-runs or applies authenticated GitHub repository maintenance and guarded Dependabot runtime-bump PR closure.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/check_repository_governance.py`: validates CODEOWNERS, branch-protection payload, and PR-template safeguards.
 - `scripts/check_launch_assets.py`: verifies launch copy, star-growth materials, initial issue pack, public-doc links, and anti-hype boundaries.

@@ -7,7 +7,7 @@ This repository is intentionally local-first and dependency-light. The current r
 - Python services and scripts use standard library imports plus local packages only.
 - Frontend code is first-party HTML, CSS, and JavaScript with no CDN dependency.
 - Docker images pin the Python base image by digest.
-- Dependabot watches GitHub Actions and all three Dockerfile directories weekly, while ignoring Python Docker semver-major bumps until the runtime baseline is intentionally upgraded across policy, docs, and verification evidence.
+- Dependabot watches GitHub Actions and all three Dockerfile directories weekly, while ignoring Python Docker semver-minor and semver-major bumps until the runtime baseline is intentionally upgraded across policy, docs, and verification evidence.
 - Public safety checks scan for secret-like tokens, private local paths, and tracked runtime artifacts.
 
 Verify the dependency surface:

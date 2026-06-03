@@ -7,6 +7,7 @@ For recurring PR, GitHub, and local-environment problems, also check `docs/devel
 ## Fast Path
 
 ```bash
+python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py governance
 python -B scripts/dev.py workflow-security
@@ -28,12 +29,24 @@ python -B scripts/review_open_prs.py --strict
 
 If unauthenticated GitHub API rate limits are hit, the script falls back to the public pulls page to detect whether any open PRs are visible. Authenticate with `gh auth login` before reviewing or merging if the API cannot provide full file-level triage.
 
+Authenticated repository maintenance is dry-run by default:
+
+```bash
+python -B scripts/maintain_github_state.py
+```
+
+After `gh auth login`, close guarded Dependabot Docker runtime-baseline PRs only through the exact matching rule:
+
+```bash
+python -B scripts/maintain_github_state.py --apply --skip-launch --close-runtime-bump-prs
+```
+
 ## Review Order
 
 1. Read the PR title, author, changed files, and automated triage findings.
 2. Read the diff before running code.
 3. Treat workflow changes, safety-gate changes, dependency changes, shell commands, environment access, outbound network calls, and binary files as high scrutiny.
-4. Treat Docker runtime major-version bumps as coordinated release-policy work, not as routine dependency updates.
+4. Treat Docker runtime baseline bumps as coordinated release-policy work, not as routine dependency updates.
 5. Run local safety and verify gates only after the diff review is clean.
 6. Merge only if the change strengthens a public repository claim, closes a real issue, or improves reliability without weakening governance.
 

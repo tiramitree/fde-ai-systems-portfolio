@@ -6,12 +6,12 @@ Use this file before adding new code or touching GitHub settings. It records rec
 
 | Item | Status | Resolution |
 | --- | --- | --- |
-| GitHub CLI authentication | Open | `gh` is installed but not authenticated. Account-level actions such as repository metadata, branch protection, release creation, PR comments, and PR closure require `gh auth login` or another authenticated GitHub path. |
-| Repository metadata and topics | Open | Run `python -B scripts/configure_github_launch.py --apply` after GitHub CLI authentication, then rerun `python -B scripts/dev.py github-readiness`. |
-| Main branch protection | Open | Apply `docs/github_branch_protection.json` through `python -B scripts/configure_github_launch.py --apply` after GitHub CLI authentication. |
-| GitHub release page for `v0.1.0` | Open | Create with `python -B scripts/configure_github_launch.py --apply` after authentication. The tag already exists. |
+| GitHub CLI authentication | Open | `gh` is installed but not authenticated. Account-level actions such as repository metadata, branch protection, release creation, PR comments, and PR closure require `gh auth login` or another authenticated GitHub path. Use `python -B scripts/dev.py github-maintenance` for the dry-run plan. |
+| Repository metadata and topics | Open | Run `python -B scripts/maintain_github_state.py --apply` after GitHub CLI authentication, then rerun `python -B scripts/dev.py github-readiness`. |
+| Main branch protection | Open | Apply `docs/github_branch_protection.json` through `python -B scripts/maintain_github_state.py --apply` after GitHub CLI authentication. |
+| GitHub release page for `v0.1.0` | Open | Create with `python -B scripts/maintain_github_state.py --apply` after authentication. The tag already exists. |
 | Social preview and profile pin | Manual | Use `docs/assets/github-preview.png` for the social preview and pin the repository from GitHub account settings. |
-| PR #12 Python Docker major bump | Do not merge | The PR changes `ai-reliability-incident-console/Dockerfile` from the pinned Python 3.12 baseline to Python 3.14 and fails `python -B scripts/dev.py container-release`. Keep it unmerged unless the repository intentionally performs a coordinated runtime baseline upgrade. |
+| PR #12 Python Docker baseline bump | Do not merge | The PR changes `ai-reliability-incident-console/Dockerfile` from the pinned Python 3.12 baseline to Python 3.14 and fails `python -B scripts/dev.py container-release`. After authentication, close matching runtime-baseline Dependabot PRs with `python -B scripts/maintain_github_state.py --apply --skip-launch --close-runtime-bump-prs` unless the repository intentionally performs a coordinated runtime baseline upgrade. |
 
 ## Recurring Local Issues
 
@@ -84,16 +84,16 @@ Do not change project code merely because a readiness read hit a temporary API l
 
 ## Pull Request Decisions
 
-### Docker Runtime Major Bumps
+### Docker Runtime Baseline Bumps
 
 Current policy:
 
 - The local demo baseline is Python 3.12 slim, digest-pinned.
-- Dependabot ignores Python Docker semver-major updates.
-- `scripts/review_open_prs.py` flags Dockerfile Python major baseline changes as `HIGH`.
+- Dependabot ignores Python Docker semver-minor and semver-major updates.
+- `scripts/review_open_prs.py` flags Dockerfile Python baseline changes away from the pinned 3.12 image as `HIGH`.
 - `scripts/check_container_release.py` rejects a service Dockerfile that does not use the expected pinned Python 3.12 prefix.
 
-Accept a runtime major bump only as a coordinated release-policy project:
+Accept a runtime baseline bump only as a coordinated release-policy project:
 
 1. Update all service Dockerfiles together.
 2. Update `scripts/check_container_release.py`.
@@ -107,6 +107,7 @@ Accept a runtime major bump only as a coordinated release-policy project:
 Before merging any PR:
 
 ```bash
+python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py governance
 python -B scripts/dev.py workflow-security
@@ -129,6 +130,7 @@ After a push:
 python -B scripts/dev.py fresh-clone
 python -B scripts/post_publish_check.py
 python -B scripts/dev.py github-readiness
+python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py pr-triage
 ```
 

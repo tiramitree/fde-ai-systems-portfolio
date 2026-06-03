@@ -46,6 +46,7 @@ python -B scripts/dev.py otel-traces
 python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py github-launch-setup
+python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py github-readiness
 python -B scripts/post_publish_check.py
 ```
@@ -93,7 +94,7 @@ python -B scripts/check_github_readiness.py --strict
 Repository description, topics, branch protection, and the first release can be applied after `gh auth login` with:
 
 ```bash
-python -B scripts/configure_github_launch.py --apply
+python -B scripts/maintain_github_state.py --apply
 ```
 
 ## Review Walkthrough Order
