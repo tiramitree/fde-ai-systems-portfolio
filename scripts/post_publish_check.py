@@ -158,6 +158,7 @@ def main() -> int:
         "scripts/check_repository_governance.py",
         "scripts/check_pr_review_policy.py",
         "scripts/review_open_prs.py",
+        "scripts/maintain_github_state.py",
         "ai-reliability-incident-console/README.md",
         "ai-reliability-incident-console/app.py",
         "ai-reliability-incident-console/Dockerfile",
