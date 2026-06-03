@@ -70,9 +70,9 @@ python -B scripts/check_github_readiness.py --strict
 | main branch protection enabled | WARN | not protected |
 | stars observed at generation | PASS | 5 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26859989280 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26861617523/job/79216313917 |
 | no open issues | PASS | 0 |
-| no open PRs awaiting review | WARN | 1 |
+| no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
 | GitHub release page exists for v0.1.0 | WARN | missing |
 | social preview configured | MANUAL | GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md |
@@ -83,7 +83,6 @@ python -B scripts/check_github_readiness.py --strict
 - repository description set: missing
 - repository topics set: missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling
 - main branch protection enabled: not protected
-- no open PRs awaiting review: 1
 - GitHub release page exists for v0.1.0: missing
 - social preview configured: GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md
 - profile repository pin configured: Requires account profile settings

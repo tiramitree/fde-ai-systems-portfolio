@@ -11,7 +11,7 @@ Use this file before adding new code or touching GitHub settings. It records rec
 | Main branch protection | Open | Apply `docs/github_branch_protection.json` through `python -B scripts/maintain_github_state.py --apply` after GitHub CLI authentication. |
 | GitHub release page for `v0.1.0` | Open | Create with `python -B scripts/maintain_github_state.py --apply` after authentication. The tag already exists. |
 | Social preview and profile pin | Manual | Use `docs/assets/github-preview.png` for the social preview and pin the repository from GitHub account settings. |
-| PR #12 Python Docker baseline bump | Do not merge | The PR changes `ai-reliability-incident-console/Dockerfile` from the pinned Python 3.12 baseline to Python 3.14 and fails `python -B scripts/dev.py container-release`. After authentication, close matching runtime-baseline Dependabot PRs with `python -B scripts/maintain_github_state.py --apply --skip-launch --close-runtime-bump-prs` unless the repository intentionally performs a coordinated runtime baseline upgrade. |
+| PR #12 Python Docker baseline bump | Closed, not merged | The PR changed `ai-reliability-incident-console/Dockerfile` from the pinned Python 3.12 baseline to Python 3.14 and failed `python -B scripts/dev.py container-release`. Future matching runtime-baseline Dependabot PRs can be closed after authentication with `python -B scripts/maintain_github_state.py --apply --skip-launch --close-runtime-bump-prs` unless the repository intentionally performs a coordinated runtime baseline upgrade. |
 
 ## Recurring Local Issues
 
@@ -139,4 +139,4 @@ Expected current state:
 - `fresh-clone` passes from GitHub origin.
 - `post_publish_check.py` passes.
 - `github-readiness` has no hard failures once Actions status has propagated, but still reports manual/account blockers until GitHub metadata, topics, branch protection, release page, social preview, and profile pin are complete.
-- `pr-triage` flags PR #12 as high risk until it is closed or replaced by a coordinated runtime-baseline update.
+- `pr-triage` currently reports 0 open PRs. Historical PR #12 remains high-risk if inspected directly by PR number.

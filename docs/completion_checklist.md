@@ -33,7 +33,7 @@ This checklist tracks the repository evidence needed before claiming a public re
 - The release tag `v0.1.0` exists.
 - The latest observed `quality-gate` run on `main` passed.
 - The latest post-publish check passed.
-- Open PRs observed: 1 guarded Dependabot runtime-baseline PR marked do-not-merge until closed or replaced by a coordinated runtime upgrade.
+- Open PRs observed: 0.
 - Open issues observed: 0.
 
 ## Still Not Fully Verified
@@ -72,7 +72,7 @@ Result:
 - Quality gate passed.
 - Post-publish check passed.
 - GitHub readiness has 0 failures and 6 warning/manual items.
-- One guarded Dependabot runtime-baseline PR is awaiting authenticated closure.
+- No open PRs are awaiting review.
 
 ## Quality Bar
 
