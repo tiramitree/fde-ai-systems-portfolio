@@ -28,6 +28,7 @@ Run these from the repository root before sending the project to a reviewer:
 
 ```bash
 python -B scripts/dev.py verify
+python -B scripts/dev.py fresh-clone-local
 python -B scripts/dev.py fresh-clone
 python -B scripts/dev.py api-docs
 python -B scripts/dev.py replay
@@ -60,30 +61,13 @@ python -B scripts/check_github_readiness.py --strict
 | Check | Status | Detail |
 | --- | --- | --- |
 | origin points to GitHub | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio.git |
-| GitHub repository metadata reachable | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio |
-| repository description set | WARN | missing |
-| repository topics set | WARN | missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling |
-| license detected as MIT | PASS | mit |
-| default branch is main | PASS | main |
-| main branch protection enabled | WARN | not protected |
-| stars observed at generation | PASS | 5 |
-| forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26813784405 |
-| no open issues | PASS | 0 |
-| no open PRs awaiting review | PASS | 0 |
-| tag v0.1.0 exists | PASS | ok |
-| GitHub release page exists for v0.1.0 | WARN | missing |
-| social preview configured | MANUAL | GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md |
-| profile repository pin configured | MANUAL | Requires account profile settings |
+| GitHub repository metadata reachable | WARN | GitHub API unavailable from this environment; rerun during the authenticated publication check |
 
 ## Remaining Blockers
 
-- repository description set: missing
-- repository topics set: missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling
-- main branch protection enabled: not protected
-- GitHub release page exists for v0.1.0: missing
-- social preview configured: GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md
-- profile repository pin configured: Requires account profile settings
+- GitHub repository metadata reachable: GitHub API unavailable from this environment; rerun during the authenticated publication check
+- repository description, topics, branch protection, release page, social preview, and profile pin still require authenticated verification.
+- rerun `python -B scripts/dev.py github-readiness` during the authenticated publication check before claiming GitHub launch completion.
 - Docker Compose runtime: not verified on this machine because Docker is not installed; static container release hygiene is gated and `python -B scripts/dev.py docker-runtime` is available for Docker-enabled machines.
 - Optional OpenAI live mode: not verified without a valid API key; `python -B scripts/dev.py openai-live` is available for API-key environments.
 - Star growth: cannot be claimed as achieved until real launch feedback accumulates.
@@ -97,7 +81,7 @@ python -B scripts/configure_github_launch.py --apply
 ## Review Walkthrough Order
 
 1. Start with the README and evidence matrix to frame the three-system repository.
-2. Run `python -B scripts/dev.py fresh-clone` to prove the public clone path works without hidden local state.
+2. Run `python -B scripts/dev.py fresh-clone-local` before pushing, then `python -B scripts/dev.py fresh-clone` after the pushed commit is visible.
 3. Run `python -B scripts/dev.py replay` to show the end-to-end demo path without relying on browser state.
 4. Run `python -B scripts/dev.py replay-artifact` to generate release-attachable Markdown and JSON evidence under `out/`.
 5. Run `python -B scripts/dev.py container-release` to prove Docker/Compose release hygiene without claiming Docker runtime verification.
@@ -118,7 +102,7 @@ python -B scripts/configure_github_launch.py --apply
 ## Quality Bar
 
 - If `verify` fails, fix the failing local behavior before changing docs.
-- If `fresh-clone` fails, fix clone-path assumptions before sending the repository to reviewers.
+- If `fresh-clone-local` or `fresh-clone` fails, fix clone-path assumptions before sending the repository to reviewers.
 - If `replay-artifact` fails, do not attach stale release evidence.
 - If `github-readiness --strict` fails only on manual/account settings, do not call the launch complete.
 - If `launch-assets` fails, fix public copy and growth docs before publishing launch posts.

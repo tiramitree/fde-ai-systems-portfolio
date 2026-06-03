@@ -37,6 +37,7 @@ python -B scripts/dev.py evals
 Prove the GitHub clone path from a temporary directory:
 
 ```bash
+python -B scripts/dev.py fresh-clone-local
 python -B scripts/dev.py fresh-clone
 ```
 

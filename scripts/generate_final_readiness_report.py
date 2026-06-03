@@ -40,17 +40,17 @@ def blockers(checks: list[Check]) -> list[str]:
         for item in checks
         if item.status in {"FAIL", "WARN", "MANUAL"}
     ]
-    rate_limited = any(
+    deferred_metadata = any(
         item.name == "GitHub repository metadata reachable"
         and item.status == "WARN"
-        and "rate-limited" in item.detail
+        and ("rate-limited" in item.detail or "unavailable" in item.detail)
         for item in checks
     )
-    if rate_limited:
+    if deferred_metadata:
         dynamic.extend(
             [
                 "- repository description, topics, branch protection, release page, social preview, and profile pin still require authenticated verification.",
-                "- rerun `python -B scripts/dev.py github-readiness` with `GH_TOKEN`, `GITHUB_TOKEN`, or `gh auth login` before claiming GitHub launch completion.",
+                "- rerun `python -B scripts/dev.py github-readiness` during the authenticated publication check before claiming GitHub launch completion.",
             ]
         )
     static = [
@@ -103,6 +103,7 @@ def render() -> str:
         "",
         "```bash",
         "python -B scripts/dev.py verify",
+        "python -B scripts/dev.py fresh-clone-local",
         "python -B scripts/dev.py fresh-clone",
         "python -B scripts/dev.py api-docs",
         "python -B scripts/dev.py replay",
@@ -147,7 +148,7 @@ def render() -> str:
         "## Review Walkthrough Order",
         "",
         "1. Start with the README and evidence matrix to frame the three-system repository.",
-        "2. Run `python -B scripts/dev.py fresh-clone` to prove the public clone path works without hidden local state.",
+        "2. Run `python -B scripts/dev.py fresh-clone-local` before pushing, then `python -B scripts/dev.py fresh-clone` after the pushed commit is visible.",
         "3. Run `python -B scripts/dev.py replay` to show the end-to-end demo path without relying on browser state.",
         "4. Run `python -B scripts/dev.py replay-artifact` to generate release-attachable Markdown and JSON evidence under `out/`.",
         "5. Run `python -B scripts/dev.py container-release` to prove Docker/Compose release hygiene without claiming Docker runtime verification.",
@@ -168,7 +169,7 @@ def render() -> str:
         "## Quality Bar",
         "",
         "- If `verify` fails, fix the failing local behavior before changing docs.",
-        "- If `fresh-clone` fails, fix clone-path assumptions before sending the repository to reviewers.",
+        "- If `fresh-clone-local` or `fresh-clone` fails, fix clone-path assumptions before sending the repository to reviewers.",
         "- If `replay-artifact` fails, do not attach stale release evidence.",
         "- If `github-readiness --strict` fails only on manual/account settings, do not call the launch complete.",
         "- If `launch-assets` fails, fix public copy and growth docs before publishing launch posts.",

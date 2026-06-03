@@ -24,6 +24,7 @@ COMMANDS = {
     "eval-csv": ["scripts/export_eval_csv.py"],
     "frontend": ["scripts/check_frontend_integrity.py"],
     "fresh-clone": ["scripts/check_fresh_clone_experience.py"],
+    "fresh-clone-local": ["scripts/check_fresh_clone_experience.py", "--source", str(ROOT)],
     "github-launch-setup": ["scripts/configure_github_launch.py"],
     "github-readiness": ["scripts/check_github_readiness.py"],
     "governance": ["scripts/check_repository_governance.py"],
@@ -51,8 +52,8 @@ COMMANDS = {
 }
 
 
-def run_script(script: str) -> int:
-    return subprocess.run([sys.executable, "-B", script], cwd=ROOT).returncode
+def run_script(command: list[str]) -> int:
+    return subprocess.run([sys.executable, "-B", *command], cwd=ROOT).returncode
 
 
 def main() -> int:
@@ -63,12 +64,12 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run all demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/github-launch-setup/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
+            "start: run all demo servers; api-docs/architecture/assets/claims/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-launch-setup/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )
     args = parser.parse_args()
-    return run_script(COMMANDS[args.command][0])
+    return run_script(COMMANDS[args.command])
 
 
 if __name__ == "__main__":

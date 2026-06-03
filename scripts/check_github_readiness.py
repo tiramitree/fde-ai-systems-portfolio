@@ -91,6 +91,22 @@ def is_rate_limited(error: str) -> bool:
     return "rate limit" in error.lower()
 
 
+def is_network_unavailable(error: str) -> bool:
+    normalized = error.lower()
+    markers = [
+        "actively refused",
+        "connection refused",
+        "connection reset",
+        "name resolution",
+        "network is unreachable",
+        "nodename nor servname",
+        "temporary failure",
+        "timed out",
+        "winerror 10061",
+    ]
+    return any(marker in normalized for marker in markers)
+
+
 def tag_exists_via_git(tag: str) -> bool:
     code, output = run_git(["ls-remote", "--tags", "origin", tag])
     return code == 0 and f"refs/tags/{tag}" in output
@@ -107,14 +123,20 @@ def collect_checks(strict: bool) -> list[Check]:
 
     status, repo_data, error = api_get(repo, "")
     if status != 200 or not isinstance(repo_data, dict):
+        rate_limited = is_rate_limited(error)
+        network_unavailable = is_network_unavailable(error)
+        if rate_limited:
+            detail = "API rate-limited; authenticate with GH_TOKEN, GITHUB_TOKEN, or gh auth login"
+        elif network_unavailable:
+            detail = "GitHub API unavailable from this environment; rerun during the authenticated publication check"
+        else:
+            detail = error or str(status)
         checks.append(
             check(
                 False,
                 "GitHub repository metadata reachable",
-                "API rate-limited; authenticate with GH_TOKEN, GITHUB_TOKEN, or gh auth login"
-                if is_rate_limited(error)
-                else error or str(status),
-                warn=not strict and is_rate_limited(error),
+                detail,
+                warn=not strict and (rate_limited or network_unavailable),
             )
         )
         return checks

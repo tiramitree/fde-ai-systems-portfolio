@@ -6,13 +6,14 @@ import os
 import socket
 import subprocess
 import sys
-import tempfile
+import shutil
 import time
 import urllib.request
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+TEMP_PARENT = ROOT / "out" / "fresh-clone-tmp"
 
 STATIC_COMMANDS = [
     "safety",
@@ -116,6 +117,26 @@ def clone_repository(source: str, target: Path) -> None:
         raise RuntimeError(output or "git clone failed")
 
 
+def make_temp_root() -> Path:
+    TEMP_PARENT.mkdir(parents=True, exist_ok=True)
+    for attempt in range(100):
+        temp_root = TEMP_PARENT / f"fde-public-clone-{int(time.time() * 1000)}-{os.getpid()}-{attempt}"
+        try:
+            temp_root.mkdir()
+            return temp_root
+        except FileExistsError:
+            continue
+    raise RuntimeError("could not create a unique fresh clone temp directory")
+
+
+def cleanup_temp_root(temp_root: Path) -> str | None:
+    try:
+        shutil.rmtree(temp_root)
+    except Exception as exc:
+        return f"left temporary clone at {temp_root} because cleanup failed: {exc}"
+    return None
+
+
 def run_static_checks(clone_dir: Path) -> list[str]:
     failures: list[str] = []
     for command in STATIC_COMMANDS:
@@ -189,26 +210,27 @@ def main() -> int:
     args = parser.parse_args()
 
     source = args.source or origin_url()
-    temp_root = Path(tempfile.mkdtemp(prefix="fde-public-clone-")) if args.keep else None
+    temp_root: Path | None = None
     failures: list[str] = []
+    cleanup_warning: str | None = None
 
     try:
-        if temp_root is None:
-            with tempfile.TemporaryDirectory(prefix="fde-public-clone-") as temp_dir:
-                clone_dir = Path(temp_dir) / "repo"
-                print(f"Cloning {source} into a temporary directory")
-                clone_repository(source, clone_dir)
-                failures.extend(run_static_checks(clone_dir))
-                failures.extend(run_runtime_smoke(clone_dir))
-        else:
-            clone_dir = temp_root / "repo"
+        temp_root = make_temp_root()
+        clone_dir = temp_root / "repo"
+        if args.keep:
             print(f"Cloning {source} into {clone_dir}")
-            clone_repository(source, clone_dir)
-            failures.extend(run_static_checks(clone_dir))
-            failures.extend(run_runtime_smoke(clone_dir))
+        else:
+            print(f"Cloning {source} into a temporary directory")
+        clone_repository(source, clone_dir)
+        failures.extend(run_static_checks(clone_dir))
+        failures.extend(run_runtime_smoke(clone_dir))
+        if args.keep:
             print(f"\nKept fresh clone at {clone_dir}")
     except Exception as exc:
         failures.append(str(exc))
+    finally:
+        if temp_root is not None and not args.keep:
+            cleanup_warning = cleanup_temp_root(temp_root)
 
     if failures:
         print("\nFresh clone experience check failed:")
@@ -216,6 +238,8 @@ def main() -> int:
             print(f"- {failure}")
         return 1
 
+    if cleanup_warning:
+        print(f"\nFresh clone cleanup warning: {cleanup_warning}")
     print("\nFresh clone experience check passed.")
     return 0
 
