@@ -1,6 +1,6 @@
 ﻿# Star Growth Plan
 
-Goal: make the repository useful and differentiated enough that engineers star it as a practical reference.
+Goal: make the repository useful and differentiated enough that engineers save and recommend it as a practical reference. Stars should be a byproduct of usefulness, not the primary product goal.
 
 ## Audience
 
@@ -47,13 +47,13 @@ Run `python -B scripts/dev.py launch-assets` before posting so required channels
 Create issues for:
 
 - add FastAPI adapter
-- add PostgreSQL adapter
-- add OpenAI Agents SDK branch
-- add trace grading examples
-- run and publish Docker verification from `python -B scripts/dev.py docker-runtime`
+- add PostgreSQL storage adapter prototype
+- add per-case eval regression reports
 - add red-team eval pack
+- add trace deep links in the demo UI
+- run and publish Docker verification from `python -B scripts/dev.py docker-runtime`
 
-These make the repo look alive and give contributors clear entry points.
+These give contributors clear entry points and connect public issues to real engineering work.
 
 ## Anti-Hype Rule
 

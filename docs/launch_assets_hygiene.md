@@ -12,8 +12,9 @@ python -B scripts/dev.py launch-assets
 
 - launch copy exists for GitHub-adjacent short posts, LinkedIn, X / Twitter, Hacker News, Reddit or community posts, and a follow-up blog outline
 - the star-growth plan lists the intended audience, launch channels, content pieces, first issue labels, and anti-hype rule
-- initial public issues have labels and acceptance criteria
+- the community issue pack records completed launch issues and proposes real follow-up work with labels and acceptance criteria
 - the community backlog preserves the key safety invariants for secure RAG, governed agents, and eval gates
+- community materials avoid vanity activity framing; issues should reflect real engineering work
 - README, the project index, the evidence matrix, and post-publish docs link back to the launch materials
 
 ## Anti-Hype Boundary
@@ -30,6 +31,7 @@ They should not claim these as complete until real evidence exists:
 - profile pin configured
 - launch feedback or star-growth success
 - production readiness
+- placeholder public activity
 
 Use "reference implementation", "control pattern", and "local-first repository" language. Avoid presenting the project as a finished enterprise platform.
 

@@ -1,36 +1,45 @@
-# GitHub Initial Issues
+# GitHub Community Issue Pack
 
-Create these issues after the first push. They are chosen to make the repository look active, useful, and contributor-friendly without distracting from the core FDE demo.
+Use this file to seed contributor-friendly GitHub issues after a release. The issue list should reflect real engineering work that would make the repository more useful, easier to run, or easier to adapt. Do not create placeholder issues only for activity metrics.
+
+## Wave 1 Completed Issues
+
+The first public issue wave was created after the initial release and is now complete:
+
+- Add README demo GIF
+- Add CSV export for eval summaries
+- Add OpenTelemetry-compatible trace export
+- Add PostgreSQL and pgvector adapter design
+- Add replayable demo reset script
+
+Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
 ## Issue 1
 
 Title:
 
 ```text
-Add README demo GIF
+Add a FastAPI adapter for one service
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+enhancement, production-upgrade
 ```
 
 Body:
 
 ```text
-Record a short GIF that shows:
-
-1. Alice asking the remote-work question.
-2. Alice being blocked from the finance plan.
-3. Morgan receiving the finance answer.
-4. The regulated operations agent creating an approval request.
-5. Supervisor approval sending the notice.
+Add a FastAPI adapter for one existing service while keeping the current stdlib HTTP server as the default local path.
 
 Acceptance criteria:
 
-- GIF is committed under docs/assets/.
-- README embeds the GIF near the screenshots.
+- Adapter lives behind a separate entrypoint or documented optional path.
+- Existing API response shapes remain compatible with docs/api_contracts.md.
+- The default local demo path still runs without third-party dependencies.
+- Update docs/production_upgrade_notes.md with the adapter boundary.
+- python -B scripts/dev.py contracts still passes.
 - python -B scripts/dev.py verify still passes.
 ```
 
@@ -39,26 +48,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add CSV export for eval summaries
+Implement a PostgreSQL storage adapter prototype
 ```
 
 Labels:
 
 ```text
-enhancement, good first issue
+enhancement, production-upgrade
 ```
 
 Body:
 
 ```text
-Add an optional script that exports eval summaries to CSV for quick comparison across runs.
+Prototype a PostgreSQL-backed storage adapter for one service based on docs/postgres_pgvector_adapter_design.md.
 
 Acceptance criteria:
 
-- New script lives under scripts/.
-- CSV includes project, total cases, passed cases, pass rate, and unsafe failure counts.
-- The script documents any eval runtime state writes and keeps generated artifacts ignored.
-- python -B scripts/dev.py verify still passes.
+- Local JSON storage remains the default.
+- Adapter has a clear feature flag or separate entrypoint.
+- Migration/schema notes include audit log, trace, and eval-state isolation.
+- Permission checks remain before answer generation or side-effect execution.
+- Add focused tests or a deterministic check script for adapter shape.
+- python -B scripts/dev.py quality still passes.
 ```
 
 ## Issue 3
@@ -66,26 +77,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add OpenTelemetry-compatible trace export
+Add per-case eval regression reports
 ```
 
 Labels:
 
 ```text
-enhancement, observability
+enhancement, evals
 ```
 
 Body:
 
 ```text
-Add an export path that converts existing trace records into an OpenTelemetry-compatible JSON shape.
+Add a report that compares current eval results with a checked-in baseline and highlights changed cases.
 
 Acceptance criteria:
 
-- Existing trace UI behavior remains unchanged.
-- Export is deterministic and local-first.
-- Documentation explains how this maps to a production trace backend.
-- python -B scripts/dev.py verify still passes.
+- Report includes project, case id, pass/fail transition, latency, and unsafe failure counts.
+- Generated report artifacts stay ignored unless intentionally committed as release evidence.
+- The report does not weaken deterministic safety assertions.
+- Documentation explains when to use the report during release review.
+- python -B scripts/dev.py evals still passes.
+- python -B scripts/dev.py claims still passes.
 ```
 
 ## Issue 4
@@ -93,25 +106,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add PostgreSQL and pgvector adapter design
+Add red-team eval cases for retrieval and agent governance
 ```
 
 Labels:
 
 ```text
-design, production-upgrade
+security, evals
 ```
 
 Body:
 
 ```text
-Write a design note for replacing JSON state with PostgreSQL and pgvector.
+Expand the eval suite with additional prompt-injection, unauthorized-access, and approval-bypass cases.
 
 Acceptance criteria:
 
-- Covers schema, migrations, row-level security, indexing, and eval isolation.
-- Explains how the permission boundary remains before model generation.
-- Links back to ADR 0002 and ADR 0003.
+- Project 1 adds retrieval or user-message attack cases that must abstain without leaking inaccessible evidence.
+- Project 2 adds approval-bypass cases that must not execute side effects.
+- Project 3 adds at least one release-risk case that must block rollout.
+- Update docs/threat_model.md or project threat docs if new threat patterns are introduced.
+- Unsafe leak, direct side-effect, and release approval failure counts remain zero.
+- python -B scripts/dev.py quality still passes.
 ```
 
 ## Issue 5
@@ -119,25 +135,61 @@ Acceptance criteria:
 Title:
 
 ```text
-Add replayable demo reset script
+Add trace deep links in the demo UI
 ```
 
 Labels:
 
 ```text
-automation, demo
+enhancement, frontend, observability
 ```
 
 Body:
 
 ```text
-Add a script that resets all demos, runs the expected business flows, and prints the exact trace IDs to inspect.
+Make it easier to inspect a specific trace from the browser demo.
 
 Acceptance criteria:
 
-- Script runs from the repository root.
-- It starts services if needed or fails with a clear message.
-- It prints Project 1, Project 2, and Project 3 demo evidence.
-- It prints trace IDs and approval IDs for inspection.
-- python -B scripts/dev.py verify still passes.
+- Trace IDs in responses can be copied or opened as a local deep link.
+- Existing trace-copy controls keep working.
+- Frontend modules remain local to each service web boundary.
+- Runtime UI contracts are updated if routes or anchors change.
+- python -B scripts/dev.py frontend still passes.
+- python -B scripts/dev.py ui-contracts still passes.
 ```
+
+## Issue 6
+
+Title:
+
+```text
+Run and document Docker Compose runtime verification
+```
+
+Labels:
+
+```text
+documentation, docker, release
+```
+
+Body:
+
+```text
+Run the Docker runtime verification on a Docker-enabled machine and publish the evidence.
+
+Acceptance criteria:
+
+- Run python -B scripts/dev.py docker-runtime on a Docker-enabled machine.
+- Record the exact environment and result in docs/container_release_hygiene.md.
+- Add screenshots only if they reflect the current running services.
+- Do not claim Docker runtime verification until the command passes.
+- python -B scripts/dev.py container-release still passes.
+```
+
+## Guardrails
+
+- Do not create issues that ask for secrets, tokens, private files, or account access.
+- Do not create issues that weaken permission checks, approval gates, evals, traces, or public safety scans.
+- Keep local-first behavior intact unless an issue explicitly adds an optional production adapter.
+- Every issue should include acceptance criteria and at least one verification command.

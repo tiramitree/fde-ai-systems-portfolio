@@ -1,6 +1,6 @@
 # Community Backlog
 
-This backlog is designed for public GitHub issues after launch. It keeps the repository open-source friendly without weakening the core demo.
+This backlog is designed for public GitHub issues after launch. It keeps the repository open-source friendly by pointing contributors toward real improvements without weakening the core demo.
 
 ## Good First Issues
 
