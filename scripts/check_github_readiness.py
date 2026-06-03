@@ -112,6 +112,106 @@ def tag_exists_via_git(tag: str) -> bool:
     return code == 0 and f"refs/tags/{tag}" in output
 
 
+def remote_main_sha() -> str:
+    code, output = run_git(["ls-remote", "--heads", "origin", "main"])
+    if code != 0:
+        return ""
+    for line in output.splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == "refs/heads/main":
+            return parts[0]
+    return ""
+
+
+def transient_github_detail(error: str, action: str) -> str:
+    if is_rate_limited(error):
+        return f"{action}: GitHub API rate-limited; authenticate with GH_TOKEN, GITHUB_TOKEN, or gh auth login"
+    if is_network_unavailable(error):
+        return f"{action}: GitHub API unavailable from this environment; rerun during the authenticated publication check"
+    return error
+
+
+def check_main_actions(repo: str, strict: bool) -> Check:
+    target_sha = remote_main_sha()
+    if target_sha:
+        status, check_data, error = api_get(repo, f"/commits/{target_sha}/check-runs")
+        if status == 200 and isinstance(check_data, dict):
+            runs = [
+                run
+                for run in check_data.get("check_runs", [])
+                if isinstance(run, dict) and run.get("name") == "quality-gate"
+            ]
+            if runs:
+                completed_success = [
+                    run
+                    for run in runs
+                    if run.get("status") == "completed" and run.get("conclusion") == "success"
+                ]
+                if completed_success:
+                    return check(
+                        True,
+                        "latest main GitHub Actions run passed",
+                        completed_success[0].get("html_url", "") or target_sha[:12],
+                    )
+                pending = [run for run in runs if run.get("status") != "completed"]
+                if pending:
+                    return check(
+                        False,
+                        "latest main GitHub Actions run passed",
+                        f"quality-gate pending for {target_sha[:12]}",
+                        warn=not strict,
+                    )
+                failed = runs[0]
+                return check(
+                    False,
+                    "latest main GitHub Actions run passed",
+                    failed.get("html_url", "") or f"quality-gate {failed.get('conclusion', 'failed')} for {target_sha[:12]}",
+                )
+            return check(
+                False,
+                "latest main GitHub Actions run passed",
+                f"quality-gate check run not found for {target_sha[:12]}",
+                warn=not strict,
+            )
+        transient_detail = transient_github_detail(error, f"check-runs for {target_sha[:12]}")
+        if transient_detail:
+            return check(
+                False,
+                "latest main GitHub Actions run passed",
+                transient_detail,
+                warn=not strict and (is_rate_limited(error) or is_network_unavailable(error)),
+            )
+
+    status, runs_data, error = api_get(repo, "/actions/runs?branch=main&event=push&per_page=10")
+    latest_main = None
+    if status == 200 and isinstance(runs_data, dict):
+        runs = [
+            run
+            for run in runs_data.get("workflow_runs", [])
+            if isinstance(run, dict)
+            and run.get("head_branch") == "main"
+            and run.get("event") == "push"
+            and (not target_sha or run.get("head_sha") == target_sha)
+        ]
+        latest_main = runs[0] if runs else None
+    if latest_main and latest_main.get("status") == "completed" and latest_main.get("conclusion") == "success":
+        return check(True, "latest main GitHub Actions run passed", latest_main.get("html_url", ""))
+    if latest_main and latest_main.get("status") != "completed":
+        return check(
+            False,
+            "latest main GitHub Actions run passed",
+            f"{latest_main.get('html_url', '')} is {latest_main.get('status', 'pending')}",
+            warn=not strict,
+        )
+    detail = latest_main.get("html_url", "") if latest_main else transient_github_detail(error, "workflow runs") or str(status)
+    return check(
+        False,
+        "latest main GitHub Actions run passed",
+        detail,
+        warn=not strict and (is_rate_limited(error) or is_network_unavailable(error)),
+    )
+
+
 def collect_checks(strict: bool) -> list[Check]:
     checks: list[Check] = []
 
@@ -180,24 +280,7 @@ def collect_checks(strict: bool) -> list[Check]:
     checks.append(check(True, "stars observed", str(repo_data.get("stargazers_count", 0))))
     checks.append(check(True, "forks observed", str(repo_data.get("forks_count", 0))))
 
-    status, runs_data, error = api_get(repo, "/actions/runs?branch=main&event=push&per_page=5")
-    latest_main = None
-    if status == 200 and isinstance(runs_data, dict):
-        latest_main = next(
-            (
-                run
-                for run in runs_data.get("workflow_runs", [])
-                if run.get("head_branch") == "main" and run.get("event") == "push"
-            ),
-            None,
-        )
-    checks.append(
-        check(
-            bool(latest_main and latest_main.get("status") == "completed" and latest_main.get("conclusion") == "success"),
-            "latest main GitHub Actions run passed",
-            latest_main.get("html_url", "") if latest_main else error or str(status),
-        )
-    )
+    checks.append(check_main_actions(repo, strict))
 
     status, issues_data, error = api_get(repo, "/issues?state=open&per_page=100")
     open_issues = [

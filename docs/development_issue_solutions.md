@@ -65,14 +65,20 @@ latest main GitHub Actions run passed: FAIL
 
 Resolution:
 
-1. Confirm the public workflow page or check-run status for the exact latest commit.
+1. `python -B scripts/dev.py github-readiness` first checks the exact current `origin/main` commit's `quality-gate` check run.
 2. Wait briefly and rerun:
 
 ```bash
 python -B scripts/dev.py github-readiness
 ```
 
-3. If unauthenticated API limits continue, authenticate GitHub CLI and rerun readiness.
+3. If ordinary readiness reports a warning because the GitHub API is rate-limited or the current check is still pending, do not treat that as a project code failure.
+4. If unauthenticated API limits continue, authenticate GitHub CLI and rerun readiness.
+5. Use strict mode only for final account-level launch checks:
+
+```bash
+python -B scripts/check_github_readiness.py --strict
+```
 
 Do not change project code merely because a readiness read hit a temporary API limit.
 
