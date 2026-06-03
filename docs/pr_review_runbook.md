@@ -2,6 +2,8 @@
 
 Use this before approving external PR workflows, running contributor code, or merging a public contribution.
 
+For recurring PR, GitHub, and local-environment problems, also check `docs/development_issue_solutions.md` before changing code.
+
 ## Fast Path
 
 ```bash

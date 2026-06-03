@@ -121,6 +121,7 @@ def main() -> int:
         "docs/threat_model.md",
         "docs/scenario_data_integrity.md",
         "docs/error_hygiene.md",
+        "docs/development_issue_solutions.md",
         "docs/final_readiness_report.md",
         "docs/demo_replay_artifact.md",
         "docs/container_release_hygiene.md",

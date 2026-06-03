@@ -2,6 +2,8 @@
 
 ## 1. Start Local Demos
 
+Before troubleshooting local, GitHub, or PR review failures, check `docs/development_issue_solutions.md` for known symptoms and current resolutions.
+
 Recommended local command:
 
 ```bash
