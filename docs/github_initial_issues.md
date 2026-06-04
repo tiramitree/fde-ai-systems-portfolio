@@ -28,6 +28,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a README maintainer workflow checklist
 - Add a compact README demo path map
 - Add README command output expectations
+- Add a compact README troubleshooting pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -152,7 +153,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README troubleshooting pointer
+Add a compact README screenshot reviewer checklist
 ```
 
 Labels:
@@ -164,16 +165,16 @@ documentation, automation, good first issue
 Body:
 
 ```text
-Add a compact README troubleshooting pointer for API rate limits, Docker availability, optional OpenAI mode, and generated local artifacts.
+Add a compact README checklist for comparing the screenshot gallery with the live demo behavior.
 
 Acceptance criteria:
 
-- Cover GitHub API rate limits, Docker availability, optional OpenAI live mode, and generated local artifacts.
-- Link to docs/development_issue_solutions.md, docs/container_release_hygiene.md, and docs/model_runtime_configuration.md.
-- Keep the default local Python path as the verified path.
-- Do not require secret values, token values, account access, or collaborator permissions; do not claim Docker, OpenAI, or GitHub account setup was verified.
+- Cover desktop and mobile screenshots for all three demos.
+- Point reviewers to the fastest useful demo paths in README and the screenshot hygiene docs.
+- Link to docs/visual_asset_hygiene.md and docs/reviewer_perspective_checklist.md.
+- Make clear that refreshed screenshots and docs/visual_assets_manifest.json should move together.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py launch-assets still passes.
+- python -B scripts/dev.py visual-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
