@@ -58,6 +58,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README model gateway safety evidence pointer
 - Add a compact README PR triage evidence pointer
 - Add a compact README threat model evidence pointer
+- Add a compact README workflow security evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -182,7 +183,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README workflow security evidence pointer
+Add a compact README governance evidence pointer
 ```
 
 Labels:
@@ -194,16 +195,16 @@ documentation, security, good first issue
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where workflow security materials live and which CI privilege boundaries must be preserved before changing GitHub Actions or automation paths.
+Add a compact README pointer that tells contributors where governance materials live and which repository policy files must stay aligned before changing maintainer, release, or contribution rules.
 
 Acceptance criteria:
 
-- Link to Workflow Security, System Evidence Matrix, PR Review Security, Pull Request Review Runbook, and the GitHub Actions row in the Evidence Matrix.
-- Cover workflow checks: `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, and `python -B scripts/dev.py quality`.
+- Link to GitHub Repository Settings, branch protection payload, maintainer review policy, CODEOWNERS, and the governance row in the Evidence Matrix.
+- Cover governance checks: `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that public PR workflows use read-only tokens, no secrets, safe triggers, hardened checkout, approved actions, and no CI push or GitHub authentication path.
+- Make clear that repository policy changes must preserve CODEOWNERS coverage, branch-protection expectations, issue/PR templates, security review rules, and release evidence gates.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py workflow-security still passes.
+- python -B scripts/dev.py governance still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
