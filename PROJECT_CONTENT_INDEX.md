@@ -206,6 +206,7 @@ Design Review Docs:
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/model_gateway_safety.md`: optional model gateway key-safety, fallback, and boundary contract.
 - `docs/observability_integrity.md`: trace, audit, approval, refusal, and release-decision evidence contract for the critical demo flows.
+- `docs/trace_timeline_examples.md`: copyable local timelines from request to trace, audit, approval, and release-decision evidence for the canonical flows.
 - `docs/threat_model.md`: repository threat matrix, trust boundaries, control owners, evidence commands, and review framing.
 - `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and review framing.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.

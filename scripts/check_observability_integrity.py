@@ -15,6 +15,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+TRACE_TIMELINE = ROOT / "docs" / "trace_timeline_examples.md"
 DEFAULT_PROJECT_1_PORT = 8886
 DEFAULT_PROJECT_2_PORT = 8887
 DEFAULT_PROJECT_3_PORT = 8888
@@ -137,6 +138,45 @@ def valid_uuid(value: Any) -> bool:
 
 def check(condition: bool, name: str, detail: str) -> Check:
     return Check(name=name, passed=condition, detail=detail)
+
+
+def require_text(text: str, phrase: str, label: str) -> Check:
+    return check(phrase in text, f"{label} contains {phrase}", "found" if phrase in text else "missing")
+
+
+def trace_timeline_doc_checks() -> list[Check]:
+    if not TRACE_TIMELINE.exists():
+        return [check(False, "trace timeline examples doc exists", "missing docs/trace_timeline_examples.md")]
+
+    text = TRACE_TIMELINE.read_text(encoding="utf-8")
+    required_phrases = [
+        "Project 1: Finance-Access Abstention",
+        "Project 2: Case-1001 Approval",
+        "Project 3: Unsafe Canary Triage",
+        "trace_id",
+        "/api/traces?limit=20",
+        "/api/audit?limit=50",
+        "/api/approvals",
+        "no_accessible_grounded_evidence",
+        "approval_requested",
+        "agent_message_processed",
+        "incident_triaged",
+        "rel-eval-003-employee-finance-abstain",
+        "python -B scripts/dev.py observability",
+        "python -B scripts/dev.py smoke",
+        "python -B scripts/dev.py claims",
+        "Do not use real user data, local machine paths, tokens, external service identifiers, or generated runtime artifacts",
+    ]
+    checks = [require_text(text, phrase, "docs/trace_timeline_examples.md") for phrase in required_phrases]
+    for rel_path in ("README.md", "PROJECT_CONTENT_INDEX.md", "docs/observability_integrity.md"):
+        checks.append(
+            require_text(
+                (ROOT / rel_path).read_text(encoding="utf-8"),
+                "docs/trace_timeline_examples.md",
+                rel_path,
+            )
+        )
+    return checks
 
 
 def find_by_id(items: list[dict], item_id: str) -> dict | None:
@@ -602,6 +642,7 @@ def main() -> int:
                 print(f"Service did not become healthy: {service.name}", file=sys.stderr)
                 return 1
 
+        checks.extend(trace_timeline_doc_checks())
         checks.extend(project_1_checks(service_list[0].base_url))
         checks.extend(project_2_checks(service_list[1].base_url))
         checks.extend(project_3_checks(service_list[2].base_url))

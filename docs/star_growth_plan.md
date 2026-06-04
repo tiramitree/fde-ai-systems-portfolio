@@ -50,7 +50,7 @@ Create issues for:
 - add PostgreSQL storage adapter prototype
 - add per-case eval regression reports
 - add red-team eval pack
-- add a trace timeline explainer for canonical flows
+- add local eval gate troubleshooting examples
 - run and publish Docker verification from `python -B scripts/dev.py docker-runtime`
 
 These give contributors clear entry points and connect public issues to real engineering work.
