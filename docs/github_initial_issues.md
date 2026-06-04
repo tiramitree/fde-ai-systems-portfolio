@@ -61,6 +61,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README workflow security evidence pointer
 - Add a compact README governance evidence pointer
 - Add a compact README launch asset evidence pointer
+- Add a compact README reviewer handoff evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -185,28 +186,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README reviewer handoff evidence pointer
+Add a compact README post-publish evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, demo, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where reviewer handoff materials live and which proof commands should run before presenting, sharing, or reviewing the repository.
+Add a compact README pointer that tells contributors where post-publish materials live and which remote checks must pass before sharing the public branch or claiming published evidence.
 
 Acceptance criteria:
 
-- Link to Reviewer Perspective Checklist, Final Demo Runbook, Final Readiness Report, Demo Path Map, Evidence Matrix, and Published Repository Status.
-- Cover reviewer handoff checks: `python -B scripts/dev.py quality`, `python -B scripts/dev.py fresh-clone-local`, `python -B scripts/dev.py visual-assets`, and `python -B scripts/dev.py launch-assets`.
+- Link to Post-Publish Checklist, Published Repository Status, GitHub Repository Settings, GitHub Release Commands, Release Evidence FAQ, and the published repository status row in the Evidence Freshness Checklist.
+- Cover post-publish checks: `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that reviewer-facing claims must match current evidence and that post-push GitHub readiness warnings stay manual until the matching account-level action or public check is complete.
+- Make clear that remote clone, published file, raw README/workflow, and GitHub readiness warnings must be treated separately from local quality evidence.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py fresh-clone-local still passes.
+- python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

@@ -241,6 +241,10 @@ REQUIRED_LAUNCH_ASSET_READINESS = [
     "Launch asset readiness:",
     "Use [Launch Assets Hygiene](docs/launch_assets_hygiene.md), [Launch Copy Pack](docs/launch_copy_pack.md), [Star Growth Plan](docs/star_growth_plan.md), [GitHub Launch Plan](docs/github_launch_plan.md), [Published Repository Status](docs/published_repository_status.md), and the launch materials row in the [Evidence Matrix](#evidence-matrix) before changing launch docs, posts, screenshots, or release-facing status. Public copy must keep Docker runtime, OpenAI live mode, branch protection, release pages, social preview, profile pins, launch feedback, star-growth success, and production readiness unclaimed until the matching evidence or account-level action exists; run `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py assets`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality`.",
 ]
+REQUIRED_REVIEWER_HANDOFF_READINESS = [
+    "Reviewer handoff readiness:",
+    "Use [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md), [Final Demo Runbook](docs/final_demo_runbook.md), [Final Readiness Report](docs/final_readiness_report.md), the [Demo Path Map](#demo-path-map), the [Evidence Matrix](#evidence-matrix), and [Published Repository Status](docs/published_repository_status.md) before presenting, sharing, or reviewing the repository. Reviewer-facing claims must match current evidence, and post-push GitHub readiness warnings remain manual until the matching account-level action or public check is complete; run `python -B scripts/dev.py quality`, `python -B scripts/dev.py fresh-clone-local`, `python -B scripts/dev.py visual-assets`, and `python -B scripts/dev.py launch-assets`.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -877,6 +881,18 @@ def check_launch_asset_readiness() -> list[str]:
     return failures
 
 
+def check_reviewer_handoff_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_REVIEWER_HANDOFF_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing reviewer handoff readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -931,6 +947,7 @@ def main() -> int:
     failures.extend(check_workflow_security_readiness())
     failures.extend(check_governance_readiness())
     failures.extend(check_launch_asset_readiness())
+    failures.extend(check_reviewer_handoff_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
