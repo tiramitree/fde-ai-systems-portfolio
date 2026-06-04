@@ -64,6 +64,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README reviewer handoff evidence pointer
 - Add a compact README post-publish evidence pointer
 - Add a compact README GitHub readiness evidence pointer
+- Add a compact README release page evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -188,28 +189,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README release page evidence pointer
+Add a compact README Docker verification evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, release, good first issue
+documentation, docker, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where release page evidence lives and how to avoid claiming GitHub release readiness before release artifacts are attached.
+Add a compact README pointer that tells contributors where Docker verification evidence lives and how to avoid claiming runtime container evidence before a Docker-enabled machine has passed the runtime check.
 
 Acceptance criteria:
 
-- Link to Demo Replay Artifact, GitHub Release Commands, Post-Publish Checklist, Published Repository Status, Final Readiness Report, and the Release Evidence FAQ.
-- Cover release page checks: `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
+- Link to Container Release Hygiene, Production Upgrade Notes, Published Repository Status, System Evidence Matrix, and the Release Evidence FAQ.
+- Cover Docker-facing checks: `python -B scripts/dev.py container-release`, `python -B scripts/dev.py fresh-clone-local`, `python -B scripts/dev.py quality`, and `python -B scripts/dev.py docker-runtime` as the environment-dependent runtime proof.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that the `v0.1.0` release page is not ready until the page exists and the current `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` files are attached or linked as release evidence.
+- Make clear that `container-release` is static configuration evidence and that Docker runtime evidence should not be claimed until `docker-runtime` passes on a Docker-enabled machine.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py launch-assets still passes.
+- python -B scripts/dev.py container-release still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
