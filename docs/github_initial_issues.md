@@ -80,6 +80,7 @@ The first public issue wave was created after the initial release and is now com
 - Add docs-only pull request review examples
 - Add docs-only review comments for common PR outcomes
 - Add a README-to-docs navigation audit
+- Add compact examples for README navigation drift fixes
 - Add optional OpenAI live-mode troubleshooting notes
 - Add a Docker runtime evidence collection checklist
 
@@ -206,28 +207,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add README navigation drift fix examples
+Add OpenTelemetry collector handoff troubleshooting notes
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+documentation, observability, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples that show how to fix README navigation drift without broad rewrites.
+Add troubleshooting notes for handing local OTLP trace exports to an OpenTelemetry Collector without making a hosted collector part of the default demo path.
 
 Acceptance criteria:
 
-- Add docs/readme_navigation_drift_examples.md with examples for stale links, unsupported claims, missing source docs, and manual evidence drift.
-- Reference docs/readme_navigation_audit.md, docs/command_output_troubleshooting_map.md, and docs/docs_only_review_comment_examples.md.
-- Keep examples narrow, local-first, and free of secrets, private paths, private account data, generated runtime files, and real customer data.
-- Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py community-issues still passes.
-- python -B scripts/dev.py assets still passes.
+- Add docs/opentelemetry_collector_handoff_troubleshooting.md with local exporter, collector endpoint, failure-mode, and rollback notes.
+- Reference docs/otel_trace_export.md, docs/observability_integrity.md, and docs/command_output_troubleshooting_map.md.
+- Keep the default local trace export path working without Docker, hosted collectors, external accounts, or paid-service requirements.
+- Link the notes from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py observability still passes.
+- python -B scripts/dev.py otel-traces still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

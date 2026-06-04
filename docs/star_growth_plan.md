@@ -50,7 +50,7 @@ Create issues for:
 - add PostgreSQL storage adapter prototype
 - add per-case eval regression reports
 - add red-team eval pack
-- add README navigation drift fix examples
+- add OpenTelemetry collector handoff troubleshooting notes
 - run and publish Docker verification from `python -B scripts/dev.py docker-runtime`
 
 These give contributors clear entry points and connect public issues to real engineering work.

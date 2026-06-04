@@ -31,6 +31,7 @@ FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
+README_NAVIGATION_DRIFT_EXAMPLES = ROOT / "docs" / "readme_navigation_drift_examples.md"
 OPENAI_LIVE_MODE_TROUBLESHOOTING = ROOT / "docs" / "openai_live_mode_troubleshooting.md"
 DOCKER_RUNTIME_EVIDENCE_CHECKLIST = ROOT / "docs" / "docker_runtime_evidence_checklist.md"
 
@@ -336,6 +337,52 @@ def check_readme_navigation_audit() -> list[str]:
     return failures
 
 
+def check_readme_navigation_drift_examples() -> list[str]:
+    failures: list[str] = []
+    if not README_NAVIGATION_DRIFT_EXAMPLES.exists():
+        return ["missing docs/readme_navigation_drift_examples.md"]
+
+    text = README_NAVIGATION_DRIFT_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "README Navigation Drift Examples",
+        "docs/readme_navigation_audit.md",
+        "docs/command_output_troubleshooting_map.md",
+        "docs/docs_only_review_comment_examples.md",
+        "Stale Link",
+        "Unsupported Claim",
+        "Missing Source Doc",
+        "Manual Evidence Drift",
+        "Drift Review Checklist",
+        "README.md",
+        "PROJECT_CONTENT_INDEX.md",
+        "python -B scripts/dev.py assets",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone-local",
+        "generated runtime files",
+        "private paths",
+        "external accounts",
+        "paid-service requirements",
+        "real customer data",
+        "Do not hide a failing gate",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/readme_navigation_drift_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/readme_navigation_drift_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/readme_navigation_drift_examples.md",
+        "docs/readme_navigation_audit.md": "docs/readme_navigation_drift_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_openai_live_mode_troubleshooting() -> list[str]:
     failures: list[str] = []
     if not OPENAI_LIVE_MODE_TROUBLESHOOTING.exists():
@@ -473,6 +520,7 @@ def main() -> int:
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())
+    failures.extend(check_readme_navigation_drift_examples())
     failures.extend(check_openai_live_mode_troubleshooting())
     failures.extend(check_docker_runtime_evidence_checklist())
     failures.extend(check_templates(labels))
