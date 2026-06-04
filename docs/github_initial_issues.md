@@ -16,6 +16,7 @@ The first public issue wave was created after the initial release and is now com
 - Add keyboard-friendly trace navigation for recent trace lists
 - Add copyable scenario-draft import/export snippets for local demos
 - Add a compact diff view for browser-local scenario drafts
+- Add a reduced-motion and focus-visible accessibility pass
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -140,7 +141,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a reduced-motion and contrast accessibility pass
+Add a small dark-mode toggle to all demo UIs
 ```
 
 Labels:
@@ -152,12 +153,13 @@ enhancement, frontend, demo
 Body:
 
 ```text
-Improve readability and motion comfort across the local browser demos.
+Add an optional dark-mode theme while preserving the default restrained product UI.
 
 Acceptance criteria:
 
-- Check all three demos for focus visibility, text contrast, and motion-sensitive behavior.
-- Add a reduced-motion CSS rule if animation or scrolling behavior needs it.
+- Theme tokens cover all three demos without duplicating large CSS blocks.
+- The toggle persists only in browser-local state and does not add backend mutation.
+- Text contrast remains readable in both themes.
 - Preserve the existing restrained product UI style.
 - Do not introduce remote frontend dependencies.
 - Frontend modules remain local to each service web boundary.

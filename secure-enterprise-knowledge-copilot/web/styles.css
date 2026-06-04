@@ -9,6 +9,7 @@
   --accent-2: #1f4f82;
   --danger: #9f2b2b;
   --warn: #8a5a00;
+  --focus-ring: rgba(19, 111, 99, 0.24);
 }
 
 * {
@@ -127,6 +128,21 @@ button {
 
 button:hover {
   filter: brightness(0.96);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  filter: none;
+  opacity: 0.68;
+}
+
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+.traceLink:focus-visible {
+  border-color: var(--accent);
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .quick {
@@ -282,7 +298,7 @@ button:hover {
 
 .traceLink:focus-visible {
   border-color: var(--accent);
-  outline: 3px solid rgba(19, 111, 99, 0.18);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -367,5 +383,16 @@ button:hover {
 
   .quick {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

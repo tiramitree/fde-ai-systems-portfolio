@@ -200,7 +200,17 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/styles.css",
             "text/css",
-            [".grid", ".panel", ".quick", ".traceLink:focus-visible", ".scenarioDiff"],
+            [
+                ".grid",
+                ".panel",
+                ".quick",
+                "button:focus-visible",
+                "select:focus-visible",
+                "textarea:focus-visible",
+                ".traceLink:focus-visible",
+                "prefers-reduced-motion",
+                ".scenarioDiff",
+            ],
         )
     )
     checks.extend(

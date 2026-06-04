@@ -358,8 +358,15 @@ def check_project(project: FrontendProject) -> list[str]:
         ".sectionActions",
         ".secondaryButton",
         ".secondaryButton:disabled",
+        "button:focus-visible",
+        "select:focus-visible",
+        "textarea:focus-visible",
         ".traceLink",
         ".traceLink:focus-visible",
+        "prefers-reduced-motion",
+        "animation-duration",
+        "transition-duration",
+        "--focus-ring",
         ".selectedTrace",
         ".scenarioDraft",
         ".scenarioDiff",
@@ -384,7 +391,7 @@ def main() -> int:
 
     print(
         "Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, "
-        "trace-copy controls, keyboard trace navigation, copyable scenario drafts, local diffs, and quick actions are intact."
+        "trace-copy controls, keyboard trace navigation, copyable scenario drafts, local diffs, accessibility CSS, and quick actions are intact."
     )
     return 0
 
