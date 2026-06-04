@@ -14,6 +14,7 @@ from types import ModuleType
 
 
 ROOT = Path(__file__).resolve().parents[1]
+ERROR_EXAMPLES = ROOT / "docs" / "api_error_examples.md"
 LEAKY_EXCEPTION = "boom C:\\" + "Users\\" + "117" + "58\\" + "One" + "Drive\\private " + "s" + "k-test-token"
 EXPECTED_ERROR = {"error": "Internal server error"}
 
@@ -138,10 +139,40 @@ def check_project(project: Project) -> list[str]:
     return failures
 
 
+def require_text(text: str, phrase: str, label: str) -> list[str]:
+    return [] if phrase in text else [f"{label}: missing {phrase!r}"]
+
+
+def check_error_examples_doc() -> list[str]:
+    if not ERROR_EXAMPLES.exists():
+        return ["missing docs/api_error_examples.md"]
+    text = ERROR_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Forbidden",
+        "Not found",
+        "Invalid JSON body",
+        "Internal server error",
+        "Only supervisors can approve actions.",
+        "Unknown user_id: missing-user",
+        "Unknown incident_id: missing-incident",
+        "python -B scripts/dev.py error-hygiene",
+        "Do not use real user data, local machine paths, tokens, or external service identifiers",
+    ]
+    failures: list[str] = []
+    for phrase in required_phrases:
+        failures.extend(require_text(text, phrase, "docs/api_error_examples.md"))
+    for rel_path in ("README.md", "PROJECT_CONTENT_INDEX.md"):
+        failures.extend(
+            require_text((ROOT / rel_path).read_text(encoding="utf-8"), "docs/api_error_examples.md", rel_path)
+        )
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
     for project in PROJECTS:
         failures.extend(check_project(project))
+    failures.extend(check_error_examples_doc())
 
     if failures:
         print("Error hygiene check failed:")
