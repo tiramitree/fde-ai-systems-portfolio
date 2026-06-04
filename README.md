@@ -272,6 +272,10 @@ API contract readiness:
 
 Use [API Contracts](docs/api_contracts.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Architecture Boundaries](docs/architecture_boundaries.md), [Runtime UI Contracts](docs/runtime_ui_contracts.md), and the [Evidence Matrix](#evidence-matrix) before changing backend routes or frontend API calls. Documented response shapes, read-only scenario snapshot endpoints, static route handling, and frontend API modules must stay aligned; run `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py ui-contracts`, and `python -B scripts/dev.py quality`.
 
+Error hygiene readiness:
+
+Use [Error Hygiene](docs/error_hygiene.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Runtime UI Contracts](docs/runtime_ui_contracts.md), [API Contracts](docs/api_contracts.md), and the [Evidence Matrix](#evidence-matrix) before changing app shells or API error handling. Unexpected server exceptions must return generic JSON errors without local paths, stack details, source file names, secret-like markers, or raw exception text, while typed application errors can still return user-safe messages; run `python -B scripts/dev.py error-hygiene`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py ui-contracts`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
