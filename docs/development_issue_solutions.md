@@ -83,6 +83,43 @@ python -B scripts/check_github_readiness.py --strict
 
 Do not change project code merely because a readiness read hit a temporary API limit.
 
+### Browser-Based Visual Asset Refresh Failures
+
+Symptom:
+
+```text
+No Chrome/Chromium/Edge executable found. Set FDE_BROWSER_BIN to refresh screenshots.
+```
+
+or:
+
+```text
+screenshot is suspiciously small
+contrast sample check failed
+source file changed since capture
+```
+
+Resolution:
+
+1. Run browser discovery without refreshing assets:
+
+```bash
+python -B scripts/refresh_visual_assets.py --check-browser
+```
+
+2. If needed, set `FDE_BROWSER_BIN` for the current shell only. Do not commit local browser paths or profile directories.
+3. Refresh screenshots and manifest together:
+
+```bash
+python -B scripts/dev.py refresh-visual-assets
+python -B scripts/dev.py visual-asset-diff
+python -B scripts/dev.py visual-assets
+```
+
+4. If dimensions mismatch, remember desktop assets are 1400x900 and mobile / narrow viewport assets are 500x844.
+5. If contrast samples fail, inspect the screenshot first. Fix the UI when contrast actually regressed; move sample coordinates in `scripts/refresh_visual_assets.py` only when the UI is correct and the stable text region moved.
+6. Run `python -B scripts/dev.py safety` before committing so temporary browser profiles, logs, local paths, and runtime files stay out of the public repository.
+
 ## Pull Request Decisions
 
 ### Docker Runtime Baseline Bumps

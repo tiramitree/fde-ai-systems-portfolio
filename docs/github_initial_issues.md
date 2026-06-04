@@ -21,6 +21,7 @@ The first public issue wave was created after the initial release and is now com
 - Add high-contrast screenshot checks for visual assets
 - Add mobile viewport screenshots to the visual asset manifest
 - Add compact visual asset diff summaries for screenshot refreshes
+- Add visual asset refresh troubleshooting notes
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -145,7 +146,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add visual asset refresh troubleshooting notes
+Add per-asset captions for screenshot galleries
 ```
 
 Labels:
@@ -157,17 +158,17 @@ documentation, frontend, demo
 Body:
 
 ```text
-Add troubleshooting notes for browser-based visual asset refresh failures.
+Add concise per-asset captions for the desktop and mobile screenshot galleries.
 
 Acceptance criteria:
 
-- Document what to check when Chrome, Chromium, or Edge is not found.
-- Explain how to set FDE_BROWSER_BIN without committing local paths.
-- Include guidance for screenshot size mismatch, tiny screenshot files, and contrast sample failures.
-- Reference both desktop and mobile visual assets.
-- Do not introduce paid APIs or remote frontend dependencies.
-- python -B scripts/dev.py visual-asset-diff still passes.
+- Caption each desktop screenshot with the specific workflow or control it demonstrates.
+- Caption each mobile / narrow viewport screenshot without duplicating the same text verbatim.
+- Keep captions factual and avoid production-readiness claims.
+- Do not introduce paid APIs, remote frontend dependencies, or unrelated image changes.
+- python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py visual-assets still passes.
+- python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
