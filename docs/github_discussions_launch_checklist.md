@@ -1,6 +1,6 @@
 # GitHub Discussions Launch Checklist
 
-Use this page before enabling or announcing GitHub Discussions for the repository. Read it with `docs/community_backlog.md`, `docs/github_initial_issues.md`, `docs/launch_feedback_collection_examples.md`, `docs/maintainer_review_policy.md`, and `docs/post_publish_checklist.md`.
+Use this page before enabling or announcing GitHub Discussions for the repository. Read it with `docs/community_backlog.md`, `docs/github_initial_issues.md`, `docs/launch_feedback_collection_examples.md`, `docs/issue_triage_sla_wording_examples.md`, `docs/maintainer_review_policy.md`, and `docs/post_publish_checklist.md`.
 
 The core rule: GitHub Discussions, issues, PRs, private feedback, and roadmap acceptance are different channels. Do not promise support SLAs, private account access, or guaranteed feature acceptance from a discussion thread.
 
@@ -106,6 +106,8 @@ Wrong use:
 - promising response times, support SLAs, or private help
 
 Review with `docs/launch_feedback_collection_examples.md` before turning discussion feedback into public launch claims.
+
+Use `docs/issue_triage_sla_wording_examples.md` before converting discussion replies into public issue response expectations.
 
 ## Review Checklist
 

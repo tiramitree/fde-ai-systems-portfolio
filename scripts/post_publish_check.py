@@ -133,6 +133,7 @@ def main() -> int:
         "docs/launch_copy_pack.md",
         "docs/launch_feedback_collection_examples.md",
         "docs/contributor_attribution_examples.md",
+        "docs/issue_triage_sla_wording_examples.md",
         "docs/postgres_pgvector_adapter_design.md",
         "docs/otel_trace_export.md",
         "docs/model_gateway_safety.md",

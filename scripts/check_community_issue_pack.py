@@ -31,6 +31,7 @@ FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 PUBLIC_ROADMAP_ISSUE_COMMENT_EXAMPLES = ROOT / "docs" / "public_roadmap_issue_comment_examples.md"
 CONTRIBUTOR_ATTRIBUTION_EXAMPLES = ROOT / "docs" / "contributor_attribution_examples.md"
+ISSUE_TRIAGE_SLA_WORDING_EXAMPLES = ROOT / "docs" / "issue_triage_sla_wording_examples.md"
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
@@ -276,6 +277,7 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "docs/issue_to_pr_handoff_flow.md",
         "docs/docs_only_review_comment_examples.md",
         "docs/contributor_attribution_examples.md",
+        "docs/issue_triage_sla_wording_examples.md",
         "docs/maintainer_review_policy.md",
         "Comment Principles",
         "Accept Scoped Roadmap Issue",
@@ -293,6 +295,7 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "secrets, credentials, private files, real customer data, or local machine details",
         "Do not mark the issue done until the PR is reviewed, merged, and verified",
         "Use `docs/contributor_attribution_examples.md` before adding public credit",
+        "Use `docs/issue_triage_sla_wording_examples.md` before setting first-response",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -304,6 +307,7 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "docs/issue_to_pr_handoff_flow.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/docs_only_review_comment_examples.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/contributor_attribution_examples.md": "docs/public_roadmap_issue_comment_examples.md",
+        "docs/issue_triage_sla_wording_examples.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/maintainer_review_policy.md": "public_roadmap_issue_comment_examples.md",
     }
     for rel_path, phrase in cross_references.items():
@@ -352,6 +356,52 @@ def check_contributor_attribution_examples() -> list[str]:
         "docs/docs_only_pr_review_examples.md": "docs/contributor_attribution_examples.md",
         "docs/public_roadmap_issue_comment_examples.md": "docs/contributor_attribution_examples.md",
         "docs/launch_feedback_collection_examples.md": "docs/contributor_attribution_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_issue_triage_sla_wording_examples() -> list[str]:
+    failures: list[str] = []
+    if not ISSUE_TRIAGE_SLA_WORDING_EXAMPLES.exists():
+        return ["missing docs/issue_triage_sla_wording_examples.md"]
+
+    text = ISSUE_TRIAGE_SLA_WORDING_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Issue Triage SLA Wording Examples",
+        "docs/maintainer_review_policy.md",
+        "docs/public_roadmap_issue_comment_examples.md",
+        "docs/github_discussions_launch_checklist.md",
+        "docs/launch_feedback_collection_examples.md",
+        "Wording Principles",
+        "First-Response Wording",
+        "Accepted Follow-Up Wording",
+        "Delayed-Response Wording",
+        "No-Guarantee Closure Wording",
+        "Channel Routing",
+        "Review Checklist",
+        "issue triage expectations, support SLAs, delivery dates, private-account access, roadmap acceptance, and production support are different things",
+        "best-effort open-source triage, not a support SLA or delivery commitment",
+        "response-time guarantees",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py pr-policy",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/issue_triage_sla_wording_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/issue_triage_sla_wording_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/issue_triage_sla_wording_examples.md",
+        "docs/maintainer_review_policy.md": "issue_triage_sla_wording_examples.md",
+        "docs/public_roadmap_issue_comment_examples.md": "docs/issue_triage_sla_wording_examples.md",
+        "docs/github_discussions_launch_checklist.md": "docs/issue_triage_sla_wording_examples.md",
+        "docs/launch_feedback_collection_examples.md": "docs/issue_triage_sla_wording_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -779,6 +829,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/contributor_attribution_examples.md",
+        "docs/issue_triage_sla_wording_examples.md",
         "docs/command_output_troubleshooting_map.md",
         "Expected Evidence Split",
         "GitHub Stars And Forks",
@@ -797,6 +848,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "support SLAs, private account access, or guaranteed roadmap acceptance",
         "Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence",
         "Use `docs/contributor_attribution_examples.md` before turning public feedback or explicitly permissioned private feedback into source-visible credit",
+        "docs/issue_triage_sla_wording_examples.md",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -812,6 +864,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/post_publish_warning_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/github_discussions_launch_checklist.md": "docs/launch_feedback_collection_examples.md",
         "docs/contributor_attribution_examples.md": "docs/launch_feedback_collection_examples.md",
+        "docs/issue_triage_sla_wording_examples.md": "docs/launch_feedback_collection_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -830,6 +883,7 @@ def check_github_discussions_launch_checklist() -> list[str]:
         "docs/community_backlog.md",
         "docs/github_initial_issues.md",
         "docs/launch_feedback_collection_examples.md",
+        "docs/issue_triage_sla_wording_examples.md",
         "docs/maintainer_review_policy.md",
         "docs/post_publish_checklist.md",
         "Evidence Boundaries",
@@ -854,6 +908,7 @@ def check_github_discussions_launch_checklist() -> list[str]:
         "python -B scripts/dev.py safety",
         "python -B scripts/dev.py quality",
         "private messages, account analytics, personal account details, secrets, customer data, or private screenshots",
+        "Use `docs/issue_triage_sla_wording_examples.md` before converting discussion replies into public issue response expectations",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -863,6 +918,7 @@ def check_github_discussions_launch_checklist() -> list[str]:
         "README.md": "docs/github_discussions_launch_checklist.md",
         "PROJECT_CONTENT_INDEX.md": "docs/github_discussions_launch_checklist.md",
         "docs/launch_feedback_collection_examples.md": "docs/github_discussions_launch_checklist.md",
+        "docs/issue_triage_sla_wording_examples.md": "docs/github_discussions_launch_checklist.md",
         "docs/maintainer_review_policy.md": "github_discussions_launch_checklist.md",
         "docs/post_publish_checklist.md": "docs/github_discussions_launch_checklist.md",
         "docs/published_repository_status.md": "docs/github_discussions_launch_checklist.md",
@@ -1870,6 +1926,7 @@ def main() -> int:
     failures.extend(check_issue_to_pr_handoff_flow())
     failures.extend(check_public_roadmap_issue_comment_examples())
     failures.extend(check_contributor_attribution_examples())
+    failures.extend(check_issue_triage_sla_wording_examples())
     failures.extend(check_eval_csv_troubleshooting_examples())
     failures.extend(check_branch_protection_verification_examples())
     failures.extend(check_post_publish_warning_examples())

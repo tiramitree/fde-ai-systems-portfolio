@@ -110,6 +110,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact repository discussions launch checklist
 - Add compact release note refresh checklist
 - Add compact contributor attribution examples
+- Add compact issue triage SLA wording examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -234,7 +235,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact issue triage SLA wording examples
+Add compact discussion-to-issue conversion examples
 ```
 
 Labels:
@@ -246,13 +247,13 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact issue triage SLA wording examples that set public response expectations without promising support guarantees, delivery dates, or private access.
+Add compact discussion-to-issue conversion examples that explain when a GitHub Discussion should become a scoped issue and when it should stay as discussion feedback.
 
 Acceptance criteria:
 
-- Add docs/issue_triage_sla_wording_examples.md with examples for first-response wording, accepted follow-up wording, delayed-response wording, and no-guarantee closure wording.
-- Reference docs/maintainer_review_policy.md, docs/public_roadmap_issue_comment_examples.md, docs/github_discussions_launch_checklist.md, and docs/launch_feedback_collection_examples.md.
-- Keep issue triage expectations separate from support SLAs, delivery dates, private-account access, roadmap acceptance, and production support.
+- Add docs/discussion_to_issue_conversion_examples.md with examples for setup questions, broad ideas, reproducible bugs, private feedback, and low-signal discussions.
+- Reference docs/github_discussions_launch_checklist.md, docs/public_roadmap_issue_comment_examples.md, docs/issue_triage_sla_wording_examples.md, and docs/launch_feedback_collection_examples.md.
+- Keep discussion volume, untriaged ideas, private feedback, and accepted issue scope separate; do not create issues just to make activity visible.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
