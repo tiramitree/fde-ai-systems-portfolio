@@ -23,6 +23,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact visual asset diff summaries for screenshot refreshes
 - Add visual asset refresh troubleshooting notes
 - Add per-asset captions for screenshot galleries
+- Add a README command quick-reference
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -147,25 +148,25 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a README command quick-reference
+Add a compact README glossary for core gates
 ```
 
 Labels:
 
 ```text
-documentation, automation, release
+documentation, design, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README command quick-reference grouped by workflow.
+Add a compact README glossary for release gates, eval gates, approval gates, trace IDs, audit logs, and abstention.
 
 Acceptance criteria:
 
-- Group commands into local run, verification, release evidence, visual assets, GitHub maintenance, and optional environment checks.
-- Keep the existing full command list available or clearly linked.
-- Do not claim Docker runtime, OpenAI live mode, or account-level GitHub setup unless verified.
+- Define each term in one concise sentence using repository-specific language.
+- Link each term to at least one existing evidence section, project, or document.
+- Keep the glossary factual and avoid production-readiness claims.
 - Do not introduce paid APIs, remote frontend dependencies, or unrelated code changes.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.

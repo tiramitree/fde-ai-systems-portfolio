@@ -22,6 +22,16 @@ REQUIRED_README_CAPTIONS = [
     "Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning.",
     "Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence.",
 ]
+REQUIRED_COMMAND_QUICK_REFERENCE = [
+    "Command quick-reference:",
+    "| Local run | `python -B scripts/dev.py start` |",
+    "| Verification | `python -B scripts/dev.py verify`, `python -B scripts/dev.py quality`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py safety` |",
+    "| Release evidence | `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py report`, `python -B scripts/dev.py readiness-report`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py` |",
+    "| Visual assets | `python -B scripts/dev.py visual-assets`, `python -B scripts/dev.py visual-asset-diff`, `python -B scripts/dev.py refresh-visual-assets` |",
+    "| GitHub maintenance | `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community` |",
+    "| Optional environment checks | `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live` |",
+    "Full command index:",
+]
 
 
 def tracked_markdown_files() -> list[Path]:
@@ -208,11 +218,24 @@ def check_readme_captions() -> list[str]:
     return failures
 
 
+def check_command_quick_reference() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_COMMAND_QUICK_REFERENCE:
+        if expected not in text:
+            failures.append(f"README.md: missing command quick-reference entry: {expected}")
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_markdown_links())
     failures.extend(check_assets())
     failures.extend(check_readme_captions())
+    failures.extend(check_command_quick_reference())
     if failures:
         print("Public asset check failed:")
         for failure in failures:
