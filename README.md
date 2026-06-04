@@ -236,6 +236,10 @@ Release artifact readiness:
 
 Use the [Demo Replay Artifact](docs/demo_replay_artifact.md), [GitHub Release Commands](docs/github_release_commands.md), [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), and [Final Readiness Report](docs/final_readiness_report.md) before preparing release evidence. Regenerate attachable evidence with `python -B scripts/dev.py replay-artifact`, then run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py quality`; do not claim a GitHub release page is ready until the page is created and the artifacts are attached.
 
+Optional-environment readiness:
+
+Use [Container Release Hygiene](docs/container_release_hygiene.md), [Model Runtime Configuration](docs/model_runtime_configuration.md), [Model Gateway Safety](docs/model_gateway_safety.md), the GitHub readiness notes in [Published Repository Status](docs/published_repository_status.md), and [Development Issue Solutions](docs/development_issue_solutions.md) before claiming optional environment evidence. Run `python -B scripts/dev.py container-release` for static container config, `python -B scripts/dev.py docker-runtime` only on a Docker-enabled machine, `python -B scripts/dev.py openai-live` only in an API-key environment, and `python -B scripts/dev.py github-readiness` after a public push; Docker runtime and OpenAI live mode stay manual or environment-dependent until their matching commands pass in the right environment.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
