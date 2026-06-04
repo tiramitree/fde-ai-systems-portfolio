@@ -292,6 +292,10 @@ Workflow security readiness:
 
 Use [Workflow Security](docs/workflow_security.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), and the GitHub Actions row in the [Evidence Matrix](#evidence-matrix) before changing GitHub Actions or automation paths. Public PR workflows must preserve read-only tokens, no secrets, safe triggers, hardened checkout, approved actions, and no CI push or GitHub authentication path; run `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, and `python -B scripts/dev.py quality`.
 
+Governance readiness:
+
+Use [GitHub Repository Settings](docs/github_repository_settings.md), [branch protection payload](docs/github_branch_protection.json), [Maintainer Review Policy](docs/maintainer_review_policy.md), [CODEOWNERS](.github/CODEOWNERS), and the repository governance row in the [Evidence Matrix](#evidence-matrix) before changing maintainer, release, or contribution rules. Repository policy changes must preserve CODEOWNERS coverage, branch-protection expectations, issue and PR templates, security review rules, release evidence gates, and dependency monitoring; run `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |

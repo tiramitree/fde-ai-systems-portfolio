@@ -59,6 +59,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README PR triage evidence pointer
 - Add a compact README threat model evidence pointer
 - Add a compact README workflow security evidence pointer
+- Add a compact README governance evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -183,28 +184,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README governance evidence pointer
+Add a compact README launch asset evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, security, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where governance materials live and which repository policy files must stay aligned before changing maintainer, release, or contribution rules.
+Add a compact README pointer that tells contributors where launch asset materials live and which public-copy claims must stay grounded before changing launch docs, posts, screenshots, or release-facing status.
 
 Acceptance criteria:
 
-- Link to GitHub Repository Settings, branch protection payload, maintainer review policy, CODEOWNERS, and the governance row in the Evidence Matrix.
-- Cover governance checks: `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
+- Link to Launch Assets Hygiene, Launch Copy Pack, Star Growth Plan, GitHub Launch Plan, Published Repository Status, and the launch materials row in the Evidence Matrix.
+- Cover launch checks: `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py assets`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that repository policy changes must preserve CODEOWNERS coverage, branch-protection expectations, issue/PR templates, security review rules, and release evidence gates.
+- Make clear that Docker runtime, OpenAI live mode, branch protection, release pages, social preview, profile pins, launch feedback, and production readiness must not be claimed until the matching evidence or account-level action exists.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py governance still passes.
+- python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
