@@ -32,6 +32,7 @@ ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
+SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
 GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troubleshooting_examples.md"
 GITHUB_RELEASE_PAGE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_release_page_troubleshooting_examples.md"
@@ -345,6 +346,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/post_publish_checklist.md",
         "docs/published_repository_status.md",
         "docs/github_release_commands.md",
+        "docs/social_preview_verification_examples.md",
         "docs/command_output_troubleshooting_map.md",
         "Expected Evidence Split",
         "Remote File Lag",
@@ -372,6 +374,52 @@ def check_post_publish_warning_examples() -> list[str]:
         "README.md": "docs/post_publish_warning_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/post_publish_warning_examples.md",
         "docs/post_publish_checklist.md": "docs/post_publish_warning_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_social_preview_verification_examples() -> list[str]:
+    failures: list[str] = []
+    if not SOCIAL_PREVIEW_VERIFICATION_EXAMPLES.exists():
+        return ["missing docs/social_preview_verification_examples.md"]
+
+    text = SOCIAL_PREVIEW_VERIFICATION_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Social Preview Verification Examples",
+        "docs/github_repository_settings.md",
+        "docs/assets/github-preview.png",
+        "docs/post_publish_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Evidence Split",
+        "Missing Social Preview",
+        "Stale Preview Image",
+        "Wrong Uploaded Image",
+        "Cache Delay",
+        "Profile-Pin Confusion",
+        "Review Checklist",
+        "python -B scripts/dev.py assets",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py github-maintenance",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "local image asset existence and GitHub account-level social preview setup prove different things",
+        "Do not claim social preview setup until the GitHub UI or account-level evidence confirms it",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/social_preview_verification_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/social_preview_verification_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/social_preview_verification_examples.md",
+        "docs/github_repository_settings.md": "docs/social_preview_verification_examples.md",
+        "docs/post_publish_checklist.md": "docs/social_preview_verification_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/social_preview_verification_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -947,6 +995,7 @@ def main() -> int:
     failures.extend(check_eval_csv_troubleshooting_examples())
     failures.extend(check_branch_protection_verification_examples())
     failures.extend(check_post_publish_warning_examples())
+    failures.extend(check_social_preview_verification_examples())
     failures.extend(check_github_actions_warning_examples())
     failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_github_release_page_troubleshooting_examples())

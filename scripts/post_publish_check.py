@@ -112,6 +112,7 @@ def main() -> int:
         "docs/github_branch_protection.json",
         "docs/branch_protection_verification_examples.md",
         "docs/github_repository_settings.md",
+        "docs/social_preview_verification_examples.md",
         "docs/post_publish_warning_examples.md",
         "docs/github_actions_warning_examples.md",
         "docs/github_label_troubleshooting_examples.md",

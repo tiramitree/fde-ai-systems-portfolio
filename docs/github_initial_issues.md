@@ -93,6 +93,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact GitHub label troubleshooting examples
 - Add compact GitHub Actions warning examples
 - Add compact GitHub release page troubleshooting examples
+- Add compact social preview verification examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -217,7 +218,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact social preview verification examples
+Add compact GitHub repository metadata troubleshooting examples
 ```
 
 Labels:
@@ -229,16 +230,16 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add compact examples for verifying GitHub social preview setup without confusing local image assets with account-level GitHub evidence.
+Add compact examples for troubleshooting GitHub repository metadata without confusing local launch docs with account-level repository settings.
 
 Acceptance criteria:
 
-- Add docs/social_preview_verification_examples.md with examples for missing social preview, stale preview image, wrong uploaded image, cache delay, and profile-pin confusion.
-- Reference docs/github_repository_settings.md, docs/assets/github-preview.png, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
-- Keep local social-preview image existence separate from account-level GitHub setup and do not claim social preview setup until the GitHub UI is checked.
+- Add docs/github_repository_metadata_troubleshooting_examples.md with examples for missing description, missing topics, wrong repository URL, stale public status, and unauthenticated maintenance output.
+- Reference docs/github_repository_settings.md, docs/published_repository_status.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep local launch docs separate from account-level GitHub metadata and do not claim metadata is current until GitHub readiness or authenticated maintenance confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py github-readiness still has no hard failures when the GitHub API is reachable.
 - python -B scripts/dev.py launch-assets still passes.
-- python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
