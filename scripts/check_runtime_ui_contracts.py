@@ -186,6 +186,7 @@ def project_checks(project: Project) -> list[Check]:
                 '<script type="module" src="/js/app.js">',
                 project.primary_label,
                 project.primary_button,
+                'id="themeToggle"',
                 'id="copyTraceId"',
                 'id="copyTraceLink"',
                 'id="scenarioDraft"',
@@ -204,9 +205,13 @@ def project_checks(project: Project) -> list[Check]:
                 ".grid",
                 ".panel",
                 ".quick",
+                ".topbarActions",
+                ".themeToggle",
+                ':root[data-theme="dark"]',
                 "button:focus-visible",
                 "select:focus-visible",
                 "textarea:focus-visible",
+                "input:focus-visible",
                 ".traceLink:focus-visible",
                 "prefers-reduced-motion",
                 ".scenarioDiff",
@@ -218,7 +223,27 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/js/app.js",
             "text/javascript",
-            ['import { api } from "./api.js"', 'from "./traceLinks.js"', 'from "./scenarioEditor.js"', "boot"],
+            [
+                'import { api } from "./api.js"',
+                'from "./traceLinks.js"',
+                'from "./scenarioEditor.js"',
+                'from "./theme.js"',
+                "boot",
+            ],
+        )
+    )
+    checks.extend(
+        check_text_asset(
+            project,
+            "/js/theme.js",
+            "text/javascript",
+            [
+                "installThemeToggle",
+                "localStorage",
+                "prefers-color-scheme: dark",
+                "dataset.theme",
+                "aria-checked",
+            ],
         )
     )
     checks.extend(
