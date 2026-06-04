@@ -39,6 +39,15 @@ REQUIRED_COMMAND_QUICK_REFERENCE = [
     "| Optional environment checks | `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live` |",
     "Full command index:",
 ]
+REQUIRED_COMMAND_DECISION_TREE = [
+    "Command decision tree:",
+    "| Prove the local repo works from a normal checkout. | `python -B scripts/dev.py verify` | Use the command output expectations table below if a gate fails. |",
+    "| Review a code or docs change before publishing it. | `python -B scripts/dev.py quality` | Run `python -B scripts/dev.py fresh-clone-local` when the change affects public setup, docs, assets, or runtime paths. |",
+    "| Prepare release-facing evidence after a push. | `python -B scripts/dev.py fresh-clone` | Run `python -B scripts/post_publish_check.py`, then `python -B scripts/dev.py github-readiness`. |",
+    "| Check screenshots or frontend visual drift. | `python -B scripts/dev.py visual-assets` | Use `python -B scripts/dev.py visual-asset-diff`; refresh with `python -B scripts/dev.py refresh-visual-assets` only when screenshots intentionally change. |",
+    "| Review GitHub state or public PRs. | `python -B scripts/dev.py pr-triage` | Use `python -B scripts/dev.py github-maintenance` and `python -B scripts/dev.py github-community` for dry-run account setup or community sync plans. |",
+    "| Check optional environments. | `python -B scripts/dev.py container-release` | Run `python -B scripts/dev.py docker-runtime` only on Docker-enabled machines, and `python -B scripts/dev.py openai-live` only in an API-key environment. |",
+]
 REQUIRED_COMMAND_OUTPUT_EXPECTATIONS = [
     "Command output expectations:",
     "| `python -B scripts/dev.py verify` | Starts or reuses the three local services, runs the CI-quality gate, and ends with `Quality gate passed.` | Use before local release review when the demo services should be exercised. |",
@@ -290,6 +299,18 @@ def check_command_quick_reference() -> list[str]:
     return failures
 
 
+def check_command_decision_tree() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_COMMAND_DECISION_TREE:
+        if expected not in text:
+            failures.append(f"README.md: missing command decision tree entry: {expected}")
+    return failures
+
+
 def check_command_output_expectations() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -357,6 +378,7 @@ def main() -> int:
     failures.extend(check_readme_captions())
     failures.extend(check_screenshot_reviewer_checklist())
     failures.extend(check_command_quick_reference())
+    failures.extend(check_command_decision_tree())
     failures.extend(check_command_output_expectations())
     failures.extend(check_troubleshooting_pointers())
     failures.extend(check_readme_glossary())
