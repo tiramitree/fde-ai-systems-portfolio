@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact roadmap duplicate-issue handling examples.
-3. Add compact issue template stale-evidence examples.
-4. Add compact stale launch-feedback claim examples.
-5. Add compact release asset checksum mismatch examples.
+2. Add compact issue template stale-evidence examples.
+3. Add compact stale launch-feedback claim examples.
+4. Add compact release asset checksum mismatch examples.
+5. Add compact stale GitHub Discussions pin examples.
 
 ## Intermediate Issues
 
@@ -49,6 +49,7 @@ Contributions should preserve these invariants:
 - Add compact discussion-to-issue conversion examples.
 - Add compact release-note changelog drift examples.
 - Add compact public maintainer status update examples.
+- Add compact roadmap duplicate-issue handling examples.
 - Add browser-local light/dark theme controls to all demo UIs.
 - Add high-contrast screenshot checks for future visual asset refreshes.
 - Add mobile viewport screenshots to the visual asset manifest.

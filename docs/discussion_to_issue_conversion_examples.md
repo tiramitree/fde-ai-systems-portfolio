@@ -1,6 +1,6 @@
 # Discussion To Issue Conversion Examples
 
-Use this page when deciding whether a GitHub Discussion should become a scoped issue. Read it with `docs/github_discussions_launch_checklist.md`, `docs/public_roadmap_issue_comment_examples.md`, `docs/issue_triage_sla_wording_examples.md`, and `docs/launch_feedback_collection_examples.md`.
+Use this page when deciding whether a GitHub Discussion should become a scoped issue. Read it with `docs/github_discussions_launch_checklist.md`, `docs/public_roadmap_issue_comment_examples.md`, `docs/issue_triage_sla_wording_examples.md`, `docs/roadmap_duplicate_issue_handling_examples.md`, and `docs/launch_feedback_collection_examples.md`.
 
 The core rule: discussion volume, untriaged ideas, private feedback, and accepted issue scope are different things. Do not create issues just to make activity visible.
 
@@ -51,6 +51,8 @@ The issue should stay separate from broader connector roadmap work and must not 
 ```
 
 Use `docs/public_roadmap_issue_comment_examples.md` before accepting the converted issue as roadmap scope.
+
+Use `docs/roadmap_duplicate_issue_handling_examples.md` before opening a new issue that may duplicate or overlap existing roadmap scope.
 
 ## Reproducible Bugs
 
@@ -118,3 +120,4 @@ python -B scripts/dev.py quality
 - The issue acceptance criteria include a local verification command.
 - The conversion does not imply support SLAs, production support, delivery dates, private-account access, or guaranteed roadmap acceptance.
 - Discussion feedback, issue scope, PR review, launch evidence, and private feedback stay separate.
+- Duplicate or overlapping discussion-to-issue paths are reviewed with `docs/roadmap_duplicate_issue_handling_examples.md`.

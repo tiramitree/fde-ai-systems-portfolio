@@ -626,6 +626,7 @@ repository/
 - [Issue Triage SLA Wording Examples](docs/issue_triage_sla_wording_examples.md)
 - [Discussion To Issue Conversion Examples](docs/discussion_to_issue_conversion_examples.md)
 - [Public Roadmap Issue Comment Examples](docs/public_roadmap_issue_comment_examples.md)
+- [Roadmap Duplicate Issue Handling Examples](docs/roadmap_duplicate_issue_handling_examples.md)
 - [README Navigation Audit](docs/readme_navigation_audit.md)
 - [README Navigation Drift Examples](docs/readme_navigation_drift_examples.md)
 - [Workflow Security](docs/workflow_security.md)

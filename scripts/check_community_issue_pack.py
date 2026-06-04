@@ -30,6 +30,7 @@ REQUIRED_LABELS = {
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 PUBLIC_ROADMAP_ISSUE_COMMENT_EXAMPLES = ROOT / "docs" / "public_roadmap_issue_comment_examples.md"
+ROADMAP_DUPLICATE_ISSUE_HANDLING_EXAMPLES = ROOT / "docs" / "roadmap_duplicate_issue_handling_examples.md"
 CONTRIBUTOR_ATTRIBUTION_EXAMPLES = ROOT / "docs" / "contributor_attribution_examples.md"
 ISSUE_TRIAGE_SLA_WORDING_EXAMPLES = ROOT / "docs" / "issue_triage_sla_wording_examples.md"
 DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLES = ROOT / "docs" / "discussion_to_issue_conversion_examples.md"
@@ -282,6 +283,7 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "docs/contributor_attribution_examples.md",
         "docs/issue_triage_sla_wording_examples.md",
         "docs/discussion_to_issue_conversion_examples.md",
+        "docs/roadmap_duplicate_issue_handling_examples.md",
         "docs/maintainer_review_policy.md",
         "Comment Principles",
         "Accept Scoped Roadmap Issue",
@@ -301,6 +303,8 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "Use `docs/contributor_attribution_examples.md` before adding public credit",
         "Use `docs/issue_triage_sla_wording_examples.md` before setting first-response",
         "Use `docs/discussion_to_issue_conversion_examples.md` before accepting a discussion as issue scope",
+        "Use `docs/roadmap_duplicate_issue_handling_examples.md` before closing, merging, splitting, or redirecting duplicate or overlapping roadmap issues",
+        "Duplicate or overlapping issue scope is handled with `docs/roadmap_duplicate_issue_handling_examples.md`",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -314,7 +318,56 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "docs/contributor_attribution_examples.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/issue_triage_sla_wording_examples.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/discussion_to_issue_conversion_examples.md": "docs/public_roadmap_issue_comment_examples.md",
+        "docs/roadmap_duplicate_issue_handling_examples.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/maintainer_review_policy.md": "public_roadmap_issue_comment_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_roadmap_duplicate_issue_handling_examples() -> list[str]:
+    failures: list[str] = []
+    if not ROADMAP_DUPLICATE_ISSUE_HANDLING_EXAMPLES.exists():
+        return ["missing docs/roadmap_duplicate_issue_handling_examples.md"]
+
+    text = ROADMAP_DUPLICATE_ISSUE_HANDLING_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Roadmap Duplicate Issue Handling Examples",
+        "docs/public_roadmap_issue_comment_examples.md",
+        "docs/discussion_to_issue_conversion_examples.md",
+        "docs/issue_triage_sla_wording_examples.md",
+        "docs/community_backlog.md",
+        "Handling Principles",
+        "Exact Duplicates",
+        "Overlapping Roadmap Ideas",
+        "Duplicate Bugs With New Evidence",
+        "Issue-Versus-Discussion Duplicates",
+        "Stale Duplicate References",
+        "Review Checklist",
+        "duplicate reports, overlapping ideas, new evidence, accepted scope, and low-signal activity are separate",
+        "Do not close, merge, or relabel issues just to hide activity or inflate public momentum",
+        "canonical issue",
+        "one affected file, command, route, or workflow",
+        "secrets, private paths, account screenshots, private messages, local machine details, or real customer data",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py pr-policy",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/roadmap_duplicate_issue_handling_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/roadmap_duplicate_issue_handling_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/roadmap_duplicate_issue_handling_examples.md",
+        "docs/post_publish_checklist.md": "docs/roadmap_duplicate_issue_handling_examples.md",
+        "docs/public_roadmap_issue_comment_examples.md": "docs/roadmap_duplicate_issue_handling_examples.md",
+        "docs/discussion_to_issue_conversion_examples.md": "docs/roadmap_duplicate_issue_handling_examples.md",
+        "docs/issue_triage_sla_wording_examples.md": "docs/roadmap_duplicate_issue_handling_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -381,6 +434,7 @@ def check_issue_triage_sla_wording_examples() -> list[str]:
         "docs/public_roadmap_issue_comment_examples.md",
         "docs/github_discussions_launch_checklist.md",
         "docs/discussion_to_issue_conversion_examples.md",
+        "docs/roadmap_duplicate_issue_handling_examples.md",
         "docs/launch_feedback_collection_examples.md",
         "Wording Principles",
         "First-Response Wording",
@@ -393,6 +447,7 @@ def check_issue_triage_sla_wording_examples() -> list[str]:
         "best-effort open-source triage, not a support SLA or delivery commitment",
         "response-time guarantees",
         "Discussion-to-issue conversions are reviewed with `docs/discussion_to_issue_conversion_examples.md`",
+        "Duplicate or overlapping roadmap issues are reviewed with `docs/roadmap_duplicate_issue_handling_examples.md` before closure or scope changes imply expectations",
         "python -B scripts/dev.py community-issues",
         "python -B scripts/dev.py pr-policy",
         "python -B scripts/dev.py launch-assets",
@@ -410,6 +465,7 @@ def check_issue_triage_sla_wording_examples() -> list[str]:
         "docs/public_roadmap_issue_comment_examples.md": "docs/issue_triage_sla_wording_examples.md",
         "docs/github_discussions_launch_checklist.md": "docs/issue_triage_sla_wording_examples.md",
         "docs/discussion_to_issue_conversion_examples.md": "docs/issue_triage_sla_wording_examples.md",
+        "docs/roadmap_duplicate_issue_handling_examples.md": "docs/issue_triage_sla_wording_examples.md",
         "docs/launch_feedback_collection_examples.md": "docs/issue_triage_sla_wording_examples.md",
     }
     for rel_path, phrase in cross_references.items():
@@ -429,6 +485,7 @@ def check_discussion_to_issue_conversion_examples() -> list[str]:
         "docs/github_discussions_launch_checklist.md",
         "docs/public_roadmap_issue_comment_examples.md",
         "docs/issue_triage_sla_wording_examples.md",
+        "docs/roadmap_duplicate_issue_handling_examples.md",
         "docs/launch_feedback_collection_examples.md",
         "Conversion Principles",
         "Setup Questions",
@@ -441,6 +498,8 @@ def check_discussion_to_issue_conversion_examples() -> list[str]:
         "Do not create issues just to make activity visible",
         "one affected file, command, route, or workflow",
         "support SLAs, production support, delivery dates, private-account access, or guaranteed roadmap acceptance",
+        "Use `docs/roadmap_duplicate_issue_handling_examples.md` before opening a new issue that may duplicate or overlap existing roadmap scope",
+        "Duplicate or overlapping discussion-to-issue paths are reviewed with `docs/roadmap_duplicate_issue_handling_examples.md`",
         "python -B scripts/dev.py community-issues",
         "python -B scripts/dev.py pr-policy",
         "python -B scripts/dev.py launch-assets",
@@ -457,6 +516,7 @@ def check_discussion_to_issue_conversion_examples() -> list[str]:
         "docs/github_discussions_launch_checklist.md": "docs/discussion_to_issue_conversion_examples.md",
         "docs/public_roadmap_issue_comment_examples.md": "docs/discussion_to_issue_conversion_examples.md",
         "docs/issue_triage_sla_wording_examples.md": "docs/discussion_to_issue_conversion_examples.md",
+        "docs/roadmap_duplicate_issue_handling_examples.md": "docs/discussion_to_issue_conversion_examples.md",
         "docs/launch_feedback_collection_examples.md": "docs/discussion_to_issue_conversion_examples.md",
         "docs/post_publish_checklist.md": "docs/discussion_to_issue_conversion_examples.md",
     }
@@ -2113,6 +2173,7 @@ def main() -> int:
     failures.extend(check_first_pull_request_checklist())
     failures.extend(check_issue_to_pr_handoff_flow())
     failures.extend(check_public_roadmap_issue_comment_examples())
+    failures.extend(check_roadmap_duplicate_issue_handling_examples())
     failures.extend(check_contributor_attribution_examples())
     failures.extend(check_issue_triage_sla_wording_examples())
     failures.extend(check_discussion_to_issue_conversion_examples())
