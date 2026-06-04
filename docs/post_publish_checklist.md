@@ -42,6 +42,7 @@ The post-publish check must prove:
 - the profile pin verification examples are published.
 - the post-publish warning examples are published.
 - the GitHub Actions warning examples are published.
+- the GitHub Actions badge verification examples are published: `docs/github_actions_badge_verification_examples.md`.
 - the container release hygiene script and documentation are published.
 - the visual asset manifest script, documentation, manifest, and desktop/mobile screenshot assets are published.
 - the launch asset hygiene script and documentation are published.
@@ -54,7 +55,7 @@ After the automated check passes:
 1. Confirm the README renders correctly.
 2. Confirm screenshots render.
 3. Confirm the `quality-gate` workflow completes successfully.
-4. Confirm the README quality badge points to the real GitHub Actions workflow.
+4. Confirm the README quality badge points to the real GitHub Actions workflow using `docs/github_actions_badge_verification_examples.md`.
 5. Apply repository description and topics from `docs/github_repository_settings.md`, then compare warning rows with `docs/github_repository_metadata_troubleshooting_examples.md` and screenshot handling with `docs/github_repository_settings_screenshot_checklist.md` before claiming repository metadata is current.
 6. Enable branch protection on `main` using `docs/github_branch_protection.json`.
 7. Compare branch protection state with `docs/branch_protection_verification_examples.md` before claiming the remote policy is active.
@@ -63,7 +64,7 @@ After the automated check passes:
 10. Pin the repository on the GitHub profile, then compare the visible account-profile state with `docs/profile_pin_verification_examples.md` before claiming profile pin setup.
 11. Run `python -B scripts/dev.py fresh-clone` after the push is visible. Use `python -B scripts/dev.py fresh-clone-local` before pushing when validating local-only commits.
 12. Compare warning rows with `docs/post_publish_warning_examples.md` before claiming published evidence.
-13. Compare Actions warnings with `docs/github_actions_warning_examples.md` before claiming the remote workflow is green.
+13. Compare Actions warnings with `docs/github_actions_warning_examples.md` and README badge evidence with `docs/github_actions_badge_verification_examples.md` before claiming the remote workflow is green.
 14. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
 15. Compare release-page state with `docs/github_release_page_troubleshooting_examples.md` and `docs/github_latest_release_troubleshooting_examples.md` before claiming the release page or latest release is current.
 16. Compare release attachments with `docs/release_attachment_verification_examples.md` and release attachment screenshots with `docs/github_release_attachment_screenshot_checklist.md` before claiming the release page is current.

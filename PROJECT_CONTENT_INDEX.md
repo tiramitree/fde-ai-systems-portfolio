@@ -235,6 +235,7 @@ Design Review Docs:
 - `docs/docs_only_pr_review_examples.md`: examples for approving, requesting changes, or closing docs-only PRs without weakening public claims.
 - `docs/readme_navigation_audit.md`: README navigation audit for release, contribution, review, optional environment, and technical evidence links.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
+- `docs/github_actions_badge_verification_examples.md`: GitHub Actions badge verification examples for missing badges, stale badges, wrong workflow badges, skipped workflow badges, and fork-PR confusion.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
 - `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, copyable scenario-draft controls, local draft diffs, no-build local UI posture, and review framing.
 - `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and review framing.
@@ -279,6 +280,7 @@ Release and growth:
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/post_publish_warning_examples.md`: post-publish warning examples for remote file lag, raw README failures, GitHub Actions pending state, readiness warning rows, and manual account settings.
 - `docs/github_actions_warning_examples.md`: GitHub Actions warning examples for pending quality-gate, missing workflow runs, stale badges, skipped workflows, and fork PR permission limits.
+- `docs/github_actions_badge_verification_examples.md`: GitHub Actions badge verification examples for README badge URL, current remote workflow evidence, stale badge rendering, skipped workflows, and fork PR confusion.
 - `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: completed launch issues and current community issue pack with labels, acceptance criteria, and guardrails.

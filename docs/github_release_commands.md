@@ -35,8 +35,8 @@ git push -u origin main
 
 After publishing:
 
-1. Replace the static quality badge with the real GitHub Actions badge.
-2. Confirm GitHub Actions passes.
+1. Confirm the README quality badge points to the real GitHub Actions workflow using `docs/github_actions_badge_verification_examples.md`.
+2. Confirm GitHub Actions passes for the current remote `quality-gate` run.
 3. Dry-run GitHub launch setup:
 
 ```powershell

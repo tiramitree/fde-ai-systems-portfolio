@@ -290,7 +290,7 @@ Use [Threat Model](docs/threat_model.md), [System Evidence Matrix](docs/portfoli
 
 Workflow security readiness:
 
-Use [Workflow Security](docs/workflow_security.md), [GitHub Actions Warning Examples](docs/github_actions_warning_examples.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), and the GitHub Actions row in the [Evidence Matrix](#evidence-matrix) before changing GitHub Actions or automation paths. Public PR workflows must preserve read-only tokens, no secrets, safe triggers, hardened checkout, approved actions, and no CI push or GitHub authentication path; run `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, and `python -B scripts/dev.py quality`.
+Use [Workflow Security](docs/workflow_security.md), [GitHub Actions Warning Examples](docs/github_actions_warning_examples.md), [GitHub Actions Badge Verification Examples](docs/github_actions_badge_verification_examples.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), and the GitHub Actions row in the [Evidence Matrix](#evidence-matrix) before changing GitHub Actions, README badges, or automation paths. Public PR workflows must preserve read-only tokens, no secrets, safe triggers, hardened checkout, approved actions, and no CI push or GitHub authentication path; run `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, and `python -B scripts/dev.py quality`.
 
 Governance readiness:
 
@@ -626,6 +626,7 @@ repository/
 - [README Navigation Drift Examples](docs/readme_navigation_drift_examples.md)
 - [Workflow Security](docs/workflow_security.md)
 - [GitHub Actions Warning Examples](docs/github_actions_warning_examples.md)
+- [GitHub Actions Badge Verification Examples](docs/github_actions_badge_verification_examples.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
 - [Published Repository Status](docs/published_repository_status.md)
