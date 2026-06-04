@@ -209,6 +209,7 @@ Design Review Docs:
 - `docs/trace_timeline_examples.md`: copyable local timelines from request to trace, audit, approval, and release-decision evidence for the canonical flows.
 - `docs/threat_model.md`: repository threat matrix, trust boundaries, control owners, evidence commands, and review framing.
 - `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and review framing.
+- `docs/local_artifact_glossary.md`: local glossary for seed, runtime, eval, replay, trace, audit, approval, release evidence, and generated artifacts.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.
 - `docs/eval_gate_troubleshooting_examples.md`: local troubleshooting map for unsafe retrieval, direct side-effect, and release-blocking eval failures.
 - `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.
