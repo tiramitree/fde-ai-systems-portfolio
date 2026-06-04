@@ -155,6 +155,17 @@ Troubleshooting pointers:
 | Optional OpenAI mode is unavailable | Local deterministic mode remains the default. `python -B scripts/dev.py openai-live` is an optional API-key-environment proof for model-facing routes only; see [Model Runtime Configuration](docs/model_runtime_configuration.md). |
 | Generated local artifacts appear | Runtime outputs under ignored paths such as `out/` are local evidence, not source changes. Run `python -B scripts/dev.py safety` before committing if a generated file appears in the worktree. |
 
+Release-evidence FAQ:
+
+| Question | Answer |
+| --- | --- |
+| Which check should run before a local commit? | Use `python -B scripts/dev.py quality`; it proves local safety, docs/assets, UI contracts, service health, smoke flows, evals, replay artifacts, and claim checks are aligned. |
+| When should `fresh-clone-local` run? | Run `python -B scripts/dev.py fresh-clone-local` before push when README, setup paths, public assets, or runtime wiring changed; it validates a clean clone of the current checkout before the remote has the commit. |
+| What does remote `fresh-clone` prove? | After push, `python -B scripts/dev.py fresh-clone` clones `origin`, runs release-facing static gates, starts isolated services, and runs smoke flows from the public branch. |
+| What does post-publish prove? | `python -B scripts/post_publish_check.py` proves the GitHub page, raw README/workflow, and required published files are reachable; compare with [Published Repository Status](docs/published_repository_status.md). |
+| Is a warning the same as a failing release gate? | No. Treat `quality`, `fresh-clone-local`, `fresh-clone`, and post-publish failures as blockers for code or docs changes; treat GitHub `[WARN]`/`[MANUAL]` items as account-level follow-up unless strict mode is being used. |
+| How should GitHub readiness warnings be handled? | `python -B scripts/dev.py github-readiness` warnings for API rate limits, repository metadata, branch protection, release pages, social preview, or profile pin are account-level/manual items unless a gate reports a failure; see [Development Issue Solutions](docs/development_issue_solutions.md). |
+
 Current verified status:
 
 ```text

@@ -34,6 +34,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README evidence legend
 - Add a compact README contributor route map
 - Add a compact README production-upgrade pointer
+- Add a compact README release-evidence FAQ
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -158,26 +159,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README release-evidence FAQ
+Add compact per-project risk badges
 ```
 
 Labels:
 
 ```text
-documentation, automation, release, good first issue
+documentation, security, observability, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README FAQ that explains how to interpret local quality, fresh-clone, post-publish, and GitHub readiness evidence.
+Add compact README badges or text labels that show which risk controls each project demonstrates.
 
 Acceptance criteria:
 
-- Explain when to use quality, fresh-clone-local, fresh-clone, post-publish, and GitHub readiness checks.
-- Distinguish local gate failures from warning/manual GitHub account-level setup items.
-- Link to command output expectations, troubleshooting pointers, development issue solutions, and published repository status.
-- Avoid claiming account-level GitHub setup is complete when readiness reports warning or manual items.
+- Cover Project 1 permissions, citations, abstention, prompt-injection handling, evals, traces, and audit logs.
+- Cover Project 2 approvals, side-effect blocking, tool governance, evals, traces, and audit logs.
+- Cover Project 3 eval-regression evidence, rollout blocking, remediation, traces, and audit logs.
+- Keep the badges text-only Markdown or existing README styling; do not add generated binary assets.
+- Link to the evidence matrix, threat model, and observability docs instead of repeating all details.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
