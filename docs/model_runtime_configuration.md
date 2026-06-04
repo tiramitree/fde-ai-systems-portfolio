@@ -9,7 +9,7 @@ This repository runs locally by default. The OpenAI path is optional and intenti
 
 The model is not the security boundary.
 
-See [Model Gateway Safety](model_gateway_safety.md) for the gate that verifies OpenAI mode stays opt-in, API key references remain constrained, structured outputs are required, and gateway failures fall back to local behavior.
+See [Model Gateway Safety](model_gateway_safety.md) for the gate that verifies OpenAI mode stays opt-in, API key references remain constrained, structured outputs are required, and gateway failures fall back to local behavior. See [OpenAI Live Mode Troubleshooting](openai_live_mode_troubleshooting.md) for safe setup, failure modes, rollback, and review guardrails.
 
 ## Default Optional Model
 

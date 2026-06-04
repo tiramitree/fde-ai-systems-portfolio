@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add a compact optional OpenAI live-mode troubleshooting note.
-3. Add a compact Docker runtime evidence collection checklist.
-4. Add docs-only review comments for common PR outcomes.
-5. Add compact examples for README navigation drift fixes.
+2. Add a compact Docker runtime evidence collection checklist.
+3. Add docs-only review comments for common PR outcomes.
+4. Add compact examples for README navigation drift fixes.
+5. Add OpenTelemetry collector handoff troubleshooting notes.
 
 ## Intermediate Issues
 
@@ -105,3 +105,4 @@ Contributions should preserve these invariants:
 - Add a contributor onboarding checklist for the first local pull request.
 - Add docs-only pull request review examples for useful, low-signal, and unsafe documentation changes.
 - Add a README-to-docs navigation audit for release-facing docs.
+- Add optional OpenAI live-mode troubleshooting notes.

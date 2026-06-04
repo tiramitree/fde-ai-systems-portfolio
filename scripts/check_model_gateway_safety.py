@@ -8,6 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+OPENAI_TROUBLESHOOTING = ROOT / "docs" / "openai_live_mode_troubleshooting.md"
 
 
 @dataclass(frozen=True)
@@ -48,12 +49,14 @@ ALLOWED_OPENAI_KEY_REFERENCES = {
     "README.md",
     "PROJECT_CONTENT_INDEX.md",
     "docs/model_runtime_configuration.md",
+    "docs/openai_live_mode_troubleshooting.md",
     "docs/final_demo_runbook.md",
     "docs/final_completion_audit.md",
     "docs/completion_checklist.md",
     "docs/model_gateway_safety.md",
     "secure-enterprise-knowledge-copilot/README.md",
     "regulated-customer-operations-agent/README.md",
+    "scripts/check_community_issue_pack.py",
     "scripts/check_model_gateway_safety.py",
     "scripts/check_openai_live_mode.py",
     "scripts/check_container_release.py",
@@ -207,11 +210,39 @@ def check_openai_key_references() -> list[str]:
     return failures
 
 
+def check_openai_troubleshooting_doc() -> list[str]:
+    failures: list[str] = []
+    if not OPENAI_TROUBLESHOOTING.exists():
+        return ["missing docs/openai_live_mode_troubleshooting.md"]
+
+    text = OPENAI_TROUBLESHOOTING.read_text(encoding="utf-8")
+    required = [
+        "python -B scripts/dev.py openai-live",
+        "python -B scripts/dev.py model-gateway-safety",
+        "OPENAI_API_KEY",
+        "COPILOT_MODEL_PROVIDER",
+        "OPS_AGENT_MODEL_ROUTER",
+        "openai_gateway_enabled=true",
+        "model_provider=openai",
+        "model_router=openai",
+        "local and deterministic",
+        "never paste API keys",
+        "never make OpenAI live mode required",
+        "never treat model output as the permission",
+        "do not claim live OpenAI evidence unless",
+    ]
+    for marker in required:
+        if marker not in text:
+            failures.append(f"docs/openai_live_mode_troubleshooting.md: missing {marker}")
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
     failures.extend(check_env_example())
     failures.extend(check_docker_compose())
     failures.extend(check_openai_key_references())
+    failures.extend(check_openai_troubleshooting_doc())
     for gateway in GATEWAYS:
         failures.extend(check_gateway(gateway))
 

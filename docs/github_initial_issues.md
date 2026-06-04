@@ -79,6 +79,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a contributor onboarding checklist for the first local pull request
 - Add docs-only pull request review examples
 - Add a README-to-docs navigation audit
+- Add optional OpenAI live-mode troubleshooting notes
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -203,27 +204,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add optional OpenAI live-mode troubleshooting notes
+Add a Docker runtime evidence collection checklist
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+documentation, docker, good first issue
 ```
 
 Body:
 
 ```text
-Add compact troubleshooting notes for the optional OpenAI live-mode check without making paid API access part of the default local demo.
+Add a compact checklist for collecting Docker runtime evidence without claiming container runtime verification before it actually passes.
 
 Acceptance criteria:
 
-- Add docs/openai_live_mode_troubleshooting.md with expected setup checks, safe failure modes, and rollback guidance.
-- Reference docs/model_runtime_configuration.md, docs/model_gateway_safety.md, and docs/command_output_troubleshooting_map.md.
-- Make clear that local deterministic mode remains the default verified path and that no API key should be committed, printed, or requested in an issue or PR.
-- Link the note from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py model-gateway-safety still passes.
+- Add docs/docker_runtime_evidence_checklist.md with environment capture, command sequence, expected artifacts, and failure notes.
+- Reference docs/container_release_hygiene.md, docs/readme_navigation_audit.md, and docs/command_output_troubleshooting_map.md.
+- Make clear that `python -B scripts/dev.py container-release` is static config evidence, while `python -B scripts/dev.py docker-runtime` is runtime evidence only on a Docker-enabled machine.
+- Link the checklist from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py container-release still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
