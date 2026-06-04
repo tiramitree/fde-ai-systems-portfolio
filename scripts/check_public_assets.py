@@ -173,6 +173,10 @@ REQUIRED_CONTRIBUTION_SAFETY_READINESS = [
     "Contribution safety readiness:",
     "Use [CONTRIBUTING](CONTRIBUTING.md), [SECURITY](SECURITY.md), [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), and the [Contributor Route Map](#contributor-route-map) before reviewing outside changes. For external PRs, inspect the diff before running untrusted code, then run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.",
 ]
+REQUIRED_RELEASE_ARTIFACT_READINESS = [
+    "Release artifact readiness:",
+    "Use the [Demo Replay Artifact](docs/demo_replay_artifact.md), [GitHub Release Commands](docs/github_release_commands.md), [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), and [Final Readiness Report](docs/final_readiness_report.md) before preparing release evidence. Regenerate attachable evidence with `python -B scripts/dev.py replay-artifact`, then run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py quality`; do not claim a GitHub release page is ready until the page is created and the artifacts are attached.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -605,6 +609,18 @@ def check_contribution_safety_readiness() -> list[str]:
     return failures
 
 
+def check_release_artifact_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_RELEASE_ARTIFACT_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing release artifact readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -642,6 +658,7 @@ def main() -> int:
     failures.extend(check_demo_recording_readiness())
     failures.extend(check_launch_channel_readiness())
     failures.extend(check_contribution_safety_readiness())
+    failures.extend(check_release_artifact_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
