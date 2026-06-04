@@ -32,6 +32,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README screenshot reviewer checklist
 - Add a compact README command decision tree
 - Add a compact README evidence legend
+- Add a compact README contributor route map
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -156,26 +157,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README contributor route map
+Add a compact README production-upgrade pointer
 ```
 
 Labels:
 
 ```text
-documentation, automation, good first issue
+documentation, production-upgrade, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README route map that tells contributors which checks to run for docs-only, frontend, backend, eval, visual asset, and GitHub-maintenance changes.
+Add a compact README pointer that helps readers find the optional production-upgrade paths without implying the local demos require them.
 
 Acceptance criteria:
 
-- Cover docs-only, frontend, backend/API, eval/data, visual asset, and GitHub-maintenance changes.
-- Point to the existing command decision tree, maintainer PR checklist, and PR review docs instead of duplicating every command.
-- Keep local-first checks as the default.
-- Keep account-level GitHub actions as dry-run or authenticated-only work.
+- Cover FastAPI, PostgreSQL, pgvector, connector stubs, OpenTelemetry export, and Docker verification paths.
+- Link to existing production upgrade notes, PostgreSQL/pgvector design, OTEL trace export, model runtime configuration, and container release hygiene docs.
+- Keep local deterministic mode and stdlib HTTP servers as the default path.
+- Avoid claiming optional adapters or Docker runtime are verified unless their commands pass.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
