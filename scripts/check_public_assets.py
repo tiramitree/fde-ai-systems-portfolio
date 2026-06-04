@@ -90,6 +90,13 @@ REQUIRED_EVIDENCE_FRESHNESS_CHECKLIST = [
     "| Published repository status | After push, run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py github-readiness`; treat `[WARN]` and `[MANUAL]` rows as account-level follow-up unless strict mode is required. | [Published Repository Status](docs/published_repository_status.md) and [Release Evidence FAQ](#release-evidence-faq). |",
     "| Generated local artifacts | Run `python -B scripts/dev.py replay-artifact` when a fresh local replay package is needed; keep ignored `out/` artifacts uncommitted unless a release process explicitly asks for them. | [Demo Report](docs/demo_report.md) and [Release Evidence FAQ](#release-evidence-faq). |",
 ]
+REQUIRED_ARCHITECTURE_CARDS = [
+    "Architecture cards:",
+    "Read these with [Architecture Boundaries](docs/architecture_boundaries.md), [API Contracts](docs/api_contracts.md), and [Runtime UI Contracts](docs/runtime_ui_contracts.md).",
+    "| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, and scenario drafts. | Permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py smoke` and inspect the Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |",
+    "| [Regulated Customer Operations Agent](regulated-customer-operations-agent/docs/architecture.md) | `regulated-customer-operations-agent/src/ops_agent` owns workflow routing, governed tools, storage, evals, and the opt-in model gateway. | `regulated-customer-operations-agent/web/js` keeps local ES modules for case investigation, approvals, trace links, theme, clipboard, and scenario drafts. | Side-effect tools require application approval, bypass attempts are refused, supervisor execution is auditable. | Run `python -B scripts/dev.py smoke` and inspect the Ivy `case-1001` approval path in the [Demo Path Map](#demo-path-map). |",
+    "| [AI Reliability Incident Console](ai-reliability-incident-console/docs/architecture.md) | `ai-reliability-incident-console/src/reliability_console` owns release state, incident triage, eval evidence, storage, and audit records. | `ai-reliability-incident-console/web/js` keeps local ES modules for incident selection, triage rendering, trace links, theme, clipboard, and scenario drafts. | Failed eval evidence blocks unsafe rollout, remediation stays traceable, audit events link release decisions to incidents. | Run `python -B scripts/dev.py smoke` and inspect the unsafe canary release path in the [Demo Path Map](#demo-path-map). |",
+]
 REQUIRED_README_GLOSSARY = [
     "## Core Terms",
     "| Release gate | The repository-level checks that keep public docs, evidence, runtime contracts, screenshots, and safety claims aligned before a change is published; see the [Evidence Matrix](#evidence-matrix) and [launch asset hygiene](docs/launch_assets_hygiene.md). |",
@@ -425,6 +432,18 @@ def check_release_evidence_faq() -> list[str]:
     return failures
 
 
+def check_architecture_cards() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_ARCHITECTURE_CARDS:
+        if expected not in text:
+            failures.append(f"README.md: missing architecture card entry: {expected}")
+    return failures
+
+
 def check_evidence_freshness_checklist() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -545,6 +564,7 @@ def main() -> int:
     failures.extend(check_command_output_expectations())
     failures.extend(check_troubleshooting_pointers())
     failures.extend(check_release_evidence_faq())
+    failures.extend(check_architecture_cards())
     failures.extend(check_evidence_freshness_checklist())
     failures.extend(check_readme_glossary())
     failures.extend(check_evidence_legend())

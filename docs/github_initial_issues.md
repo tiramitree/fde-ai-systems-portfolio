@@ -39,6 +39,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README operational runbook index
 - Add a compact README evidence freshness checklist
 - Add a compact README reviewer handoff checklist
+- Add compact per-project architecture cards to the README
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -163,26 +164,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact per-project architecture cards to the README
+Add shareable demo-state reset presets
 ```
 
 Labels:
 
 ```text
-documentation, design, demo, good first issue
+enhancement, automation, demo, good first issue
 ```
 
 Body:
 
 ```text
-Add compact README architecture cards that summarize the backend boundary, frontend boundary, safety controls, and evidence path for each project.
+Add shareable demo-state reset presets that make it easy to restore canonical local demo scenarios before recording, reviewing, or sharing the repository.
 
 Acceptance criteria:
 
-- Cover Secure Enterprise Knowledge Copilot, Regulated Customer Operations Agent, and AI Reliability Incident Console.
-- For each project, include the backend package, browser module boundary, core safety controls, and fastest evidence command.
-- Link to Architecture Boundaries, API Contracts, Runtime UI Contracts, and the project-specific architecture docs.
-- Keep the cards compact enough for README scanning and avoid duplicating full architecture documents.
+- Cover the canonical Project 1 finance-access path, Project 2 `case-1001` approval path, and Project 3 unsafe canary release path.
+- Keep presets local-first and deterministic; do not require external accounts, paid APIs, private files, or secrets.
+- Document how presets relate to `python -B scripts/dev.py replay`, `python -B scripts/dev.py smoke`, and the Demo Path Map.
+- Preserve the existing reset behavior for `python -B scripts/dev.py replay` and `python -B scripts/dev.py fresh-clone-local`.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
