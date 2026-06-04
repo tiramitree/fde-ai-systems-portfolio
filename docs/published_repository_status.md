@@ -130,7 +130,7 @@ Confirmed:
 - Add repository description and topics from `docs/github_repository_settings.md`; `python -B scripts/dev.py github-maintenance` dry-runs the required authenticated maintenance commands.
 - Enable branch protection on `main`; `docs/github_branch_protection.json` is the tracked API payload used by `python -B scripts/maintain_github_state.py --apply`.
 - Add social preview using `docs/assets/github-preview.png`.
-- Create a GitHub release page for `v0.1.0`; `python -B scripts/maintain_github_state.py --apply` can do this after `gh auth login`, and release attachment screenshots should be reviewed with `docs/github_release_attachment_screenshot_checklist.md`.
+- Create a GitHub release page for `v0.1.0`; `python -B scripts/maintain_github_state.py --apply` can do this after `gh auth login`, release asset upload plans should be reviewed with `docs/release_asset_upload_dry_run_examples.md`, and release attachment screenshots should be reviewed with `docs/github_release_attachment_screenshot_checklist.md`.
 - Pin repository on profile.
 - Verify Docker runtime with `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; static Docker/Compose release hygiene is already gated.
 - Verify optional OpenAI mode with `python -B scripts/dev.py openai-live` and a live API key.

@@ -106,6 +106,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact GitHub Actions badge verification examples
 - Add compact Dependabot and secret-scanning verification examples
 - Add compact public roadmap issue comment examples
+- Add compact release asset upload dry-run examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -230,26 +231,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact release asset upload dry-run examples
+Add compact repository discussions launch checklist
 ```
 
 Labels:
 
 ```text
-documentation, release, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for dry-running release asset upload plans without confusing generated local replay artifacts, GitHub release pages, tags, and source-controlled documentation.
+Add a compact checklist for launching GitHub Discussions without confusing issue triage, release support, roadmap planning, and general feedback.
 
 Acceptance criteria:
 
-- Add docs/release_asset_upload_dry_run_examples.md with examples for missing replay artifacts, stale local artifacts, wrong release tag, GitHub release page not found, and generated out/ handling.
-- Reference docs/release_attachment_verification_examples.md, docs/github_release_commands.md, docs/github_release_page_troubleshooting_examples.md, docs/github_release_attachment_screenshot_checklist.md, and docs/post_publish_checklist.md.
-- Keep dry-run plans, generated replay artifacts, source-controlled docs, and published GitHub release state separate; do not claim release assets were uploaded until public release evidence confirms it.
+- Add docs/github_discussions_launch_checklist.md with categories, pinned starter topics, moderation rules, and evidence boundaries for launch feedback.
+- Reference docs/community_backlog.md, docs/github_initial_issues.md, docs/launch_feedback_collection_examples.md, docs/maintainer_review_policy.md, and docs/post_publish_checklist.md.
+- Keep GitHub Discussions, issues, PRs, private feedback, and roadmap acceptance separate; do not promise support SLAs, private account access, or guaranteed feature acceptance.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

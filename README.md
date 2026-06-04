@@ -234,7 +234,7 @@ Use [CONTRIBUTING](CONTRIBUTING.md), [SECURITY](SECURITY.md), [PR Review Securit
 
 Release artifact readiness:
 
-Use the [Demo Replay Artifact](docs/demo_replay_artifact.md), [Release Attachment Verification Examples](docs/release_attachment_verification_examples.md), [GitHub Release Attachment Screenshot Checklist](docs/github_release_attachment_screenshot_checklist.md), [GitHub Release Commands](docs/github_release_commands.md), [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), and [Final Readiness Report](docs/final_readiness_report.md) before preparing release evidence. Regenerate attachable evidence with `python -B scripts/dev.py replay-artifact`, then run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py quality`; do not claim a GitHub release page is ready until the page exists and the artifacts are attached or linked.
+Use the [Demo Replay Artifact](docs/demo_replay_artifact.md), [Release Attachment Verification Examples](docs/release_attachment_verification_examples.md), [Release Asset Upload Dry-Run Examples](docs/release_asset_upload_dry_run_examples.md), [GitHub Release Attachment Screenshot Checklist](docs/github_release_attachment_screenshot_checklist.md), [GitHub Release Commands](docs/github_release_commands.md), [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), and [Final Readiness Report](docs/final_readiness_report.md) before preparing release evidence. Regenerate attachable evidence with `python -B scripts/dev.py replay-artifact`, then run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py quality`; do not claim a GitHub release page or release assets are ready until the page exists and the artifacts are attached or linked.
 
 Optional-environment readiness:
 
@@ -652,6 +652,7 @@ repository/
 - [Demo Video Script](docs/demo_video_script.md)
 - [Demo Recording Checklist](docs/demo_recording_checklist.md)
 - [Release Attachment Verification Examples](docs/release_attachment_verification_examples.md)
+- [Release Asset Upload Dry-Run Examples](docs/release_asset_upload_dry_run_examples.md)
 - [GitHub Release Attachment Screenshot Checklist](docs/github_release_attachment_screenshot_checklist.md)
 - [GitHub Release Page Troubleshooting Examples](docs/github_release_page_troubleshooting_examples.md)
 - [Star Growth Plan](docs/star_growth_plan.md)

@@ -50,8 +50,14 @@ python -B scripts/dev.py github-maintenance
 python -B scripts/maintain_github_state.py --apply
 ```
 
-5. Upload `docs/assets/github-preview.png` as the social preview and pin the repo on your profile.
-6. Re-run:
+5. After `python -B scripts/dev.py replay-artifact` regenerates the current replay evidence and the release page exists, review `docs/release_asset_upload_dry_run_examples.md` before uploading release assets:
+
+```powershell
+gh release upload v0.1.0 out/demo_replay_artifact.md out/demo_replay_artifact.json --repo tiramitree/fde-ai-systems-portfolio
+```
+
+6. Upload `docs/assets/github-preview.png` as the social preview and pin the repo on your profile.
+7. Re-run:
 
 ```powershell
 python -B scripts/dev.py github-readiness
