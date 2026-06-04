@@ -304,6 +304,10 @@ Reviewer handoff readiness:
 
 Use [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md), [Final Demo Runbook](docs/final_demo_runbook.md), [Final Readiness Report](docs/final_readiness_report.md), the [Demo Path Map](#demo-path-map), the [Evidence Matrix](#evidence-matrix), and [Published Repository Status](docs/published_repository_status.md) before presenting, sharing, or reviewing the repository. Reviewer-facing claims must match current evidence, and post-push GitHub readiness warnings remain manual until the matching account-level action or public check is complete; run `python -B scripts/dev.py quality`, `python -B scripts/dev.py fresh-clone-local`, `python -B scripts/dev.py visual-assets`, and `python -B scripts/dev.py launch-assets`.
 
+Post-publish readiness:
+
+Use [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), [GitHub Repository Settings](docs/github_repository_settings.md), [GitHub Release Commands](docs/github_release_commands.md), the [Release Evidence FAQ](#release-evidence-faq), and the published repository row in the [Evidence Freshness Checklist](#evidence-freshness-checklist) before sharing the public branch or claiming published evidence. Remote clone results, published files, raw README/workflow reachability, and GitHub readiness warnings are separate from local quality evidence; after push, run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
