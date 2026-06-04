@@ -55,6 +55,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README dependency surface evidence pointer
 - Add a compact README API contract evidence pointer
 - Add a compact README error hygiene evidence pointer
+- Add a compact README model gateway safety evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -179,7 +180,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README model gateway safety evidence pointer
+Add a compact README PR triage evidence pointer
 ```
 
 Labels:
@@ -191,16 +192,16 @@ documentation, security, good first issue
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where model gateway materials live and which optional model-provider boundaries must be preserved before changing gateway code or runtime configuration.
+Add a compact README pointer that tells contributors where PR triage materials live and which public-contribution review boundaries must be preserved before approving workflows, running contributor code, or merging.
 
 Acceptance criteria:
 
-- Link to Model Gateway Safety, Model Runtime Configuration, System Evidence Matrix, Production Upgrade Notes, and the optional model gateway row in the Evidence Matrix.
-- Cover model-gateway checks: `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`; mention `python -B scripts/dev.py openai-live` only for API-key environments before claiming live model evidence.
+- Link to PR Review Security, PR Review Runbook, Maintainer PR Checklist, Development Issue Solutions, and the public PR triage row in the Evidence Matrix.
+- Cover PR review checks: `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that OpenAI mode is opt-in, API keys stay outside the repo, gateways use structured outputs, failures fall back locally, and models do not authorize permissions, approvals, audit logs, or eval success.
+- Make clear that public PRs are treated as untrusted input, changed files and diffs are reviewed before running contributor code, and high-risk workflow, dependency, model gateway, safety, eval, binary, network, shell, or environment changes require extra scrutiny.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py model-gateway-safety still passes.
+- python -B scripts/dev.py pr-policy still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
