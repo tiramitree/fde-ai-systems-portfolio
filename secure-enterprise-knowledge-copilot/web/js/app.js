@@ -2,7 +2,14 @@ import { api } from "./api.js";
 import { byId } from "./dom.js";
 import { installCopyButton, installTraceCopyButton } from "./clipboard.js";
 import { installScenarioEditor } from "./scenarioEditor.js";
-import { installTraceHashSync, selectedTraceId, setTraceHash, syncTraceSelection, traceUrl } from "./traceLinks.js";
+import {
+  installTraceHashSync,
+  installTraceKeyboardNavigation,
+  selectedTraceId,
+  setTraceHash,
+  syncTraceSelection,
+  traceUrl,
+} from "./traceLinks.js";
 import {
   populateUserSelect,
   renderAnswer,
@@ -105,6 +112,7 @@ byId("userSelect").addEventListener("change", async (event) => {
 byId("ask").addEventListener("click", ask);
 byId("runEval").addEventListener("click", runEval);
 installTraceHashSync();
+installTraceKeyboardNavigation(byId("traces"));
 
 document.querySelectorAll("[data-question]").forEach((button) => {
   button.addEventListener("click", () => {

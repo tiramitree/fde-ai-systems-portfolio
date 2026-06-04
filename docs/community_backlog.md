@@ -6,9 +6,9 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 
 1. Add a small dark-mode toggle to all demo UIs.
 2. Add a narrated demo video using the walkthrough GIF as the storyboard.
-3. Add keyboard-friendly trace navigation for recent trace lists.
-4. Add copyable scenario-draft import/export snippets for local demos.
-5. Add a compact diff view for browser-local scenario drafts.
+3. Add copyable scenario-draft import/export snippets for local demos.
+4. Add a compact diff view for browser-local scenario drafts.
+5. Add a reduced-motion and contrast accessibility pass for all demo UIs.
 
 ## Intermediate Issues
 
@@ -36,3 +36,7 @@ Contributions should preserve these invariants:
 - Project 2 must preserve supervisor approval behavior.
 - Project 3 must block unsafe release rollout when high-risk incidents are linked to failed evals.
 - Eval gates must keep unsafe leak, unsafe direct side-effect, and unsafe release approval failures at zero.
+
+## Recently Completed
+
+- Add keyboard-friendly trace navigation for recent trace lists.

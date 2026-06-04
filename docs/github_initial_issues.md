@@ -13,6 +13,7 @@ The first public issue wave was created after the initial release and is now com
 - Add replayable demo reset script
 - Add trace deep links in the demo UI
 - Add a local seed-data editor prototype
+- Add keyboard-friendly trace navigation for recent trace lists
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -137,7 +138,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add keyboard-friendly trace navigation for recent trace lists
+Add copyable scenario-draft import/export snippets
 ```
 
 Labels:
@@ -149,13 +150,14 @@ enhancement, frontend, demo
 Body:
 
 ```text
-Improve keyboard navigation for recent trace lists across all browser demos.
+Make browser-local scenario drafts easier to move between local demo sessions without adding server-side mutation.
 
 Acceptance criteria:
 
-- Recent trace links can be reached predictably with keyboard navigation.
-- Selected trace state is visible without relying only on hover.
-- Focus styling is visible and consistent across all three demos.
+- Scenario draft panels expose a copy/export action for the current local JSON draft.
+- Import guidance is concise and uses the existing local textarea path.
+- Invalid JSON remains blocked before saving.
+- Drafts continue to live only in browser localStorage.
 - Frontend modules remain local to each service web boundary.
 - python -B scripts/dev.py frontend still passes.
 - python -B scripts/dev.py ui-contracts still passes.

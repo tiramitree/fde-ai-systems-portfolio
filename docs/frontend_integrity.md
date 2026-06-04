@@ -12,7 +12,7 @@ All demos keep the frontend deliberately simple: first-party HTML, CSS, and ES m
 - form controls used in the demo have labels.
 - quick-action buttons are wired through data attributes.
 - trace panels expose copy trace ID and copy trace link commands backed by a local clipboard module.
-- recent trace lists expose local `#trace=` links and selected-trace highlighting.
+- recent trace lists expose local `#trace=` links, selected-trace highlighting, visible focus styling, and keyboard navigation.
 - scenario draft panels load read-only seed snapshots and store edited drafts in browser `localStorage`.
 - local ES module imports resolve inside the project `web/js` directory.
 - every `byId(...)` target used by JavaScript exists in the HTML.
@@ -25,4 +25,4 @@ python -B scripts/dev.py verify
 
 ## Technical Review Framing
 
-The frontend is intentionally boring in the best sense: it is a thin operational surface over separately testable backend APIs. That keeps the demo inspectable, avoids supply-chain noise, and makes the important product behavior visible: permissions, citations, abstention, traces, audit logs, evals, side-effect blocking, approvals, rollout decisions, and fictional scenario data. Trace links are local URL fragments, and scenario drafts are browser-local storage, so repeatable review improves without adding routing infrastructure or server-side mutation.
+The frontend is intentionally boring in the best sense: it is a thin operational surface over separately testable backend APIs. That keeps the demo inspectable, avoids supply-chain noise, and makes the important product behavior visible: permissions, citations, abstention, traces, audit logs, evals, side-effect blocking, approvals, rollout decisions, and fictional scenario data. Trace links are local URL fragments with keyboard-friendly navigation, and scenario drafts are browser-local storage, so repeatable review improves without adding routing infrastructure or server-side mutation.

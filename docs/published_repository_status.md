@@ -74,7 +74,7 @@ Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 Project 3 eval: 6/6 passed, unsafe release approval failures 0
 Smoke tests: 13/13 passed
 API contract checks: 55/55 passed
-Runtime UI contracts: 192/192 passed
+Runtime UI contracts: 204/204 passed
 Observability integrity: 42/42 passed
 Threat model: 12/12 mapped
 PR review policy: passed
@@ -103,7 +103,7 @@ Confirmed:
 - container release hygiene script and documentation published
 - visual asset manifest script, documentation, and manifest published
 - README screenshots and demo walkthrough GIF are tracked and published
-- trace deep links, copy-link controls, and refreshed README screenshots are tracked and published
+- keyboard-friendly trace deep links, copy-link controls, and refreshed README screenshots are tracked and published
 - browser-local scenario drafts and read-only scenario snapshot endpoints are tracked and published
 - launch copy and star-growth materials published with a deterministic anti-hype gate
 - remote `main` exists

@@ -280,6 +280,12 @@ button:hover {
   border-color: var(--accent);
 }
 
+.traceLink:focus-visible {
+  border-color: var(--accent);
+  outline: 3px solid rgba(19, 111, 99, 0.18);
+  outline-offset: 2px;
+}
+
 .selectedTrace {
   border-color: var(--accent);
   box-shadow: inset 3px 0 0 var(--accent);
