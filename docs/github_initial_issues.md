@@ -52,6 +52,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README red-team eval expansion pointer
 - Add a compact README OpenTelemetry backend pointer
 - Add a compact README Docker runtime evidence pointer
+- Add a compact README dependency surface evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -176,28 +177,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README dependency surface evidence pointer
+Add a compact README API contract evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, security, good first issue
+documentation, design, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where dependency-surface materials live and which supply-chain boundaries must be preserved before adding packages, CDNs, or runtime manifests.
+Add a compact README pointer that tells contributors where API contract materials live and which response-shape boundaries must be preserved before changing backend routes or frontend API calls.
 
 Acceptance criteria:
 
-- Link to Supply Chain Security, System Evidence Matrix, Contributor Route Map, Development Issue Solutions, and the dependency-surface row in the Evidence Matrix.
-- Cover dependency checks: `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
+- Link to API Contracts, System Evidence Matrix, Architecture Boundaries, Runtime UI Contracts, and the API contract row in the Evidence Matrix.
+- Cover API checks: `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py ui-contracts`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that stdlib-only Python, first-party frontend assets, pinned Docker bases, and explicit Dependabot coverage remain the default posture until a dependency is intentionally reviewed.
+- Make clear that documented response shapes, read-only scenario snapshot endpoints, static route handling, and frontend API modules must remain aligned.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py dependency-surface still passes.
+- python -B scripts/dev.py contracts still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

@@ -205,6 +205,10 @@ REQUIRED_DOCKER_RUNTIME_READINESS = [
     "Docker runtime readiness:",
     "Use [Container Release Hygiene](docs/container_release_hygiene.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), [Published Repository Status](docs/published_repository_status.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), and the [Release Evidence FAQ](#release-evidence-faq) before claiming container runtime evidence. `python -B scripts/dev.py container-release` is the local static proof path; `python -B scripts/dev.py docker-runtime` is environment-dependent and should be claimed only after it passes on a Docker-enabled machine. Run `python -B scripts/dev.py container-release`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality` before publishing Docker-facing docs.",
 ]
+REQUIRED_DEPENDENCY_SURFACE_READINESS = [
+    "Dependency surface readiness:",
+    "Use [Supply Chain Security](docs/supply_chain_security.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), the [Contributor Route Map](#contributor-route-map), [Development Issue Solutions](docs/development_issue_solutions.md), and the [Evidence Matrix](#evidence-matrix) before adding packages, CDNs, or runtime manifests. The default posture is stdlib-only Python, first-party frontend assets, pinned Docker bases, and explicit Dependabot coverage until a dependency is intentionally reviewed; run `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -733,6 +737,18 @@ def check_docker_runtime_readiness() -> list[str]:
     return failures
 
 
+def check_dependency_surface_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_DEPENDENCY_SURFACE_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing dependency surface readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -778,6 +794,7 @@ def main() -> int:
     failures.extend(check_red_team_eval_readiness())
     failures.extend(check_opentelemetry_backend_readiness())
     failures.extend(check_docker_runtime_readiness())
+    failures.extend(check_dependency_surface_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
