@@ -163,7 +163,7 @@ Troubleshooting pointers:
 | Optional OpenAI mode is unavailable | Local deterministic mode remains the default. `python -B scripts/dev.py openai-live` is an optional API-key-environment proof for model-facing routes only; see [Model Runtime Configuration](docs/model_runtime_configuration.md). |
 | Generated local artifacts appear | Runtime outputs under ignored paths such as `out/` are local evidence, not source changes. Run `python -B scripts/dev.py safety` before committing if a generated file appears in the worktree. |
 
-Release-evidence FAQ:
+## Release Evidence FAQ
 
 | Question | Answer |
 | --- | --- |
@@ -173,6 +173,18 @@ Release-evidence FAQ:
 | What does post-publish prove? | `python -B scripts/post_publish_check.py` proves the GitHub page, raw README/workflow, and required published files are reachable; compare with [Published Repository Status](docs/published_repository_status.md). |
 | Is a warning the same as a failing release gate? | No. Treat `quality`, `fresh-clone-local`, `fresh-clone`, and post-publish failures as blockers for code or docs changes; treat GitHub `[WARN]`/`[MANUAL]` items as account-level follow-up unless strict mode is being used. |
 | How should GitHub readiness warnings be handled? | `python -B scripts/dev.py github-readiness` warnings for API rate limits, repository metadata, branch protection, release pages, social preview, or profile pin are account-level/manual items unless a gate reports a failure; see [Development Issue Solutions](docs/development_issue_solutions.md). |
+
+## Evidence Freshness Checklist
+
+Ignored outputs under `out/` are local evidence by default. Do not claim Docker runtime, OpenAI live mode, branch protection, or release page freshness until the matching command or account-level action is complete.
+
+| Evidence | Verify Or Refresh | Source Of Truth |
+| --- | --- | --- |
+| README screenshots and mobile screenshots | Run `python -B scripts/dev.py visual-assets` and `python -B scripts/dev.py visual-asset-diff`; use `python -B scripts/dev.py refresh-visual-assets` only for intentional screenshot updates. | [Visual Asset Hygiene](docs/visual_asset_hygiene.md) and [Screenshots](#screenshots). |
+| Demo walkthrough GIF | Run `python -B scripts/dev.py assets` and inspect `docs/assets/demo-walkthrough.gif` before sharing; refresh it only for intentional demo-flow changes. | [Visual Asset Hygiene](docs/visual_asset_hygiene.md). |
+| Eval summary counts | Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py report`, and `python -B scripts/dev.py claims`; commit source docs only when the claimed metrics intentionally change. | [Demo Report](docs/demo_report.md) and [Evidence Matrix](#evidence-matrix). |
+| Published repository status | After push, run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py github-readiness`; treat `[WARN]` and `[MANUAL]` rows as account-level follow-up unless strict mode is required. | [Published Repository Status](docs/published_repository_status.md) and [Release Evidence FAQ](#release-evidence-faq). |
+| Generated local artifacts | Run `python -B scripts/dev.py replay-artifact` when a fresh local replay package is needed; keep ignored `out/` artifacts uncommitted unless a release process explicitly asks for them. | [Demo Report](docs/demo_report.md) and [Release Evidence FAQ](#release-evidence-faq). |
 
 Current verified status:
 
