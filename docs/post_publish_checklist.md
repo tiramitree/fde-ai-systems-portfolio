@@ -24,6 +24,7 @@ The post-publish check must prove:
 - GitHub Actions workflow is reachable.
 - key documentation files are published.
 - the authenticated GitHub maintenance troubleshooting examples are published.
+- the GitHub public PR API fallback troubleshooting examples are published: `docs/github_public_pr_api_fallback_troubleshooting_examples.md`.
 - the GitHub repository metadata troubleshooting examples are published.
 - the observability integrity script and documentation are published.
 - the threat model script and documentation are published.

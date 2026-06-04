@@ -33,6 +33,7 @@ EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_ex
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
 GITHUB_AUTHENTICATED_MAINTENANCE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_authenticated_maintenance_troubleshooting_examples.md"
+GITHUB_PUBLIC_PR_API_FALLBACK_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_public_pr_api_fallback_troubleshooting_examples.md"
 GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_api_rate_limit_troubleshooting_examples.md"
 GITHUB_REPOSITORY_METADATA_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_repository_metadata_troubleshooting_examples.md"
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
@@ -352,6 +353,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/published_repository_status.md",
         "docs/github_release_commands.md",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md",
+        "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
         "docs/github_api_rate_limit_troubleshooting_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/social_preview_verification_examples.md",
@@ -443,6 +445,59 @@ def check_github_authenticated_maintenance_troubleshooting_examples() -> list[st
     return failures
 
 
+def check_github_public_pr_api_fallback_troubleshooting_examples() -> list[str]:
+    failures: list[str] = []
+    if not GITHUB_PUBLIC_PR_API_FALLBACK_TROUBLESHOOTING_EXAMPLES.exists():
+        return ["missing docs/github_public_pr_api_fallback_troubleshooting_examples.md"]
+
+    text = GITHUB_PUBLIC_PR_API_FALLBACK_TROUBLESHOOTING_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "GitHub Public PR API Fallback Troubleshooting Examples",
+        "docs/pr_review_runbook.md",
+        "docs/pr_review_security.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/github_api_rate_limit_troubleshooting_examples.md",
+        "docs/maintainer_review_policy.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Evidence Split",
+        "Unauthenticated API Limits",
+        "Public Pulls Page Fallback",
+        "Missing File-Level Triage",
+        "Strict-Mode Review",
+        "Stale No-Open-PR State",
+        "Review Checklist",
+        "python -B scripts/dev.py pr-triage",
+        "python -B scripts/review_open_prs.py --strict",
+        "python -B scripts/dev.py pr-policy",
+        "python -B scripts/dev.py governance",
+        "python -B scripts/dev.py workflow-security",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py github-maintenance",
+        "python -B scripts/dev.py github-readiness",
+        "public page visibility, API file-level triage, and strict review confidence prove different things",
+        "Do not claim no risky PRs until API or authenticated evidence confirms it",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/github_public_pr_api_fallback_troubleshooting_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
+        "docs/pr_review_runbook.md": "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
+        "docs/pr_review_security.md": "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
+        "docs/post_publish_checklist.md": "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
+        "docs/github_api_rate_limit_troubleshooting_examples.md": "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
+        "docs/maintainer_review_policy.md": "github_public_pr_api_fallback_troubleshooting_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_github_api_rate_limit_troubleshooting_examples() -> list[str]:
     failures: list[str] = []
     if not GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES.exists():
@@ -454,6 +509,7 @@ def check_github_api_rate_limit_troubleshooting_examples() -> list[str]:
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
+        "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
         "docs/github_actions_warning_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -1254,6 +1310,7 @@ def main() -> int:
     failures.extend(check_branch_protection_verification_examples())
     failures.extend(check_post_publish_warning_examples())
     failures.extend(check_github_authenticated_maintenance_troubleshooting_examples())
+    failures.extend(check_github_public_pr_api_fallback_troubleshooting_examples())
     failures.extend(check_github_api_rate_limit_troubleshooting_examples())
     failures.extend(check_github_repository_metadata_troubleshooting_examples())
     failures.extend(check_social_preview_verification_examples())

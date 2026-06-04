@@ -1,6 +1,6 @@
 # GitHub API Rate-Limit Troubleshooting Examples
 
-Use this page when `github-readiness`, `post_publish_check.py`, or PR triage reports a GitHub API rate limit, transient API failure, pending Actions lookup, stale cached status, or strict-mode review question. Read it with `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_actions_warning_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when `github-readiness`, `post_publish_check.py`, or PR triage reports a GitHub API rate limit, transient API failure, pending Actions lookup, stale cached status, or strict-mode review question. Read it with `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_public_pr_api_fallback_troubleshooting_examples.md`, `docs/github_actions_warning_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: GitHub API availability and local project quality prove different things. Do not claim remote readiness until the readiness command can verify the current repository state.
 

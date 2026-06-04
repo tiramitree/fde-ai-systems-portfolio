@@ -111,6 +111,7 @@ def main() -> int:
         "docs/api_contracts.md",
         "docs/github_branch_protection.json",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md",
+        "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
         "docs/github_api_rate_limit_troubleshooting_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/branch_protection_verification_examples.md",
