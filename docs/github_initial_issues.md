@@ -33,6 +33,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README command decision tree
 - Add a compact README evidence legend
 - Add a compact README contributor route map
+- Add a compact README production-upgrade pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -157,26 +158,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README production-upgrade pointer
+Add a compact README release-evidence FAQ
 ```
 
 Labels:
 
 ```text
-documentation, production-upgrade, good first issue
+documentation, automation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that helps readers find the optional production-upgrade paths without implying the local demos require them.
+Add a compact README FAQ that explains how to interpret local quality, fresh-clone, post-publish, and GitHub readiness evidence.
 
 Acceptance criteria:
 
-- Cover FastAPI, PostgreSQL, pgvector, connector stubs, OpenTelemetry export, and Docker verification paths.
-- Link to existing production upgrade notes, PostgreSQL/pgvector design, OTEL trace export, model runtime configuration, and container release hygiene docs.
-- Keep local deterministic mode and stdlib HTTP servers as the default path.
-- Avoid claiming optional adapters or Docker runtime are verified unless their commands pass.
+- Explain when to use quality, fresh-clone-local, fresh-clone, post-publish, and GitHub readiness checks.
+- Distinguish local gate failures from warning/manual GitHub account-level setup items.
+- Link to command output expectations, troubleshooting pointers, development issue solutions, and published repository status.
+- Avoid claiming account-level GitHub setup is complete when readiness reports warning or manual items.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
