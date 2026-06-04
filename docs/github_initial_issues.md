@@ -44,6 +44,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README demo recording checklist pointer
 - Add a compact README launch-channel checklist pointer
 - Add a compact README contribution safety summary pointer
+- Add a compact README release artifact attachment pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -168,7 +169,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README release artifact attachment pointer
+Add a compact README optional-environment evidence pointer
 ```
 
 Labels:
@@ -180,14 +181,14 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add a compact README pointer that tells maintainers which release evidence artifacts should be regenerated and attached before publishing a release page.
+Add a compact README pointer that tells maintainers which optional environment checks must pass before claiming Docker runtime or OpenAI live-mode evidence.
 
 Acceptance criteria:
 
-- Link to Demo Replay Artifact, GitHub Release Commands, Post-Publish Checklist, Published Repository Status, and Final Readiness Report.
-- Cover release artifact checks: `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py quality`.
+- Link to Container Release Hygiene, Model Runtime Configuration, Model Gateway Safety, GitHub Readiness docs, and Development Issue Solutions.
+- Cover optional checks: `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live`, and `python -B scripts/dev.py github-readiness`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Avoid claiming a GitHub release page exists until the page is created and the artifacts are attached.
+- Make clear that Docker runtime and OpenAI live mode remain manual or environment-dependent until the matching commands pass in the right environment.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
