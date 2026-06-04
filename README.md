@@ -73,6 +73,17 @@ Command quick-reference:
 | GitHub maintenance | `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community` |
 | Optional environment checks | `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live` |
 
+Command decision tree:
+
+| Need | Start With | Follow With |
+| --- | --- | --- |
+| Prove the local repo works from a normal checkout. | `python -B scripts/dev.py verify` | Use the command output expectations table below if a gate fails. |
+| Review a code or docs change before publishing it. | `python -B scripts/dev.py quality` | Run `python -B scripts/dev.py fresh-clone-local` when the change affects public setup, docs, assets, or runtime paths. |
+| Prepare release-facing evidence after a push. | `python -B scripts/dev.py fresh-clone` | Run `python -B scripts/post_publish_check.py`, then `python -B scripts/dev.py github-readiness`. |
+| Check screenshots or frontend visual drift. | `python -B scripts/dev.py visual-assets` | Use `python -B scripts/dev.py visual-asset-diff`; refresh with `python -B scripts/dev.py refresh-visual-assets` only when screenshots intentionally change. |
+| Review GitHub state or public PRs. | `python -B scripts/dev.py pr-triage` | Use `python -B scripts/dev.py github-maintenance` and `python -B scripts/dev.py github-community` for dry-run account setup or community sync plans. |
+| Check optional environments. | `python -B scripts/dev.py container-release` | Run `python -B scripts/dev.py docker-runtime` only on Docker-enabled machines, and `python -B scripts/dev.py openai-live` only in an API-key environment. |
+
 Full command index:
 
 ```bash

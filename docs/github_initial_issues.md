@@ -30,6 +30,7 @@ The first public issue wave was created after the initial release and is now com
 - Add README command output expectations
 - Add a compact README troubleshooting pointer
 - Add a compact README screenshot reviewer checklist
+- Add a compact README command decision tree
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -154,7 +155,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README command decision tree
+Add a compact README evidence legend
 ```
 
 Labels:
@@ -166,13 +167,13 @@ documentation, automation, good first issue
 Body:
 
 ```text
-Add a compact README decision tree for choosing local, release, GitHub, and optional environment checks.
+Add a compact README legend that distinguishes smoke, eval, trace, audit, and visual gates.
 
 Acceptance criteria:
 
-- Cover local verification, release evidence, GitHub maintenance, visual assets, and optional environment checks.
-- Point readers to the existing command quick-reference and output expectations instead of duplicating the full command index.
-- Keep Docker and OpenAI checks clearly optional and environment-specific.
+- Explain what each gate proves and what it does not prove.
+- Link to docs/portfolio_evidence_matrix.md, docs/observability_integrity.md, and docs/visual_asset_hygiene.md.
+- Avoid repeating the full evidence matrix; link out for detail.
 - Keep the section compact enough for README scanning.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
