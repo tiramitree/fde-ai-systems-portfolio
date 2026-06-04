@@ -1,6 +1,6 @@
 # GitHub Release Page Troubleshooting Examples
 
-Use this page when release page evidence, release notes, tags, or replay attachments drift. Read it with `docs/github_latest_release_troubleshooting_examples.md`, `docs/github_release_commands.md`, `docs/github_release_notes_v0.1.0.md`, `docs/release_attachment_verification_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/post_publish_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when release page evidence, release notes, tags, or replay attachments drift. Read it with `docs/github_latest_release_troubleshooting_examples.md`, `docs/github_release_commands.md`, `docs/github_release_notes_v0.1.0.md`, `docs/release_attachment_verification_examples.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/post_publish_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local replay-artifact evidence and published release page evidence prove different things. Do not claim the release page is current until the tag, release notes, and current replay attachments are visible on GitHub.
 
@@ -155,7 +155,7 @@ python -B scripts/dev.py github-maintenance
 
 Keep public wording tied to evidence: the release page is current only after the intended tag is the latest release and current replay artifacts are attached or linked.
 
-Use `docs/github_latest_release_troubleshooting_examples.md` when the release page exists but the latest-release pointer, draft/prerelease state, or attachment freshness is still ambiguous. Use `docs/github_release_attachment_screenshot_checklist.md` before treating release-page screenshots as attachment evidence.
+Use `docs/github_latest_release_troubleshooting_examples.md` when the release page exists but the latest-release pointer, draft/prerelease state, or attachment freshness is still ambiguous. Use `docs/release_asset_upload_dry_run_examples.md` before treating an upload plan as applied release state. Use `docs/github_release_attachment_screenshot_checklist.md` before treating release-page screenshots as attachment evidence.
 
 ## Review Checklist
 

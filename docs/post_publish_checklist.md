@@ -36,6 +36,7 @@ The post-publish check must prove:
 - the API documentation script and documentation are published.
 - the demo replay artifact script and documentation are published.
 - the release attachment verification examples are published.
+- the release asset upload dry-run examples are published: `docs/release_asset_upload_dry_run_examples.md`.
 - the GitHub release attachment screenshot checklist is published: `docs/github_release_attachment_screenshot_checklist.md`.
 - the GitHub release page troubleshooting examples are published.
 - the GitHub latest release troubleshooting examples are published.
@@ -69,7 +70,7 @@ After the automated check passes:
 13. Compare Actions warnings with `docs/github_actions_warning_examples.md` and README badge evidence with `docs/github_actions_badge_verification_examples.md` before claiming the remote workflow is green.
 14. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
 15. Compare release-page state with `docs/github_release_page_troubleshooting_examples.md` and `docs/github_latest_release_troubleshooting_examples.md` before claiming the release page or latest release is current.
-16. Compare release attachments with `docs/release_attachment_verification_examples.md` and release attachment screenshots with `docs/github_release_attachment_screenshot_checklist.md` before claiming the release page is current.
+16. Compare release attachments with `docs/release_attachment_verification_examples.md`, release upload plans with `docs/release_asset_upload_dry_run_examples.md`, and release attachment screenshots with `docs/github_release_attachment_screenshot_checklist.md` before claiming the release page is current.
 17. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
 18. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
 19. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.

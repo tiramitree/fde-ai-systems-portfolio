@@ -48,6 +48,7 @@ GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troublesho
 GITHUB_RELEASE_PAGE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_release_page_troubleshooting_examples.md"
 GITHUB_LATEST_RELEASE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_latest_release_troubleshooting_examples.md"
 GITHUB_RELEASE_ATTACHMENT_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_release_attachment_screenshot_checklist.md"
+RELEASE_ASSET_UPLOAD_DRY_RUN_EXAMPLES = ROOT / "docs" / "release_asset_upload_dry_run_examples.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
@@ -1060,6 +1061,7 @@ def check_github_release_attachment_screenshot_checklist() -> list[str]:
     required_phrases = [
         "GitHub Release Attachment Screenshot Checklist",
         "docs/release_attachment_verification_examples.md",
+        "docs/release_asset_upload_dry_run_examples.md",
         "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_latest_release_troubleshooting_examples.md",
         "docs/post_publish_checklist.md",
@@ -1073,6 +1075,7 @@ def check_github_release_attachment_screenshot_checklist() -> list[str]:
         "Latest-Release Attachment Screenshots",
         "Screenshot Handling Rules",
         "Review Checklist",
+        "upload-plan and generated-`out/` boundaries",
         "python -B scripts/dev.py replay-artifact",
         "python -B scripts/dev.py launch-assets",
         "python -B scripts/dev.py safety",
@@ -1090,12 +1093,65 @@ def check_github_release_attachment_screenshot_checklist() -> list[str]:
         "README.md": "docs/github_release_attachment_screenshot_checklist.md",
         "PROJECT_CONTENT_INDEX.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/release_attachment_verification_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
+        "docs/release_asset_upload_dry_run_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/github_release_page_troubleshooting_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/github_latest_release_troubleshooting_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/github_repository_settings_screenshot_checklist.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/post_publish_checklist.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/post_publish_warning_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/published_repository_status.md": "docs/github_release_attachment_screenshot_checklist.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_release_asset_upload_dry_run_examples() -> list[str]:
+    failures: list[str] = []
+    if not RELEASE_ASSET_UPLOAD_DRY_RUN_EXAMPLES.exists():
+        return ["missing docs/release_asset_upload_dry_run_examples.md"]
+
+    text = RELEASE_ASSET_UPLOAD_DRY_RUN_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Release Asset Upload Dry-Run Examples",
+        "docs/release_attachment_verification_examples.md",
+        "docs/github_release_commands.md",
+        "docs/github_release_page_troubleshooting_examples.md",
+        "docs/github_release_attachment_screenshot_checklist.md",
+        "docs/post_publish_checklist.md",
+        "Expected Evidence Split",
+        "Missing Replay Artifacts",
+        "Stale Local Artifacts",
+        "Wrong Release Tag",
+        "GitHub Release Page Not Found",
+        "Generated out/ Handling",
+        "Review Checklist",
+        "dry-run plans, generated replay artifacts, source-controlled docs, and published GitHub release state prove different things",
+        "Do not claim release assets were uploaded until public release evidence confirms it",
+        "python -B scripts/dev.py replay-artifact",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py github-maintenance",
+        "python -B scripts/post_publish_check.py",
+        "gh release upload v0.1.0 out/demo_replay_artifact.md out/demo_replay_artifact.json",
+        "out/` files remain ignored",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/release_asset_upload_dry_run_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/release_asset_upload_dry_run_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/release_asset_upload_dry_run_examples.md",
+        "docs/release_attachment_verification_examples.md": "docs/release_asset_upload_dry_run_examples.md",
+        "docs/github_release_commands.md": "docs/release_asset_upload_dry_run_examples.md",
+        "docs/github_release_page_troubleshooting_examples.md": "docs/release_asset_upload_dry_run_examples.md",
+        "docs/github_release_attachment_screenshot_checklist.md": "docs/release_asset_upload_dry_run_examples.md",
+        "docs/post_publish_checklist.md": "docs/release_asset_upload_dry_run_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/release_asset_upload_dry_run_examples.md",
+        "docs/published_repository_status.md": "docs/release_asset_upload_dry_run_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1115,6 +1171,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "docs/github_release_commands.md",
         "docs/github_release_notes_v0.1.0.md",
         "docs/release_attachment_verification_examples.md",
+        "docs/release_asset_upload_dry_run_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md",
         "docs/post_publish_checklist.md",
         "docs/command_output_troubleshooting_map.md",
@@ -1135,6 +1192,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "python -B scripts/maintain_github_state.py --apply",
         "local replay-artifact evidence and published release page evidence prove different things",
         "Do not claim the release page is current until the tag, release notes, and current replay attachments are visible on GitHub",
+        "before treating an upload plan as applied release state",
         "Release attachment screenshots are compared with `docs/github_release_attachment_screenshot_checklist.md`",
         "out/demo_replay_artifact.md",
         "out/demo_replay_artifact.json",
@@ -1147,6 +1205,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "README.md": "docs/github_release_page_troubleshooting_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/release_attachment_verification_examples.md": "docs/github_release_page_troubleshooting_examples.md",
+        "docs/release_asset_upload_dry_run_examples.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/post_publish_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_latest_release_troubleshooting_examples.md": "docs/github_release_page_troubleshooting_examples.md",
@@ -1650,6 +1709,7 @@ def main() -> int:
     failures.extend(check_dependabot_secret_scanning_verification_examples())
     failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_github_release_attachment_screenshot_checklist())
+    failures.extend(check_release_asset_upload_dry_run_examples())
     failures.extend(check_github_release_page_troubleshooting_examples())
     failures.extend(check_github_latest_release_troubleshooting_examples())
     failures.extend(check_docs_only_pr_review_examples())
