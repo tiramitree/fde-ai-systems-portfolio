@@ -14,6 +14,14 @@ IMAGE_SUFFIXES = {".gif", ".png", ".svg"}
 REQUIRED_IMAGE_SIZES = {
     "docs/assets/github-preview.png": (1200, 520),
 }
+REQUIRED_README_CAPTIONS = [
+    "Desktop: role-aware knowledge access, visible documents, eval gate, and trace/audit surfaces for permission-aware RAG.",
+    "Desktop: investigator workflow with case context, governed action buttons, eval gate, and approval-driven operations controls.",
+    "Desktop: release and incident triage workspace with eval evidence, rollout blocking, and audit/trace context.",
+    "Mobile: narrow layout keeps user context, visible documents, and permission-aware knowledge controls readable.",
+    "Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning.",
+    "Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence.",
+]
 
 
 def tracked_markdown_files() -> list[Path]:
@@ -188,10 +196,23 @@ def check_assets() -> list[str]:
     return failures
 
 
+def check_readme_captions() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for caption in REQUIRED_README_CAPTIONS:
+        if caption not in text:
+            failures.append(f"README.md: missing screenshot caption: {caption}")
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_markdown_links())
     failures.extend(check_assets())
+    failures.extend(check_readme_captions())
     if failures:
         print("Public asset check failed:")
         for failure in failures:

@@ -22,6 +22,7 @@ The first public issue wave was created after the initial release and is now com
 - Add mobile viewport screenshots to the visual asset manifest
 - Add compact visual asset diff summaries for screenshot refreshes
 - Add visual asset refresh troubleshooting notes
+- Add per-asset captions for screenshot galleries
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -146,28 +147,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add per-asset captions for screenshot galleries
+Add a README command quick-reference
 ```
 
 Labels:
 
 ```text
-documentation, frontend, demo
+documentation, automation, release
 ```
 
 Body:
 
 ```text
-Add concise per-asset captions for the desktop and mobile screenshot galleries.
+Add a compact README command quick-reference grouped by workflow.
 
 Acceptance criteria:
 
-- Caption each desktop screenshot with the specific workflow or control it demonstrates.
-- Caption each mobile / narrow viewport screenshot without duplicating the same text verbatim.
-- Keep captions factual and avoid production-readiness claims.
-- Do not introduce paid APIs, remote frontend dependencies, or unrelated image changes.
+- Group commands into local run, verification, release evidence, visual assets, GitHub maintenance, and optional environment checks.
+- Keep the existing full command list available or clearly linked.
+- Do not claim Docker runtime, OpenAI live mode, or account-level GitHub setup unless verified.
+- Do not introduce paid APIs, remote frontend dependencies, or unrelated code changes.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py visual-assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```

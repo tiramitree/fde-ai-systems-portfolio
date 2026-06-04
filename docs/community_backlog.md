@@ -7,8 +7,8 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
 2. Add compact per-project architecture cards to the README.
 3. Add shareable demo-state reset presets.
-4. Add per-asset captions for the desktop and mobile screenshot gallery.
-5. Add a README command quick-reference grouped by local run, verification, release, and GitHub maintenance.
+4. Add a README command quick-reference grouped by local run, verification, release, and GitHub maintenance.
+5. Add a compact glossary for release gates, eval gates, approval gates, and trace IDs.
 
 ## Intermediate Issues
 
@@ -48,3 +48,4 @@ Contributions should preserve these invariants:
 - Add mobile viewport screenshots to the visual asset manifest.
 - Add compact visual asset diff summaries for screenshot refreshes.
 - Add visual asset refresh troubleshooting notes for browser capture failures.
+- Add per-asset captions for the desktop and mobile screenshot gallery.
