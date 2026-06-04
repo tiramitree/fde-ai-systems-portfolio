@@ -30,6 +30,7 @@ REQUIRED_LABELS = {
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 PUBLIC_ROADMAP_ISSUE_COMMENT_EXAMPLES = ROOT / "docs" / "public_roadmap_issue_comment_examples.md"
+CONTRIBUTOR_ATTRIBUTION_EXAMPLES = ROOT / "docs" / "contributor_attribution_examples.md"
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
@@ -274,6 +275,7 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "docs/community_backlog.md",
         "docs/issue_to_pr_handoff_flow.md",
         "docs/docs_only_review_comment_examples.md",
+        "docs/contributor_attribution_examples.md",
         "docs/maintainer_review_policy.md",
         "Comment Principles",
         "Accept Scoped Roadmap Issue",
@@ -290,6 +292,7 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "python -B scripts/dev.py quality",
         "secrets, credentials, private files, real customer data, or local machine details",
         "Do not mark the issue done until the PR is reviewed, merged, and verified",
+        "Use `docs/contributor_attribution_examples.md` before adding public credit",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -300,7 +303,55 @@ def check_public_roadmap_issue_comment_examples() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/issue_to_pr_handoff_flow.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/docs_only_review_comment_examples.md": "docs/public_roadmap_issue_comment_examples.md",
+        "docs/contributor_attribution_examples.md": "docs/public_roadmap_issue_comment_examples.md",
         "docs/maintainer_review_policy.md": "public_roadmap_issue_comment_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_contributor_attribution_examples() -> list[str]:
+    failures: list[str] = []
+    if not CONTRIBUTOR_ATTRIBUTION_EXAMPLES.exists():
+        return ["missing docs/contributor_attribution_examples.md"]
+
+    text = CONTRIBUTOR_ATTRIBUTION_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Contributor Attribution Examples",
+        "docs/maintainer_review_policy.md",
+        "docs/docs_only_pr_review_examples.md",
+        "docs/public_roadmap_issue_comment_examples.md",
+        "docs/launch_feedback_collection_examples.md",
+        "Attribution Principles",
+        "Useful Docs PR Credit",
+        "Useful Bug Report Credit",
+        "Eval-Case Addition Credit",
+        "Useful PR Credit",
+        "Private Feedback Credit",
+        "Rejected Low-Signal Attribution Requests",
+        "Review Checklist",
+        "useful public contribution, private feedback, launch feedback, and low-signal activity prove different things",
+        "Keep attribution tied to public GitHub activity or explicitly permissioned public credit",
+        "do not include private messages, account details, emails, or analytics screenshots",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py pr-policy",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/contributor_attribution_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/contributor_attribution_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/contributor_attribution_examples.md",
+        "docs/maintainer_review_policy.md": "contributor_attribution_examples.md",
+        "docs/docs_only_pr_review_examples.md": "docs/contributor_attribution_examples.md",
+        "docs/public_roadmap_issue_comment_examples.md": "docs/contributor_attribution_examples.md",
+        "docs/launch_feedback_collection_examples.md": "docs/contributor_attribution_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -727,6 +778,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
+        "docs/contributor_attribution_examples.md",
         "docs/command_output_troubleshooting_map.md",
         "Expected Evidence Split",
         "GitHub Stars And Forks",
@@ -744,6 +796,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "public feedback, private messages, analytics screenshots, and source evidence prove different things",
         "support SLAs, private account access, or guaranteed roadmap acceptance",
         "Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence",
+        "Use `docs/contributor_attribution_examples.md` before turning public feedback or explicitly permissioned private feedback into source-visible credit",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -758,6 +811,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/post_publish_checklist.md": "docs/launch_feedback_collection_examples.md",
         "docs/post_publish_warning_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/github_discussions_launch_checklist.md": "docs/launch_feedback_collection_examples.md",
+        "docs/contributor_attribution_examples.md": "docs/launch_feedback_collection_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1397,6 +1451,7 @@ def check_docs_only_pr_review_examples() -> list[str]:
         "docs/command_output_troubleshooting_map.md",
         "docs/github_initial_issues.md",
         "docs/first_pull_request_checklist.md",
+        "docs/contributor_attribution_examples.md",
         "Useful Docs PR Example",
         "Low-Signal Docs PR Example",
         "Unsafe Docs PR Example",
@@ -1422,6 +1477,7 @@ def check_docs_only_pr_review_examples() -> list[str]:
         "*/data/runtime_state.json",
         "*/data/eval_runtime_state.json",
         "Do not run contributor commands",
+        "Use `docs/contributor_attribution_examples.md` before adding public credit for a docs-only fix",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -1430,6 +1486,7 @@ def check_docs_only_pr_review_examples() -> list[str]:
     cross_references = {
         "README.md": "docs/docs_only_pr_review_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/docs_only_pr_review_examples.md",
+        "docs/contributor_attribution_examples.md": "docs/docs_only_pr_review_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1812,6 +1869,7 @@ def main() -> int:
     failures.extend(check_first_pull_request_checklist())
     failures.extend(check_issue_to_pr_handoff_flow())
     failures.extend(check_public_roadmap_issue_comment_examples())
+    failures.extend(check_contributor_attribution_examples())
     failures.extend(check_eval_csv_troubleshooting_examples())
     failures.extend(check_branch_protection_verification_examples())
     failures.extend(check_post_publish_warning_examples())
