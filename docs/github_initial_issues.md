@@ -105,6 +105,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact GitHub release attachment screenshot checklist
 - Add compact GitHub Actions badge verification examples
 - Add compact Dependabot and secret-scanning verification examples
+- Add compact public roadmap issue comment examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -229,28 +230,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact public roadmap issue comment examples
+Add compact release asset upload dry-run examples
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add compact maintainer comment examples for public roadmap issues without confusing accepted scope, backlog ideas, implementation promises, and low-signal activity.
+Add compact examples for dry-running release asset upload plans without confusing generated local replay artifacts, GitHub release pages, tags, and source-controlled documentation.
 
 Acceptance criteria:
 
-- Add docs/public_roadmap_issue_comment_examples.md with examples for accepting a scoped roadmap issue, narrowing an oversized request, closing low-signal activity, redirecting unsafe requests, and linking a useful PR.
-- Reference docs/github_initial_issues.md, docs/community_backlog.md, docs/issue_to_pr_handoff_flow.md, docs/docs_only_review_comment_examples.md, and docs/maintainer_review_policy.md.
-- Keep accepted scope, backlog ideas, implementation promises, and low-signal activity separate; do not promise delivery dates, external-account access, private data, or guaranteed roadmap acceptance.
+- Add docs/release_asset_upload_dry_run_examples.md with examples for missing replay artifacts, stale local artifacts, wrong release tag, GitHub release page not found, and generated out/ handling.
+- Reference docs/release_attachment_verification_examples.md, docs/github_release_commands.md, docs/github_release_page_troubleshooting_examples.md, docs/github_release_attachment_screenshot_checklist.md, and docs/post_publish_checklist.md.
+- Keep dry-run plans, generated replay artifacts, source-controlled docs, and published GitHub release state separate; do not claim release assets were uploaded until public release evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py community-issues still passes.
-- python -B scripts/dev.py pr-policy still passes.
+- python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

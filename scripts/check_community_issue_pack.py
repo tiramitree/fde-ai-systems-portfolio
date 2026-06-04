@@ -29,6 +29,7 @@ REQUIRED_LABELS = {
 
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
+PUBLIC_ROADMAP_ISSUE_COMMENT_EXAMPLES = ROOT / "docs" / "public_roadmap_issue_comment_examples.md"
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
@@ -218,6 +219,7 @@ def check_issue_to_pr_handoff_flow() -> list[str]:
         "Issue To PR Handoff Flow",
         "docs/github_initial_issues.md",
         "docs/first_pull_request_checklist.md",
+        "docs/public_roadmap_issue_comment_examples.md",
         "docs/docs_only_review_comment_examples.md",
         "docs/pr_review_security.md",
         "Pick One Issue",
@@ -239,6 +241,7 @@ def check_issue_to_pr_handoff_flow() -> list[str]:
         "private paths",
         "real customer data",
         "Public PRs are still untrusted input",
+        "before accepting, narrowing, closing, or linking public roadmap issue work",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -249,6 +252,52 @@ def check_issue_to_pr_handoff_flow() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/issue_to_pr_handoff_flow.md",
         "CONTRIBUTING.md": "docs/issue_to_pr_handoff_flow.md",
         "docs/first_pull_request_checklist.md": "docs/issue_to_pr_handoff_flow.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_public_roadmap_issue_comment_examples() -> list[str]:
+    failures: list[str] = []
+    if not PUBLIC_ROADMAP_ISSUE_COMMENT_EXAMPLES.exists():
+        return ["missing docs/public_roadmap_issue_comment_examples.md"]
+
+    text = PUBLIC_ROADMAP_ISSUE_COMMENT_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Public Roadmap Issue Comment Examples",
+        "docs/github_initial_issues.md",
+        "docs/community_backlog.md",
+        "docs/issue_to_pr_handoff_flow.md",
+        "docs/docs_only_review_comment_examples.md",
+        "docs/maintainer_review_policy.md",
+        "Comment Principles",
+        "Accept Scoped Roadmap Issue",
+        "Narrow Oversized Request",
+        "Close Low-Signal Activity",
+        "Redirect Unsafe Requests",
+        "Link Useful PR",
+        "Review Checklist",
+        "accepted scope, backlog ideas, implementation promises, and low-signal activity",
+        "do not promise delivery dates, external-account access, private data, or guaranteed roadmap acceptance",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py pr-policy",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "secrets, credentials, private files, real customer data, or local machine details",
+        "Do not mark the issue done until the PR is reviewed, merged, and verified",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/public_roadmap_issue_comment_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/public_roadmap_issue_comment_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/public_roadmap_issue_comment_examples.md",
+        "docs/issue_to_pr_handoff_flow.md": "docs/public_roadmap_issue_comment_examples.md",
+        "docs/docs_only_review_comment_examples.md": "docs/public_roadmap_issue_comment_examples.md",
+        "docs/maintainer_review_policy.md": "public_roadmap_issue_comment_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1220,6 +1269,7 @@ def check_docs_only_review_comment_examples() -> list[str]:
         "docs/docs_only_pr_review_examples.md",
         "docs/pr_review_security.md",
         "docs/first_pull_request_checklist.md",
+        "docs/public_roadmap_issue_comment_examples.md",
         "approve",
         "request-changes",
         "close-as-unsafe",
@@ -1242,6 +1292,7 @@ def check_docs_only_review_comment_examples() -> list[str]:
         "paid-service requirements",
         "real customer data",
         "Do not run contributor commands",
+        "accepted scope, backlog ideas, implementation promises, or low-signal activity",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -1251,6 +1302,7 @@ def check_docs_only_review_comment_examples() -> list[str]:
         "README.md": "docs/docs_only_review_comment_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/docs_only_review_comment_examples.md",
         "docs/docs_only_pr_review_examples.md": "docs/docs_only_review_comment_examples.md",
+        "docs/public_roadmap_issue_comment_examples.md": "docs/docs_only_review_comment_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1581,6 +1633,7 @@ def main() -> int:
     failures.extend(check_public_backlog())
     failures.extend(check_first_pull_request_checklist())
     failures.extend(check_issue_to_pr_handoff_flow())
+    failures.extend(check_public_roadmap_issue_comment_examples())
     failures.extend(check_eval_csv_troubleshooting_examples())
     failures.extend(check_branch_protection_verification_examples())
     failures.extend(check_post_publish_warning_examples())
