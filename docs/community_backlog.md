@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add a compact README connector roadmap pointer.
-3. Add a compact README eval regression report pointer.
-4. Add a compact README storage adapter evidence pointer.
-5. Add a compact README red-team eval expansion pointer.
+2. Add a compact README eval regression report pointer.
+3. Add a compact README storage adapter evidence pointer.
+4. Add a compact README red-team eval expansion pointer.
+5. Add a compact README OpenTelemetry backend pointer.
 
 ## Intermediate Issues
 
@@ -72,3 +72,4 @@ Contributions should preserve these invariants:
 - Add a compact README contribution safety summary pointer.
 - Add a compact README release artifact attachment pointer.
 - Add a compact README optional-environment evidence pointer.
+- Add a compact README connector roadmap pointer.

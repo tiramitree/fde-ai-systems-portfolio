@@ -181,6 +181,10 @@ REQUIRED_OPTIONAL_ENVIRONMENT_READINESS = [
     "Optional-environment readiness:",
     "Use [Container Release Hygiene](docs/container_release_hygiene.md), [Model Runtime Configuration](docs/model_runtime_configuration.md), [Model Gateway Safety](docs/model_gateway_safety.md), the GitHub readiness notes in [Published Repository Status](docs/published_repository_status.md), and [Development Issue Solutions](docs/development_issue_solutions.md) before claiming optional environment evidence. Run `python -B scripts/dev.py container-release` for static container config, `python -B scripts/dev.py docker-runtime` only on a Docker-enabled machine, `python -B scripts/dev.py openai-live` only in an API-key environment, and `python -B scripts/dev.py github-readiness` after a public push; Docker runtime and OpenAI live mode stay manual or environment-dependent until their matching commands pass in the right environment.",
 ]
+REQUIRED_CONNECTOR_ROADMAP_READINESS = [
+    "Connector roadmap readiness:",
+    "Use [Production Upgrade Notes](docs/production_upgrade_notes.md), [Project Case Notes](docs/project_case_notes.md), [Model Gateway Safety](docs/model_gateway_safety.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Connector stubs](#contributor-route-map) row before adding external-system adapters. Connector stubs must keep external side effects behind approval, idempotency, audit, and trace boundaries; run `python -B scripts/dev.py architecture`, `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -637,6 +641,18 @@ def check_optional_environment_readiness() -> list[str]:
     return failures
 
 
+def check_connector_roadmap_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_CONNECTOR_ROADMAP_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing connector roadmap readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -676,6 +692,7 @@ def main() -> int:
     failures.extend(check_contribution_safety_readiness())
     failures.extend(check_release_artifact_readiness())
     failures.extend(check_optional_environment_readiness())
+    failures.extend(check_connector_roadmap_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
