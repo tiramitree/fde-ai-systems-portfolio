@@ -56,6 +56,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README API contract evidence pointer
 - Add a compact README error hygiene evidence pointer
 - Add a compact README model gateway safety evidence pointer
+- Add a compact README PR triage evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -180,7 +181,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README PR triage evidence pointer
+Add a compact README threat model evidence pointer
 ```
 
 Labels:
@@ -192,16 +193,16 @@ documentation, security, good first issue
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where PR triage materials live and which public-contribution review boundaries must be preserved before approving workflows, running contributor code, or merging.
+Add a compact README pointer that tells contributors where threat model materials live and which deterministic controls must be preserved before changing security-sensitive behavior.
 
 Acceptance criteria:
 
-- Link to PR Review Security, PR Review Runbook, Maintainer PR Checklist, Development Issue Solutions, and the public PR triage row in the Evidence Matrix.
-- Cover PR review checks: `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
+- Link to Threat Model, System Evidence Matrix, Evidence Legend, Architecture Boundaries, and the threat model row in the Evidence Matrix.
+- Cover threat-model checks: `python -B scripts/dev.py threat-model`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py evals`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that public PRs are treated as untrusted input, changed files and diffs are reviewed before running contributor code, and high-risk workflow, dependency, model gateway, safety, eval, binary, network, shell, or environment changes require extra scrutiny.
+- Make clear that information disclosure, prompt injection, unsafe side effects, public PR abuse, dependency drift, optional model gateway risk, observability gaps, and UI route surprises map to deterministic owners and evidence commands.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py pr-policy still passes.
+- python -B scripts/dev.py threat-model still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

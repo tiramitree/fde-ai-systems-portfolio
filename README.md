@@ -280,6 +280,10 @@ Model gateway readiness:
 
 Use [Model Gateway Safety](docs/model_gateway_safety.md), [Model Runtime Configuration](docs/model_runtime_configuration.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), and the [Evidence Matrix](#evidence-matrix) before changing gateway code or runtime configuration. OpenAI mode stays opt-in, API keys stay outside the repo, structured outputs are required, failures fall back locally, and models do not authorize permissions, approvals, audit logs, or eval success; run `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`, with `python -B scripts/dev.py openai-live` only in API-key environments before claiming live model evidence.
 
+PR triage readiness:
+
+Use [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), [Development Issue Solutions](docs/development_issue_solutions.md), and the [Evidence Matrix](#evidence-matrix) before approving workflows, running contributor code, or merging public contributions. Treat public PRs as untrusted input: read changed files and diffs before running code, and give workflow, dependency, model gateway, safety, eval, binary, network, shell, and environment changes extra scrutiny; run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
