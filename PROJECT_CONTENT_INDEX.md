@@ -160,7 +160,7 @@ Local Git state:
 - `scripts/manage_community_issues.py`: dry-runs or applies GitHub label sync and optional community issue creation through `gh`.
 - `scripts/community_issue_pack.py`: shared parser for label and community issue automation.
 - `scripts/generate_final_readiness_report.py`: writes the compact launch, blocker, and technical review walkthrough report.
-- `scripts/check_pr_review_policy.py`: verifies malicious-contribution triage heuristics, runbook, maintainer policy, and PR template safeguards remain intact.
+- `scripts/check_pr_review_policy.py`: verifies malicious-contribution triage heuristics, runbook, maintainer policy, docs-only review examples, and PR template safeguards remain intact.
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
 - `scripts/run_all_evals.py`: runs all project eval suites.
 - `scripts/export_eval_csv.py`: exports repository eval summary rows to `eval_summaries.csv`.
@@ -222,6 +222,7 @@ Design Review Docs:
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
 - `docs/code_tour.md`: contributor map from HTTP shells to API classes, domain modules, storage, evals, and frontend modules.
 - `docs/first_pull_request_checklist.md`: first local pull request checklist for clone, branch, diff review, route selection, targeted gates, quality checks, and PR handoff.
+- `docs/docs_only_pr_review_examples.md`: examples for approving, requesting changes, or closing docs-only PRs without weakening public claims.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
 - `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, copyable scenario-draft controls, local draft diffs, no-build local UI posture, and review framing.
@@ -239,6 +240,7 @@ Release and growth:
 - `docs/public_release_audit.md`: public-readiness audit.
 - `docs/reviewer_perspective_checklist.md`: checks from user and reviewer perspectives.
 - `docs/pr_review_security.md`: PR review policy gate and malicious-contribution review framing.
+- `docs/docs_only_pr_review_examples.md`: docs-only PR review examples for useful docs, low-signal docs, unsafe docs, claim checks, link checks, generated artifact checks, and issue-pack drift.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_branch_protection.json`: branch-protection payload for `main`.

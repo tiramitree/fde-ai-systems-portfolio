@@ -28,6 +28,7 @@ REQUIRED_LABELS = {
 }
 
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
+DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 
 FORBIDDEN_ISSUE_TEXT = [
     "look active",
@@ -180,6 +181,57 @@ def check_first_pull_request_checklist() -> list[str]:
     return failures
 
 
+def check_docs_only_pr_review_examples() -> list[str]:
+    failures: list[str] = []
+    if not DOCS_ONLY_PR_REVIEW_EXAMPLES.exists():
+        return ["missing docs/docs_only_pr_review_examples.md"]
+
+    text = DOCS_ONLY_PR_REVIEW_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "docs/pr_review_security.md",
+        "docs/command_output_troubleshooting_map.md",
+        "docs/github_initial_issues.md",
+        "docs/first_pull_request_checklist.md",
+        "Useful Docs PR Example",
+        "Low-Signal Docs PR Example",
+        "Unsafe Docs PR Example",
+        "Claim Check",
+        "Link And Artifact Check",
+        "Issue-Pack Drift Check",
+        "Docs-Only Merge Bar",
+        "public claims",
+        "generated runtime artifacts",
+        "private paths",
+        "external-account requirements",
+        "paid-service requirements",
+        "real customer data",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py pr-triage",
+        "python -B scripts/dev.py pr-policy",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py claims",
+        "out/demo_replay_artifact.*",
+        "*/data/runtime_state.json",
+        "*/data/eval_runtime_state.json",
+        "Do not run contributor commands",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/docs_only_pr_review_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/docs_only_pr_review_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/docs_only_pr_review_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_templates(labels: dict[str, object]) -> list[str]:
     failures: list[str] = []
     for rel_path, template_label_names in template_labels().items():
@@ -225,6 +277,7 @@ def main() -> int:
     failures.extend(check_issue_pack(labels))
     failures.extend(check_public_backlog())
     failures.extend(check_first_pull_request_checklist())
+    failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_templates(labels))
     failures.extend(check_cross_references())
 

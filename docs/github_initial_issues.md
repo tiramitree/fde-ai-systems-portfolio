@@ -77,6 +77,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a local demo reset troubleshooting guide for stale runtime state
 - Add a seed fixture data-flow map
 - Add a contributor onboarding checklist for the first local pull request
+- Add docs-only pull request review examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -201,7 +202,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add docs-only pull request review examples
+Add a README-to-docs navigation audit
 ```
 
 Labels:
@@ -213,15 +214,14 @@ documentation, good first issue
 Body:
 
 ```text
-Add concrete examples for reviewing docs-only pull requests without running unnecessary code or weakening public claims.
+Add a compact audit that maps release-facing README pointers to their supporting docs so navigation drift is easy to review.
 
 Acceptance criteria:
 
-- Add docs/docs_only_pr_review_examples.md with examples of useful docs PRs, low-signal docs PRs, and unsafe docs PRs.
-- Include reviewer steps for checking public claims, links, generated artifacts, private paths, and issue-pack drift.
-- Reference docs/pr_review_security.md, docs/command_output_troubleshooting_map.md, docs/github_initial_issues.md, and docs/first_pull_request_checklist.md.
-- Link the examples page from README.md and PROJECT_CONTENT_INDEX.md.
-- Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
+- Add docs/readme_navigation_audit.md with a table for README sections, supporting docs, owner/gate, and drift risk.
+- Include release-facing sections such as demo recording, launch channels, contribution safety, optional environments, Docker runtime, model gateway, PR triage, and GitHub readiness.
+- Link the audit from README.md and PROJECT_CONTENT_INDEX.md.
+- Keep the audit local-only and do not claim fresh runtime, Docker, OpenAI, branch-protection, release-page, or account-level evidence unless a matching command or manual proof exists.
 - python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

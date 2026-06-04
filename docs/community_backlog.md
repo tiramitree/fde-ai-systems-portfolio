@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add a docs-only pull request review examples page.
-3. Add a small README-to-docs navigation audit for release-facing docs.
-4. Add a compact optional OpenAI live-mode troubleshooting note.
-5. Add a compact Docker runtime evidence collection checklist.
+2. Add a small README-to-docs navigation audit for release-facing docs.
+3. Add a compact optional OpenAI live-mode troubleshooting note.
+4. Add a compact Docker runtime evidence collection checklist.
+5. Add docs-only review comments for common PR outcomes.
 
 ## Intermediate Issues
 
@@ -103,3 +103,4 @@ Contributions should preserve these invariants:
 - Add a local demo reset troubleshooting guide for stale runtime state.
 - Add a concise data-flow map for each service's checked-in seed fixtures.
 - Add a contributor onboarding checklist for the first local pull request.
+- Add docs-only pull request review examples for useful, low-signal, and unsafe documentation changes.
