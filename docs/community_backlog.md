@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a small dark-mode toggle to all demo UIs.
-2. Add a one-command screenshot refresh script that updates `docs/visual_assets_manifest.json`.
-3. Add a tiny seed-data editor for local demos.
-4. Add a narrated demo video using the walkthrough GIF as the storyboard.
-5. Add keyboard-friendly trace navigation for recent trace lists.
+2. Add a narrated demo video using the walkthrough GIF as the storyboard.
+3. Add keyboard-friendly trace navigation for recent trace lists.
+4. Add copyable scenario-draft import/export snippets for local demos.
+5. Add a compact diff view for browser-local scenario drafts.
 
 ## Intermediate Issues
 

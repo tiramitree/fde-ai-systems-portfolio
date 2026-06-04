@@ -132,7 +132,7 @@ Local Git state:
 - `scripts/check_openai_live_mode.py`: optionally proves live OpenAI mode with a real API key while preserving citations, approval requests, and side-effect blocking.
 - `scripts/check_observability_integrity.py`: starts isolated services and verifies trace, audit, approval, blocked-action, unauthorized-query, and release-decision evidence stay consistent with demo outcomes.
 - `scripts/check_threat_model.py`: verifies repository threat IDs map to deterministic controls, source files, supporting docs, and evidence commands.
-- `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent.
+- `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent for the local scenario draft surface.
 - `scripts/check_error_hygiene.py`: verifies unexpected backend exceptions return generic JSON errors without leaking internals.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_visual_asset_manifest.py`: verifies README screenshots match recorded asset hashes, dimensions, and frontend source hashes.
@@ -140,9 +140,9 @@ Local Git state:
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.
 - `scripts/check_docker_runtime.py`: optionally builds the Compose stack, waits for container health, runs smoke flows, and tears the stack down on Docker-enabled machines.
-- `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, trace deep links, and quick-action controls.
+- `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, trace deep links, scenario-draft controls, and quick-action controls.
 - `scripts/check_fresh_clone_experience.py`: clones the repository into a temporary directory, runs release-facing static checks, starts all demos on isolated ports, and runs health/smoke flows.
-- `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, content types, security headers, 404s, and traversal blocking.
+- `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, scenario editor modules, content types, security headers, 404s, and traversal blocking.
 - `scripts/check_api_documentation.py`: verifies API source routes, public API contract documentation, README, index, and evidence matrix stay aligned.
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
@@ -210,7 +210,7 @@ Design Review Docs:
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
-- `docs/frontend_integrity.md`: frontend wiring, trace-copy and trace-link controls, no-build local UI posture, and review framing.
+- `docs/frontend_integrity.md`: frontend wiring, trace-copy, trace-link, and scenario-draft controls, no-build local UI posture, and review framing.
 - `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and review framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
 - `docs/api_contracts.md`: documented backend API surface, response-shape boundaries, and review framing.
@@ -274,7 +274,7 @@ Important files:
 - `src/copilot/evals.py`: golden eval definitions and assertions.
 - `src/copilot/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.
-- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, renderers, and app orchestration.
+- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, scenario draft helper, renderers, and app orchestration.
 - `data/seed_documents.json`: seed knowledge base.
 - `data/eval_cases.json`: eval cases.
 - `docs/architecture.md`: project architecture.
@@ -304,7 +304,7 @@ Important files:
 - `src/ops_agent/evals.py`: golden eval definitions and assertions.
 - `src/ops_agent/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.
-- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, renderers, and app orchestration.
+- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, scenario draft helper, renderers, and app orchestration.
 - `data/seed_state.json`: seeded operations state.
 - `data/eval_cases.json`: eval cases.
 - `docs/architecture.md`: project architecture.
@@ -332,7 +332,7 @@ Important files:
 - `src/reliability_console/storage.py`: thread-safe JSON state, traces, audit log, and triage decisions.
 - `src/reliability_console/evals.py`: golden eval definitions and assertions.
 - `scripts/run_eval.py`: project-level eval runner using reset local state.
-- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, renderers, and app orchestration.
+- `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, scenario draft helper, renderers, and app orchestration.
 - `data/seed_state.json`: fictional release, incident, eval, and runbook data.
 - `data/eval_cases.json`: eval cases.
 - `docs/architecture.md`: project architecture.

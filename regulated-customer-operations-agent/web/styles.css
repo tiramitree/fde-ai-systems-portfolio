@@ -265,6 +265,31 @@ button {
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
+.scenarioDraft {
+  min-height: 128px;
+  max-height: 220px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+}
+
+.scenarioActions {
+  margin-top: 8px;
+}
+
+.scenarioStatus {
+  min-height: 20px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.scenarioStatus[data-state="ok"] {
+  color: var(--accent);
+}
+
+.scenarioStatus[data-state="error"] {
+  color: var(--danger);
+}
+
 @media (max-width: 1100px) {
   .grid,
   .twoCols {

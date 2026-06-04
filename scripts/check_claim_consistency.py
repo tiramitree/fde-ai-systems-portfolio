@@ -40,7 +40,13 @@ def count_smoke_checks() -> int:
 
 def count_api_contract_checks() -> int:
     text = read_text("scripts/check_api_contracts.py")
-    return len(re.findall(r"\bchecks\.append\(", text))
+    append_count = len(re.findall(r"\bchecks\.append\(", text))
+    helper_match = re.search(r"def scenario_contract\(.*?\n\s+return checks", text, flags=re.DOTALL)
+    if not helper_match:
+        return append_count
+    helper_append_count = len(re.findall(r"\bchecks\.append\(", helper_match.group(0)))
+    helper_call_count = len(re.findall(r"\bchecks\.extend\(scenario_contract\(", text))
+    return append_count - helper_append_count + (helper_append_count * helper_call_count)
 
 
 def expected_claims() -> ExpectedClaims:

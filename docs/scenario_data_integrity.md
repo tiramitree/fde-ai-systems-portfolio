@@ -1,6 +1,6 @@
 ﻿# Scenario Data Integrity
 
-The repository uses small fictional datasets so the demos are understandable, repeatable, and safe to publish. The scenario data integrity gate makes sure those datasets keep supporting the claims made in the README and release materials.
+The repository uses small fictional datasets so the demos are understandable, repeatable, and safe to publish. The scenario data integrity gate makes sure those datasets keep supporting the claims made in the README and release materials. The browser scenario draft panels read these seed snapshots and store edits only in browser localStorage.
 
 Run it with:
 
@@ -39,8 +39,27 @@ Project 2 checks:
 - approval evals require a blocked action before approval
 - refusal evals contain a bypass/override marker or a non-supervisor approval attempt
 
+Project 3 checks:
+
+- demo users include reliability lead and product manager roles
+- release, incident, runbook, and eval case ids are unique
+- eval runs point to existing releases
+- eval run metrics match the number of cases
+- incidents point to existing releases
+- incident severities and statuses stay within the expected operational vocabulary
+- incident runbook ids and linked eval case ids point to existing seed data
+- eval cases point to existing users, releases, and incidents
+- blocked release cases include remediation phrases
+
 The gate also scans the seed and eval JSON for local paths, private artifacts, obvious secret markers, and personal identifiers that should never appear in public fixtures.
+
+The browser-local scenario draft surface depends on this same data contract:
+
+- `/api/scenario` exposes only allowlisted fictional seed and eval files.
+- runtime state files are not part of the scenario snapshot.
+- drafts are stored in browser `localStorage`, not written back to repository JSON.
+- JSON seed files remain the source of truth for evals and reset behavior.
 
 ## Technical Review Framing
 
-The data is deliberately small, but it is not arbitrary. Each fixture exists to demonstrate a production invariant: permission filtering before generation, citation-backed answers, abstention, retrieved-content injection handling, deterministic tools, approval gates, blocked side effects, and release triage. The integrity gate prevents future edits from making the demo story inconsistent or accidentally publishing private artifacts.
+The data is deliberately small, but it is not arbitrary. Each fixture exists to demonstrate a production invariant: permission filtering before generation, citation-backed answers, abstention, retrieved-content injection handling, deterministic tools, approval gates, blocked side effects, and release triage. The integrity gate prevents future edits from making the demo story inconsistent or accidentally publishing private artifacts, while the scenario draft UI makes the fictional data inspectable without mutating it.

@@ -86,6 +86,17 @@
           <div id="audit" class="list compact"></div>
           <h2>Recent Traces</h2>
           <div id="traces" class="list compact"></div>
+
+          <h2>Scenario Draft</h2>
+          <div id="scenarioSummary" class="box">Loading scenario...</div>
+          <label for="scenarioDraft">Seed JSON</label>
+          <textarea id="scenarioDraft" class="scenarioDraft" rows="6" spellcheck="false"></textarea>
+          <div class="sectionActions scenarioActions">
+            <button id="saveScenarioDraft" class="secondaryButton" type="button" disabled>Save Local</button>
+            <button id="resetScenarioDraft" class="secondaryButton" type="button" disabled>Reset</button>
+            <button id="clearScenarioDraft" class="secondaryButton" type="button" disabled>Clear</button>
+          </div>
+          <div id="scenarioStatus" class="scenarioStatus muted">Draft not loaded.</div>
         </aside>
       </section>
     </main>

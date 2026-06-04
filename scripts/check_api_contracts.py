@@ -153,6 +153,45 @@ def expect_types(payload: dict, expected: dict[str, type | tuple[type, ...]]) ->
     return not failures, ", ".join(failures) or "ok"
 
 
+def scenario_contract(base_url: str, label: str, expected_app: str) -> list[Check]:
+    checks: list[Check] = []
+    status, payload = get_json(f"{base_url}/api/scenario")
+    scenario = payload.get("scenario")
+    checks.append(
+        check(
+            status == 200 and isinstance(scenario, dict),
+            f"{label} scenario endpoint contract",
+            f"status={status}; keys={sorted(scenario.keys()) if isinstance(scenario, dict) else []}",
+        )
+    )
+    if isinstance(scenario, dict):
+        ok, detail = expect_types(
+            scenario,
+            {
+                "app": str,
+                "draft_mode": str,
+                "write_policy": str,
+                "files": list,
+            },
+        )
+        checks.append(
+            check(
+                ok
+                and scenario.get("app") == expected_app
+                and scenario.get("draft_mode") == "browser_local_storage"
+                and scenario.get("write_policy") == "read_only_seed_snapshot",
+                f"{label} scenario metadata contract",
+                detail,
+            )
+        )
+        files = scenario.get("files", [])
+        checks.append(check(isinstance(files, list) and len(files) == 2, f"{label} scenario file list contract", f"files={len(files) if isinstance(files, list) else 0}"))
+        if files:
+            ok, detail = expect_types(files[0], {"path": str, "kind": str, "record_count": int, "content": (dict, list)})
+            checks.append(check(ok and files[0]["path"].startswith("data/"), f"{label} scenario file shape contract", detail))
+    return checks
+
+
 def project_1_contracts(base_url: str) -> list[Check]:
     checks: list[Check] = []
 
@@ -241,6 +280,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
         ok, detail = expect_types(traces["traces"][0], {"id": str, "created_at": str, "user_id": str, "question": str, "payload": dict})
         checks.append(check(ok, "P1 trace shape contract", detail))
 
+    checks.extend(scenario_contract(base_url, "P1", "secure-enterprise-knowledge-copilot"))
     return checks
 
 
@@ -334,6 +374,7 @@ def project_2_contracts(base_url: str) -> list[Check]:
         ok, detail = expect_types(traces["traces"][0], {"id": str, "created_at": str, "user_id": str, "message": str, "intent": str, "result": dict})
         checks.append(check(ok, "P2 trace shape contract", detail))
 
+    checks.extend(scenario_contract(base_url, "P2", "regulated-customer-operations-agent"))
     return checks
 
 
@@ -480,6 +521,7 @@ def project_3_contracts(base_url: str) -> list[Check]:
         ok, detail = expect_types(audit["events"][0], {"id": int, "created_at": str, "user_id": str, "action": str, "details": dict})
         checks.append(check(ok, "P3 audit shape contract", detail))
 
+    checks.extend(scenario_contract(base_url, "P3", "ai-reliability-incident-console"))
     return checks
 
 

@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
 STATE_PATH = DATA_DIR / "runtime_state.json"
 SEED_PATH = DATA_DIR / "seed_state.json"
+EVAL_CASES_PATH = DATA_DIR / "eval_cases.json"
 STORE_LOCK = threading.RLock()
 
 
@@ -148,3 +149,30 @@ def list_traces(store: JsonStore, limit: int = 25) -> list[dict]:
 
 def list_audit(store: JsonStore, limit: int = 50) -> list[dict]:
     return sorted(store.state["audit_events"], key=lambda item: item["created_at"], reverse=True)[:limit]
+
+
+def _record_count(payload: dict | list) -> int:
+    if isinstance(payload, list):
+        return len(payload)
+    return sum(len(value) for value in payload.values() if isinstance(value, list))
+
+
+def _scenario_file(path: Path, kind: str) -> dict:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        "path": f"data/{path.name}",
+        "kind": kind,
+        "record_count": _record_count(payload),
+        "content": payload,
+    }
+
+
+def load_scenario_snapshot() -> dict:
+    return {
+        "draft_mode": "browser_local_storage",
+        "write_policy": "read_only_seed_snapshot",
+        "files": [
+            _scenario_file(SEED_PATH, "seed"),
+            _scenario_file(EVAL_CASES_PATH, "eval"),
+        ],
+    }

@@ -130,10 +130,10 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | Regression gates | `scripts/dev.py`, project eval runners, CSV summary export | `python -B scripts/dev.py verify`, `python -B scripts/dev.py eval-csv` |
 | Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
 | Architecture boundaries | `scripts/check_architecture_boundaries.py`, `docs/architecture_boundaries.md` | app shells, API classes, backend packages, and frontend modules preserve separation of concerns |
-| Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, trace-copy and trace-link controls, and quick actions stay intact |
+| Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, trace-copy, trace-link, scenario-draft controls, and quick actions stay intact |
 | Visual asset hygiene | `scripts/check_visual_asset_manifest.py`, `scripts/refresh_visual_assets.py`, `docs/visual_assets_manifest.json` | README screenshots stay tied to recorded frontend source hashes and can be refreshed from live local apps |
 | Fresh clone experience | `scripts/check_fresh_clone_experience.py`, `docs/fresh_clone_experience.md` | clone the public repo into a temp directory, run release-facing checks, start all apps on isolated ports, and run smoke flows |
-| Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, project `app.py` files | static assets, content types, security headers, 404s, and traversal blocking |
+| Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, project `app.py` files | static assets, scenario editor modules, content types, security headers, 404s, and traversal blocking |
 | Error hygiene | `scripts/check_error_hygiene.py`, project `app.py` files | unexpected exceptions return generic JSON errors without leaking paths, stack details, or secret-like strings |
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
 | Container release hygiene | `scripts/check_container_release.py`, `scripts/check_docker_runtime.py`, `docs/container_release_hygiene.md` | Dockerfiles, compose ports, health checks, startup commands, env handling, build-context ignores, and optional runtime smoke checks stay aligned |
@@ -146,7 +146,7 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | Model gateway safety | `scripts/check_model_gateway_safety.py`, `scripts/check_openai_live_mode.py`, project `model_gateway.py` files | OpenAI mode is opt-in, key references are constrained, structured outputs are required, failures fall back locally, and live mode can be verified when a key is available |
 | Observability integrity | `scripts/check_observability_integrity.py`, project trace/audit/approval endpoints | response trace IDs, audit events, approval records, blocked actions, unauthorized-query evidence, and release decisions stay internally consistent |
 | Threat model | `docs/threat_model.md`, `scripts/check_threat_model.py` | threat IDs map to deterministic controls, source files, and evidence commands |
-| Scenario data integrity | `scripts/check_scenario_data_integrity.py`, project `data/` folders | fictional seed data, roles, references, and eval expectations remain internally consistent |
+| Scenario data integrity | `scripts/check_scenario_data_integrity.py`, project `data/` folders | fictional seed data, roles, references, eval expectations, and browser-local scenario drafts remain internally consistent |
 | PR review policy | `scripts/check_pr_review_policy.py`, `docs/pr_review_security.md` | triage heuristics, runbook, maintainer policy, and PR template keep malicious-contribution checks intact |
 | Public PR triage | `scripts/review_open_prs.py` | inspect open PRs and flag risky diffs before running code |
 | Replayable demo | `scripts/replay_demo.py` | reset services, run key flows, print trace and approval evidence |
@@ -351,7 +351,7 @@ repository/
 
 ## System Narrative
 
-The first project handles enterprise knowledge access with permissions, citations, abstention, traces, audit logs, and evals. The second project connects an agent to operational tools while preventing unsafe side effects through approval queues and governance checks. The third project handles AI release reliability after deployment by linking eval regressions, incidents, rollout blocking, traces, audit logs, and remediation plans. The browser demos expose trace IDs and local trace links so a specific run can be inspected again without relying on screenshots.
+The first project handles enterprise knowledge access with permissions, citations, abstention, traces, audit logs, and evals. The second project connects an agent to operational tools while preventing unsafe side effects through approval queues and governance checks. The third project handles AI release reliability after deployment by linking eval regressions, incidents, rollout blocking, traces, audit logs, and remediation plans. The browser demos expose trace IDs, local trace links, and browser-local scenario drafts so a specific run and its fictional seed context can be inspected again without relying on screenshots.
 
 Together they form a compact reference architecture for AI systems that are useful, inspectable, and safe enough to reason about before enterprise deployment.
 
