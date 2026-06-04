@@ -45,6 +45,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README launch-channel checklist pointer
 - Add a compact README contribution safety summary pointer
 - Add a compact README release artifact attachment pointer
+- Add a compact README optional-environment evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -169,28 +170,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README optional-environment evidence pointer
+Add a compact README connector roadmap pointer
 ```
 
 Labels:
 
 ```text
-documentation, release, good first issue
+documentation, production-upgrade, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells maintainers which optional environment checks must pass before claiming Docker runtime or OpenAI live-mode evidence.
+Add a compact README pointer that tells contributors where connector roadmap materials live and which boundaries must be preserved before adding external-system stubs.
 
 Acceptance criteria:
 
-- Link to Container Release Hygiene, Model Runtime Configuration, Model Gateway Safety, GitHub Readiness docs, and Development Issue Solutions.
-- Cover optional checks: `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live`, and `python -B scripts/dev.py github-readiness`.
+- Link to Production Upgrade Notes, Project Case Notes, Model Gateway Safety, Architecture Boundaries, and the connector-stub row in the Contributor Route Map.
+- Cover connector checks: `python -B scripts/dev.py architecture`, `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that Docker runtime and OpenAI live mode remain manual or environment-dependent until the matching commands pass in the right environment.
+- Make clear that connector stubs must not execute external side effects without approval, idempotency, audit, and trace boundaries.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py launch-assets still passes.
+- python -B scripts/dev.py architecture still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
