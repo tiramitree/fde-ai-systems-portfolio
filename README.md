@@ -192,6 +192,14 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | [Regulated Customer Operations Agent](#project-2-regulated-customer-operations-agent) | Open `http://127.0.0.1:8770`, select Ivy and `case-1001`, then run the investigation. | Inspect the pending approval, blocked side effect, audit event, and `python -B scripts/dev.py smoke`. |
 | [AI Reliability Incident Console](ai-reliability-incident-console/README.md) | Open `http://127.0.0.1:8780`, select the unsafe canary incident, then run triage. | Inspect failed eval evidence, blocked rollout, remediation steps, trace/audit records, and `python -B scripts/dev.py smoke`. |
 
+Operational runbook index:
+
+| Scenario | Fast Path | Evidence To Inspect |
+| --- | --- | --- |
+| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |
+| Project 2 investigation, approval queue, side-effect blocking, and supervisor approval | Use the [Demo Path Map](#demo-path-map) Ivy `case-1001` path and the Project 2 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the governed tool-use rows in the [Evidence Matrix](#evidence-matrix). |
+| Project 3 unsafe release triage, failed-eval evidence, rollout blocking, and remediation | Use the [Demo Path Map](#demo-path-map) unsafe canary path and the reliability-console review flow in [Project Case Notes](docs/project_case_notes.md). | [Final Demo Runbook](docs/final_demo_runbook.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the release-triage rows in the [Evidence Matrix](#evidence-matrix). |
+
 ## Core Terms
 
 | Term | Meaning In This Repository |

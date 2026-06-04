@@ -130,6 +130,12 @@ REQUIRED_DEMO_PATH_MAP = [
     "| [Regulated Customer Operations Agent](#project-2-regulated-customer-operations-agent) | Open `http://127.0.0.1:8770`, select Ivy and `case-1001`, then run the investigation. | Inspect the pending approval, blocked side effect, audit event, and `python -B scripts/dev.py smoke`. |",
     "| [AI Reliability Incident Console](ai-reliability-incident-console/README.md) | Open `http://127.0.0.1:8780`, select the unsafe canary incident, then run triage. | Inspect failed eval evidence, blocked rollout, remediation steps, trace/audit records, and `python -B scripts/dev.py smoke`. |",
 ]
+REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
+    "Operational runbook index:",
+    "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
+    "| Project 2 investigation, approval queue, side-effect blocking, and supervisor approval | Use the [Demo Path Map](#demo-path-map) Ivy `case-1001` path and the Project 2 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the governed tool-use rows in the [Evidence Matrix](#evidence-matrix). |",
+    "| Project 3 unsafe release triage, failed-eval evidence, rollout blocking, and remediation | Use the [Demo Path Map](#demo-path-map) unsafe canary path and the reliability-console review flow in [Project Case Notes](docs/project_case_notes.md). | [Final Demo Runbook](docs/final_demo_runbook.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the release-triage rows in the [Evidence Matrix](#evidence-matrix). |",
+]
 
 
 def tracked_markdown_files() -> list[Path]:
@@ -472,6 +478,18 @@ def check_demo_path_map() -> list[str]:
     return failures
 
 
+def check_operational_runbook_index() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_OPERATIONAL_RUNBOOK_INDEX:
+        if expected not in text:
+            failures.append(f"README.md: missing operational runbook index entry: {expected}")
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_markdown_links())
@@ -490,6 +508,7 @@ def main() -> int:
     failures.extend(check_contributor_route_map())
     failures.extend(check_production_upgrade_pointer())
     failures.extend(check_demo_path_map())
+    failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
         for failure in failures:

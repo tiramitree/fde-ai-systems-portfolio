@@ -36,6 +36,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README production-upgrade pointer
 - Add a compact README release-evidence FAQ
 - Add compact per-project risk badges
+- Add a compact README operational runbook index
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -160,27 +161,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README operational runbook index
+Add a compact README evidence freshness checklist
 ```
 
 Labels:
 
 ```text
-documentation, demo, good first issue
+documentation, release, demo, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README index that points readers to the smallest operational runbook for each canonical scenario.
+Add a compact README checklist that tells maintainers how to confirm screenshots, eval summaries, and published status are fresh before sharing the repository.
 
 Acceptance criteria:
 
-- Cover Project 1 retrieval, citation-backed answer, and unauthorized abstention scenarios.
-- Cover Project 2 investigation, approval queue, side-effect blocking, and supervisor approval scenarios.
-- Cover Project 3 unsafe release triage, failed-eval evidence, rollout blocking, and remediation scenarios.
-- Link to the Demo Path Map, Final Demo Runbook, Project Case Notes, Technical Review Playbook, and Evidence Matrix instead of duplicating every step.
-- Keep the index compact and local-first.
+- Cover README screenshots, mobile screenshots, demo walkthrough GIF, eval summary counts, and published repository status.
+- Link to Visual Asset Hygiene, Published Repository Status, Demo Report, and the release-evidence FAQ.
+- Explain which commands refresh or verify each evidence type without committing generated local artifacts by default.
+- Avoid claiming Docker runtime, OpenAI live mode, branch protection, or release page freshness unless the relevant checks or account-level actions are complete.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
