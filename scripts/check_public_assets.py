@@ -41,6 +41,14 @@ REQUIRED_README_GLOSSARY = [
     "| Audit log | Structured records of security, workflow, approval, and release-decision events that explain what happened after a run; see [threat model](docs/threat_model.md) and [observability integrity](docs/observability_integrity.md). |",
     "| Abstention | The answer behavior used when accessible evidence is missing, unauthorized, or unsafe after filtering; see [Project 1](#project-1-secure-enterprise-knowledge-copilot) and the [System Evidence Matrix](docs/portfolio_evidence_matrix.md). |",
 ]
+REQUIRED_README_PR_CHECKLIST = [
+    "## Maintainer PR Checklist",
+    "Public PRs are treated as untrusted input. Before approving workflows, running contributor code, or merging:",
+    "| Triage first | Run `python -B scripts/dev.py pr-triage`, then read the changed files and diff before running code. |",
+    "| High-risk surfaces | Treat workflow files, dependency policy, model gateways, safety scans, quality gates, shell commands, network calls, and binary/generated artifacts as high scrutiny. |",
+    "| Secrets and access | Do not ask contributors for secrets, tokens, account access, private files, local paths, or collaborator permissions. |",
+    "| Merge bar | Use the [PR review security gate](docs/pr_review_security.md) and [PR review runbook](docs/pr_review_runbook.md); merge only after `pr-policy`, `governance`, `workflow-security`, `safety`, and `verify` pass. |",
+]
 
 
 def tracked_markdown_files() -> list[Path]:
@@ -251,6 +259,18 @@ def check_readme_glossary() -> list[str]:
     return failures
 
 
+def check_readme_pr_checklist() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_README_PR_CHECKLIST:
+        if expected not in text:
+            failures.append(f"README.md: missing maintainer PR checklist entry: {expected}")
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_markdown_links())
@@ -258,6 +278,7 @@ def main() -> int:
     failures.extend(check_readme_captions())
     failures.extend(check_command_quick_reference())
     failures.extend(check_readme_glossary())
+    failures.extend(check_readme_pr_checklist())
     if failures:
         print("Public asset check failed:")
         for failure in failures:

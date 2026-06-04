@@ -142,6 +142,17 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | Audit log | Structured records of security, workflow, approval, and release-decision events that explain what happened after a run; see [threat model](docs/threat_model.md) and [observability integrity](docs/observability_integrity.md). |
 | Abstention | The answer behavior used when accessible evidence is missing, unauthorized, or unsafe after filtering; see [Project 1](#project-1-secure-enterprise-knowledge-copilot) and the [System Evidence Matrix](docs/portfolio_evidence_matrix.md). |
 
+## Maintainer PR Checklist
+
+Public PRs are treated as untrusted input. Before approving workflows, running contributor code, or merging:
+
+| Check | Action |
+| --- | --- |
+| Triage first | Run `python -B scripts/dev.py pr-triage`, then read the changed files and diff before running code. |
+| High-risk surfaces | Treat workflow files, dependency policy, model gateways, safety scans, quality gates, shell commands, network calls, and binary/generated artifacts as high scrutiny. |
+| Secrets and access | Do not ask contributors for secrets, tokens, account access, private files, local paths, or collaborator permissions. |
+| Merge bar | Use the [PR review security gate](docs/pr_review_security.md) and [PR review runbook](docs/pr_review_runbook.md); merge only after `pr-policy`, `governance`, `workflow-security`, `safety`, and `verify` pass. |
+
 ## Evidence Matrix
 
 | Production Concern | Where To Look | Verification |

@@ -25,6 +25,7 @@ The first public issue wave was created after the initial release and is now com
 - Add per-asset captions for screenshot galleries
 - Add a README command quick-reference
 - Add a compact README glossary for core gates
+- Add a README maintainer workflow checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -149,28 +150,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a README maintainer workflow checklist
+Add a compact README demo path map
 ```
 
 Labels:
 
 ```text
-documentation, security, good first issue
+documentation, demo, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README maintainer workflow checklist for reviewing external PRs without running untrusted code first.
+Add a compact README section that maps each project to the smallest useful demo path.
 
 Acceptance criteria:
 
-- Include a short read-first checklist for PR diffs, workflow changes, dependency changes, model gateway changes, and generated artifacts.
-- Link to docs/pr_review_security.md, docs/pr_review_runbook.md, and python -B scripts/dev.py pr-triage.
-- Keep the checklist factual and avoid asking contributors for secrets or account access.
+- For each project, list the local URL, the single best demo prompt or action, and the evidence panel or command to inspect next.
+- Keep the section shorter than the full project walkthroughs and link to existing project sections.
+- Do not claim Docker runtime, OpenAI live mode, or account-level GitHub setup unless verified.
 - Do not introduce paid APIs, remote frontend dependencies, or unrelated code changes.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py pr-policy still passes.
+- python -B scripts/dev.py smoke still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
