@@ -234,7 +234,7 @@ Use [CONTRIBUTING](CONTRIBUTING.md), [SECURITY](SECURITY.md), [PR Review Securit
 
 Release artifact readiness:
 
-Use the [Demo Replay Artifact](docs/demo_replay_artifact.md), [GitHub Release Commands](docs/github_release_commands.md), [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), and [Final Readiness Report](docs/final_readiness_report.md) before preparing release evidence. Regenerate attachable evidence with `python -B scripts/dev.py replay-artifact`, then run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py quality`; do not claim a GitHub release page is ready until the page is created and the artifacts are attached.
+Use the [Demo Replay Artifact](docs/demo_replay_artifact.md), [Release Attachment Verification Examples](docs/release_attachment_verification_examples.md), [GitHub Release Commands](docs/github_release_commands.md), [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), and [Final Readiness Report](docs/final_readiness_report.md) before preparing release evidence. Regenerate attachable evidence with `python -B scripts/dev.py replay-artifact`, then run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py quality`; do not claim a GitHub release page is ready until the page is created and the artifacts are attached.
 
 Optional-environment readiness:
 
@@ -641,6 +641,7 @@ repository/
 - [Governed Agent Case Study](docs/case_study_regulated_customer_operations_agent.md)
 - [Demo Video Script](docs/demo_video_script.md)
 - [Demo Recording Checklist](docs/demo_recording_checklist.md)
+- [Release Attachment Verification Examples](docs/release_attachment_verification_examples.md)
 - [Star Growth Plan](docs/star_growth_plan.md)
 - [Launch Copy Pack](docs/launch_copy_pack.md)
 - [GitHub Community Issue Pack](docs/github_initial_issues.md)

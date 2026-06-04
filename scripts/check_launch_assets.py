@@ -22,6 +22,7 @@ REQUIRED_FILES = [
     "docs/differentiation_strategy.md",
     "docs/published_repository_status.md",
     "docs/post_publish_checklist.md",
+    "docs/release_attachment_verification_examples.md",
     "docs/github_repository_settings.md",
     "docs/final_readiness_report.md",
     "docs/portfolio_evidence_matrix.md",
@@ -105,11 +106,13 @@ REQUIRED_PHRASES = {
         "docs/launch_assets_hygiene.md",
         "docs/star_growth_plan.md",
         "docs/launch_copy_pack.md",
+        "docs/release_attachment_verification_examples.md",
     ],
     "PROJECT_CONTENT_INDEX.md": [
         "launch-assets",
         "scripts/check_launch_assets.py",
         "docs/launch_assets_hygiene.md",
+        "docs/release_attachment_verification_examples.md",
     ],
     "docs/portfolio_evidence_matrix.md": [
         "Launch materials are complete without overclaiming",
@@ -122,12 +125,31 @@ REQUIRED_PHRASES = {
     ],
     "docs/post_publish_checklist.md": [
         "the launch asset hygiene script and documentation are published",
+        "the release attachment verification examples are published",
         "python -B scripts/dev.py launch-assets",
     ],
     "docs/final_readiness_report.md": [
         "python -B scripts/dev.py launch-assets",
         "Do not claim full launch completion",
         "Star growth: cannot be claimed as achieved",
+    ],
+    "docs/release_attachment_verification_examples.md": [
+        "# Release Attachment Verification Examples",
+        "docs/github_release_commands.md",
+        "docs/post_publish_checklist.md",
+        "docs/command_output_troubleshooting_map.md",
+        "docs/demo_replay_artifact.md",
+        "Missing Replay Artifacts",
+        "Stale Attachments",
+        "Wrong Release Tag",
+        "Generated out/ Handling",
+        "Post-Publish Mismatch",
+        "python -B scripts/dev.py replay-artifact",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/post_publish_check.py",
+        "out/demo_replay_artifact.md",
+        "out/demo_replay_artifact.json",
+        "Do not commit",
     ],
 }
 
@@ -141,6 +163,7 @@ PUBLIC_POSITIONING_FILES = [
     "docs/github_launch_plan.md",
     "docs/published_repository_status.md",
     "docs/post_publish_checklist.md",
+    "docs/release_attachment_verification_examples.md",
     "docs/final_readiness_report.md",
 ]
 
