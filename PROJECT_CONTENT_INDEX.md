@@ -266,6 +266,7 @@ Release and growth:
 - `docs/github_release_notes_v0.1.0.md`: release notes used by `scripts/configure_github_launch.py`.
 - `docs/release_attachment_verification_examples.md`: release attachment verification examples for replay artifacts, tag mismatch, generated `out/` handling, and post-publish drift.
 - `docs/github_release_page_troubleshooting_examples.md`: GitHub release page troubleshooting examples for missing page, wrong tag, stale notes, missing replay attachments, and latest-release mismatch.
+- `docs/github_latest_release_troubleshooting_examples.md`: latest-release troubleshooting examples for missing latest release, wrong latest tag, draft or prerelease confusion, stale release page, and artifact drift.
 - `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.
 - `docs/pr_review_runbook.md`: concrete PR review command sequence and merge bar.
 - `docs/development_issue_solutions.md`: issue and solution log for recurring local, GitHub, PR, and publication problems.
