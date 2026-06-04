@@ -91,6 +91,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact branch protection verification examples
 - Add compact post-publish warning examples
 - Add compact GitHub label troubleshooting examples
+- Add compact GitHub Actions warning examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -215,28 +216,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact GitHub Actions warning examples
+Add compact GitHub release page troubleshooting examples
 ```
 
 Labels:
 
 ```text
-documentation, automation, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for handling GitHub Actions warning states without confusing local quality evidence with remote workflow evidence.
+Add compact examples for troubleshooting GitHub release page evidence without confusing local replay artifacts with published release evidence.
 
 Acceptance criteria:
 
-- Add docs/github_actions_warning_examples.md with examples for pending quality-gate, missing workflow run, stale badge, skipped workflow, and fork PR permission limits.
-- Reference .github/workflows/ci.yml, docs/workflow_security.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
-- Keep local quality evidence separate from remote GitHub Actions evidence and do not claim a green workflow until the current remote run passes.
+- Add docs/github_release_page_troubleshooting_examples.md with examples for missing release page, wrong tag, stale release notes, missing replay attachments, and latest-release mismatch.
+- Reference docs/github_release_commands.md, docs/github_release_notes_v0.1.0.md, docs/release_attachment_verification_examples.md, and docs/post_publish_checklist.md.
+- Keep local replay-artifact evidence separate from published release page evidence and do not claim the release page is current until remote checks pass.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py workflow-security still passes.
-- python -B scripts/dev.py github-readiness still has no hard failures when the GitHub API is reachable.
+- python -B scripts/dev.py launch-assets still passes.
+- python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

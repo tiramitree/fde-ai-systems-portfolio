@@ -31,6 +31,7 @@ The post-publish check must prove:
 - the release attachment verification examples are published.
 - the branch protection verification examples are published.
 - the post-publish warning examples are published.
+- the GitHub Actions warning examples are published.
 - the container release hygiene script and documentation are published.
 - the visual asset manifest script, documentation, manifest, and desktop/mobile screenshot assets are published.
 - the launch asset hygiene script and documentation are published.
@@ -51,15 +52,16 @@ After the automated check passes:
 10. Pin the repository on the GitHub profile.
 11. Run `python -B scripts/dev.py fresh-clone` after the push is visible. Use `python -B scripts/dev.py fresh-clone-local` before pushing when validating local-only commits.
 12. Compare warning rows with `docs/post_publish_warning_examples.md` before claiming published evidence.
-13. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
-14. Compare release attachments with `docs/release_attachment_verification_examples.md` before claiming the release page is current.
-15. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
-16. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
-17. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
-18. Run `python -B scripts/dev.py visual-asset-diff` and `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
-19. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
-20. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
-21. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
+13. Compare Actions warnings with `docs/github_actions_warning_examples.md` before claiming the remote workflow is green.
+14. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
+15. Compare release attachments with `docs/release_attachment_verification_examples.md` before claiming the release page is current.
+16. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
+17. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
+18. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
+19. Run `python -B scripts/dev.py visual-asset-diff` and `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
+20. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
+21. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
+22. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
 
 ## Optional Backlog Seeding
 
