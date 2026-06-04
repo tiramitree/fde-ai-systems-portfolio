@@ -616,6 +616,7 @@ repository/
 - [Architecture Boundaries](docs/architecture_boundaries.md)
 - [Contributor Code Tour](docs/code_tour.md)
 - [First Pull Request Checklist](docs/first_pull_request_checklist.md)
+- [README Navigation Audit](docs/readme_navigation_audit.md)
 - [Workflow Security](docs/workflow_security.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)

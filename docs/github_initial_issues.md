@@ -78,6 +78,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a seed fixture data-flow map
 - Add a contributor onboarding checklist for the first local pull request
 - Add docs-only pull request review examples
+- Add a README-to-docs navigation audit
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -202,7 +203,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a README-to-docs navigation audit
+Add optional OpenAI live-mode troubleshooting notes
 ```
 
 Labels:
@@ -214,15 +215,15 @@ documentation, good first issue
 Body:
 
 ```text
-Add a compact audit that maps release-facing README pointers to their supporting docs so navigation drift is easy to review.
+Add compact troubleshooting notes for the optional OpenAI live-mode check without making paid API access part of the default local demo.
 
 Acceptance criteria:
 
-- Add docs/readme_navigation_audit.md with a table for README sections, supporting docs, owner/gate, and drift risk.
-- Include release-facing sections such as demo recording, launch channels, contribution safety, optional environments, Docker runtime, model gateway, PR triage, and GitHub readiness.
-- Link the audit from README.md and PROJECT_CONTENT_INDEX.md.
-- Keep the audit local-only and do not claim fresh runtime, Docker, OpenAI, branch-protection, release-page, or account-level evidence unless a matching command or manual proof exists.
-- python -B scripts/dev.py community-issues still passes.
+- Add docs/openai_live_mode_troubleshooting.md with expected setup checks, safe failure modes, and rollback guidance.
+- Reference docs/model_runtime_configuration.md, docs/model_gateway_safety.md, and docs/command_output_troubleshooting_map.md.
+- Make clear that local deterministic mode remains the default verified path and that no API key should be committed, printed, or requested in an issue or PR.
+- Link the note from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py model-gateway-safety still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

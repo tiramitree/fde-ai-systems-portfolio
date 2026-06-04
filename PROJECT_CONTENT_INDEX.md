@@ -213,6 +213,7 @@ Design Review Docs:
 - `docs/local_artifact_glossary.md`: local glossary for seed, runtime, eval, replay, trace, audit, approval, release evidence, and generated artifacts.
 - `docs/local_demo_reset_troubleshooting.md`: local reset troubleshooting for runtime state, eval runtime state, browser scenario drafts, and canonical demo presets.
 - `docs/command_output_troubleshooting_map.md`: local troubleshooting map from common gate output to first files, narrower commands, and safe follow-up checks.
+- `docs/readme_navigation_audit.md`: README-to-docs navigation audit for release-facing pointers, supporting docs, owner gates, and drift risks.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.
 - `docs/eval_gate_troubleshooting_examples.md`: local troubleshooting map for unsafe retrieval, direct side-effect, and release-blocking eval failures.
 - `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.
@@ -223,6 +224,7 @@ Design Review Docs:
 - `docs/code_tour.md`: contributor map from HTTP shells to API classes, domain modules, storage, evals, and frontend modules.
 - `docs/first_pull_request_checklist.md`: first local pull request checklist for clone, branch, diff review, route selection, targeted gates, quality checks, and PR handoff.
 - `docs/docs_only_pr_review_examples.md`: examples for approving, requesting changes, or closing docs-only PRs without weakening public claims.
+- `docs/readme_navigation_audit.md`: README navigation audit for release, contribution, review, optional environment, and technical evidence links.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
 - `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, copyable scenario-draft controls, local draft diffs, no-build local UI posture, and review framing.

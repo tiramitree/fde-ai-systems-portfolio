@@ -29,6 +29,7 @@ REQUIRED_LABELS = {
 
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
+README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
 
 FORBIDDEN_ISSUE_TEXT = [
     "look active",
@@ -232,6 +233,58 @@ def check_docs_only_pr_review_examples() -> list[str]:
     return failures
 
 
+def check_readme_navigation_audit() -> list[str]:
+    failures: list[str] = []
+    if not README_NAVIGATION_AUDIT.exists():
+        return ["missing docs/readme_navigation_audit.md"]
+
+    text = README_NAVIGATION_AUDIT.read_text(encoding="utf-8")
+    required_phrases = [
+        "README Navigation Audit",
+        "Release-Facing Navigation",
+        "Contribution And Review Navigation",
+        "Technical Navigation",
+        "Audit Steps",
+        "Manual-Evidence Rule",
+        "Demo recording readiness",
+        "Launch-channel readiness",
+        "Contribution safety readiness",
+        "Optional-environment readiness",
+        "Docker runtime readiness",
+        "Model gateway readiness",
+        "PR triage readiness",
+        "GitHub readiness",
+        "Release page readiness",
+        "Supporting Docs",
+        "Owner/Gate",
+        "Drift Risk",
+        "fresh runtime",
+        "Docker",
+        "OpenAI",
+        "branch-protection",
+        "release-page",
+        "account-level evidence",
+        "python -B scripts/dev.py assets",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone-local",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/readme_navigation_audit.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/readme_navigation_audit.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/readme_navigation_audit.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_templates(labels: dict[str, object]) -> list[str]:
     failures: list[str] = []
     for rel_path, template_label_names in template_labels().items():
@@ -278,6 +331,7 @@ def main() -> int:
     failures.extend(check_public_backlog())
     failures.extend(check_first_pull_request_checklist())
     failures.extend(check_docs_only_pr_review_examples())
+    failures.extend(check_readme_navigation_audit())
     failures.extend(check_templates(labels))
     failures.extend(check_cross_references())
 
