@@ -50,7 +50,7 @@ Create issues for:
 - add PostgreSQL storage adapter prototype
 - add per-case eval regression reports
 - add red-team eval pack
-- add a seed fixture data-flow map
+- add a contributor onboarding checklist for the first local pull request
 - run and publish Docker verification from `python -B scripts/dev.py docker-runtime`
 
 These give contributors clear entry points and connect public issues to real engineering work.

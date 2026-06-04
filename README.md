@@ -603,6 +603,7 @@ repository/
 - [Trace Timeline Examples](docs/trace_timeline_examples.md)
 - [Threat Model](docs/threat_model.md)
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)
+- [Seed Fixture Data Flow](docs/seed_fixture_data_flow.md)
 - [Local Artifact Glossary](docs/local_artifact_glossary.md)
 - [Local Demo Reset Troubleshooting](docs/local_demo_reset_troubleshooting.md)
 - [Command Output Troubleshooting Map](docs/command_output_troubleshooting_map.md)

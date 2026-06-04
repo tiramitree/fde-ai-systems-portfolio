@@ -75,6 +75,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a small glossary for local data and evidence artifacts
 - Add a command-output troubleshooting map for common gates
 - Add a local demo reset troubleshooting guide for stale runtime state
+- Add a seed fixture data-flow map
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -199,7 +200,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a seed fixture data-flow map
+Add a contributor onboarding checklist for the first local pull request
 ```
 
 Labels:
@@ -211,16 +212,16 @@ documentation, good first issue
 Body:
 
 ```text
-Add a concise data-flow map for each service's checked-in fictional seed fixtures.
+Add a contributor-friendly checklist for opening the first local pull request without weakening safety or reproducibility.
 
 Acceptance criteria:
 
-- Add docs/seed_fixture_data_flow.md mapping each checked-in seed fixture to APIs, runtime state, evals, traces, audit evidence, approvals, and release decisions where applicable.
-- Cover secure-enterprise-knowledge-copilot/data/seed_documents.json, regulated-customer-operations-agent/data/seed_state.json, and ai-reliability-incident-console/data/seed_state.json.
-- Explain the boundary between checked-in seed fixtures, runtime_state.json, eval_runtime_state.json, browser localStorage scenario drafts, and generated replay artifacts.
-- Link the guide from README.md and PROJECT_CONTENT_INDEX.md.
+- Add docs/first_pull_request_checklist.md covering clone, branch, diff review, route selection, targeted gates, full quality checks, and PR handoff.
+- Reference CONTRIBUTING.md, docs/code_tour.md, docs/pr_review_security.md, docs/command_output_troubleshooting_map.md, and docs/local_demo_reset_troubleshooting.md.
+- Include separate paths for docs-only, frontend, backend/API, seed/eval, and visual-asset changes.
+- Link the checklist from README.md and PROJECT_CONTENT_INDEX.md.
 - Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
-- python -B scripts/dev.py scenario-data still passes.
+- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
