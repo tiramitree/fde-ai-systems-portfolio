@@ -42,6 +42,7 @@ PROJECTS = [
             "traces",
             "scenarioSummary",
             "scenarioDraft",
+            "scenarioDiff",
             "scenarioStatus",
             "saveScenarioDraft",
             "copyScenarioDraft",
@@ -73,6 +74,7 @@ PROJECTS = [
             "traces",
             "scenarioSummary",
             "scenarioDraft",
+            "scenarioDiff",
             "scenarioStatus",
             "saveScenarioDraft",
             "copyScenarioDraft",
@@ -105,6 +107,7 @@ PROJECTS = [
             "traces",
             "scenarioSummary",
             "scenarioDraft",
+            "scenarioDiff",
             "scenarioStatus",
             "saveScenarioDraft",
             "copyScenarioDraft",
@@ -327,6 +330,9 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
         "localStorage.removeItem",
         "copyText",
         "copyButton",
+        "diffRows",
+        "scenarioDiffRow",
+        "scenarioDiffState",
         "JSON.parse",
         "JSON.stringify",
         "saveScenarioDraft",
@@ -356,6 +362,8 @@ def check_project(project: FrontendProject) -> list[str]:
         ".traceLink:focus-visible",
         ".selectedTrace",
         ".scenarioDraft",
+        ".scenarioDiff",
+        ".scenarioDiffState",
         ".scenarioStatus",
     ]:
         if marker not in styles:
@@ -376,7 +384,7 @@ def main() -> int:
 
     print(
         "Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, "
-        "trace-copy controls, keyboard trace navigation, copyable scenario drafts, and quick actions are intact."
+        "trace-copy controls, keyboard trace navigation, copyable scenario drafts, local diffs, and quick actions are intact."
     )
     return 0
 

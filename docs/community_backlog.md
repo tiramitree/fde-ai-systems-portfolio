@@ -6,9 +6,9 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 
 1. Add a small dark-mode toggle to all demo UIs.
 2. Add a narrated demo video using the walkthrough GIF as the storyboard.
-3. Add a compact diff view for browser-local scenario drafts.
-4. Add a reduced-motion and contrast accessibility pass for all demo UIs.
-5. Add compact per-project architecture cards to the README.
+3. Add a reduced-motion and contrast accessibility pass for all demo UIs.
+4. Add compact per-project architecture cards to the README.
+5. Add shareable demo-state reset presets.
 
 ## Intermediate Issues
 
@@ -41,3 +41,4 @@ Contributions should preserve these invariants:
 
 - Add keyboard-friendly trace navigation for recent trace lists.
 - Add copyable scenario-draft import/export snippets for local demos.
+- Add a compact diff view for browser-local scenario drafts.

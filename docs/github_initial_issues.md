@@ -15,6 +15,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a local seed-data editor prototype
 - Add keyboard-friendly trace navigation for recent trace lists
 - Add copyable scenario-draft import/export snippets for local demos
+- Add a compact diff view for browser-local scenario drafts
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -139,7 +140,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact diff view for browser-local scenario drafts
+Add a reduced-motion and contrast accessibility pass
 ```
 
 Labels:
@@ -151,14 +152,14 @@ enhancement, frontend, demo
 Body:
 
 ```text
-Make local scenario changes easier to inspect before saving or sharing a draft.
+Improve readability and motion comfort across the local browser demos.
 
 Acceptance criteria:
 
-- Scenario draft panels show a compact diff between the seed snapshot and the current local draft.
-- The diff is computed in the browser without server-side mutation.
-- Invalid JSON still blocks saving and reports a useful local status.
-- Drafts continue to live only in browser localStorage.
+- Check all three demos for focus visibility, text contrast, and motion-sensitive behavior.
+- Add a reduced-motion CSS rule if animation or scrolling behavior needs it.
+- Preserve the existing restrained product UI style.
+- Do not introduce remote frontend dependencies.
 - Frontend modules remain local to each service web boundary.
 - python -B scripts/dev.py frontend still passes.
 - python -B scripts/dev.py ui-contracts still passes.

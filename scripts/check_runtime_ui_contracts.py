@@ -189,6 +189,7 @@ def project_checks(project: Project) -> list[Check]:
                 'id="copyTraceId"',
                 'id="copyTraceLink"',
                 'id="scenarioDraft"',
+                'id="scenarioDiff"',
                 'id="saveScenarioDraft"',
                 'id="copyScenarioDraft"',
             ],
@@ -199,7 +200,7 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/styles.css",
             "text/css",
-            [".grid", ".panel", ".quick", ".traceLink:focus-visible"],
+            [".grid", ".panel", ".quick", ".traceLink:focus-visible", ".scenarioDiff"],
         )
     )
     checks.extend(
@@ -215,7 +216,16 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/js/scenarioEditor.js",
             "text/javascript",
-            ["installScenarioEditor", "localStorage", "copyText", "copyButton", "JSON.parse", "JSON.stringify"],
+            [
+                "installScenarioEditor",
+                "localStorage",
+                "copyText",
+                "copyButton",
+                "diffRows",
+                "scenarioDiffRow",
+                "JSON.parse",
+                "JSON.stringify",
+            ],
         )
     )
     checks.extend(
