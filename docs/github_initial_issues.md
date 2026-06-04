@@ -37,6 +37,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README release-evidence FAQ
 - Add compact per-project risk badges
 - Add a compact README operational runbook index
+- Add a compact README evidence freshness checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -161,26 +162,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README evidence freshness checklist
+Add a compact README reviewer handoff checklist
 ```
 
 Labels:
 
 ```text
-documentation, release, demo, good first issue
+documentation, security, demo, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README checklist that tells maintainers how to confirm screenshots, eval summaries, and published status are fresh before sharing the repository.
+Add a compact README checklist that tells reviewers how to confirm local gates, remote evidence, visual assets, PR state, and GitHub account-level follow-up before approving or sharing the repository.
 
 Acceptance criteria:
 
-- Cover README screenshots, mobile screenshots, demo walkthrough GIF, eval summary counts, and published repository status.
-- Link to Visual Asset Hygiene, Published Repository Status, Demo Report, and the release-evidence FAQ.
-- Explain which commands refresh or verify each evidence type without committing generated local artifacts by default.
-- Avoid claiming Docker runtime, OpenAI live mode, branch protection, or release page freshness unless the relevant checks or account-level actions are complete.
+- Cover local quality, local fresh-clone, remote fresh-clone, post-publish, visual asset, PR triage, and GitHub readiness checks.
+- Link to Maintainer PR Checklist, Contributor route map, Visual Asset Hygiene, Published Repository Status, PR Review Runbook, and the release-evidence FAQ.
+- Distinguish blocking gate failures from `[WARN]` and `[MANUAL]` account-level follow-up rows.
+- Keep the checklist local-first and avoid asking maintainers to expose private tokens or private account settings in public issues.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
