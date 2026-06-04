@@ -40,6 +40,7 @@ Related docs:
 
 - `docs/eval_authoring_guide.md`
 - `docs/eval_gate_troubleshooting_examples.md`
+- `docs/eval_csv_troubleshooting_examples.md`
 - `docs/seed_data_extension_examples.md`
 - `docs/trace_timeline_examples.md`
 - `docs/demo_replay_artifact.md`

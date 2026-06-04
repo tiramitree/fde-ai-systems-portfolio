@@ -117,6 +117,7 @@ def main() -> int:
         "docs/postgres_pgvector_adapter_design.md",
         "docs/otel_trace_export.md",
         "docs/model_gateway_safety.md",
+        "docs/eval_csv_troubleshooting_examples.md",
         "docs/launch_assets_hygiene.md",
         "docs/observability_integrity.md",
         "docs/threat_model.md",

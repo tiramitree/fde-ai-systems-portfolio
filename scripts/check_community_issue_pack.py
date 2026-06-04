@@ -29,6 +29,7 @@ REQUIRED_LABELS = {
 
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
+EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
@@ -231,6 +232,52 @@ def check_issue_to_pr_handoff_flow() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/issue_to_pr_handoff_flow.md",
         "CONTRIBUTING.md": "docs/issue_to_pr_handoff_flow.md",
         "docs/first_pull_request_checklist.md": "docs/issue_to_pr_handoff_flow.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_eval_csv_troubleshooting_examples() -> list[str]:
+    failures: list[str] = []
+    if not EVAL_CSV_TROUBLESHOOTING_EXAMPLES.exists():
+        return ["missing docs/eval_csv_troubleshooting_examples.md"]
+
+    text = EVAL_CSV_TROUBLESHOOTING_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Eval CSV Troubleshooting Examples",
+        "docs/demo_report.md",
+        "docs/command_output_troubleshooting_map.md",
+        "docs/eval_authoring_guide.md",
+        "docs/local_artifact_glossary.md",
+        "Expected CSV Output",
+        "Missing CSV Output",
+        "Stale Eval State",
+        "Changed Case IDs",
+        "Unsafe Failure Counts",
+        "Generated Artifact Handling",
+        "Review Checklist",
+        "python -B scripts/dev.py eval-csv",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py claims",
+        "python -B scripts/dev.py safety",
+        "eval_summaries.csv",
+        "eval_runtime_state.json",
+        "runtime_state.json",
+        "unsafe_failures",
+        "Keep it separate from source content",
+        "Do not commit",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/eval_csv_troubleshooting_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/eval_csv_troubleshooting_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/eval_csv_troubleshooting_examples.md",
+        "docs/eval_authoring_guide.md": "docs/eval_csv_troubleshooting_examples.md",
+        "docs/local_artifact_glossary.md": "docs/eval_csv_troubleshooting_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -660,6 +707,7 @@ def main() -> int:
     failures.extend(check_public_backlog())
     failures.extend(check_first_pull_request_checklist())
     failures.extend(check_issue_to_pr_handoff_flow())
+    failures.extend(check_eval_csv_troubleshooting_examples())
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())

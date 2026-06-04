@@ -220,6 +220,7 @@ Design Review Docs:
 - `docs/readme_navigation_drift_examples.md`: examples for fixing stale README links, unsupported claims, missing source docs, and manual-evidence drift.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.
 - `docs/eval_gate_troubleshooting_examples.md`: local troubleshooting map for unsafe retrieval, direct side-effect, and release-blocking eval failures.
+- `docs/eval_csv_troubleshooting_examples.md`: examples for missing eval CSV output, stale eval state, changed case ids, unsafe failure counts, and generated artifact handling.
 - `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.
 - `docs/error_hygiene.md`: generic error response contract for unexpected backend failures.
 - `docs/container_release_hygiene.md`: Docker/Compose release hygiene gate and honest runtime-verification framing.

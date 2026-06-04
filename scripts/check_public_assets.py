@@ -210,7 +210,7 @@ REQUIRED_CONNECTOR_ROADMAP_READINESS = [
 ]
 REQUIRED_EVAL_REGRESSION_READINESS = [
     "Eval regression readiness:",
-    "Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.",
+    "Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), [Eval CSV Troubleshooting Examples](docs/eval_csv_troubleshooting_examples.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.",
 ]
 REQUIRED_STORAGE_ADAPTER_READINESS = [
     "Storage adapter readiness:",
