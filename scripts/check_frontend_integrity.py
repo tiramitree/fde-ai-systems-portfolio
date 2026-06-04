@@ -44,6 +44,7 @@ PROJECTS = [
             "scenarioDraft",
             "scenarioStatus",
             "saveScenarioDraft",
+            "copyScenarioDraft",
             "resetScenarioDraft",
             "clearScenarioDraft",
         },
@@ -74,6 +75,7 @@ PROJECTS = [
             "scenarioDraft",
             "scenarioStatus",
             "saveScenarioDraft",
+            "copyScenarioDraft",
             "resetScenarioDraft",
             "clearScenarioDraft",
         },
@@ -105,6 +107,7 @@ PROJECTS = [
             "scenarioDraft",
             "scenarioStatus",
             "saveScenarioDraft",
+            "copyScenarioDraft",
             "resetScenarioDraft",
             "clearScenarioDraft",
         },
@@ -281,6 +284,7 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
 
     required_clipboard_markers = [
         "export function installCopyButton",
+        "export async function copyText",
         "export function installTraceCopyButton",
         "navigator.clipboard.writeText",
         'document.createElement("textarea")',
@@ -321,9 +325,12 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
         "localStorage.getItem",
         "localStorage.setItem",
         "localStorage.removeItem",
+        "copyText",
+        "copyButton",
         "JSON.parse",
         "JSON.stringify",
         "saveScenarioDraft",
+        "copyScenarioDraft",
     ]
     for marker in required_scenario_markers:
         if marker not in scenario_text and marker not in app_text:
@@ -369,7 +376,7 @@ def main() -> int:
 
     print(
         "Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, "
-        "trace-copy controls, keyboard trace navigation, scenario drafts, and quick actions are intact."
+        "trace-copy controls, keyboard trace navigation, copyable scenario drafts, and quick actions are intact."
     )
     return 0
 

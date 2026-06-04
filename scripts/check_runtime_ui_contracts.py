@@ -190,6 +190,7 @@ def project_checks(project: Project) -> list[Check]:
                 'id="copyTraceLink"',
                 'id="scenarioDraft"',
                 'id="saveScenarioDraft"',
+                'id="copyScenarioDraft"',
             ],
         )
     )
@@ -214,7 +215,7 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/js/scenarioEditor.js",
             "text/javascript",
-            ["installScenarioEditor", "localStorage", "JSON.parse", "JSON.stringify"],
+            ["installScenarioEditor", "localStorage", "copyText", "copyButton", "JSON.parse", "JSON.stringify"],
         )
     )
     checks.extend(
@@ -239,7 +240,7 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/js/clipboard.js",
             "text/javascript",
-            ["installCopyButton", "installTraceCopyButton", "navigator.clipboard"],
+            ["copyText", "installCopyButton", "installTraceCopyButton", "navigator.clipboard"],
         )
     )
     checks.extend(

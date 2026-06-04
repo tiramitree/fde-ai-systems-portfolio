@@ -14,6 +14,7 @@ The first public issue wave was created after the initial release and is now com
 - Add trace deep links in the demo UI
 - Add a local seed-data editor prototype
 - Add keyboard-friendly trace navigation for recent trace lists
+- Add copyable scenario-draft import/export snippets for local demos
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -138,7 +139,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add copyable scenario-draft import/export snippets
+Add a compact diff view for browser-local scenario drafts
 ```
 
 Labels:
@@ -150,13 +151,13 @@ enhancement, frontend, demo
 Body:
 
 ```text
-Make browser-local scenario drafts easier to move between local demo sessions without adding server-side mutation.
+Make local scenario changes easier to inspect before saving or sharing a draft.
 
 Acceptance criteria:
 
-- Scenario draft panels expose a copy/export action for the current local JSON draft.
-- Import guidance is concise and uses the existing local textarea path.
-- Invalid JSON remains blocked before saving.
+- Scenario draft panels show a compact diff between the seed snapshot and the current local draft.
+- The diff is computed in the browser without server-side mutation.
+- Invalid JSON still blocks saving and reports a useful local status.
 - Drafts continue to live only in browser localStorage.
 - Frontend modules remain local to each service web boundary.
 - python -B scripts/dev.py frontend still passes.
