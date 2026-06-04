@@ -606,6 +606,7 @@ repository/
 - [Container Release Hygiene](docs/container_release_hygiene.md)
 - [Visual Asset Hygiene](docs/visual_asset_hygiene.md)
 - [Architecture Boundaries](docs/architecture_boundaries.md)
+- [Contributor Code Tour](docs/code_tour.md)
 - [Workflow Security](docs/workflow_security.md)
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)

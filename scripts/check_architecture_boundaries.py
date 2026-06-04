@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+CODE_TOUR = ROOT / "docs" / "code_tour.md"
 
 
 @dataclass(frozen=True)
@@ -210,6 +211,53 @@ def check_project_isolation() -> list[str]:
     return failures
 
 
+def require_text(text: str, needle: str, label: str) -> list[str]:
+    if needle not in text:
+        return [f"{label}: missing `{needle}`"]
+    return []
+
+
+def check_code_tour() -> list[str]:
+    failures: list[str] = []
+    if not CODE_TOUR.exists():
+        return ["missing docs/code_tour.md"]
+
+    text = CODE_TOUR.read_text(encoding="utf-8")
+    required_phrases = [
+        "no generated runtime files, external accounts, paid services, secrets, or private paths",
+        "secure-enterprise-knowledge-copilot/app.py",
+        "src/copilot/api.py: CopilotApi",
+        "src/copilot/retrieval.py",
+        "src/copilot/security.py",
+        "src/copilot/answering.py",
+        "regulated-customer-operations-agent/app.py",
+        "src/ops_agent/api.py: OpsAgentApi",
+        "src/ops_agent/agent.py",
+        "src/ops_agent/tools.py",
+        "ai-reliability-incident-console/app.py",
+        "src/reliability_console/api.py: ReliabilityApi",
+        "src/reliability_console/triage.py",
+        "web/js/api.js",
+        "web/js/app.js",
+        "web/js/renderers.js",
+        "web/js/scenarioEditor.js",
+        "python -B scripts/dev.py architecture",
+        "python -B scripts/dev.py frontend",
+        "python -B scripts/dev.py quality",
+    ]
+    for phrase in required_phrases:
+        failures.extend(require_text(text, phrase, "docs/code_tour.md"))
+
+    cross_references = {
+        ROOT / "README.md": "docs/code_tour.md",
+        ROOT / "PROJECT_CONTENT_INDEX.md": "docs/code_tour.md",
+    }
+    for path, phrase in cross_references.items():
+        failures.extend(require_text(path.read_text(encoding="utf-8"), phrase, path.relative_to(ROOT).as_posix()))
+
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
     for project in PROJECTS:
@@ -218,6 +266,7 @@ def main() -> int:
         failures.extend(check_backend_import_boundaries(project))
         failures.extend(check_frontend_module_boundaries(project))
     failures.extend(check_project_isolation())
+    failures.extend(check_code_tour())
 
     if failures:
         print("Architecture boundary check failed:")

@@ -66,6 +66,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README GitHub readiness evidence pointer
 - Add a compact README release page evidence pointer
 - Add an API request cookbook for canonical demo paths
+- Add a contributor code-tour page for service boundaries
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -190,29 +191,29 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a contributor code-tour page for service boundaries
+Add an eval authoring guide for safe AI workflows
 ```
 
 Labels:
 
 ```text
-documentation, design, good first issue
+documentation, eval, good first issue
 ```
 
 Body:
 
 ```text
-Add a contributor-friendly code tour that maps each project from HTTP shell to API layer, domain logic, storage, evals, optional model gateway, and frontend modules.
+Add a contributor-friendly eval authoring guide that shows how to add safe retrieval, governed agent, and release-reliability eval cases without changing the local-first runtime contract.
 
 Acceptance criteria:
 
-- Add a docs/code_tour.md page with one section per project and one shared boundary summary.
-- Map app.py, src API classes, domain/service modules, storage, evals, optional model gateways, and web/js modules without duplicating full architecture docs.
-- Link the code tour from README.md and PROJECT_CONTENT_INDEX.md.
-- Keep the page source-linked and local-first; do not include generated runtime files, private paths, secrets, external accounts, or paid-service requirements.
-- python -B scripts/dev.py architecture still passes.
-- python -B scripts/dev.py api-docs still passes.
-- python -B scripts/dev.py frontend still passes.
+- Add docs/eval_authoring_guide.md with one section each for Project 1 retrieval/abstention evals, Project 2 approval/refusal evals, and Project 3 release-blocking/monitor-only evals.
+- Show the exact checked-in seed/eval files a contributor should edit and the fields that must stay fictional and local-first.
+- Link the guide from README.md and PROJECT_CONTENT_INDEX.md.
+- Keep examples free of secrets, private paths, external accounts, paid-service requirements, and generated runtime files.
+- python -B scripts/dev.py evals still passes.
+- python -B scripts/dev.py scenario-data still passes.
+- python -B scripts/dev.py claims still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
