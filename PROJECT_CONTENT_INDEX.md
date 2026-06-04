@@ -232,6 +232,7 @@ Design Review Docs:
 - `docs/code_tour.md`: contributor map from HTTP shells to API classes, domain modules, storage, evals, and frontend modules.
 - `docs/first_pull_request_checklist.md`: first local pull request checklist for clone, branch, diff review, route selection, targeted gates, quality checks, and PR handoff.
 - `docs/issue_to_pr_handoff_flow.md`: contributor handoff flow from one approved public issue to a narrow pull request, including branch naming, route gates, PR body, and maintainer review notes.
+- `docs/public_roadmap_issue_comment_examples.md`: maintainer comment templates for accepting scoped roadmap issues, narrowing oversized requests, closing low-signal activity, redirecting unsafe requests, and linking useful PRs.
 - `docs/docs_only_pr_review_examples.md`: examples for approving, requesting changes, or closing docs-only PRs without weakening public claims.
 - `docs/readme_navigation_audit.md`: README navigation audit for release, contribution, review, optional environment, and technical evidence links.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
@@ -256,6 +257,7 @@ Release and growth:
 - `docs/pr_review_security.md`: PR review policy gate and malicious-contribution review framing.
 - `docs/docs_only_pr_review_examples.md`: docs-only PR review examples for useful docs, low-signal docs, unsafe docs, claim checks, link checks, generated artifact checks, and issue-pack drift.
 - `docs/docs_only_review_comment_examples.md`: maintainer comment templates for approving, requesting changes, closing unsafe changes, or closing low-signal docs-only PRs.
+- `docs/public_roadmap_issue_comment_examples.md`: public roadmap issue comment examples for scoped acceptance, oversized requests, low-signal issues, unsafe requests, and useful PR links.
 - `docs/readme_navigation_drift_examples.md`: README navigation drift fix examples for docs-only reviews that touch public navigation or evidence wording.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.

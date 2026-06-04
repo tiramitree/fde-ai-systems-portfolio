@@ -1,6 +1,6 @@
 # Docs-Only Review Comment Examples
 
-Use this page when a documentation-only pull request needs a clear maintainer reply. Read it with `docs/docs_only_pr_review_examples.md`, `docs/pr_review_security.md`, and `docs/first_pull_request_checklist.md`.
+Use this page when a documentation-only pull request needs a clear maintainer reply. Read it with `docs/docs_only_pr_review_examples.md`, `docs/pr_review_security.md`, `docs/first_pull_request_checklist.md`, and `docs/public_roadmap_issue_comment_examples.md`.
 
 These examples are templates, not automatic decisions. Read the diff before posting a review, keep the response tied to the current repository state, and do not run contributor commands until the changed files are understood.
 
@@ -95,6 +95,8 @@ A better follow-up would be a small docs change that names the specific problem,
 ```
 
 Use request-changes instead of close-as-low-signal when the contributor has a specific useful idea but missed the repo's link or evidence pattern.
+
+Use `docs/public_roadmap_issue_comment_examples.md` when the same contribution also needs an issue-level reply about accepted scope, backlog ideas, implementation promises, or low-signal activity.
 
 ## Reviewer Checklist Before Posting
 

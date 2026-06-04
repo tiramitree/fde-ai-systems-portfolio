@@ -1,6 +1,6 @@
 # Issue To PR Handoff Flow
 
-Use this page when a contributor wants to turn one approved public issue into a small, reviewable pull request. Read it with `docs/github_initial_issues.md`, `docs/first_pull_request_checklist.md`, `docs/docs_only_review_comment_examples.md`, and `docs/pr_review_security.md`.
+Use this page when a contributor wants to turn one approved public issue into a small, reviewable pull request. Read it with `docs/github_initial_issues.md`, `docs/first_pull_request_checklist.md`, `docs/public_roadmap_issue_comment_examples.md`, `docs/docs_only_review_comment_examples.md`, and `docs/pr_review_security.md`.
 
 This flow is local-first. It does not require external accounts, paid APIs, generated runtime files, private paths, or real customer data. Public PRs are still untrusted input, so maintainers should read the diff before running contributor code.
 
@@ -132,6 +132,7 @@ Maintainers should:
 - run `python -B scripts/dev.py pr-triage` for visible public PRs
 - read the diff before running contributor code
 - compare the PR with the issue acceptance criteria
+- use `docs/public_roadmap_issue_comment_examples.md` before accepting, narrowing, closing, or linking public roadmap issue work
 - run the route-specific gates and the merge bar from `docs/pr_review_security.md`
 - use `docs/docs_only_review_comment_examples.md` for docs-only approve, request-changes, close-as-unsafe, or close-as-low-signal wording
 
