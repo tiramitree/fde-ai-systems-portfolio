@@ -604,6 +604,7 @@ repository/
 - [Threat Model](docs/threat_model.md)
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)
 - [Eval Authoring Guide](docs/eval_authoring_guide.md)
+- [Eval Gate Troubleshooting Examples](docs/eval_gate_troubleshooting_examples.md)
 - [Seed Data Extension Examples](docs/seed_data_extension_examples.md)
 - [Error Hygiene](docs/error_hygiene.md)
 - [Container Release Hygiene](docs/container_release_hygiene.md)

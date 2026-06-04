@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add contributor-local troubleshooting examples for failed eval gates.
-3. Add a small glossary for seed, runtime, eval, replay, and trace artifacts.
-4. Add a command-output troubleshooting map for the most common failing gates.
-5. Add a local demo reset troubleshooting guide for stale runtime state.
+2. Add a small glossary for seed, runtime, eval, replay, and trace artifacts.
+3. Add a command-output troubleshooting map for the most common failing gates.
+4. Add a local demo reset troubleshooting guide for stale runtime state.
+5. Add a concise data-flow map for each service's checked-in seed fixtures.
 
 ## Intermediate Issues
 
@@ -97,3 +97,4 @@ Contributions should preserve these invariants:
 - Add seed-data extension examples for one document, one operations case, and one incident.
 - Add local API error examples for 403, 404, and invalid JSON responses.
 - Add a trace timeline explainer for canonical flows.
+- Add contributor-local troubleshooting examples for failed eval gates.
