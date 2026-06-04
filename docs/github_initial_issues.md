@@ -26,6 +26,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a README command quick-reference
 - Add a compact README glossary for core gates
 - Add a README maintainer workflow checklist
+- Add a compact README demo path map
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -150,28 +151,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README demo path map
+Add README command output expectations
 ```
 
 Labels:
 
 ```text
-documentation, demo, good first issue
+documentation, automation, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README section that maps each project to the smallest useful demo path.
+Add a compact README table that describes expected output for the most important verification commands.
 
 Acceptance criteria:
 
-- For each project, list the local URL, the single best demo prompt or action, and the evidence panel or command to inspect next.
-- Keep the section shorter than the full project walkthroughs and link to existing project sections.
-- Do not claim Docker runtime, OpenAI live mode, or account-level GitHub setup unless verified.
+- Cover verify, quality, fresh-clone-local, fresh-clone, post_publish_check.py, github-readiness, and pr-triage.
+- Note that GitHub API checks can be rate-limited without authentication.
+- Keep the section short and link to existing detailed docs when needed.
 - Do not introduce paid APIs, remote frontend dependencies, or unrelated code changes.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py smoke still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```

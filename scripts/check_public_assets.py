@@ -49,6 +49,12 @@ REQUIRED_README_PR_CHECKLIST = [
     "| Secrets and access | Do not ask contributors for secrets, tokens, account access, private files, local paths, or collaborator permissions. |",
     "| Merge bar | Use the [PR review security gate](docs/pr_review_security.md) and [PR review runbook](docs/pr_review_runbook.md); merge only after `pr-policy`, `governance`, `workflow-security`, `safety`, and `verify` pass. |",
 ]
+REQUIRED_DEMO_PATH_MAP = [
+    "## Demo Path Map",
+    "| [Secure Enterprise Knowledge Copilot](#project-1-secure-enterprise-knowledge-copilot) | Open `http://127.0.0.1:8765`, select Alice, and ask `What is the finance retention plan?`; then switch to Morgan for the same question. | Compare abstention vs citation-backed access, copy the trace ID, then run `python -B scripts/dev.py smoke`. |",
+    "| [Regulated Customer Operations Agent](#project-2-regulated-customer-operations-agent) | Open `http://127.0.0.1:8770`, select Ivy and `case-1001`, then run the investigation. | Inspect the pending approval, blocked side effect, audit event, and `python -B scripts/dev.py smoke`. |",
+    "| [AI Reliability Incident Console](ai-reliability-incident-console/README.md) | Open `http://127.0.0.1:8780`, select the unsafe canary incident, then run triage. | Inspect failed eval evidence, blocked rollout, remediation steps, trace/audit records, and `python -B scripts/dev.py smoke`. |",
+]
 
 
 def tracked_markdown_files() -> list[Path]:
@@ -271,6 +277,18 @@ def check_readme_pr_checklist() -> list[str]:
     return failures
 
 
+def check_demo_path_map() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_DEMO_PATH_MAP:
+        if expected not in text:
+            failures.append(f"README.md: missing demo path map entry: {expected}")
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_markdown_links())
@@ -279,6 +297,7 @@ def main() -> int:
     failures.extend(check_command_quick_reference())
     failures.extend(check_readme_glossary())
     failures.extend(check_readme_pr_checklist())
+    failures.extend(check_demo_path_map())
     if failures:
         print("Public asset check failed:")
         for failure in failures:

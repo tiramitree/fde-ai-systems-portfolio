@@ -7,8 +7,8 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
 2. Add compact per-project architecture cards to the README.
 3. Add shareable demo-state reset presets.
-4. Add a compact README section that maps each project to the smallest useful demo path.
-5. Add a README command output expectations table for verify, quality, fresh-clone, and post-publish checks.
+4. Add a README command output expectations table for verify, quality, fresh-clone, and post-publish checks.
+5. Add a compact README troubleshooting pointer for API rate limits, Docker availability, and optional OpenAI mode.
 
 ## Intermediate Issues
 
@@ -52,3 +52,4 @@ Contributions should preserve these invariants:
 - Add a README command quick-reference grouped by local run, verification, release, visual assets, GitHub maintenance, and optional environment checks.
 - Add a compact glossary for release gates, eval gates, approval gates, trace IDs, audit logs, and abstention.
 - Add a README maintainer workflow checklist for reviewing external PRs without running untrusted code first.
+- Add a compact README section that maps each project to the smallest useful demo path.
