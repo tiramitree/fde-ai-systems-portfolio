@@ -91,7 +91,7 @@ On a Docker-enabled machine, prove the actual Compose runtime:
 python -B scripts/dev.py docker-runtime
 ```
 
-Verify README screenshots still match the recorded frontend source hashes:
+Verify desktop and mobile demo screenshots still match the recorded frontend source hashes:
 
 ```bash
 python -B scripts/dev.py visual-assets

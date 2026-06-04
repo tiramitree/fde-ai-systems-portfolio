@@ -131,7 +131,7 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | Public claim consistency | `scripts/check_claim_consistency.py` | README, release notes, evidence matrix, and preview metrics match eval/smoke evidence |
 | Architecture boundaries | `scripts/check_architecture_boundaries.py`, `docs/architecture_boundaries.md` | app shells, API classes, backend packages, and frontend modules preserve separation of concerns |
 | Frontend integrity | `scripts/check_frontend_integrity.py`, project `web/` folders | HTML, labels, local ES modules, DOM wiring, trace-copy, trace-link, keyboard trace navigation, copyable scenario-draft controls, local draft diffs, accessibility CSS, browser-local theme controls, and quick actions stay intact |
-| Visual asset hygiene | `scripts/check_visual_asset_manifest.py`, `scripts/refresh_visual_assets.py`, `docs/visual_assets_manifest.json` | README screenshots stay tied to recorded frontend source hashes, contrast samples, and live local refreshes |
+| Visual asset hygiene | `scripts/check_visual_asset_manifest.py`, `scripts/refresh_visual_assets.py`, `docs/visual_assets_manifest.json` | Desktop and mobile demo screenshots stay tied to recorded frontend source hashes, contrast samples, and live local refreshes |
 | Fresh clone experience | `scripts/check_fresh_clone_experience.py`, `docs/fresh_clone_experience.md` | clone the public repo into a temp directory, run release-facing checks, start all apps on isolated ports, and run smoke flows |
 | Runtime UI contracts | `scripts/check_runtime_ui_contracts.py`, project `app.py` files | static assets, trace keyboard modules, scenario editor modules, content types, security headers, 404s, and traversal blocking |
 | Error hygiene | `scripts/check_error_hygiene.py`, project `app.py` files | unexpected exceptions return generic JSON errors without leaking paths, stack details, or secret-like strings |
@@ -163,6 +163,12 @@ See [System Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full cla
 | Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
 | --- | --- | --- |
 | ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png) | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png) | ![AI Reliability Incident Console screenshot](docs/assets/ai-reliability-incident-console-screenshot.png) |
+
+Mobile / narrow viewport captures are checked by the same visual asset manifest:
+
+| Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
+| --- | --- | --- |
+| ![Secure Enterprise Knowledge Copilot mobile screenshot](docs/assets/secure-knowledge-copilot-mobile.png) | ![Regulated Customer Operations Agent mobile screenshot](docs/assets/regulated-ops-agent-mobile.png) | ![AI Reliability Incident Console mobile screenshot](docs/assets/ai-reliability-incident-console-mobile.png) |
 
 ## Project 1: Secure Enterprise Knowledge Copilot
 
