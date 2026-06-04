@@ -615,6 +615,7 @@ repository/
 - [Error Hygiene](docs/error_hygiene.md)
 - [Container Release Hygiene](docs/container_release_hygiene.md)
 - [Docker Runtime Evidence Checklist](docs/docker_runtime_evidence_checklist.md)
+- [Docker Runtime Failure Examples](docs/docker_runtime_failure_examples.md)
 - [Visual Asset Hygiene](docs/visual_asset_hygiene.md)
 - [Architecture Boundaries](docs/architecture_boundaries.md)
 - [Contributor Code Tour](docs/code_tour.md)

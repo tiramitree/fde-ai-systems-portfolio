@@ -2,7 +2,7 @@
 
 Use this checklist only on a Docker-enabled machine. The local Python path remains the verified default in environments where Docker is unavailable.
 
-Read this with `docs/container_release_hygiene.md`, `docs/readme_navigation_audit.md`, and `docs/command_output_troubleshooting_map.md`.
+Read this with `docs/container_release_hygiene.md`, `docs/readme_navigation_audit.md`, `docs/docker_runtime_failure_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 ## Evidence Boundary
 

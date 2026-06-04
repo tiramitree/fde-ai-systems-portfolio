@@ -35,6 +35,7 @@ README_NAVIGATION_DRIFT_EXAMPLES = ROOT / "docs" / "readme_navigation_drift_exam
 OPENTELEMETRY_COLLECTOR_HANDOFF_TROUBLESHOOTING = ROOT / "docs" / "opentelemetry_collector_handoff_troubleshooting.md"
 OPENAI_LIVE_MODE_TROUBLESHOOTING = ROOT / "docs" / "openai_live_mode_troubleshooting.md"
 DOCKER_RUNTIME_EVIDENCE_CHECKLIST = ROOT / "docs" / "docker_runtime_evidence_checklist.md"
+DOCKER_RUNTIME_FAILURE_EXAMPLES = ROOT / "docs" / "docker_runtime_failure_examples.md"
 
 FORBIDDEN_ISSUE_TEXT = [
     "look active",
@@ -519,6 +520,50 @@ def check_docker_runtime_evidence_checklist() -> list[str]:
     return failures
 
 
+def check_docker_runtime_failure_examples() -> list[str]:
+    failures: list[str] = []
+    if not DOCKER_RUNTIME_FAILURE_EXAMPLES.exists():
+        return ["missing docs/docker_runtime_failure_examples.md"]
+
+    text = DOCKER_RUNTIME_FAILURE_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Docker Runtime Failure Examples",
+        "docs/docker_runtime_evidence_checklist.md",
+        "docs/container_release_hygiene.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Missing Docker Daemon",
+        "Compose Command Mismatch",
+        "Unhealthy Service",
+        "Stale Generated Logs",
+        "Port Conflicts",
+        "Merge Bar",
+        "Claim Wording",
+        "python -B scripts/dev.py container-release",
+        "python -B scripts/dev.py docker-runtime",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "Docker runtime verification is optional",
+        "`python -B scripts/dev.py quality` must not require Docker",
+        "Do not claim Docker runtime proof",
+        "Do not commit generated container logs",
+        "host port(s) already in use",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/docker_runtime_failure_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/docker_runtime_failure_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/docker_runtime_failure_examples.md",
+        "docs/docker_runtime_evidence_checklist.md": "docs/docker_runtime_failure_examples.md",
+        "docs/container_release_hygiene.md": "docker_runtime_failure_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_templates(labels: dict[str, object]) -> list[str]:
     failures: list[str] = []
     for rel_path, template_label_names in template_labels().items():
@@ -571,6 +616,7 @@ def main() -> int:
     failures.extend(check_opentelemetry_collector_handoff_troubleshooting())
     failures.extend(check_openai_live_mode_troubleshooting())
     failures.extend(check_docker_runtime_evidence_checklist())
+    failures.extend(check_docker_runtime_failure_examples())
     failures.extend(check_templates(labels))
     failures.extend(check_cross_references())
 
