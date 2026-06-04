@@ -212,6 +212,7 @@ Design Review Docs:
 - `docs/container_release_hygiene.md`: Docker/Compose release hygiene gate and honest runtime-verification framing.
 - `docs/visual_asset_hygiene.md`: desktop/mobile screenshot manifest, source-hash drift protection, refresh troubleshooting, and review framing.
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
+- `docs/code_tour.md`: contributor map from HTTP shells to API classes, domain modules, storage, evals, and frontend modules.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
 - `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, copyable scenario-draft controls, local draft diffs, no-build local UI posture, and review framing.
