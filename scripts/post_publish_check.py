@@ -150,6 +150,7 @@ def main() -> int:
         "docs/release_attachment_verification_examples.md",
         "docs/release_asset_upload_dry_run_examples.md",
         "docs/release_note_refresh_checklist.md",
+        "docs/release_note_changelog_drift_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md",
         "docs/demo_state_presets.json",
         "docs/container_release_hygiene.md",
