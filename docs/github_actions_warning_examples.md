@@ -1,6 +1,6 @@
 # GitHub Actions Warning Examples
 
-Use this page when GitHub Actions or `github-readiness` reports a workflow warning. Read it with `.github/workflows/ci.yml`, `docs/workflow_security.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when GitHub Actions or `github-readiness` reports a workflow warning. Read it with `.github/workflows/ci.yml`, `docs/workflow_security.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_api_rate_limit_troubleshooting_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local quality evidence and remote GitHub Actions evidence prove different things. Do not claim a green workflow until the current remote `quality-gate` run passes for the pushed commit.
 
@@ -74,6 +74,8 @@ python -B scripts/dev.py github-readiness
 ```
 
 If the workflow remains missing after the pushed commit is visible, inspect the Actions page for repository-level workflow settings before changing code.
+
+Use `docs/github_api_rate_limit_troubleshooting_examples.md` when the missing run might be API rate-limit, stale-cache, or transient GitHub availability rather than workflow configuration.
 
 ## Stale Badge
 
