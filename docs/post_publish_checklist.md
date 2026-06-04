@@ -19,6 +19,7 @@ The post-publish check must prove:
 - tracked worktree is clean.
 - remote `main` branch exists.
 - GitHub repository page is reachable.
+- GitHub API rate-limit troubleshooting examples are published: `docs/github_api_rate_limit_troubleshooting_examples.md`.
 - raw README is reachable.
 - GitHub Actions workflow is reachable.
 - key documentation files are published.

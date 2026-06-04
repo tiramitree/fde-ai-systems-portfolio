@@ -95,6 +95,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact GitHub release page troubleshooting examples
 - Add compact social preview verification examples
 - Add compact GitHub repository metadata troubleshooting examples
+- Add compact GitHub API rate-limit troubleshooting examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -219,7 +220,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact GitHub API rate-limit troubleshooting examples
+Add compact GitHub latest release troubleshooting examples
 ```
 
 Labels:
@@ -231,13 +232,13 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add compact examples for handling GitHub API rate-limit and transient readiness output without confusing API availability with repository quality.
+Add compact examples for troubleshooting GitHub latest-release state without confusing tag existence, release-page existence, and latest-release selection.
 
 Acceptance criteria:
 
-- Add docs/github_api_rate_limit_troubleshooting_examples.md with examples for unauthenticated rate limits, transient GitHub API failures, pending Actions lookups, stale cached status, and strict-mode review.
-- Reference docs/published_repository_status.md, docs/post_publish_checklist.md, docs/post_publish_warning_examples.md, docs/github_actions_warning_examples.md, and docs/github_repository_metadata_troubleshooting_examples.md.
-- Keep GitHub API availability separate from local project quality and do not claim remote readiness until the readiness command can verify the current repository state.
+- Add docs/github_latest_release_troubleshooting_examples.md with examples for missing latest release, wrong latest tag, draft or prerelease confusion, stale release page, and attached artifact drift.
+- Reference docs/github_release_page_troubleshooting_examples.md, docs/github_release_commands.md, docs/release_attachment_verification_examples.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep tag existence, release-page existence, and latest-release selection separate; do not claim the latest release is current until GitHub readiness or direct release-page evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py github-readiness still has no hard failures when the GitHub API is reachable.
 - python -B scripts/dev.py launch-assets still passes.
