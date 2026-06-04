@@ -140,7 +140,7 @@ Local Git state:
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.
 - `scripts/check_docker_runtime.py`: optionally builds the Compose stack, waits for container health, runs smoke flows, and tears the stack down on Docker-enabled machines.
-- `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, keyboard trace deep links, copyable scenario-draft controls, and quick-action controls.
+- `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, keyboard trace deep links, copyable scenario-draft controls, local draft diffs, and quick-action controls.
 - `scripts/check_fresh_clone_experience.py`: clones the repository into a temporary directory, runs release-facing static checks, starts all demos on isolated ports, and runs health/smoke flows.
 - `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, scenario editor modules, content types, security headers, 404s, and traversal blocking.
 - `scripts/check_api_documentation.py`: verifies API source routes, public API contract documentation, README, index, and evidence matrix stay aligned.
@@ -210,7 +210,7 @@ Design Review Docs:
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
-- `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, and copyable scenario-draft controls, no-build local UI posture, and review framing.
+- `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, copyable scenario-draft controls, local draft diffs, no-build local UI posture, and review framing.
 - `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and review framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
 - `docs/api_contracts.md`: documented backend API surface, response-shape boundaries, and review framing.

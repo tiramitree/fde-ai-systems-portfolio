@@ -298,6 +298,49 @@ button:hover {
   font-size: 12px;
 }
 
+.scenarioDiff {
+  display: grid;
+  gap: 6px;
+  min-height: 44px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.scenarioDiffRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scenarioDiffPath {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.scenarioDiffState {
+  min-width: 72px;
+  border-radius: 999px;
+  padding: 3px 7px;
+  background: #eef2f7;
+  color: var(--muted);
+  text-align: center;
+}
+
+.scenarioDiffState.changed {
+  background: #fff4d8;
+  color: var(--warn);
+}
+
+.scenarioDiffState.added {
+  background: #e2f3ed;
+  color: var(--accent);
+}
+
+.scenarioDiffState.removed {
+  background: #f8e4e4;
+  color: var(--danger);
+}
+
 .scenarioActions {
   margin-top: 8px;
 }

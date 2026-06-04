@@ -34,6 +34,7 @@ installScenarioEditor({
   loadScenario: () => api("/api/scenario"),
   summary: byId("scenarioSummary"),
   draft: byId("scenarioDraft"),
+  diff: byId("scenarioDiff"),
   status: byId("scenarioStatus"),
   saveButton: byId("saveScenarioDraft"),
   resetButton: byId("resetScenarioDraft"),

@@ -57,9 +57,9 @@ The browser-local scenario draft surface depends on this same data contract:
 
 - `/api/scenario` exposes only allowlisted fictional seed and eval files.
 - runtime state files are not part of the scenario snapshot.
-- drafts are copied/exported from the browser and stored in browser `localStorage`, not written back to repository JSON.
+- drafts are copied/exported and diffed in the browser, then stored in browser `localStorage`, not written back to repository JSON.
 - JSON seed files remain the source of truth for evals and reset behavior.
 
 ## Technical Review Framing
 
-The data is deliberately small, but it is not arbitrary. Each fixture exists to demonstrate a production invariant: permission filtering before generation, citation-backed answers, abstention, retrieved-content injection handling, deterministic tools, approval gates, blocked side effects, and release triage. The integrity gate prevents future edits from making the demo story inconsistent or accidentally publishing private artifacts, while the scenario draft UI makes the fictional data inspectable and copyable without mutating it.
+The data is deliberately small, but it is not arbitrary. Each fixture exists to demonstrate a production invariant: permission filtering before generation, citation-backed answers, abstention, retrieved-content injection handling, deterministic tools, approval gates, blocked side effects, and release triage. The integrity gate prevents future edits from making the demo story inconsistent or accidentally publishing private artifacts, while the scenario draft UI makes the fictional data inspectable, copyable, and diffable without mutating it.

@@ -12,8 +12,53 @@ function summarize(files) {
   return files.map((file) => `${file.path} (${file.record_count})`).join(" | ");
 }
 
-export function installScenarioEditor({ loadScenario, summary, draft, status, saveButton, resetButton, clearButton, copyButton }) {
+function normalize(value) {
+  if (Array.isArray(value)) {
+    return value.map(normalize);
+  }
+  if (value && typeof value === "object") {
+    return Object.keys(value).sort().reduce((result, key) => {
+      result[key] = normalize(value[key]);
+      return result;
+    }, {});
+  }
+  return value;
+}
+
+function signature(value) {
+  return JSON.stringify(normalize(value));
+}
+
+function filesByPath(files) {
+  const map = new Map();
+  files.forEach((file, index) => {
+    const path = file && typeof file.path === "string" ? file.path : `draft-item-${index + 1}`;
+    map.set(path, file);
+  });
+  return map;
+}
+
+function diffRows(seedFiles, draftFiles) {
+  const seedMap = filesByPath(seedFiles);
+  const draftMap = filesByPath(draftFiles);
+  const paths = Array.from(new Set([...seedMap.keys(), ...draftMap.keys()])).sort();
+  return paths.map((path) => {
+    if (!seedMap.has(path)) {
+      return { path, state: "added" };
+    }
+    if (!draftMap.has(path)) {
+      return { path, state: "removed" };
+    }
+    return {
+      path,
+      state: signature(seedMap.get(path)) === signature(draftMap.get(path)) ? "unchanged" : "changed",
+    };
+  });
+}
+
+export function installScenarioEditor({ loadScenario, summary, draft, diff, status, saveButton, resetButton, clearButton, copyButton }) {
   let seedText = "";
+  let seedFiles = [];
   let storageKey = "";
   let loaded = false;
 
@@ -22,16 +67,42 @@ export function installScenarioEditor({ loadScenario, summary, draft, status, sa
     status.dataset.state = state;
   }
 
+  function renderDiff(rows) {
+    diff.replaceChildren();
+    rows.forEach((row) => {
+      const item = document.createElement("div");
+      item.className = "scenarioDiffRow";
+      const state = document.createElement("span");
+      state.className = `scenarioDiffState ${row.state}`;
+      state.textContent = row.state;
+      const path = document.createElement("span");
+      path.className = "scenarioDiffPath";
+      path.textContent = row.path;
+      item.append(state, path);
+      diff.append(item);
+    });
+  }
+
+  function setDiffMessage(message) {
+    diff.replaceChildren();
+    diff.textContent = message;
+  }
+
   function validateDraft() {
     try {
-      JSON.parse(draft.value);
+      const parsed = JSON.parse(draft.value);
+      if (!Array.isArray(parsed)) {
+        throw new Error("draft must be a file array");
+      }
       saveButton.disabled = false;
       copyButton.disabled = !loaded;
+      renderDiff(diffRows(seedFiles, parsed));
       setStatus("Valid local draft", "ok");
       return true;
     } catch (error) {
       saveButton.disabled = true;
       copyButton.disabled = true;
+      setDiffMessage("Fix JSON to compare draft.");
       setStatus(`Invalid JSON: ${error.message}`, "error");
       return false;
     }
@@ -41,7 +112,8 @@ export function installScenarioEditor({ loadScenario, summary, draft, status, sa
     .then((payload) => {
       const scenario = payload.scenario;
       storageKey = draftKey(scenario.app);
-      seedText = formatFiles(scenario.files);
+      seedFiles = scenario.files;
+      seedText = formatFiles(seedFiles);
       const savedDraft = localStorage.getItem(storageKey);
       summary.textContent = summarize(scenario.files);
       draft.value = savedDraft || seedText;
