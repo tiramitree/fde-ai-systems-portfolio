@@ -224,6 +224,10 @@ Demo recording readiness:
 
 Use the [Demo Recording Checklist](docs/demo_recording_checklist.md) with the [Demo Path Map](#demo-path-map), [Demo State Presets](docs/demo_state_presets.json), [Visual Asset Hygiene](docs/visual_asset_hygiene.md), and [Demo Replay Artifact](docs/demo_replay_artifact.md). Before recording, run `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py visual-assets`, and `python -B scripts/dev.py replay-artifact`.
 
+Launch-channel readiness:
+
+Use the [Launch Copy Pack](docs/launch_copy_pack.md) with the [Star Growth Plan](docs/star_growth_plan.md), [Launch Assets Hygiene](docs/launch_assets_hygiene.md), [GitHub Launch Plan](docs/github_launch_plan.md), and [Published Repository Status](docs/published_repository_status.md). Before sharing public launch posts, run `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py assets`, `python -B scripts/dev.py fresh-clone`, and `python -B scripts/post_publish_check.py`; keep Docker runtime, OpenAI live mode, branch protection, release pages, repo topics, profile pins, and social preview setup as manual claims until their checks or account actions are complete.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
