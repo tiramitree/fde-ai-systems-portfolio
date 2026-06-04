@@ -1,6 +1,6 @@
 # Release Asset Upload Dry-Run Examples
 
-Use this page when planning or reviewing release asset uploads. Read it with `docs/release_attachment_verification_examples.md`, `docs/github_release_commands.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, and `docs/post_publish_checklist.md`.
+Use this page when planning or reviewing release asset uploads. Read it with `docs/release_attachment_verification_examples.md`, `docs/github_release_commands.md`, `docs/release_note_refresh_checklist.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, and `docs/post_publish_checklist.md`.
 
 The core rule: dry-run plans, generated replay artifacts, source-controlled docs, and published GitHub release state prove different things. Do not claim release assets were uploaded until public release evidence confirms it.
 
@@ -107,7 +107,7 @@ git ls-remote origin refs/heads/main
 python -B scripts/dev.py github-readiness
 ```
 
-Use `docs/github_release_commands.md` as the source of truth for the intended tag and release notes. Keep the upload plan tied to `v0.1.0` unless a reviewed release process changes the target.
+Use `docs/github_release_commands.md` as the source of truth for the intended tag and release notes. Use `docs/release_note_refresh_checklist.md` before changing release-page text to match a generated artifact. Keep the upload plan tied to `v0.1.0` unless a reviewed release process changes the target.
 
 ## GitHub Release Page Not Found
 
@@ -167,6 +167,7 @@ Generated replay artifacts should stay ignored and be uploaded externally to the
 - `python -B scripts/dev.py replay-artifact` regenerated `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json`.
 - `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality` passed after release-facing wording changed.
 - The upload plan targets `v0.1.0` from `docs/github_release_commands.md`.
+- Checked-in release notes and release-page text are reviewed with `docs/release_note_refresh_checklist.md`.
 - The release page exists before upload commands are treated as actionable.
 - Dry-run output is not described as an applied GitHub release state.
 - `out/` files remain ignored and are not committed as ordinary source content.

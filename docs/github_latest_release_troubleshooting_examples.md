@@ -1,6 +1,6 @@
 # GitHub Latest Release Troubleshooting Examples
 
-Use this page when GitHub latest-release state is unclear. Read it with `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_commands.md`, `docs/release_attachment_verification_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when GitHub latest-release state is unclear. Read it with `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_commands.md`, `docs/release_note_refresh_checklist.md`, `docs/release_attachment_verification_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: tag existence, release-page existence, and latest-release selection prove different things. Do not claim the latest release is current until GitHub readiness or direct release-page evidence confirms it.
 
@@ -124,7 +124,7 @@ python -B scripts/dev.py replay-artifact
 python -B scripts/dev.py github-readiness
 ```
 
-Update checked-in release notes first, then refresh the GitHub release page through reviewed maintenance or the UI. Keep stale-page wording manual until the public page matches the intended notes.
+Update checked-in release notes first, then review `docs/release_note_refresh_checklist.md` and refresh the GitHub release page through reviewed maintenance or the UI. Keep stale-page wording manual until the public page matches the intended notes.
 
 ## Attached Artifact Drift
 
@@ -154,6 +154,7 @@ Use `docs/release_attachment_verification_examples.md` and `docs/github_release_
 
 - `docs/github_release_commands.md` still points to the intended tag.
 - `docs/github_release_notes_v0.1.0.md` matches the release claim.
+- `docs/release_note_refresh_checklist.md` was used before treating checked-in notes or GitHub release-page text as current.
 - `python -B scripts/dev.py replay-artifact` regenerates current local attachment evidence.
 - `python -B scripts/dev.py launch-assets` passes after release-facing wording changes.
 - `python -B scripts/dev.py github-readiness` has no hard failures when the GitHub API is reachable.

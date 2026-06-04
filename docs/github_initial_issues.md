@@ -108,6 +108,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact public roadmap issue comment examples
 - Add compact release asset upload dry-run examples
 - Add compact repository discussions launch checklist
+- Add compact release note refresh checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -232,26 +233,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact release note refresh checklist
+Add compact contributor attribution examples
 ```
 
 Labels:
 
 ```text
-documentation, release, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact release note refresh checklist that keeps checked-in release notes, GitHub release-page text, replay artifacts, and post-publish evidence aligned.
+Add compact contributor attribution examples that explain how useful docs, bug reports, eval cases, and PRs should be credited without adding vanity activity or private identity details.
 
 Acceptance criteria:
 
-- Add docs/release_note_refresh_checklist.md with examples for stale release notes, stale GitHub release-page text, replay artifact drift, and post-publish evidence mismatch.
-- Reference docs/github_release_notes_v0.1.0.md, docs/github_release_commands.md, docs/release_asset_upload_dry_run_examples.md, docs/github_latest_release_troubleshooting_examples.md, and docs/post_publish_checklist.md.
-- Keep checked-in release notes, generated replay artifacts, GitHub release-page text, and post-publish evidence separate; do not claim release notes are current until public release evidence confirms it.
+- Add docs/contributor_attribution_examples.md with examples for useful docs PRs, bug reports, eval-case additions, and rejected low-signal attribution requests.
+- Reference docs/maintainer_review_policy.md, docs/docs_only_pr_review_examples.md, docs/public_roadmap_issue_comment_examples.md, and docs/launch_feedback_collection_examples.md.
+- Keep attribution tied to public GitHub activity or explicitly permissioned public credit; do not include private messages, account details, emails, or analytics screenshots.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
