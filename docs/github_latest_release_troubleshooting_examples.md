@@ -1,6 +1,6 @@
 # GitHub Latest Release Troubleshooting Examples
 
-Use this page when GitHub latest-release state is unclear. Read it with `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_commands.md`, `docs/release_attachment_verification_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when GitHub latest-release state is unclear. Read it with `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_commands.md`, `docs/release_attachment_verification_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: tag existence, release-page existence, and latest-release selection prove different things. Do not claim the latest release is current until GitHub readiness or direct release-page evidence confirms it.
 
@@ -148,7 +148,7 @@ python -B scripts/dev.py safety
 python -B scripts/dev.py github-readiness
 ```
 
-Use `docs/release_attachment_verification_examples.md` to review attachment evidence. Attach or link the regenerated files externally, and keep `out/` ignored unless a release process explicitly asks for reviewed source-visible evidence.
+Use `docs/release_attachment_verification_examples.md` and `docs/github_release_attachment_screenshot_checklist.md` to review attachment evidence. Attach or link the regenerated files externally, and keep `out/` ignored unless a release process explicitly asks for reviewed source-visible evidence.
 
 ## Review Checklist
 
@@ -159,4 +159,5 @@ Use `docs/release_attachment_verification_examples.md` to review attachment evid
 - `python -B scripts/dev.py github-readiness` has no hard failures when the GitHub API is reachable.
 - `python -B scripts/check_github_readiness.py --strict` is used when latest-release setup is expected to be complete.
 - Tag existence, release-page existence, and latest-release selection are reviewed separately.
+- Latest-release attachment screenshots are compared with `docs/github_release_attachment_screenshot_checklist.md`.
 - Public docs do not claim the latest release is current until GitHub readiness or direct release-page evidence confirms it.

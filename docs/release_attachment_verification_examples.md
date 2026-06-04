@@ -1,6 +1,6 @@
 # Release Attachment Verification Examples
 
-Use this page when preparing or reviewing release evidence attachments. Read it with `docs/github_release_commands.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/post_publish_checklist.md`, `docs/command_output_troubleshooting_map.md`, and `docs/demo_replay_artifact.md`.
+Use this page when preparing or reviewing release evidence attachments. Read it with `docs/github_release_commands.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/post_publish_checklist.md`, `docs/command_output_troubleshooting_map.md`, and `docs/demo_replay_artifact.md`.
 
 The core rule: release attachments are generated evidence, not source content. Regenerate them from the release commit, attach them to the release page or review notes, and keep `out/` ignored unless a release process explicitly asks for a reviewed source diff.
 
@@ -26,6 +26,8 @@ python -B scripts/dev.py quality
 ```
 
 Use `python -B scripts/dev.py fresh-clone-local` before push, and `python -B scripts/dev.py fresh-clone` after the pushed branch is visible.
+
+Use `docs/github_release_attachment_screenshot_checklist.md` before collecting or interpreting screenshots of replay artifact attachments, missing attachments, stale attachments, wrong tags, or latest-release attachment state.
 
 ## Missing Replay Artifacts
 
