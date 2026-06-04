@@ -59,6 +59,7 @@ After the automated check passes:
 18. Run `python -B scripts/dev.py visual-asset-diff` and `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
 19. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
 20. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
+21. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
 
 ## Optional Backlog Seeding
 

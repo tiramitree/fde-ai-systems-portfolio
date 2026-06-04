@@ -90,6 +90,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact eval CSV troubleshooting examples
 - Add compact branch protection verification examples
 - Add compact post-publish warning examples
+- Add compact GitHub label troubleshooting examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -214,28 +215,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact GitHub label troubleshooting examples
+Add compact GitHub Actions warning examples
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+documentation, automation, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for troubleshooting GitHub label sync without creating unnecessary public roadmap churn.
+Add compact examples for handling GitHub Actions warning states without confusing local quality evidence with remote workflow evidence.
 
 Acceptance criteria:
 
-- Add docs/github_label_troubleshooting_examples.md with examples for missing labels, color drift, template mismatch, dry-run output, and issue-pack label mismatch.
-- Reference docs/github_labels.json, docs/github_initial_issues.md, docs/github_repository_settings.md, and docs/post_publish_checklist.md.
-- Keep label sync separate from creating public roadmap issues unless the repository is intentionally ready for open issue work.
+- Add docs/github_actions_warning_examples.md with examples for pending quality-gate, missing workflow run, stale badge, skipped workflow, and fork PR permission limits.
+- Reference .github/workflows/ci.yml, docs/workflow_security.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep local quality evidence separate from remote GitHub Actions evidence and do not claim a green workflow until the current remote run passes.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py github-community still passes in dry-run mode.
-- python -B scripts/dev.py community-issues still passes.
+- python -B scripts/dev.py workflow-security still passes.
+- python -B scripts/dev.py github-readiness still has no hard failures when the GitHub API is reachable.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

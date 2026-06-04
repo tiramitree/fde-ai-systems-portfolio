@@ -270,6 +270,7 @@ Release and growth:
 - `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: completed launch issues and current community issue pack with labels, acceptance criteria, and guardrails.
+- `docs/github_label_troubleshooting_examples.md`: GitHub label troubleshooting examples for missing labels, color drift, template mismatch, dry-run output, and issue-pack label mismatch.
 - `docs/github_labels.json`: GitHub label manifest used by community issue checks and optional `gh` sync.
 - `docs/demo_video_script.md`: short video/GIF script.
 - `docs/demo_recording_checklist.md`: operational checklist for recording the first demo video or GIF.

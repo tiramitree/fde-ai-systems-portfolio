@@ -310,7 +310,7 @@ Use [Post-Publish Checklist](docs/post_publish_checklist.md), [Post-Publish Warn
 
 GitHub readiness:
 
-Use [Published Repository Status](docs/published_repository_status.md), [GitHub Repository Settings](docs/github_repository_settings.md), [GitHub Release Commands](docs/github_release_commands.md), [Development Issue Solutions](docs/development_issue_solutions.md), and the GitHub readiness row in the [Evidence Freshness Checklist](#evidence-freshness-checklist) before changing repository metadata, topics, branch protection, release pages, social preview, profile pins, or community issue state. Treat `[WARN]` and `[MANUAL]` output for rate limits, metadata, topics, branch protection, release page, social preview, and profile pin as account-level or remote-freshness follow-up until `github-readiness` or authenticated maintenance confirms them; run `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community`, and `python -B scripts/dev.py quality`.
+Use [Published Repository Status](docs/published_repository_status.md), [GitHub Repository Settings](docs/github_repository_settings.md), [GitHub Label Troubleshooting Examples](docs/github_label_troubleshooting_examples.md), [GitHub Release Commands](docs/github_release_commands.md), [Development Issue Solutions](docs/development_issue_solutions.md), and the GitHub readiness row in the [Evidence Freshness Checklist](#evidence-freshness-checklist) before changing repository metadata, topics, labels, branch protection, release pages, social preview, profile pins, or community issue state. Treat `[WARN]` and `[MANUAL]` output for rate limits, metadata, topics, labels, branch protection, release page, social preview, and profile pin as account-level or remote-freshness follow-up until `github-readiness` or authenticated maintenance confirms them; run `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community`, and `python -B scripts/dev.py quality`.
 
 Release page readiness:
 
@@ -630,6 +630,7 @@ repository/
 - [Published Repository Status](docs/published_repository_status.md)
 - [Post-Publish Warning Examples](docs/post_publish_warning_examples.md)
 - [GitHub Repository Settings](docs/github_repository_settings.md)
+- [GitHub Label Troubleshooting Examples](docs/github_label_troubleshooting_examples.md)
 - [Branch Protection Verification Examples](docs/branch_protection_verification_examples.md)
 - [Community Backlog](docs/community_backlog.md)
 - [Public Release Audit](docs/public_release_audit.md)
