@@ -59,6 +59,7 @@ The post-publish check must prove:
 - the visual asset manifest script, documentation, manifest, and desktop/mobile screenshot assets are published.
 - the launch asset hygiene script and documentation are published.
 - the launch feedback collection examples are published: `docs/launch_feedback_collection_examples.md`.
+- the stale launch-feedback claim examples are published: `docs/stale_launch_feedback_claim_examples.md`.
 
 ## Manual GitHub Checks
 
@@ -88,14 +89,15 @@ After the automated check passes:
 22. Run `python -B scripts/dev.py visual-asset-diff` and `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
 23. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
 24. Compare public comments, private-message summaries, analytics notes, stars, and forks with `docs/launch_feedback_collection_examples.md` before claiming launch feedback or star-growth evidence.
-25. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
-26. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
-27. Compare GitHub Discussions setup, categories, pinned starter topics, moderation rules, and launch-feedback boundaries with `docs/github_discussions_launch_checklist.md` before claiming Discussions are launch-ready.
-28. Compare discussion-to-issue conversions with `docs/discussion_to_issue_conversion_examples.md` before turning Q&A, ideas, private feedback, or low-signal discussions into public issue scope.
-29. Compare duplicate or overlapping roadmap issues with `docs/roadmap_duplicate_issue_handling_examples.md` before closing, merging, splitting, or redirecting public issue scope.
-30. Compare issue templates and seeded issue bodies with `docs/issue_template_stale_evidence_examples.md` before asking contributors for command output, screenshots, generated artifacts, account-level evidence, or roadmap evidence.
-31. Compare public maintainer updates with `docs/public_maintainer_status_update_examples.md` before summarizing local progress, pushed code, remote warnings, manual account setup, launch feedback, or roadmap scope.
-32. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
+25. Compare stale stars, forks, public comments, private feedback summaries, analytics screenshots, and launch-post reposts with `docs/stale_launch_feedback_claim_examples.md` before treating old launch feedback as current public evidence.
+26. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
+27. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
+28. Compare GitHub Discussions setup, categories, pinned starter topics, moderation rules, and launch-feedback boundaries with `docs/github_discussions_launch_checklist.md` before claiming Discussions are launch-ready.
+29. Compare discussion-to-issue conversions with `docs/discussion_to_issue_conversion_examples.md` before turning Q&A, ideas, private feedback, or low-signal discussions into public issue scope.
+30. Compare duplicate or overlapping roadmap issues with `docs/roadmap_duplicate_issue_handling_examples.md` before closing, merging, splitting, or redirecting public issue scope.
+31. Compare issue templates and seeded issue bodies with `docs/issue_template_stale_evidence_examples.md` before asking contributors for command output, screenshots, generated artifacts, account-level evidence, or roadmap evidence.
+32. Compare public maintainer updates with `docs/public_maintainer_status_update_examples.md` before summarizing local progress, pushed code, remote warnings, manual account setup, launch feedback, or roadmap scope.
+33. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
 
 ## Optional Backlog Seeding
 

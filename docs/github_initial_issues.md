@@ -116,6 +116,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact public maintainer status update examples
 - Add compact roadmap duplicate-issue handling examples
 - Add compact issue template stale-evidence examples
+- Add compact stale launch-feedback claim examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -240,7 +241,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact stale launch-feedback claim examples
+Add compact release asset checksum mismatch examples
 ```
 
 Labels:
@@ -252,15 +253,14 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact stale launch-feedback claim examples that explain how to handle stars, forks, comments, analytics notes, and private feedback without turning stale or unverifiable feedback into public evidence.
+Add compact release asset checksum mismatch examples that explain how to handle mismatches between generated replay artifacts, release attachment hashes, local manifests, and public GitHub release evidence.
 
 Acceptance criteria:
 
-- Add docs/stale_launch_feedback_claim_examples.md with examples for stale stars/forks counts, stale public comments, private feedback summaries, analytics screenshots, and launch-post reposts.
-- Reference docs/launch_feedback_collection_examples.md, docs/public_maintainer_status_update_examples.md, docs/post_publish_warning_examples.md, and docs/star_growth_plan.md.
-- Keep current public feedback, stale feedback, private feedback, analytics, launch copy, and roadmap scope separate; do not claim star growth, user adoption, production readiness, or private support from stale or private feedback.
+- Add docs/release_asset_checksum_mismatch_examples.md with examples for stale local replay artifacts, changed generated artifact hashes, missing public attachments, wrong release tag checksums, and post-publish checksum drift.
+- Reference docs/release_attachment_verification_examples.md, docs/release_asset_upload_dry_run_examples.md, docs/github_release_attachment_screenshot_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep generated local artifacts, source-controlled docs, uploaded release attachments, screenshots, checksums, and post-publish evidence separate; do not claim release assets are current until public evidence confirms them.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

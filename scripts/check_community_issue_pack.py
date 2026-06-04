@@ -46,6 +46,7 @@ GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_api_rat
 GITHUB_REPOSITORY_METADATA_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_repository_metadata_troubleshooting_examples.md"
 GITHUB_REPOSITORY_SETTINGS_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_repository_settings_screenshot_checklist.md"
 LAUNCH_FEEDBACK_COLLECTION_EXAMPLES = ROOT / "docs" / "launch_feedback_collection_examples.md"
+STALE_LAUNCH_FEEDBACK_CLAIM_EXAMPLES = ROOT / "docs" / "stale_launch_feedback_claim_examples.md"
 GITHUB_DISCUSSIONS_LAUNCH_CHECKLIST = ROOT / "docs" / "github_discussions_launch_checklist.md"
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
 PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_examples.md"
@@ -683,6 +684,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/github_repository_settings_screenshot_checklist.md",
         "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/launch_feedback_collection_examples.md",
+        "docs/stale_launch_feedback_claim_examples.md",
         "docs/social_preview_verification_examples.md",
         "docs/profile_pin_verification_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -708,6 +710,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "Dependabot alerts, Dependabot security updates, secret scanning, push protection, or local safety-scan output",
         "Use `docs/public_maintainer_status_update_examples.md` before summarizing warnings or manual rows in a public maintainer update",
         "Use `docs/issue_template_stale_evidence_examples.md` before editing issue templates or seeded issue bodies that ask contributors for command output",
+        "Use `docs/stale_launch_feedback_claim_examples.md` before treating stale feedback counts, stale comments, private feedback summaries, analytics screenshots, or launch-post reposts as current public evidence",
+        "Stale launch-feedback claims are reviewed before public docs mention old stars, forks, public comments, private feedback summaries, analytics screenshots, or launch-post reposts",
         "Issue templates ask for current reproducible evidence and do not request stale output, private screenshots, local machine details, generated artifacts as source, or account-level material",
         "Public maintainer updates keep local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises separate",
     ]
@@ -721,6 +725,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/post_publish_checklist.md": "docs/post_publish_warning_examples.md",
         "docs/public_maintainer_status_update_examples.md": "docs/post_publish_warning_examples.md",
         "docs/issue_template_stale_evidence_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/stale_launch_feedback_claim_examples.md": "docs/post_publish_warning_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1000,6 +1005,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "Launch Feedback Collection Examples",
         "docs/launch_copy_pack.md",
         "docs/star_growth_plan.md",
+        "docs/stale_launch_feedback_claim_examples.md",
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
@@ -1026,6 +1032,8 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence",
         "Use `docs/contributor_attribution_examples.md` before turning public feedback or explicitly permissioned private feedback into source-visible credit",
         "Use `docs/public_maintainer_status_update_examples.md` before turning launch feedback or repository progress into a public maintainer update",
+        "Use `docs/stale_launch_feedback_claim_examples.md` before treating stale feedback counts, stale comments, private feedback summaries, analytics screenshots, or launch-post reposts as public evidence",
+        "`docs/stale_launch_feedback_claim_examples.md` keeps stale launch-feedback claims separate from current public evidence",
         "keeps maintainer updates separate from launch feedback, private messages, analytics, and roadmap promises",
         "docs/issue_triage_sla_wording_examples.md",
         "Use `docs/discussion_to_issue_conversion_examples.md` before turning a discussion into a scoped issue",
@@ -1038,6 +1046,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
     cross_references = {
         "README.md": "docs/launch_feedback_collection_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/launch_feedback_collection_examples.md",
+        "docs/stale_launch_feedback_claim_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/launch_copy_pack.md": "docs/launch_feedback_collection_examples.md",
         "docs/star_growth_plan.md": "docs/launch_feedback_collection_examples.md",
         "docs/published_repository_status.md": "docs/launch_feedback_collection_examples.md",
@@ -1048,6 +1057,55 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/discussion_to_issue_conversion_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/contributor_attribution_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/issue_triage_sla_wording_examples.md": "docs/launch_feedback_collection_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_stale_launch_feedback_claim_examples() -> list[str]:
+    failures: list[str] = []
+    if not STALE_LAUNCH_FEEDBACK_CLAIM_EXAMPLES.exists():
+        return ["missing docs/stale_launch_feedback_claim_examples.md"]
+
+    text = STALE_LAUNCH_FEEDBACK_CLAIM_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Stale Launch Feedback Claim Examples",
+        "docs/launch_feedback_collection_examples.md",
+        "docs/public_maintainer_status_update_examples.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/star_growth_plan.md",
+        "Expected Evidence Split",
+        "Stale Stars Or Forks",
+        "Stale Public Comments",
+        "Private Feedback Summaries",
+        "Analytics Screenshots",
+        "Launch-Post Reposts",
+        "Review Checklist",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/post_publish_check.py",
+        "current public feedback, stale feedback, private feedback, analytics, launch copy, and roadmap scope prove different things",
+        "Do not claim star growth, user adoption, production readiness, or private support from stale or private feedback",
+        "Old stars, forks, comments, reposts, and screenshots are not described as current unless they are rechecked",
+        "Private messages and analytics are not committed as source evidence",
+        "Stale feedback is not used to claim star growth, user adoption, production readiness, or private support",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/stale_launch_feedback_claim_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/stale_launch_feedback_claim_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/stale_launch_feedback_claim_examples.md",
+        "docs/post_publish_checklist.md": "docs/stale_launch_feedback_claim_examples.md",
+        "docs/launch_feedback_collection_examples.md": "docs/stale_launch_feedback_claim_examples.md",
+        "docs/public_maintainer_status_update_examples.md": "docs/stale_launch_feedback_claim_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/stale_launch_feedback_claim_examples.md",
+        "docs/star_growth_plan.md": "docs/stale_launch_feedback_claim_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1069,6 +1127,7 @@ def check_public_maintainer_status_update_examples() -> list[str]:
         "docs/issue_template_stale_evidence_examples.md",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md",
         "docs/launch_feedback_collection_examples.md",
+        "docs/stale_launch_feedback_claim_examples.md",
         "Expected Evidence Split",
         "Local-Only Progress",
         "Pushed-But-Pending Checks",
@@ -1079,6 +1138,7 @@ def check_public_maintainer_status_update_examples() -> list[str]:
         "local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises are separate",
         "Do not imply delivery dates, production support, private access, or completed setup before evidence exists",
         "The update uses `docs/issue_template_stale_evidence_examples.md` before treating issue-template evidence requests",
+        "The update uses `docs/stale_launch_feedback_claim_examples.md` before treating old stars, forks, comments, private feedback, analytics, or launch-post reposts as current evidence",
         "git status --short --branch",
         "python -B scripts/dev.py quality",
         "python -B scripts/dev.py fresh-clone-local",
@@ -1104,6 +1164,7 @@ def check_public_maintainer_status_update_examples() -> list[str]:
         "docs/issue_template_stale_evidence_examples.md": "docs/public_maintainer_status_update_examples.md",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md": "docs/public_maintainer_status_update_examples.md",
         "docs/launch_feedback_collection_examples.md": "docs/public_maintainer_status_update_examples.md",
+        "docs/stale_launch_feedback_claim_examples.md": "docs/public_maintainer_status_update_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -2247,6 +2308,7 @@ def main() -> int:
     failures.extend(check_github_repository_metadata_troubleshooting_examples())
     failures.extend(check_github_repository_settings_screenshot_checklist())
     failures.extend(check_launch_feedback_collection_examples())
+    failures.extend(check_stale_launch_feedback_claim_examples())
     failures.extend(check_public_maintainer_status_update_examples())
     failures.extend(check_github_discussions_launch_checklist())
     failures.extend(check_social_preview_verification_examples())
