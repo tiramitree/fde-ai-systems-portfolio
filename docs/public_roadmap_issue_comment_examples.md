@@ -1,6 +1,6 @@
 # Public Roadmap Issue Comment Examples
 
-Use this page when replying to public roadmap issues, contributor proposals, or issue-to-PR handoff questions. Read it with `docs/github_initial_issues.md`, `docs/community_backlog.md`, `docs/issue_to_pr_handoff_flow.md`, `docs/docs_only_review_comment_examples.md`, `docs/contributor_attribution_examples.md`, `docs/issue_triage_sla_wording_examples.md`, and `docs/maintainer_review_policy.md`.
+Use this page when replying to public roadmap issues, contributor proposals, or issue-to-PR handoff questions. Read it with `docs/github_initial_issues.md`, `docs/community_backlog.md`, `docs/issue_to_pr_handoff_flow.md`, `docs/docs_only_review_comment_examples.md`, `docs/contributor_attribution_examples.md`, `docs/issue_triage_sla_wording_examples.md`, `docs/discussion_to_issue_conversion_examples.md`, and `docs/maintainer_review_policy.md`.
 
 The core rule: accepted scope, backlog ideas, implementation promises, and low-signal activity are different things. Keep public issue comments factual, narrow, and reversible; do not promise delivery dates, external-account access, private data, or guaranteed roadmap acceptance.
 
@@ -100,6 +100,8 @@ Do not mark the issue done until the PR is reviewed, merged, and verified throug
 Use `docs/contributor_attribution_examples.md` before adding public credit in issue comments. Credit useful public work without copying private identity details or turning low-signal activity into a roadmap signal.
 
 Use `docs/issue_triage_sla_wording_examples.md` before setting first-response, delayed-response, accepted-scope, or no-guarantee closure expectations in public issue comments.
+
+Use `docs/discussion_to_issue_conversion_examples.md` before accepting a discussion as issue scope.
 
 ## Review Checklist
 
