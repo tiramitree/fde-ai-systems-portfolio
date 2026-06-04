@@ -37,6 +37,7 @@ PROJECTS = [
             "citations",
             "trace",
             "copyTraceId",
+            "copyTraceLink",
             "audit",
             "traces",
         },
@@ -60,6 +61,7 @@ PROJECTS = [
             "approvals",
             "trace",
             "copyTraceId",
+            "copyTraceLink",
             "audit",
             "traces",
         },
@@ -84,6 +86,7 @@ PROJECTS = [
             "failedEvals",
             "trace",
             "copyTraceId",
+            "copyTraceLink",
             "audit",
             "traces",
         },
@@ -213,7 +216,7 @@ def api_paths(js_path: Path) -> set[str]:
 def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     failures: list[str] = []
     js_dir = project.root / "web" / "js"
-    expected_modules = {"api.js", "app.js", "clipboard.js", "dom.js", "renderers.js"}
+    expected_modules = {"api.js", "app.js", "clipboard.js", "dom.js", "renderers.js", "traceLinks.js"}
     present_modules = {path.name for path in js_dir.glob("*.js")}
     missing_modules = sorted(expected_modules - present_modules)
     if missing_modules:
@@ -239,25 +242,54 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     app_text = (js_dir / "app.js").read_text(encoding="utf-8")
     clipboard_text = (js_dir / "clipboard.js").read_text(encoding="utf-8")
     required_app_markers = [
-        'import { installTraceCopyButton } from "./clipboard.js";',
+        'import { installCopyButton, installTraceCopyButton } from "./clipboard.js";',
+        'import { installTraceHashSync, selectedTraceId, setTraceHash, syncTraceSelection, traceUrl } from "./traceLinks.js";',
         'lastTraceId: ""',
         'installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId)',
+        'installCopyButton(byId("copyTraceLink"), () => traceUrl(state.lastTraceId))',
         "state.lastTraceId = data.trace_id",
         "setTraceCopyState(data.trace_id)",
+        "setTraceLinkCopyState(data.trace_id)",
+        "setTraceHash(data.trace_id)",
+        "selectedTraceId()",
+        "syncTraceSelection()",
     ]
     for marker in required_app_markers:
         if marker not in app_text:
             failures.append(f"{project.name}: app.js missing trace-copy marker: {marker}")
 
     required_clipboard_markers = [
+        "export function installCopyButton",
         "export function installTraceCopyButton",
         "navigator.clipboard.writeText",
         'document.createElement("textarea")',
-        'button.disabled = !traceId',
+        'button.disabled = !value',
     ]
     for marker in required_clipboard_markers:
         if marker not in clipboard_text:
             failures.append(f"{project.name}: clipboard.js missing marker: {marker}")
+
+    trace_links_text = (js_dir / "traceLinks.js").read_text(encoding="utf-8")
+    required_trace_link_markers = [
+        "export function traceHash",
+        "export function traceUrl",
+        "export function selectedTraceId",
+        "export function setTraceHash",
+        "export function syncTraceSelection",
+        "export function installTraceHashSync",
+        "[data-trace-id]",
+        "URLSearchParams",
+    ]
+    for marker in required_trace_link_markers:
+        if marker not in trace_links_text:
+            failures.append(f"{project.name}: traceLinks.js missing marker: {marker}")
+
+    renderers_text = (js_dir / "renderers.js").read_text(encoding="utf-8")
+    for marker in ["traceHash(trace.id)", "selectedTrace"]:
+        if marker not in renderers_text:
+            failures.append(f"{project.name}: renderers.js missing trace deep-link marker: {marker}")
+    if "data-trace-id" not in renderers_text and "dataset: { traceId: trace.id }" not in renderers_text:
+        failures.append(f"{project.name}: renderers.js missing trace id data marker")
     return failures
 
 
@@ -270,7 +302,7 @@ def check_project(project: FrontendProject) -> list[str]:
     failures.extend(check_html(project, parser))
     failures.extend(check_javascript(project, set(parser.ids)))
     styles = (project.root / "web" / "styles.css").read_text(encoding="utf-8")
-    for marker in [".sectionHeader", ".secondaryButton", ".secondaryButton:disabled"]:
+    for marker in [".sectionHeader", ".sectionActions", ".secondaryButton", ".secondaryButton:disabled", ".traceLink", ".selectedTrace"]:
         if marker not in styles:
             failures.append(f"{project.name}: styles.css missing trace-copy style marker: {marker}")
     return failures

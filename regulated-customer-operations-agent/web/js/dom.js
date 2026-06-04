@@ -18,6 +18,9 @@ export function element(tagName, options = {}, children = []) {
   if (options.textContent !== undefined) {
     node.textContent = String(options.textContent);
   }
+  if (options.href) {
+    node.href = options.href;
+  }
   if (options.dataset) {
     Object.entries(options.dataset).forEach(([key, value]) => {
       node.dataset[key] = value;

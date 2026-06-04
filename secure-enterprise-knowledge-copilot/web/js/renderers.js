@@ -1,4 +1,5 @@
 import { byId, clear, element, renderList, tag } from "./dom.js";
+import { traceHash } from "./traceLinks.js";
 
 export function populateUserSelect(users, selectedUser) {
   const select = byId("userSelect");
@@ -108,12 +109,16 @@ export function renderAudit(events) {
   );
 }
 
-export function renderTraces(traces) {
+export function renderTraces(traces, selectedTraceId = "") {
   renderList(
     byId("traces"),
     traces,
     (trace) =>
-      element("div", { className: "item" }, [
+      element("a", {
+        className: ["item", "traceLink", trace.id === selectedTraceId ? "selectedTrace" : ""].filter(Boolean).join(" "),
+        dataset: { traceId: trace.id },
+        href: traceHash(trace.id),
+      }, [
         element("strong", { textContent: trace.user_id }),
         element("span", { textContent: trace.question }),
         element("br"),

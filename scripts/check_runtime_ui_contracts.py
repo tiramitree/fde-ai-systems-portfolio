@@ -187,6 +187,7 @@ def project_checks(project: Project) -> list[Check]:
                 project.primary_label,
                 project.primary_button,
                 'id="copyTraceId"',
+                'id="copyTraceLink"',
             ],
         )
     )
@@ -203,7 +204,15 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/js/app.js",
             "text/javascript",
-            ['import { api } from "./api.js"', "boot"],
+            ['import { api } from "./api.js"', 'from "./traceLinks.js"', "boot"],
+        )
+    )
+    checks.extend(
+        check_text_asset(
+            project,
+            "/js/traceLinks.js",
+            "text/javascript",
+            ["traceHash", "traceUrl", "selectedTraceId", "syncTraceSelection", "[data-trace-id]"],
         )
     )
     checks.extend(
@@ -211,7 +220,7 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/js/clipboard.js",
             "text/javascript",
-            ["installTraceCopyButton", "navigator.clipboard"],
+            ["installCopyButton", "installTraceCopyButton", "navigator.clipboard"],
         )
     )
     checks.extend(

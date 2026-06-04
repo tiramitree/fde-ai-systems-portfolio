@@ -2,7 +2,7 @@
   "version": 1,
   "purpose": "Keep README screenshots tied to the frontend source files they were captured from.",
   "capture": {
-    "date": "2026-06-02",
+    "date": "2026-06-04",
     "viewport": [
       1400,
       900
@@ -17,15 +17,15 @@
         1400,
         900
       ],
-      "sha256": "7657b7a243a0600bf7249ec5fb9a374884b195536e948a78ea6197e8f16bd8ac",
+      "sha256": "420c181c908e374fe7e7dbbfc8a0aa31880c6c6ce90a7cd1edee828d0c15bc89",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "92946f3e5d22c7fc03573c7b01463ce5b7b3333b233b97a8389dac83b18253a4"
+          "sha256": "eeac2a9aea9d1b71b1f5f7b67d7a523a34cb4c3627e5cd052ced7ec13f3e612b"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "a6b772f4f60d7b04609350f38f3b9013149e047a6bb83dc3e22a8d4147933c95"
+          "sha256": "aa4e417d42b1acbd04309899c9809a3d2c1e209f64c7b639f27ca45a029fa56d"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -33,19 +33,23 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "c073cfe527d7cdd6a755891b249de8a74348da0a6368806585d53d87a40dc190"
+          "sha256": "90aeb202d1c930a80ef764d56bac31efa05418ca9709000ea0fb80515afedf66"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
-          "sha256": "d1284bf442f8082c2f0e1d3a6496a9b81f5067bccdd66efa68785d116297eab0"
+          "sha256": "851daca5b70280f3d858ffa3407147bed7c9cfc9993b0e544c0daf7a6a8990a4"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/dom.js",
-          "sha256": "5221a7cffcba23e3335518c7351f97fdba57753afdbe70b864fd82f73356d783"
+          "sha256": "d778c3e77a18bb562f59ba1d1a41de168d01116415c7566e40730a6014a1ae67"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
-          "sha256": "03d8207b3dba4f8aa2ccbab08767d5b0c090c46937f564434846bafed48d9321"
+          "sha256": "ccd4fbac121b1be6ab940d45f6bd4c54171e05b0f61f58e7740b66836fe6f525"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/traceLinks.js",
+          "sha256": "1d6e2dcc731710ee662ce4e19380d6757df11699d3b9362712ee87b1b51dbf6d"
         }
       ]
     },
@@ -56,15 +60,15 @@
         1400,
         900
       ],
-      "sha256": "41e1a040808e6003e6979cbc438b13f352f8e45216b419c2b878daef55a385c1",
+      "sha256": "960a5b50d6f5f134004a3f2b85199c5d2cf1c6f6345f56d3029dc88374a5bd3a",
       "source_files": [
         {
           "path": "regulated-customer-operations-agent/web/index.html",
-          "sha256": "1a831c66a408c6a8a9de114da3f15cb6a6727e27ca0e8c7a4e3ddab1dee040dd"
+          "sha256": "784bc4552907c4988cd26c93a379d98805be0e4349119ad0d1af961b63deaf9e"
         },
         {
           "path": "regulated-customer-operations-agent/web/styles.css",
-          "sha256": "9b5bbadb92129735d5b3d2942fe085d8e874426b2c6a0df948199351d7716eba"
+          "sha256": "efdcc32932a7a5f5ce9606be516aef72803aa9ec8d745e6d3c55da029080f19b"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/api.js",
@@ -72,19 +76,23 @@
         },
         {
           "path": "regulated-customer-operations-agent/web/js/app.js",
-          "sha256": "2a17b75dc34d54aacb8c4cb08c494537721ee11efd796c5d91477e8b03fbaf95"
+          "sha256": "e23bf95820f8b72614cc640cd33e93b7605a9ab98092bbd8f453f012a70ac4da"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/clipboard.js",
-          "sha256": "d1284bf442f8082c2f0e1d3a6496a9b81f5067bccdd66efa68785d116297eab0"
+          "sha256": "851daca5b70280f3d858ffa3407147bed7c9cfc9993b0e544c0daf7a6a8990a4"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/dom.js",
-          "sha256": "4f699d38b031ae6a3509e128ebed10062a27879027fb623143480641cc6fad60"
+          "sha256": "2143a9716c6228d3a5969d0096f4a92460ceb1654d2155d44997aa6f88b5d7a7"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/renderers.js",
-          "sha256": "3e082a0d607ed2023011a03e1fc9696678a0b0ee98cf6fbfd7b3ef4f462726ef"
+          "sha256": "1d54c464ce823f6e074abb7e249c884a19af10205ffbb00b9d63df204511972e"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/traceLinks.js",
+          "sha256": "1d6e2dcc731710ee662ce4e19380d6757df11699d3b9362712ee87b1b51dbf6d"
         }
       ]
     },
@@ -95,15 +103,15 @@
         1400,
         900
       ],
-      "sha256": "91fb0f603d0027fc996b4a61be3a3eedab830d78982e0c0bd32e208b41974fff",
+      "sha256": "87043fbe8be2b8e2de1a8da07a80b4aa6600a9dc483bb0d55295cedb33173c6b",
       "source_files": [
         {
           "path": "ai-reliability-incident-console/web/index.html",
-          "sha256": "d26263845c0038343ab300f6f467d13770ba8431dc18a33e5c5a24a551e59b60"
+          "sha256": "405d7d4d7173d1576c96623af9980537ff49c3ca8c0ccb3309b2daff37d01440"
         },
         {
           "path": "ai-reliability-incident-console/web/styles.css",
-          "sha256": "3b55ecfef316c223e6edc13225d309a2dde37fe49fc314393c8d9c22aafa806f"
+          "sha256": "8be20894c34db695fc3966298b2c2a8da13a245b49c94873179317c0c06172c7"
         },
         {
           "path": "ai-reliability-incident-console/web/js/api.js",
@@ -111,11 +119,11 @@
         },
         {
           "path": "ai-reliability-incident-console/web/js/app.js",
-          "sha256": "58e2cfc145e94d28ff1041d92394e1e28dd638311c56facce240695e2038e347"
+          "sha256": "aa9c045c78ed43fba48848d888de8609f98969ddf3eadf88763e98abb07ca404"
         },
         {
           "path": "ai-reliability-incident-console/web/js/clipboard.js",
-          "sha256": "d1284bf442f8082c2f0e1d3a6496a9b81f5067bccdd66efa68785d116297eab0"
+          "sha256": "851daca5b70280f3d858ffa3407147bed7c9cfc9993b0e544c0daf7a6a8990a4"
         },
         {
           "path": "ai-reliability-incident-console/web/js/dom.js",
@@ -123,7 +131,11 @@
         },
         {
           "path": "ai-reliability-incident-console/web/js/renderers.js",
-          "sha256": "b0b475e2216ea1ef742e277cf0410e86539945f098799adeba17be24ccdd4511"
+          "sha256": "ca5b9497b58ae6a18c66803dd45dcc5a35b355ae9fe2f97f4c41adf1c119a983"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/traceLinks.js",
+          "sha256": "1d6e2dcc731710ee662ce4e19380d6757df11699d3b9362712ee87b1b51dbf6d"
         }
       ]
     }

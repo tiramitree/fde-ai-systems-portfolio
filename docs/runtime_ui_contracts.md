@@ -10,6 +10,7 @@ The frontend integrity gate checks files. The runtime UI contract gate checks wh
 - `/styles.css`, `/js/app.js`, and `/js/api.js` are served with text content types.
 - static responses include `Content-Length`.
 - static and JSON responses include `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and a restrictive local-demo Content Security Policy.
+- `/js/traceLinks.js` is served for local trace deep-link behavior.
 - missing static files return a JSON 404.
 - direct path traversal attempts such as `/../app.py` return 403.
 
