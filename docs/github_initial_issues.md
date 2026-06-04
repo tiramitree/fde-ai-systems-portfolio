@@ -67,6 +67,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README release page evidence pointer
 - Add an API request cookbook for canonical demo paths
 - Add a contributor code-tour page for service boundaries
+- Add an eval authoring guide for safe AI workflows
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -191,29 +192,29 @@ Acceptance criteria:
 Title:
 
 ```text
-Add an eval authoring guide for safe AI workflows
+Add seed-data extension examples for canonical scenarios
 ```
 
 Labels:
 
 ```text
-documentation, eval, good first issue
+documentation, demo, good first issue
 ```
 
 Body:
 
 ```text
-Add a contributor-friendly eval authoring guide that shows how to add safe retrieval, governed agent, and release-reliability eval cases without changing the local-first runtime contract.
+Add contributor-friendly seed-data extension examples showing how to add one Project 1 document, one Project 2 operations case/listing, and one Project 3 incident signal while preserving the local-first fictional data contract.
 
 Acceptance criteria:
 
-- Add docs/eval_authoring_guide.md with one section each for Project 1 retrieval/abstention evals, Project 2 approval/refusal evals, and Project 3 release-blocking/monitor-only evals.
-- Show the exact checked-in seed/eval files a contributor should edit and the fields that must stay fictional and local-first.
-- Link the guide from README.md and PROJECT_CONTENT_INDEX.md.
-- Keep examples free of secrets, private paths, external accounts, paid-service requirements, and generated runtime files.
-- python -B scripts/dev.py evals still passes.
+- Add docs/seed_data_extension_examples.md with one copyable fictional example per project and a short review checklist.
+- Show the exact checked-in seed files and related eval files without modifying runtime_state.json or generated evidence artifacts.
+- Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- Keep examples free of real people, real customers, private paths, secrets, external accounts, and paid-service requirements.
 - python -B scripts/dev.py scenario-data still passes.
-- python -B scripts/dev.py claims still passes.
+- python -B scripts/dev.py demo-presets still passes.
+- python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

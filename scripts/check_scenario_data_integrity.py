@@ -7,6 +7,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+EVAL_GUIDE = ROOT / "docs" / "eval_authoring_guide.md"
 
 P1_ROOT = ROOT / "secure-enterprise-knowledge-copilot"
 P2_ROOT = ROOT / "regulated-customer-operations-agent"
@@ -53,6 +54,11 @@ def read_json(path: Path) -> Any:
 def require(condition: bool, failures: list[str], message: str) -> None:
     if not condition:
         failures.append(message)
+
+
+def require_text(text: str, needle: str, failures: list[str], source: str) -> None:
+    if needle not in text:
+        failures.append(f"{source}: missing {needle!r}")
 
 
 def ids(rows: list[dict[str, Any]], label: str, failures: list[str]) -> set[str]:
@@ -301,11 +307,57 @@ def check_p3() -> list[str]:
     return failures
 
 
+def check_eval_authoring_guide() -> list[str]:
+    failures: list[str] = []
+    if not EVAL_GUIDE.exists():
+        return ["missing docs/eval_authoring_guide.md"]
+
+    text = EVAL_GUIDE.read_text(encoding="utf-8")
+    required_phrases = [
+        "Do not add secrets, private paths, real customer data, external accounts, paid-service requirements, or generated runtime state.",
+        "secure-enterprise-knowledge-copilot/data/seed_documents.json",
+        "secure-enterprise-knowledge-copilot/data/eval_cases.json",
+        "expected.behavior",
+        "expected.must_cite_doc_ids",
+        "expected.forbidden_doc_ids",
+        "expected.requires_security_event",
+        "regulated-customer-operations-agent/data/seed_state.json",
+        "regulated-customer-operations-agent/data/eval_cases.json",
+        "expected.intent",
+        "expected.requires_approval",
+        "expected.forbids_direct_side_effect",
+        "expected.requires_blocked_action",
+        "expected.must_refuse",
+        "ai-reliability-incident-console/data/seed_state.json",
+        "ai-reliability-incident-console/data/eval_cases.json",
+        "expected.release_blocked",
+        "expected.minimum_severity",
+        "expected.must_link_eval_case_ids",
+        "expected.must_recommend_phrases",
+        "python -B scripts/dev.py scenario-data",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py claims",
+        "python -B scripts/dev.py quality",
+    ]
+    for phrase in required_phrases:
+        require_text(text, phrase, failures, "docs/eval_authoring_guide.md")
+
+    cross_references = {
+        ROOT / "README.md": "docs/eval_authoring_guide.md",
+        ROOT / "PROJECT_CONTENT_INDEX.md": "docs/eval_authoring_guide.md",
+    }
+    for path, phrase in cross_references.items():
+        require_text(path.read_text(encoding="utf-8"), phrase, failures, path.relative_to(ROOT).as_posix())
+
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_p1())
     failures.extend(check_p2())
     failures.extend(check_p3())
+    failures.extend(check_eval_authoring_guide())
 
     if failures:
         print("Scenario data integrity check failed:")
