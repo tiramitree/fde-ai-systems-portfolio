@@ -112,6 +112,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact contributor attribution examples
 - Add compact issue triage SLA wording examples
 - Add compact discussion-to-issue conversion examples
+- Add compact release-note changelog drift examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -236,7 +237,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact release-note changelog drift examples
+Add compact public maintainer status update examples
 ```
 
 Labels:
@@ -248,13 +249,13 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact release-note changelog drift examples that explain how to detect and correct drift between checked-in release notes, changelog-style summaries, GitHub release-page text, and post-publish evidence.
+Add compact public maintainer status update examples that explain how to publish factual maintainer updates without mixing local progress, pushed code, remote GitHub evidence, account-level setup, or roadmap promises.
 
 Acceptance criteria:
 
-- Add docs/release_note_changelog_drift_examples.md with examples for checked-in release notes drift, changelog-style summary drift, GitHub release-page drift, and post-publish evidence mismatch.
-- Reference docs/release_note_refresh_checklist.md, docs/github_release_page_troubleshooting_examples.md, docs/github_latest_release_troubleshooting_examples.md, and docs/post_publish_checklist.md.
-- Keep release notes, changelog summaries, release page text, and remote evidence separate; do not claim changelog freshness until public evidence confirms it.
+- Add docs/public_maintainer_status_update_examples.md with examples for local-only progress, pushed-but-pending checks, remote warning/manual items, accepted roadmap items without dates, and blocked optional environments.
+- Reference docs/published_repository_status.md, docs/post_publish_warning_examples.md, docs/github_authenticated_maintenance_troubleshooting_examples.md, and docs/launch_feedback_collection_examples.md.
+- Keep local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises separate; do not imply delivery dates, production support, private access, or completed setup before evidence exists.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.

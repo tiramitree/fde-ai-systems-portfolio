@@ -1,6 +1,6 @@
 # Release Note Refresh Checklist
 
-Use this page when release notes, GitHub release-page text, replay artifacts, or post-publish evidence change. Read it with `docs/github_release_notes_v0.1.0.md`, `docs/github_release_commands.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_latest_release_troubleshooting_examples.md`, and `docs/post_publish_checklist.md`.
+Use this page when release notes, GitHub release-page text, replay artifacts, or post-publish evidence change. Read it with `docs/github_release_notes_v0.1.0.md`, `docs/github_release_commands.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/release_note_changelog_drift_examples.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_latest_release_troubleshooting_examples.md`, and `docs/post_publish_checklist.md`.
 
 The core rule: checked-in release notes, generated replay artifacts, GitHub release-page text, and post-publish evidence prove different things. Do not claim release notes are current until public release evidence confirms it.
 
@@ -45,6 +45,8 @@ python -B scripts/dev.py github-readiness
 4. Run local gates before changing public wording.
 5. Push intentionally, refresh or recreate the GitHub release page through `docs/github_release_commands.md`, then run post-publish checks.
 6. Keep release-page and latest-release claims manual until `docs/github_latest_release_troubleshooting_examples.md` and `docs/post_publish_checklist.md` agree with public evidence.
+
+Use `docs/release_note_changelog_drift_examples.md` before summarizing drift across release notes, changelog summaries, release page text, or post-publish evidence.
 
 ## Stale Release Notes
 
@@ -153,4 +155,5 @@ Use `docs/post_publish_checklist.md` after push. Use `docs/github_latest_release
 - `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality` passed after release-facing wording changed.
 - `python -B scripts/post_publish_check.py` and `python -B scripts/dev.py github-readiness` are used after push before public release freshness is claimed.
 - Checked-in release notes, generated replay artifacts, GitHub release-page text, and post-publish evidence remain separate.
+- Release notes, changelog summaries, release page text, and remote evidence stay separate when summarized through `docs/release_note_changelog_drift_examples.md`.
 - Public docs do not claim release notes are current until public release evidence confirms the intended tag, page text, and current replay attachments.

@@ -54,6 +54,7 @@ GITHUB_LATEST_RELEASE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_latest_
 GITHUB_RELEASE_ATTACHMENT_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_release_attachment_screenshot_checklist.md"
 RELEASE_ASSET_UPLOAD_DRY_RUN_EXAMPLES = ROOT / "docs" / "release_asset_upload_dry_run_examples.md"
 RELEASE_NOTE_REFRESH_CHECKLIST = ROOT / "docs" / "release_note_refresh_checklist.md"
+RELEASE_NOTE_CHANGELOG_DRIFT_EXAMPLES = ROOT / "docs" / "release_note_changelog_drift_examples.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
@@ -1405,6 +1406,7 @@ def check_release_note_refresh_checklist() -> list[str]:
         "docs/github_release_notes_v0.1.0.md",
         "docs/github_release_commands.md",
         "docs/release_asset_upload_dry_run_examples.md",
+        "docs/release_note_changelog_drift_examples.md",
         "docs/github_latest_release_troubleshooting_examples.md",
         "docs/post_publish_checklist.md",
         "Expected Evidence Split",
@@ -1416,6 +1418,7 @@ def check_release_note_refresh_checklist() -> list[str]:
         "Review Checklist",
         "checked-in release notes, generated replay artifacts, GitHub release-page text, and post-publish evidence prove different things",
         "Do not claim release notes are current until public release evidence confirms it",
+        "Use `docs/release_note_changelog_drift_examples.md` before summarizing drift across release notes, changelog summaries, release page text, or post-publish evidence",
         "python -B scripts/dev.py replay-artifact",
         "python -B scripts/dev.py launch-assets",
         "python -B scripts/dev.py safety",
@@ -1433,11 +1436,61 @@ def check_release_note_refresh_checklist() -> list[str]:
         "README.md": "docs/release_note_refresh_checklist.md",
         "PROJECT_CONTENT_INDEX.md": "docs/release_note_refresh_checklist.md",
         "docs/release_asset_upload_dry_run_examples.md": "docs/release_note_refresh_checklist.md",
+        "docs/release_note_changelog_drift_examples.md": "docs/release_note_refresh_checklist.md",
         "docs/github_release_page_troubleshooting_examples.md": "docs/release_note_refresh_checklist.md",
         "docs/github_latest_release_troubleshooting_examples.md": "docs/release_note_refresh_checklist.md",
         "docs/post_publish_checklist.md": "docs/release_note_refresh_checklist.md",
         "docs/post_publish_warning_examples.md": "docs/release_note_refresh_checklist.md",
         "docs/published_repository_status.md": "docs/release_note_refresh_checklist.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_release_note_changelog_drift_examples() -> list[str]:
+    failures: list[str] = []
+    if not RELEASE_NOTE_CHANGELOG_DRIFT_EXAMPLES.exists():
+        return ["missing docs/release_note_changelog_drift_examples.md"]
+
+    text = RELEASE_NOTE_CHANGELOG_DRIFT_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Release Note Changelog Drift Examples",
+        "docs/release_note_refresh_checklist.md",
+        "docs/github_release_page_troubleshooting_examples.md",
+        "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/post_publish_checklist.md",
+        "Expected Evidence Split",
+        "Checked-In Release Notes Drift",
+        "Changelog-Style Summary Drift",
+        "GitHub Release-Page Drift",
+        "Post-Publish Evidence Mismatch",
+        "Review Checklist",
+        "release notes, changelog summaries, release page text, and remote evidence are different things",
+        "Do not claim changelog freshness until public evidence confirms it",
+        "checked-in release notes drift",
+        "changelog-style summary drift",
+        "GitHub release-page drift",
+        "post-publish evidence mismatch",
+        "python -B scripts/dev.py replay-artifact",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+        "python -B scripts/dev.py github-readiness",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/release_note_changelog_drift_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/release_note_changelog_drift_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/release_note_changelog_drift_examples.md",
+        "docs/release_note_refresh_checklist.md": "docs/release_note_changelog_drift_examples.md",
+        "docs/github_release_page_troubleshooting_examples.md": "docs/release_note_changelog_drift_examples.md",
+        "docs/github_latest_release_troubleshooting_examples.md": "docs/release_note_changelog_drift_examples.md",
+        "docs/post_publish_checklist.md": "docs/release_note_changelog_drift_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1457,6 +1510,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "docs/github_release_commands.md",
         "docs/github_release_notes_v0.1.0.md",
         "docs/release_note_refresh_checklist.md",
+        "docs/release_note_changelog_drift_examples.md",
         "docs/release_attachment_verification_examples.md",
         "docs/release_asset_upload_dry_run_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md",
@@ -1480,6 +1534,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "local replay-artifact evidence and published release page evidence prove different things",
         "Do not claim the release page is current until the tag, release notes, and current replay attachments are visible on GitHub",
         "docs/release_note_refresh_checklist.md",
+        "Use `docs/release_note_changelog_drift_examples.md` before treating changelog-style summaries as release-page evidence",
         "before treating an upload plan as applied release state",
         "Release attachment screenshots are compared with `docs/github_release_attachment_screenshot_checklist.md`",
         "out/demo_replay_artifact.md",
@@ -1495,6 +1550,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "docs/release_attachment_verification_examples.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/release_asset_upload_dry_run_examples.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/release_note_refresh_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
+        "docs/release_note_changelog_drift_examples.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/post_publish_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_latest_release_troubleshooting_examples.md": "docs/github_release_page_troubleshooting_examples.md",
@@ -1516,6 +1572,7 @@ def check_github_latest_release_troubleshooting_examples() -> list[str]:
         "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_release_commands.md",
         "docs/release_note_refresh_checklist.md",
+        "docs/release_note_changelog_drift_examples.md",
         "docs/release_attachment_verification_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md",
         "docs/post_publish_checklist.md",
@@ -1538,6 +1595,7 @@ def check_github_latest_release_troubleshooting_examples() -> list[str]:
         "tag existence, release-page existence, and latest-release selection prove different things",
         "Do not claim the latest release is current until GitHub readiness or direct release-page evidence confirms it",
         "docs/release_note_refresh_checklist.md",
+        "Use `docs/release_note_changelog_drift_examples.md` before treating changelog freshness as latest-release evidence",
         "Latest-release attachment screenshots are compared with `docs/github_release_attachment_screenshot_checklist.md`",
     ]
     for phrase in required_phrases:
@@ -1549,6 +1607,7 @@ def check_github_latest_release_troubleshooting_examples() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/github_release_page_troubleshooting_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/release_note_refresh_checklist.md": "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/release_note_changelog_drift_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/post_publish_checklist.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/post_publish_warning_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
@@ -2010,6 +2069,7 @@ def main() -> int:
     failures.extend(check_github_release_attachment_screenshot_checklist())
     failures.extend(check_release_asset_upload_dry_run_examples())
     failures.extend(check_release_note_refresh_checklist())
+    failures.extend(check_release_note_changelog_drift_examples())
     failures.extend(check_github_release_page_troubleshooting_examples())
     failures.extend(check_github_latest_release_troubleshooting_examples())
     failures.extend(check_docs_only_pr_review_examples())

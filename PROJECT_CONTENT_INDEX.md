@@ -278,6 +278,7 @@ Release and growth:
 - `docs/release_attachment_verification_examples.md`: release attachment verification examples for replay artifacts, tag mismatch, generated `out/` handling, and post-publish drift.
 - `docs/release_asset_upload_dry_run_examples.md`: release asset upload dry-run examples for missing replay artifacts, stale local artifacts, wrong tags, missing release pages, and generated `out/` handling.
 - `docs/release_note_refresh_checklist.md`: release note refresh checklist for checked-in notes, GitHub release-page text, replay artifact drift, and post-publish evidence mismatch.
+- `docs/release_note_changelog_drift_examples.md`: release note and changelog drift examples for checked-in notes, changelog summaries, GitHub release-page text, and post-publish evidence mismatch.
 - `docs/github_release_attachment_screenshot_checklist.md`: release attachment screenshot checklist for public evidence, stale screenshots, wrong tags, and latest-release attachment review.
 - `docs/github_release_page_troubleshooting_examples.md`: GitHub release page troubleshooting examples for missing page, wrong tag, stale notes, missing replay attachments, and latest-release mismatch.
 - `docs/github_latest_release_troubleshooting_examples.md`: latest-release troubleshooting examples for missing latest release, wrong latest tag, draft or prerelease confusion, stale release page, and artifact drift.
