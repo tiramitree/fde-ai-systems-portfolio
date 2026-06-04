@@ -35,6 +35,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README contributor route map
 - Add a compact README production-upgrade pointer
 - Add a compact README release-evidence FAQ
+- Add compact per-project risk badges
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -159,27 +160,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact per-project risk badges
+Add a compact README operational runbook index
 ```
 
 Labels:
 
 ```text
-documentation, security, observability, good first issue
+documentation, demo, good first issue
 ```
 
 Body:
 
 ```text
-Add compact README badges or text labels that show which risk controls each project demonstrates.
+Add a compact README index that points readers to the smallest operational runbook for each canonical scenario.
 
 Acceptance criteria:
 
-- Cover Project 1 permissions, citations, abstention, prompt-injection handling, evals, traces, and audit logs.
-- Cover Project 2 approvals, side-effect blocking, tool governance, evals, traces, and audit logs.
-- Cover Project 3 eval-regression evidence, rollout blocking, remediation, traces, and audit logs.
-- Keep the badges text-only Markdown or existing README styling; do not add generated binary assets.
-- Link to the evidence matrix, threat model, and observability docs instead of repeating all details.
+- Cover Project 1 retrieval, citation-backed answer, and unauthorized abstention scenarios.
+- Cover Project 2 investigation, approval queue, side-effect blocking, and supervisor approval scenarios.
+- Cover Project 3 unsafe release triage, failed-eval evidence, rollout blocking, and remediation scenarios.
+- Link to the Demo Path Map, Final Demo Runbook, Project Case Notes, Technical Review Playbook, and Evidence Matrix instead of duplicating every step.
+- Keep the index compact and local-first.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.

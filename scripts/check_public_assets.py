@@ -22,6 +22,12 @@ REQUIRED_README_CAPTIONS = [
     "Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning.",
     "Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence.",
 ]
+REQUIRED_PROJECT_RISK_BADGES = [
+    "Risk badges:",
+    "| Secure Enterprise Knowledge Copilot | `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |",
+    "| Regulated Customer Operations Agent | `tool governance` `approvals` `side-effect blocking` `supervisor review` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |",
+    "| AI Reliability Incident Console | `eval-regression evidence` `release blocking` `remediation planning` `incident triage` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |",
+]
 REQUIRED_SCREENSHOT_REVIEWER_CHECKLIST = [
     "Screenshot reviewer checklist:",
     "| Desktop and mobile assets cover all three demos. | Six PNGs are listed above and checked by `python -B scripts/dev.py visual-assets`. |",
@@ -310,6 +316,18 @@ def check_readme_captions() -> list[str]:
     return failures
 
 
+def check_project_risk_badges() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_PROJECT_RISK_BADGES:
+        if expected not in text:
+            failures.append(f"README.md: missing project risk badge entry: {expected}")
+    return failures
+
+
 def check_screenshot_reviewer_checklist() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -459,6 +477,7 @@ def main() -> int:
     failures.extend(check_markdown_links())
     failures.extend(check_assets())
     failures.extend(check_readme_captions())
+    failures.extend(check_project_risk_badges())
     failures.extend(check_screenshot_reviewer_checklist())
     failures.extend(check_command_quick_reference())
     failures.extend(check_command_decision_tree())
