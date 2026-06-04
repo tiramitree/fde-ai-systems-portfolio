@@ -11,6 +11,7 @@ EVAL_GUIDE = ROOT / "docs" / "eval_authoring_guide.md"
 LOCAL_ARTIFACT_GLOSSARY = ROOT / "docs" / "local_artifact_glossary.md"
 EVAL_TROUBLESHOOTING = ROOT / "docs" / "eval_gate_troubleshooting_examples.md"
 SEED_EXAMPLES = ROOT / "docs" / "seed_data_extension_examples.md"
+SEED_FIXTURE_DATA_FLOW = ROOT / "docs" / "seed_fixture_data_flow.md"
 
 P1_ROOT = ROOT / "secure-enterprise-knowledge-copilot"
 P2_ROOT = ROOT / "regulated-customer-operations-agent"
@@ -494,6 +495,63 @@ def check_seed_extension_examples() -> list[str]:
     return failures
 
 
+def check_seed_fixture_data_flow() -> list[str]:
+    failures: list[str] = []
+    if not SEED_FIXTURE_DATA_FLOW.exists():
+        return ["missing docs/seed_fixture_data_flow.md"]
+
+    text = SEED_FIXTURE_DATA_FLOW.read_text(encoding="utf-8")
+    required_phrases = [
+        "Do not add secrets, private paths, real customer data, external accounts, paid-service requirements, generated runtime files, or real incident details.",
+        "secure-enterprise-knowledge-copilot/data/seed_documents.json",
+        "regulated-customer-operations-agent/data/seed_state.json",
+        "ai-reliability-incident-console/data/seed_state.json",
+        "secure-enterprise-knowledge-copilot/data/eval_cases.json",
+        "regulated-customer-operations-agent/data/eval_cases.json",
+        "ai-reliability-incident-console/data/eval_cases.json",
+        "runtime_state.json",
+        "runtime_state.tmp",
+        "eval_runtime_state.json",
+        "localStorage",
+        "fde-scenario-draft:",
+        "out/demo_replay_artifact.*",
+        "docs/demo_report.md",
+        "otel_traces.json",
+        "eval_summaries.csv",
+        "storage.seed()",
+        "storage.init_state()",
+        "retrieval.retrieve()",
+        "answering.generate_answer()",
+        "agent.process_message()",
+        "tools.request_approval()",
+        "supervisor /api/approval/approve",
+        "triage.triage_incident()",
+        "permission filtering happens before answer generation",
+        "side-effect actions are represented as approval requests with idempotency keys",
+        "high-risk incidents linked to failed evals block rollout",
+        "/api/scenario",
+        "docs/demo_state_presets.json",
+        "docs/local_demo_reset_troubleshooting.md",
+        "docs/local_artifact_glossary.md",
+        "python -B scripts/dev.py scenario-data",
+        "python -B scripts/dev.py demo-presets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone-local",
+    ]
+    for phrase in required_phrases:
+        require_text(text, phrase, failures, "docs/seed_fixture_data_flow.md")
+
+    cross_references = {
+        ROOT / "README.md": "docs/seed_fixture_data_flow.md",
+        ROOT / "PROJECT_CONTENT_INDEX.md": "docs/seed_fixture_data_flow.md",
+    }
+    for path, phrase in cross_references.items():
+        require_text(path.read_text(encoding="utf-8"), phrase, failures, path.relative_to(ROOT).as_posix())
+
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_p1())
@@ -503,6 +561,7 @@ def main() -> int:
     failures.extend(check_local_artifact_glossary())
     failures.extend(check_eval_troubleshooting_examples())
     failures.extend(check_seed_extension_examples())
+    failures.extend(check_seed_fixture_data_flow())
 
     if failures:
         print("Scenario data integrity check failed:")
