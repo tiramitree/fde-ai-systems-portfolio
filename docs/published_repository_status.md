@@ -101,12 +101,13 @@ Confirmed:
 - API documentation script and documentation published
 - demo replay artifact script and documentation published
 - container release hygiene script and documentation published
-- visual asset manifest script, documentation, and manifest published
+- visual asset manifest script, documentation, manifest, and screenshot contrast samples published
 - README screenshots and demo walkthrough GIF are tracked and published
 - keyboard-friendly trace deep links, copy-link controls, and refreshed README screenshots are tracked and published
 - copyable and diffable browser-local scenario drafts and read-only scenario snapshot endpoints are tracked and published
 - focus-visible and reduced-motion CSS markers are tracked and verified across all browser demos
 - browser-local light/dark theme controls are tracked and verified across all browser demos
+- README screenshot contrast samples are tracked and verified by the visual asset gate
 - launch copy and star-growth materials published with a deterministic anti-hype gate
 - remote `main` exists
 - local tracked worktree clean

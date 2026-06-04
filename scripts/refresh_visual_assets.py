@@ -25,18 +25,84 @@ PROJECTS = [
         "path": ROOT / "secure-enterprise-knowledge-copilot",
         "preferred_port": 8765,
         "asset": ROOT / "docs" / "assets" / "secure-knowledge-copilot-screenshot.png",
+        "contrast_samples": [
+            {
+                "name": "title text",
+                "kind": "dark_text_on_light",
+                "region": [16, 38, 460, 26],
+                "background": [20, 20],
+                "minimum_ratio": 4.5,
+            },
+            {
+                "name": "primary action text",
+                "kind": "light_text_on_fill",
+                "region": [346, 354, 668, 40],
+                "minimum_ratio": 4.5,
+            },
+            {
+                "name": "quick action text",
+                "kind": "dark_text_on_light",
+                "region": [345, 166, 162, 33],
+                "background": [360, 184],
+                "minimum_ratio": 4.5,
+            },
+        ],
     },
     {
         "name": "regulated-customer-operations-agent",
         "path": ROOT / "regulated-customer-operations-agent",
         "preferred_port": 8770,
         "asset": ROOT / "docs" / "assets" / "regulated-ops-agent-screenshot.png",
+        "contrast_samples": [
+            {
+                "name": "title text",
+                "kind": "dark_text_on_light",
+                "region": [16, 38, 430, 26],
+                "background": [20, 20],
+                "minimum_ratio": 4.5,
+            },
+            {
+                "name": "primary action text",
+                "kind": "light_text_on_fill",
+                "region": [346, 358, 668, 40],
+                "minimum_ratio": 4.5,
+            },
+            {
+                "name": "quick action text",
+                "kind": "dark_text_on_light",
+                "region": [345, 166, 162, 36],
+                "background": [360, 184],
+                "minimum_ratio": 4.5,
+            },
+        ],
     },
     {
         "name": "ai-reliability-incident-console",
         "path": ROOT / "ai-reliability-incident-console",
         "preferred_port": 8780,
         "asset": ROOT / "docs" / "assets" / "ai-reliability-incident-console-screenshot.png",
+        "contrast_samples": [
+            {
+                "name": "title text",
+                "kind": "dark_text_on_light",
+                "region": [16, 38, 390, 26],
+                "background": [20, 20],
+                "minimum_ratio": 4.5,
+            },
+            {
+                "name": "primary action text",
+                "kind": "light_text_on_fill",
+                "region": [346, 379, 668, 40],
+                "minimum_ratio": 4.5,
+            },
+            {
+                "name": "quick action text",
+                "kind": "dark_text_on_light",
+                "region": [345, 330, 330, 37],
+                "background": [360, 348],
+                "minimum_ratio": 4.5,
+            },
+        ],
     },
 ]
 
@@ -177,6 +243,7 @@ def render_manifest() -> dict:
                     }
                     for source in source_files(project)
                 ],
+                "contrast_samples": project["contrast_samples"],
             }
             for project in PROJECTS
         ],

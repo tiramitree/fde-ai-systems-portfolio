@@ -59,6 +59,49 @@
           "path": "secure-enterprise-knowledge-copilot/web/js/traceLinks.js",
           "sha256": "452c297a4909cc1bd632ab81eb0f13994448f5bfb91be344dd98b8853f8c4373"
         }
+      ],
+      "contrast_samples": [
+        {
+          "name": "title text",
+          "kind": "dark_text_on_light",
+          "region": [
+            16,
+            38,
+            460,
+            26
+          ],
+          "background": [
+            20,
+            20
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "primary action text",
+          "kind": "light_text_on_fill",
+          "region": [
+            346,
+            354,
+            668,
+            40
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "quick action text",
+          "kind": "dark_text_on_light",
+          "region": [
+            345,
+            166,
+            162,
+            33
+          ],
+          "background": [
+            360,
+            184
+          ],
+          "minimum_ratio": 4.5
+        }
       ]
     },
     {
@@ -110,6 +153,49 @@
           "path": "regulated-customer-operations-agent/web/js/traceLinks.js",
           "sha256": "452c297a4909cc1bd632ab81eb0f13994448f5bfb91be344dd98b8853f8c4373"
         }
+      ],
+      "contrast_samples": [
+        {
+          "name": "title text",
+          "kind": "dark_text_on_light",
+          "region": [
+            16,
+            38,
+            430,
+            26
+          ],
+          "background": [
+            20,
+            20
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "primary action text",
+          "kind": "light_text_on_fill",
+          "region": [
+            346,
+            358,
+            668,
+            40
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "quick action text",
+          "kind": "dark_text_on_light",
+          "region": [
+            345,
+            166,
+            162,
+            36
+          ],
+          "background": [
+            360,
+            184
+          ],
+          "minimum_ratio": 4.5
+        }
       ]
     },
     {
@@ -160,6 +246,49 @@
         {
           "path": "ai-reliability-incident-console/web/js/traceLinks.js",
           "sha256": "452c297a4909cc1bd632ab81eb0f13994448f5bfb91be344dd98b8853f8c4373"
+        }
+      ],
+      "contrast_samples": [
+        {
+          "name": "title text",
+          "kind": "dark_text_on_light",
+          "region": [
+            16,
+            38,
+            390,
+            26
+          ],
+          "background": [
+            20,
+            20
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "primary action text",
+          "kind": "light_text_on_fill",
+          "region": [
+            346,
+            379,
+            668,
+            40
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "quick action text",
+          "kind": "dark_text_on_light",
+          "region": [
+            345,
+            330,
+            330,
+            37
+          ],
+          "background": [
+            360,
+            348
+          ],
+          "minimum_ratio": 4.5
         }
       ]
     }
