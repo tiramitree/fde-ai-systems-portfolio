@@ -187,3 +187,9 @@ Pin this repository only after:
 - README desktop and mobile screenshots render correctly.
 - repo topics are set.
 - static badge is replaced with the real Actions badge.
+
+Profile pin troubleshooting examples live in:
+
+```text
+docs/profile_pin_verification_examples.md
+```

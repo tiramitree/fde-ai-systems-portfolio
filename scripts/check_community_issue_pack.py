@@ -35,6 +35,7 @@ POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.m
 GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_api_rate_limit_troubleshooting_examples.md"
 GITHUB_REPOSITORY_METADATA_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_repository_metadata_troubleshooting_examples.md"
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
+PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
 GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troubleshooting_examples.md"
 GITHUB_RELEASE_PAGE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_release_page_troubleshooting_examples.md"
@@ -352,6 +353,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/github_api_rate_limit_troubleshooting_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/social_preview_verification_examples.md",
+        "docs/profile_pin_verification_examples.md",
         "docs/command_output_troubleshooting_map.md",
         "Expected Evidence Split",
         "Remote File Lag",
@@ -492,6 +494,7 @@ def check_social_preview_verification_examples() -> list[str]:
         "Social Preview Verification Examples",
         "docs/github_repository_settings.md",
         "docs/assets/github-preview.png",
+        "docs/profile_pin_verification_examples.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -521,6 +524,54 @@ def check_social_preview_verification_examples() -> list[str]:
         "docs/github_repository_settings.md": "docs/social_preview_verification_examples.md",
         "docs/post_publish_checklist.md": "docs/social_preview_verification_examples.md",
         "docs/post_publish_warning_examples.md": "docs/social_preview_verification_examples.md",
+        "docs/profile_pin_verification_examples.md": "docs/social_preview_verification_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_profile_pin_verification_examples() -> list[str]:
+    failures: list[str] = []
+    if not PROFILE_PIN_VERIFICATION_EXAMPLES.exists():
+        return ["missing docs/profile_pin_verification_examples.md"]
+
+    text = PROFILE_PIN_VERIFICATION_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "GitHub Profile Pin Verification Examples",
+        "docs/github_repository_settings.md",
+        "docs/social_preview_verification_examples.md",
+        "docs/post_publish_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Evidence Split",
+        "Missing Profile Pin",
+        "Wrong Pinned Repository",
+        "Stale Profile Cache",
+        "Social-Preview Confusion",
+        "Account Visibility",
+        "Review Checklist",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py github-maintenance",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+        "repository readiness, social preview setup, and profile pin setup prove different things",
+        "Do not claim the profile pin is configured until account-profile evidence confirms it",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/profile_pin_verification_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/profile_pin_verification_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/profile_pin_verification_examples.md",
+        "docs/github_repository_settings.md": "docs/profile_pin_verification_examples.md",
+        "docs/social_preview_verification_examples.md": "docs/profile_pin_verification_examples.md",
+        "docs/post_publish_checklist.md": "docs/profile_pin_verification_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/profile_pin_verification_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1150,6 +1201,7 @@ def main() -> int:
     failures.extend(check_github_api_rate_limit_troubleshooting_examples())
     failures.extend(check_github_repository_metadata_troubleshooting_examples())
     failures.extend(check_social_preview_verification_examples())
+    failures.extend(check_profile_pin_verification_examples())
     failures.extend(check_github_actions_warning_examples())
     failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_github_release_page_troubleshooting_examples())
