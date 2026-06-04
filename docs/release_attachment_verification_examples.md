@@ -1,6 +1,6 @@
 # Release Attachment Verification Examples
 
-Use this page when preparing or reviewing release evidence attachments. Read it with `docs/github_release_commands.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/post_publish_checklist.md`, `docs/command_output_troubleshooting_map.md`, and `docs/demo_replay_artifact.md`.
+Use this page when preparing or reviewing release evidence attachments. Read it with `docs/github_release_commands.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/release_asset_checksum_mismatch_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/post_publish_checklist.md`, `docs/command_output_troubleshooting_map.md`, and `docs/demo_replay_artifact.md`.
 
 The core rule: release attachments are generated evidence, not source content. Regenerate them from the release commit, attach them to the release page or review notes, and keep `out/` ignored unless a release process explicitly asks for a reviewed source diff.
 
@@ -28,6 +28,8 @@ python -B scripts/dev.py quality
 Use `python -B scripts/dev.py fresh-clone-local` before push, and `python -B scripts/dev.py fresh-clone` after the pushed branch is visible.
 
 Use `docs/release_asset_upload_dry_run_examples.md` before treating a `gh release upload` plan, generated `out/` files, or local replay output as uploaded release evidence.
+
+Use `docs/release_asset_checksum_mismatch_examples.md` before treating local hashes, changed artifact hashes, screenshots, or public attachment hashes as current release evidence.
 
 Use `docs/github_release_attachment_screenshot_checklist.md` before collecting or interpreting screenshots of replay artifact attachments, missing attachments, stale attachments, wrong tags, or latest-release attachment state.
 
@@ -153,6 +155,7 @@ If the branch is intentionally ahead only locally, use `python -B scripts/dev.py
 - Attachments are uploaded externally or described as manual follow-up.
 - `out/` files are not committed as ordinary source content.
 - The release tag or page points to the intended commit.
+- Checksum mismatches are reviewed with `docs/release_asset_checksum_mismatch_examples.md` before release assets are described as current.
 - `python -B scripts/dev.py launch-assets` passed.
 - `python -B scripts/post_publish_check.py` passed after push, or the release claim stays manual.
 - `python -B scripts/dev.py quality` passed before publishing release-facing claims.

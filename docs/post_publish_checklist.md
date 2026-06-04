@@ -44,6 +44,7 @@ The post-publish check must prove:
 - the demo replay artifact script and documentation are published.
 - the release attachment verification examples are published.
 - the release asset upload dry-run examples are published: `docs/release_asset_upload_dry_run_examples.md`.
+- the release asset checksum mismatch examples are published: `docs/release_asset_checksum_mismatch_examples.md`.
 - the release note refresh checklist is published: `docs/release_note_refresh_checklist.md`.
 - the release note changelog drift examples are published: `docs/release_note_changelog_drift_examples.md`.
 - the GitHub release attachment screenshot checklist is published: `docs/github_release_attachment_screenshot_checklist.md`.
@@ -82,7 +83,7 @@ After the automated check passes:
 15. Compare release notes with `docs/release_note_refresh_checklist.md` before claiming checked-in notes, GitHub release-page text, replay artifacts, or post-publish evidence are current.
 16. Compare release notes, changelog summaries, release page text, and remote evidence with `docs/release_note_changelog_drift_examples.md` before claiming changelog freshness.
 17. Compare release-page state with `docs/github_release_page_troubleshooting_examples.md` and `docs/github_latest_release_troubleshooting_examples.md` before claiming the release page or latest release is current.
-18. Compare release attachments with `docs/release_attachment_verification_examples.md`, release upload plans with `docs/release_asset_upload_dry_run_examples.md`, and release attachment screenshots with `docs/github_release_attachment_screenshot_checklist.md` before claiming the release page is current.
+18. Compare release attachments with `docs/release_attachment_verification_examples.md`, release upload plans with `docs/release_asset_upload_dry_run_examples.md`, release asset checksums with `docs/release_asset_checksum_mismatch_examples.md`, and release attachment screenshots with `docs/github_release_attachment_screenshot_checklist.md` before claiming the release page is current.
 19. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
 20. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
 21. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
