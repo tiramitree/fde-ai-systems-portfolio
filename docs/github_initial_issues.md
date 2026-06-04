@@ -43,6 +43,7 @@ The first public issue wave was created after the initial release and is now com
 - Add shareable demo-state reset presets
 - Add a compact README demo recording checklist pointer
 - Add a compact README launch-channel checklist pointer
+- Add a compact README contribution safety summary pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -167,28 +168,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README contribution safety summary pointer
+Add a compact README release artifact attachment pointer
 ```
 
 Labels:
 
 ```text
-documentation, security, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors and maintainers where the contribution safety materials live before reviewing or running outside changes.
+Add a compact README pointer that tells maintainers which release evidence artifacts should be regenerated and attached before publishing a release page.
 
 Acceptance criteria:
 
-- Link to CONTRIBUTING, SECURITY, PR Review Security, PR Review Runbook, Maintainer PR Checklist, and Contributor Route Map.
-- Cover safety checks: `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
+- Link to Demo Replay Artifact, GitHub Release Commands, Post-Publish Checklist, Published Repository Status, and Final Readiness Report.
+- Cover release artifact checks: `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Preserve the warning that maintainers should inspect external diffs before running untrusted code.
+- Avoid claiming a GitHub release page exists until the page is created and the artifacts are attached.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py pr-policy still passes.
+- python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

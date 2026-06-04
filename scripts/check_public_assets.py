@@ -169,6 +169,10 @@ REQUIRED_LAUNCH_CHANNEL_READINESS = [
     "Launch-channel readiness:",
     "Use the [Launch Copy Pack](docs/launch_copy_pack.md) with the [Star Growth Plan](docs/star_growth_plan.md), [Launch Assets Hygiene](docs/launch_assets_hygiene.md), [GitHub Launch Plan](docs/github_launch_plan.md), and [Published Repository Status](docs/published_repository_status.md). Before sharing public launch posts, run `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py assets`, `python -B scripts/dev.py fresh-clone`, and `python -B scripts/post_publish_check.py`; keep Docker runtime, OpenAI live mode, branch protection, release pages, repo topics, profile pins, and social preview setup as manual claims until their checks or account actions are complete.",
 ]
+REQUIRED_CONTRIBUTION_SAFETY_READINESS = [
+    "Contribution safety readiness:",
+    "Use [CONTRIBUTING](CONTRIBUTING.md), [SECURITY](SECURITY.md), [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), and the [Contributor Route Map](#contributor-route-map) before reviewing outside changes. For external PRs, inspect the diff before running untrusted code, then run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -589,6 +593,18 @@ def check_launch_channel_readiness() -> list[str]:
     return failures
 
 
+def check_contribution_safety_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_CONTRIBUTION_SAFETY_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing contribution safety readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -625,6 +641,7 @@ def main() -> int:
     failures.extend(check_demo_state_presets())
     failures.extend(check_demo_recording_readiness())
     failures.extend(check_launch_channel_readiness())
+    failures.extend(check_contribution_safety_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
