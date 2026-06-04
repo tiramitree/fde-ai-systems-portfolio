@@ -2,7 +2,7 @@
 
 Use this before approving external PR workflows, running contributor code, or merging a public contribution.
 
-For recurring PR, GitHub, and local-environment problems, also check `docs/development_issue_solutions.md` and `docs/github_authenticated_maintenance_troubleshooting_examples.md` before changing code.
+For recurring PR, GitHub, and local-environment problems, also check `docs/development_issue_solutions.md`, `docs/github_authenticated_maintenance_troubleshooting_examples.md`, and `docs/github_public_pr_api_fallback_troubleshooting_examples.md` before changing code.
 
 ## Fast Path
 
@@ -27,7 +27,7 @@ Use strict mode when you want automation to fail on high-risk findings:
 python -B scripts/review_open_prs.py --strict
 ```
 
-If unauthenticated GitHub API rate limits are hit, the script falls back to the public pulls page to detect whether any open PRs are visible. Authenticate with `gh auth login` before reviewing or merging if the API cannot provide full file-level triage.
+If unauthenticated GitHub API rate limits are hit, the script falls back to the public pulls page to detect whether any open PRs are visible. Use `docs/github_public_pr_api_fallback_troubleshooting_examples.md` to keep public visibility evidence separate from file-level triage. Authenticate with `gh auth login` before reviewing or merging if the API cannot provide full file-level triage.
 
 Authenticated repository maintenance is dry-run by default:
 

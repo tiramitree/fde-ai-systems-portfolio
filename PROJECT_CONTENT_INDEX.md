@@ -271,6 +271,7 @@ Release and growth:
 - `docs/github_latest_release_troubleshooting_examples.md`: latest-release troubleshooting examples for missing latest release, wrong latest tag, draft or prerelease confusion, stale release page, and artifact drift.
 - `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.
 - `docs/pr_review_runbook.md`: concrete PR review command sequence and merge bar.
+- `docs/github_public_pr_api_fallback_troubleshooting_examples.md`: public PR API fallback troubleshooting examples for unauthenticated API limits, public pulls page fallback, missing file-level triage, strict-mode review, and stale no-open-PR state.
 - `docs/development_issue_solutions.md`: issue and solution log for recurring local, GitHub, PR, and publication problems.
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/post_publish_warning_examples.md`: post-publish warning examples for remote file lag, raw README failures, GitHub Actions pending state, readiness warning rows, and manual account settings.

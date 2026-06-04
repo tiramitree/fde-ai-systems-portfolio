@@ -6,7 +6,7 @@ Run:
 python -B scripts/dev.py pr-policy
 ```
 
-Public repositories receive untrusted code. `python -B scripts/dev.py pr-triage` inspects live open PRs, while this gate protects the review policy itself. It fails if the triage script, runbook, maintainer policy, or PR template loses the checks needed before approving workflows, running contributor code, or merging.
+Public repositories receive untrusted code. `python -B scripts/dev.py pr-triage` inspects live open PRs, while this gate protects the review policy itself. Use `docs/github_public_pr_api_fallback_troubleshooting_examples.md` when API fallback limits file-level evidence. This gate fails if the triage script, runbook, maintainer policy, or PR template loses the checks needed before approving workflows, running contributor code, or merging.
 
 ## What It Protects
 

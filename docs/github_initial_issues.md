@@ -99,6 +99,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact GitHub latest release troubleshooting examples
 - Add compact profile pin verification examples
 - Add compact authenticated maintenance troubleshooting examples
+- Add compact GitHub public PR API fallback troubleshooting examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -223,7 +224,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact GitHub public PR API fallback troubleshooting examples
+Add compact repository settings screenshot checklist
 ```
 
 Labels:
@@ -235,13 +236,13 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add compact examples for reviewing public PR API fallback behavior without confusing public page visibility, file-level API triage, and strict review confidence.
+Add a compact checklist for repository settings screenshots without confusing local docs, authenticated settings, and public repository evidence.
 
 Acceptance criteria:
 
-- Add docs/github_public_pr_api_fallback_troubleshooting_examples.md with examples for unauthenticated API limits, public pulls page fallback, missing file-level triage, strict-mode review, and stale no-open-PR state.
-- Reference docs/pr_review_runbook.md, docs/pr_review_security.md, docs/post_publish_warning_examples.md, docs/github_api_rate_limit_troubleshooting_examples.md, and docs/maintainer_review_policy.md.
-- Keep public page visibility, API file-level triage, and strict review confidence separate; do not claim no risky PRs until API or authenticated evidence confirms it.
+- Add docs/github_repository_settings_screenshot_checklist.md with examples for description/topics screenshots, branch protection screenshots, social preview screenshots, release page screenshots, and profile pin screenshots.
+- Reference docs/github_repository_settings.md, docs/post_publish_checklist.md, docs/post_publish_warning_examples.md, docs/profile_pin_verification_examples.md, and docs/social_preview_verification_examples.md.
+- Keep local docs, authenticated settings screenshots, and public repository evidence separate; do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py github-readiness still has no hard failures when the GitHub API is reachable.
 - python -B scripts/dev.py launch-assets still passes.
