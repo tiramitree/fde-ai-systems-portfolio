@@ -63,6 +63,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README launch asset evidence pointer
 - Add a compact README reviewer handoff evidence pointer
 - Add a compact README post-publish evidence pointer
+- Add a compact README GitHub readiness evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -187,28 +188,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README GitHub readiness evidence pointer
+Add a compact README release page evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, automation, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where GitHub readiness materials live and how to interpret account-level warnings before changing repository metadata, topics, branch protection, releases, social preview, or profile-pin guidance.
+Add a compact README pointer that tells contributors where release page evidence lives and how to avoid claiming GitHub release readiness before release artifacts are attached.
 
 Acceptance criteria:
 
-- Link to Published Repository Status, GitHub Repository Settings, GitHub Release Commands, Development Issue Solutions, and the GitHub readiness row in the Evidence Freshness Checklist.
-- Cover GitHub readiness checks: `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community`, and `python -B scripts/dev.py quality`.
+- Link to Demo Replay Artifact, GitHub Release Commands, Post-Publish Checklist, Published Repository Status, Final Readiness Report, and the Release Evidence FAQ.
+- Cover release page checks: `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that repository metadata, topics, branch protection, release pages, social preview, profile pins, and rate-limit warnings are account-level or remote freshness items until the matching public check or authenticated maintenance action is complete.
+- Make clear that the `v0.1.0` release page is not ready until the page exists and the current `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` files are attached or linked as release evidence.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py github-readiness still runs without treating `[WARN]` or `[MANUAL]` rows as local quality failures.
+- python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

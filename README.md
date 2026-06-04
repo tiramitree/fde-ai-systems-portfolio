@@ -308,6 +308,10 @@ Post-publish readiness:
 
 Use [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), [GitHub Repository Settings](docs/github_repository_settings.md), [GitHub Release Commands](docs/github_release_commands.md), the [Release Evidence FAQ](#release-evidence-faq), and the published repository row in the [Evidence Freshness Checklist](#evidence-freshness-checklist) before sharing the public branch or claiming published evidence. Remote clone results, published files, raw README/workflow reachability, and GitHub readiness warnings are separate from local quality evidence; after push, run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
 
+GitHub readiness:
+
+Use [Published Repository Status](docs/published_repository_status.md), [GitHub Repository Settings](docs/github_repository_settings.md), [GitHub Release Commands](docs/github_release_commands.md), [Development Issue Solutions](docs/development_issue_solutions.md), and the GitHub readiness row in the [Evidence Freshness Checklist](#evidence-freshness-checklist) before changing repository metadata, topics, branch protection, release pages, social preview, profile pins, or community issue state. Treat `[WARN]` and `[MANUAL]` output for rate limits, metadata, topics, branch protection, release page, social preview, and profile pin as account-level or remote-freshness follow-up until `github-readiness` or authenticated maintenance confirms them; run `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
