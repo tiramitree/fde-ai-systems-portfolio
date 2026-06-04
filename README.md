@@ -276,6 +276,10 @@ Error hygiene readiness:
 
 Use [Error Hygiene](docs/error_hygiene.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Runtime UI Contracts](docs/runtime_ui_contracts.md), [API Contracts](docs/api_contracts.md), and the [Evidence Matrix](#evidence-matrix) before changing app shells or API error handling. Unexpected server exceptions must return generic JSON errors without local paths, stack details, source file names, secret-like markers, or raw exception text, while typed application errors can still return user-safe messages; run `python -B scripts/dev.py error-hygiene`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py ui-contracts`, and `python -B scripts/dev.py quality`.
 
+Model gateway readiness:
+
+Use [Model Gateway Safety](docs/model_gateway_safety.md), [Model Runtime Configuration](docs/model_runtime_configuration.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), and the [Evidence Matrix](#evidence-matrix) before changing gateway code or runtime configuration. OpenAI mode stays opt-in, API keys stay outside the repo, structured outputs are required, failures fall back locally, and models do not authorize permissions, approvals, audit logs, or eval success; run `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`, with `python -B scripts/dev.py openai-live` only in API-key environments before claiming live model evidence.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
