@@ -260,6 +260,10 @@ OpenTelemetry backend readiness:
 
 Use [OpenTelemetry Trace Export](docs/otel_trace_export.md), [Observability Integrity](docs/observability_integrity.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), and the [Evidence Legend](#evidence-legend) before adding hosted collector support. Local JSON trace export remains the default proof path and hosted collectors are optional environment-dependent extensions; run `python -B scripts/dev.py replay`, `python -B scripts/dev.py otel-traces`, `python -B scripts/dev.py observability`, and `python -B scripts/dev.py quality`.
 
+Docker runtime readiness:
+
+Use [Container Release Hygiene](docs/container_release_hygiene.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), [Published Repository Status](docs/published_repository_status.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), and the [Release Evidence FAQ](#release-evidence-faq) before claiming container runtime evidence. `python -B scripts/dev.py container-release` is the local static proof path; `python -B scripts/dev.py docker-runtime` is environment-dependent and should be claimed only after it passes on a Docker-enabled machine. Run `python -B scripts/dev.py container-release`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality` before publishing Docker-facing docs.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |

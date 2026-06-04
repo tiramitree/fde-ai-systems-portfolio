@@ -51,6 +51,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README storage adapter evidence pointer
 - Add a compact README red-team eval expansion pointer
 - Add a compact README OpenTelemetry backend pointer
+- Add a compact README Docker runtime evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -175,28 +176,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README Docker runtime evidence pointer
+Add a compact README dependency surface evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, docker, good first issue
+documentation, security, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where Docker runtime materials live and which evidence boundaries must be preserved before claiming container runtime verification.
+Add a compact README pointer that tells contributors where dependency-surface materials live and which supply-chain boundaries must be preserved before adding packages, CDNs, or runtime manifests.
 
 Acceptance criteria:
 
-- Link to Container Release Hygiene, Production Upgrade Notes, Published Repository Status, System Evidence Matrix, and the Release Evidence FAQ.
-- Cover container checks: `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality`.
+- Link to Supply Chain Security, System Evidence Matrix, Contributor Route Map, Development Issue Solutions, and the dependency-surface row in the Evidence Matrix.
+- Cover dependency checks: `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that `container-release` is a local static proof path and `docker-runtime` is an environment-dependent proof that should only be claimed on a Docker-enabled machine.
+- Make clear that stdlib-only Python, first-party frontend assets, pinned Docker bases, and explicit Dependabot coverage remain the default posture until a dependency is intentionally reviewed.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py container-release still passes.
+- python -B scripts/dev.py dependency-surface still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

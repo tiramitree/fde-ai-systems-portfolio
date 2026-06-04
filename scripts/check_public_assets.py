@@ -201,6 +201,10 @@ REQUIRED_OPENTELEMETRY_BACKEND_READINESS = [
     "OpenTelemetry backend readiness:",
     "Use [OpenTelemetry Trace Export](docs/otel_trace_export.md), [Observability Integrity](docs/observability_integrity.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), and the [Evidence Legend](#evidence-legend) before adding hosted collector support. Local JSON trace export remains the default proof path and hosted collectors are optional environment-dependent extensions; run `python -B scripts/dev.py replay`, `python -B scripts/dev.py otel-traces`, `python -B scripts/dev.py observability`, and `python -B scripts/dev.py quality`.",
 ]
+REQUIRED_DOCKER_RUNTIME_READINESS = [
+    "Docker runtime readiness:",
+    "Use [Container Release Hygiene](docs/container_release_hygiene.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), [Published Repository Status](docs/published_repository_status.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), and the [Release Evidence FAQ](#release-evidence-faq) before claiming container runtime evidence. `python -B scripts/dev.py container-release` is the local static proof path; `python -B scripts/dev.py docker-runtime` is environment-dependent and should be claimed only after it passes on a Docker-enabled machine. Run `python -B scripts/dev.py container-release`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality` before publishing Docker-facing docs.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -717,6 +721,18 @@ def check_opentelemetry_backend_readiness() -> list[str]:
     return failures
 
 
+def check_docker_runtime_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_DOCKER_RUNTIME_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing Docker runtime readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -761,6 +777,7 @@ def main() -> int:
     failures.extend(check_storage_adapter_readiness())
     failures.extend(check_red_team_eval_readiness())
     failures.extend(check_opentelemetry_backend_readiness())
+    failures.extend(check_docker_runtime_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
