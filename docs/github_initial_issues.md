@@ -72,6 +72,7 @@ The first public issue wave was created after the initial release and is now com
 - Add local API error examples
 - Add a trace timeline explainer for canonical flows
 - Add local eval gate troubleshooting examples
+- Add a small glossary for local data and evidence artifacts
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -196,7 +197,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a small glossary for local data and evidence artifacts
+Add a command-output troubleshooting map for common gates
 ```
 
 Labels:
@@ -208,15 +209,16 @@ documentation, good first issue
 Body:
 
 ```text
-Add a concise glossary that explains the repository's local data and evidence artifact terms for new contributors.
+Add a contributor-friendly troubleshooting map for the most common local command outputs and failure paths.
 
 Acceptance criteria:
 
-- Add docs/local_artifact_glossary.md defining seed, runtime, eval, replay, trace, audit, approval, release evidence, and generated artifact.
-- Include the checked-in path or generated path pattern for each term.
-- Link the glossary from README.md and PROJECT_CONTENT_INDEX.md.
+- Add docs/command_output_troubleshooting_map.md covering verify, quality, fresh-clone-local, safety, and community-issues failures.
+- For each command, include the success signal, common failure symptom, safest first files to inspect, and next command to run.
+- Link the troubleshooting map from README.md and PROJECT_CONTENT_INDEX.md.
 - Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
-- python -B scripts/dev.py scenario-data still passes.
+- python -B scripts/dev.py verify still passes.
+- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

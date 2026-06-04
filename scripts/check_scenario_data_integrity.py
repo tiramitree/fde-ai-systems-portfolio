@@ -8,6 +8,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EVAL_GUIDE = ROOT / "docs" / "eval_authoring_guide.md"
+LOCAL_ARTIFACT_GLOSSARY = ROOT / "docs" / "local_artifact_glossary.md"
 EVAL_TROUBLESHOOTING = ROOT / "docs" / "eval_gate_troubleshooting_examples.md"
 SEED_EXAMPLES = ROOT / "docs" / "seed_data_extension_examples.md"
 
@@ -317,6 +318,7 @@ def check_eval_authoring_guide() -> list[str]:
     text = EVAL_GUIDE.read_text(encoding="utf-8")
     required_phrases = [
         "Do not add secrets, private paths, real customer data, external accounts, paid-service requirements, or generated runtime state.",
+        "docs/local_artifact_glossary.md",
         "docs/eval_gate_troubleshooting_examples.md",
         "secure-enterprise-knowledge-copilot/data/seed_documents.json",
         "secure-enterprise-knowledge-copilot/data/eval_cases.json",
@@ -348,6 +350,58 @@ def check_eval_authoring_guide() -> list[str]:
     cross_references = {
         ROOT / "README.md": "docs/eval_authoring_guide.md",
         ROOT / "PROJECT_CONTENT_INDEX.md": "docs/eval_authoring_guide.md",
+    }
+    for path, phrase in cross_references.items():
+        require_text(path.read_text(encoding="utf-8"), phrase, failures, path.relative_to(ROOT).as_posix())
+
+    return failures
+
+
+def check_local_artifact_glossary() -> list[str]:
+    failures: list[str] = []
+    if not LOCAL_ARTIFACT_GLOSSARY.exists():
+        return ["missing docs/local_artifact_glossary.md"]
+
+    text = LOCAL_ARTIFACT_GLOSSARY.read_text(encoding="utf-8")
+    required_phrases = [
+        "Do not add secrets, private paths, real customer data, external accounts, paid-service requirements, generated runtime files, or real incident details.",
+        "Seed fixture",
+        "Runtime state",
+        "Eval fixture",
+        "Eval run",
+        "Replay artifact",
+        "Trace",
+        "Audit",
+        "Approval",
+        "Release evidence",
+        "Generated artifact",
+        "secure-enterprise-knowledge-copilot/data/seed_documents.json",
+        "regulated-customer-operations-agent/data/seed_state.json",
+        "ai-reliability-incident-console/data/seed_state.json",
+        "secure-enterprise-knowledge-copilot/data/eval_cases.json",
+        "regulated-customer-operations-agent/data/eval_cases.json",
+        "ai-reliability-incident-console/data/eval_cases.json",
+        "*/data/runtime_state.json",
+        "*/data/eval_runtime_state.json",
+        "docs/demo_replay_artifact.md",
+        "out/demo_replay_artifact.md",
+        "out/demo_replay_artifact.json",
+        "eval_summaries.csv",
+        "otel_traces.json",
+        "python -B scripts/dev.py scenario-data",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py claims",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone-local",
+    ]
+    for phrase in required_phrases:
+        require_text(text, phrase, failures, "docs/local_artifact_glossary.md")
+
+    cross_references = {
+        ROOT / "README.md": "docs/local_artifact_glossary.md",
+        ROOT / "PROJECT_CONTENT_INDEX.md": "docs/local_artifact_glossary.md",
+        ROOT / "docs" / "eval_authoring_guide.md": "docs/local_artifact_glossary.md",
     }
     for path, phrase in cross_references.items():
         require_text(path.read_text(encoding="utf-8"), phrase, failures, path.relative_to(ROOT).as_posix())
@@ -446,6 +500,7 @@ def main() -> int:
     failures.extend(check_p2())
     failures.extend(check_p3())
     failures.extend(check_eval_authoring_guide())
+    failures.extend(check_local_artifact_glossary())
     failures.extend(check_eval_troubleshooting_examples())
     failures.extend(check_seed_extension_examples())
 
