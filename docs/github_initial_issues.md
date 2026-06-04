@@ -71,6 +71,7 @@ The first public issue wave was created after the initial release and is now com
 - Add seed-data extension examples for canonical scenarios
 - Add local API error examples
 - Add a trace timeline explainer for canonical flows
+- Add local eval gate troubleshooting examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -195,28 +196,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add local eval gate troubleshooting examples
+Add a small glossary for local data and evidence artifacts
 ```
 
 Labels:
 
 ```text
-documentation, eval, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add contributor-local troubleshooting examples for common eval gate failures without weakening the deterministic safety assertions.
+Add a concise glossary that explains the repository's local data and evidence artifact terms for new contributors.
 
 Acceptance criteria:
 
-- Add docs/eval_gate_troubleshooting_examples.md covering Project 1 unauthorized retrieval leaks, Project 2 approval-bypass side effects, and Project 3 unsafe release approvals.
-- For each case, include the symptom, likely local cause, safest first files to inspect, reset command, and rerun command.
-- Link the guide from README.md and PROJECT_CONTENT_INDEX.md.
+- Add docs/local_artifact_glossary.md defining seed, runtime, eval, replay, trace, audit, approval, release evidence, and generated artifact.
+- Include the checked-in path or generated path pattern for each term.
+- Link the glossary from README.md and PROJECT_CONTENT_INDEX.md.
 - Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
-- python -B scripts/dev.py evals still passes.
-- python -B scripts/dev.py claims still passes.
+- python -B scripts/dev.py scenario-data still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
