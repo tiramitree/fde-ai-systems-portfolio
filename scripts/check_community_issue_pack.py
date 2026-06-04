@@ -31,6 +31,7 @@ FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 PUBLIC_ROADMAP_ISSUE_COMMENT_EXAMPLES = ROOT / "docs" / "public_roadmap_issue_comment_examples.md"
 ROADMAP_DUPLICATE_ISSUE_HANDLING_EXAMPLES = ROOT / "docs" / "roadmap_duplicate_issue_handling_examples.md"
+ISSUE_TEMPLATE_STALE_EVIDENCE_EXAMPLES = ROOT / "docs" / "issue_template_stale_evidence_examples.md"
 CONTRIBUTOR_ATTRIBUTION_EXAMPLES = ROOT / "docs" / "contributor_attribution_examples.md"
 ISSUE_TRIAGE_SLA_WORDING_EXAMPLES = ROOT / "docs" / "issue_triage_sla_wording_examples.md"
 DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLES = ROOT / "docs" / "discussion_to_issue_conversion_examples.md"
@@ -375,6 +376,51 @@ def check_roadmap_duplicate_issue_handling_examples() -> list[str]:
     return failures
 
 
+def check_issue_template_stale_evidence_examples() -> list[str]:
+    failures: list[str] = []
+    if not ISSUE_TEMPLATE_STALE_EVIDENCE_EXAMPLES.exists():
+        return ["missing docs/issue_template_stale_evidence_examples.md"]
+
+    text = ISSUE_TEMPLATE_STALE_EVIDENCE_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Issue Template Stale Evidence Examples",
+        "docs/github_initial_issues.md",
+        "docs/community_backlog.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/public_maintainer_status_update_examples.md",
+        "Evidence Principles",
+        "Stale Command Output",
+        "Stale Screenshots",
+        "Stale Labels Or Template Links",
+        "Stale Generated Artifacts",
+        "Private Or Account-Level Evidence Requests",
+        "Review Checklist",
+        "current reproducible evidence, stale evidence, generated artifacts, private/account-level material, and roadmap scope are separate",
+        "Do not ask contributors for secrets, private screenshots, local machine details, or real customer data",
+        "`out/`, `otel_traces.json`, and `eval_summaries.csv`",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/issue_template_stale_evidence_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/issue_template_stale_evidence_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/issue_template_stale_evidence_examples.md",
+        "docs/post_publish_checklist.md": "docs/issue_template_stale_evidence_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/issue_template_stale_evidence_examples.md",
+        "docs/public_maintainer_status_update_examples.md": "docs/issue_template_stale_evidence_examples.md",
+        ".github/ISSUE_TEMPLATE/bug_report.md": "Do not paste secrets, private screenshots, local machine details, private account data, or real customer data",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_contributor_attribution_examples() -> list[str]:
     failures: list[str] = []
     if not CONTRIBUTOR_ATTRIBUTION_EXAMPLES.exists():
@@ -627,6 +673,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/post_publish_checklist.md",
         "docs/published_repository_status.md",
         "docs/public_maintainer_status_update_examples.md",
+        "docs/issue_template_stale_evidence_examples.md",
         "docs/github_release_commands.md",
         "docs/github_release_attachment_screenshot_checklist.md",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md",
@@ -660,6 +707,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "README badge, Actions page, and current `github-readiness` output disagree",
         "Dependabot alerts, Dependabot security updates, secret scanning, push protection, or local safety-scan output",
         "Use `docs/public_maintainer_status_update_examples.md` before summarizing warnings or manual rows in a public maintainer update",
+        "Use `docs/issue_template_stale_evidence_examples.md` before editing issue templates or seeded issue bodies that ask contributors for command output",
+        "Issue templates ask for current reproducible evidence and do not request stale output, private screenshots, local machine details, generated artifacts as source, or account-level material",
         "Public maintainer updates keep local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises separate",
     ]
     for phrase in required_phrases:
@@ -671,6 +720,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/post_publish_warning_examples.md",
         "docs/post_publish_checklist.md": "docs/post_publish_warning_examples.md",
         "docs/public_maintainer_status_update_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/issue_template_stale_evidence_examples.md": "docs/post_publish_warning_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1016,6 +1066,7 @@ def check_public_maintainer_status_update_examples() -> list[str]:
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
+        "docs/issue_template_stale_evidence_examples.md",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md",
         "docs/launch_feedback_collection_examples.md",
         "Expected Evidence Split",
@@ -1027,6 +1078,7 @@ def check_public_maintainer_status_update_examples() -> list[str]:
         "Review Checklist",
         "local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises are separate",
         "Do not imply delivery dates, production support, private access, or completed setup before evidence exists",
+        "The update uses `docs/issue_template_stale_evidence_examples.md` before treating issue-template evidence requests",
         "git status --short --branch",
         "python -B scripts/dev.py quality",
         "python -B scripts/dev.py fresh-clone-local",
@@ -1049,6 +1101,7 @@ def check_public_maintainer_status_update_examples() -> list[str]:
         "docs/published_repository_status.md": "docs/public_maintainer_status_update_examples.md",
         "docs/post_publish_checklist.md": "docs/public_maintainer_status_update_examples.md",
         "docs/post_publish_warning_examples.md": "docs/public_maintainer_status_update_examples.md",
+        "docs/issue_template_stale_evidence_examples.md": "docs/public_maintainer_status_update_examples.md",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md": "docs/public_maintainer_status_update_examples.md",
         "docs/launch_feedback_collection_examples.md": "docs/public_maintainer_status_update_examples.md",
     }
@@ -2134,6 +2187,13 @@ def check_templates(labels: dict[str, object]) -> list[str]:
         for label in template_label_names:
             if label not in labels:
                 failures.append(f"{rel_path}: template label {label!r} is not defined in docs/github_labels.json")
+    bug_template_text = (ROOT / ".github" / "ISSUE_TEMPLATE" / "bug_report.md").read_text(encoding="utf-8")
+    for phrase in [
+        "smallest current public command output, trace ID, or screenshot",
+        "Do not paste secrets, private screenshots, local machine details, private account data, or real customer data",
+    ]:
+        if phrase not in bug_template_text:
+            failures.append(f".github/ISSUE_TEMPLATE/bug_report.md: missing evidence guardrail {phrase!r}")
     return failures
 
 
@@ -2174,6 +2234,7 @@ def main() -> int:
     failures.extend(check_issue_to_pr_handoff_flow())
     failures.extend(check_public_roadmap_issue_comment_examples())
     failures.extend(check_roadmap_duplicate_issue_handling_examples())
+    failures.extend(check_issue_template_stale_evidence_examples())
     failures.extend(check_contributor_attribution_examples())
     failures.extend(check_issue_triage_sla_wording_examples())
     failures.extend(check_discussion_to_issue_conversion_examples())

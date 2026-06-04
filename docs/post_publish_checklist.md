@@ -28,6 +28,7 @@ The post-publish check must prove:
 - the GitHub repository settings screenshot checklist is published: `docs/github_repository_settings_screenshot_checklist.md`.
 - the public roadmap issue comment examples are published: `docs/public_roadmap_issue_comment_examples.md`.
 - the roadmap duplicate issue handling examples are published: `docs/roadmap_duplicate_issue_handling_examples.md`.
+- the issue template stale-evidence examples are published: `docs/issue_template_stale_evidence_examples.md`.
 - the contributor attribution examples are published: `docs/contributor_attribution_examples.md`.
 - the issue triage SLA wording examples are published: `docs/issue_triage_sla_wording_examples.md`.
 - the discussion-to-issue conversion examples are published: `docs/discussion_to_issue_conversion_examples.md`.
@@ -92,8 +93,9 @@ After the automated check passes:
 27. Compare GitHub Discussions setup, categories, pinned starter topics, moderation rules, and launch-feedback boundaries with `docs/github_discussions_launch_checklist.md` before claiming Discussions are launch-ready.
 28. Compare discussion-to-issue conversions with `docs/discussion_to_issue_conversion_examples.md` before turning Q&A, ideas, private feedback, or low-signal discussions into public issue scope.
 29. Compare duplicate or overlapping roadmap issues with `docs/roadmap_duplicate_issue_handling_examples.md` before closing, merging, splitting, or redirecting public issue scope.
-30. Compare public maintainer updates with `docs/public_maintainer_status_update_examples.md` before summarizing local progress, pushed code, remote warnings, manual account setup, launch feedback, or roadmap scope.
-31. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
+30. Compare issue templates and seeded issue bodies with `docs/issue_template_stale_evidence_examples.md` before asking contributors for command output, screenshots, generated artifacts, account-level evidence, or roadmap evidence.
+31. Compare public maintainer updates with `docs/public_maintainer_status_update_examples.md` before summarizing local progress, pushed code, remote warnings, manual account setup, launch feedback, or roadmap scope.
+32. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
 
 ## Optional Backlog Seeding
 

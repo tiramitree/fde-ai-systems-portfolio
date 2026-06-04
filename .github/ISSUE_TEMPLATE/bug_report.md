@@ -28,4 +28,4 @@ Describe what should happen.
 
 ## Evidence
 
-Paste command output, trace ID, or screenshot.
+Paste the smallest current public command output, trace ID, or screenshot that reproduces the issue. Do not paste secrets, private screenshots, local machine details, private account data, or real customer data.

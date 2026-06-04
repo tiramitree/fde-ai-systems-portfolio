@@ -115,6 +115,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact release-note changelog drift examples
 - Add compact public maintainer status update examples
 - Add compact roadmap duplicate-issue handling examples
+- Add compact issue template stale-evidence examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -239,7 +240,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact issue template stale-evidence examples
+Add compact stale launch-feedback claim examples
 ```
 
 Labels:
@@ -251,13 +252,13 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact issue template stale-evidence examples that explain how to keep issue templates and seeded issue bodies from asking for stale, unverifiable, or private evidence.
+Add compact stale launch-feedback claim examples that explain how to handle stars, forks, comments, analytics notes, and private feedback without turning stale or unverifiable feedback into public evidence.
 
 Acceptance criteria:
 
-- Add docs/issue_template_stale_evidence_examples.md with examples for stale command output, stale screenshots, stale labels or template links, stale generated artifacts, and private/account-level evidence requests.
-- Reference docs/github_initial_issues.md, docs/community_backlog.md, docs/post_publish_warning_examples.md, and docs/public_maintainer_status_update_examples.md.
-- Keep current reproducible evidence, stale evidence, generated artifacts, private/account-level material, and roadmap scope separate; do not ask contributors for secrets, private screenshots, local machine details, or real customer data.
+- Add docs/stale_launch_feedback_claim_examples.md with examples for stale stars/forks counts, stale public comments, private feedback summaries, analytics screenshots, and launch-post reposts.
+- Reference docs/launch_feedback_collection_examples.md, docs/public_maintainer_status_update_examples.md, docs/post_publish_warning_examples.md, and docs/star_growth_plan.md.
+- Keep current public feedback, stale feedback, private feedback, analytics, launch copy, and roadmap scope separate; do not claim star growth, user adoption, production readiness, or private support from stale or private feedback.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
