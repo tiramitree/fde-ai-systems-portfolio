@@ -68,6 +68,7 @@ The first public issue wave was created after the initial release and is now com
 - Add an API request cookbook for canonical demo paths
 - Add a contributor code-tour page for service boundaries
 - Add an eval authoring guide for safe AI workflows
+- Add seed-data extension examples for canonical scenarios
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -192,28 +193,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add seed-data extension examples for canonical scenarios
+Add local API error examples
 ```
 
 Labels:
 
 ```text
-documentation, demo, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add contributor-friendly seed-data extension examples showing how to add one Project 1 document, one Project 2 operations case/listing, and one Project 3 incident signal while preserving the local-first fictional data contract.
+Add contributor-friendly local API error examples for expected 403, 404, and invalid JSON responses across the demo services.
 
 Acceptance criteria:
 
-- Add docs/seed_data_extension_examples.md with one copyable fictional example per project and a short review checklist.
-- Show the exact checked-in seed files and related eval files without modifying runtime_state.json or generated evidence artifacts.
+- Add docs/api_error_examples.md with copyable local requests for forbidden static traversal, missing static asset, invalid JSON, and representative typed API errors.
+- Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, and generated runtime files.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- Keep examples free of real people, real customers, private paths, secrets, external accounts, and paid-service requirements.
-- python -B scripts/dev.py scenario-data still passes.
-- python -B scripts/dev.py demo-presets still passes.
+- python -B scripts/dev.py api-docs still passes.
+- python -B scripts/dev.py error-hygiene still passes.
+- python -B scripts/dev.py ui-contracts still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

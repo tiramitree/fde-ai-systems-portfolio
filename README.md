@@ -376,7 +376,7 @@ Use this with the [Maintainer PR Checklist](#maintainer-pr-checklist), [Contribu
 | Docs-only | The command decision tree above, [Launch Asset Hygiene](docs/launch_assets_hygiene.md), and [System Evidence Matrix](docs/portfolio_evidence_matrix.md). | `python -B scripts/dev.py assets`, `python -B scripts/dev.py launch-assets`, then `python -B scripts/dev.py quality` before publishing. |
 | Frontend/UI | [Frontend Integrity](docs/frontend_integrity.md), [Runtime UI Contracts](docs/runtime_ui_contracts.md), and [Visual Asset Hygiene](docs/visual_asset_hygiene.md). | `python -B scripts/dev.py frontend`, `python -B scripts/dev.py ui-contracts`, `python -B scripts/dev.py visual-assets`, then `python -B scripts/dev.py quality`. |
 | Backend/API | [API Contracts](docs/api_contracts.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the service `src/` package being changed. | `python -B scripts/dev.py contracts`, `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py architecture`, then `python -B scripts/dev.py quality`. |
-| Eval/data | [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), and the project `data/` folder. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py claims`, then `python -B scripts/dev.py quality`. |
+| Eval/data | [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), [Seed Data Extension Examples](docs/seed_data_extension_examples.md), and the project `data/` folder. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py claims`, then `python -B scripts/dev.py quality`. |
 | Visual assets | The [Screenshots](#screenshots) section and [Visual Asset Hygiene](docs/visual_asset_hygiene.md). | `python -B scripts/dev.py visual-assets` and `python -B scripts/dev.py visual-asset-diff`; use `python -B scripts/dev.py refresh-visual-assets` only for intentional screenshot updates. |
 | GitHub maintenance | [Maintainer PR Checklist](#maintainer-pr-checklist), [PR Review Security](docs/pr_review_security.md), and [PR Review Runbook](docs/pr_review_runbook.md). | `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py github-readiness`, and dry-run `python -B scripts/dev.py github-maintenance` before any account-level action. |
 
@@ -603,6 +603,7 @@ repository/
 - [Threat Model](docs/threat_model.md)
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)
 - [Eval Authoring Guide](docs/eval_authoring_guide.md)
+- [Seed Data Extension Examples](docs/seed_data_extension_examples.md)
 - [Error Hygiene](docs/error_hygiene.md)
 - [Container Release Hygiene](docs/container_release_hygiene.md)
 - [Visual Asset Hygiene](docs/visual_asset_hygiene.md)

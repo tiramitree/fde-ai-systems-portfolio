@@ -8,6 +8,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EVAL_GUIDE = ROOT / "docs" / "eval_authoring_guide.md"
+SEED_EXAMPLES = ROOT / "docs" / "seed_data_extension_examples.md"
 
 P1_ROOT = ROOT / "secure-enterprise-knowledge-copilot"
 P2_ROOT = ROOT / "regulated-customer-operations-agent"
@@ -352,12 +353,57 @@ def check_eval_authoring_guide() -> list[str]:
     return failures
 
 
+def check_seed_extension_examples() -> list[str]:
+    failures: list[str] = []
+    if not SEED_EXAMPLES.exists():
+        return ["missing docs/seed_data_extension_examples.md"]
+
+    text = SEED_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Do not edit `runtime_state.json`, generated demo reports, trace exports, replay artifacts, private files, external accounts, paid-service configuration, secrets, or real customer data.",
+        "secure-enterprise-knowledge-copilot/data/seed_documents.json",
+        "secure-enterprise-knowledge-copilot/data/eval_cases.json",
+        "ai-change-review-standard-2026",
+        "internal://ai/change-review-standard-2026",
+        "expected.must_cite_doc_ids",
+        "regulated-customer-operations-agent/data/seed_state.json",
+        "regulated-customer-operations-agent/data/eval_cases.json",
+        "prod-vacuum-v12",
+        "lst-1004",
+        "case-1003",
+        "marketplace://homehub/vacuum-v12-cordless",
+        "expected.forbids_direct_side_effect",
+        "ai-reliability-incident-console/data/seed_state.json",
+        "ai-reliability-incident-console/data/eval_cases.json",
+        "inc-2026-016",
+        "rel-eval-006-latency-budget",
+        "rb-latency-investigation",
+        "expected.release_blocked",
+        "python -B scripts/dev.py scenario-data",
+        "python -B scripts/dev.py demo-presets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+    ]
+    for phrase in required_phrases:
+        require_text(text, phrase, failures, "docs/seed_data_extension_examples.md")
+
+    cross_references = {
+        ROOT / "README.md": "docs/seed_data_extension_examples.md",
+        ROOT / "PROJECT_CONTENT_INDEX.md": "docs/seed_data_extension_examples.md",
+    }
+    for path, phrase in cross_references.items():
+        require_text(path.read_text(encoding="utf-8"), phrase, failures, path.relative_to(ROOT).as_posix())
+
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_p1())
     failures.extend(check_p2())
     failures.extend(check_p3())
     failures.extend(check_eval_authoring_guide())
+    failures.extend(check_seed_extension_examples())
 
     if failures:
         print("Scenario data integrity check failed:")

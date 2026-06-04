@@ -209,6 +209,7 @@ Design Review Docs:
 - `docs/threat_model.md`: repository threat matrix, trust boundaries, control owners, evidence commands, and review framing.
 - `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and review framing.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.
+- `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.
 - `docs/error_hygiene.md`: generic error response contract for unexpected backend failures.
 - `docs/container_release_hygiene.md`: Docker/Compose release hygiene gate and honest runtime-verification framing.
 - `docs/visual_asset_hygiene.md`: desktop/mobile screenshot manifest, source-hash drift protection, refresh troubleshooting, and review framing.
