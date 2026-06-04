@@ -600,6 +600,7 @@ repository/
 - [Model Gateway Safety](docs/model_gateway_safety.md)
 - [Launch Assets Hygiene](docs/launch_assets_hygiene.md)
 - [Observability Integrity](docs/observability_integrity.md)
+- [Trace Timeline Examples](docs/trace_timeline_examples.md)
 - [Threat Model](docs/threat_model.md)
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)
 - [Eval Authoring Guide](docs/eval_authoring_guide.md)
