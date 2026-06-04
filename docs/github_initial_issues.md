@@ -104,6 +104,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact launch feedback collection examples
 - Add compact GitHub release attachment screenshot checklist
 - Add compact GitHub Actions badge verification examples
+- Add compact Dependabot and secret-scanning verification examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -228,28 +229,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact Dependabot and secret-scanning verification examples
+Add compact public roadmap issue comment examples
 ```
 
 Labels:
 
 ```text
-documentation, security, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for checking Dependabot and secret-scanning posture without confusing checked-in policy files, GitHub account-level security settings, generated alerts, and local safety scans.
+Add compact maintainer comment examples for public roadmap issues without confusing accepted scope, backlog ideas, implementation promises, and low-signal activity.
 
 Acceptance criteria:
 
-- Add docs/dependabot_secret_scanning_verification_examples.md with examples for missing Dependabot config, stale dependency alerts, secret-scanning setting confusion, false positive secret alerts, and local safety scan confusion.
-- Reference .github/dependabot.yml, docs/supply_chain_security.md, docs/post_publish_checklist.md, docs/post_publish_warning_examples.md, and docs/github_repository_settings.md.
-- Keep checked-in policy files, GitHub account-level security settings, generated alerts, and local safety scans separate; do not claim Dependabot or secret-scanning setup is complete until public/account-level evidence confirms it.
+- Add docs/public_roadmap_issue_comment_examples.md with examples for accepting a scoped roadmap issue, narrowing an oversized request, closing low-signal activity, redirecting unsafe requests, and linking a useful PR.
+- Reference docs/github_initial_issues.md, docs/community_backlog.md, docs/issue_to_pr_handoff_flow.md, docs/docs_only_review_comment_examples.md, and docs/maintainer_review_policy.md.
+- Keep accepted scope, backlog ideas, implementation promises, and low-signal activity separate; do not promise delivery dates, external-account access, private data, or guaranteed roadmap acceptance.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py dependency-surface still passes.
-- python -B scripts/dev.py github-readiness still passes.
+- python -B scripts/dev.py community-issues still passes.
+- python -B scripts/dev.py pr-policy still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

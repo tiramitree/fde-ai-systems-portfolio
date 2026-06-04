@@ -237,6 +237,7 @@ Design Review Docs:
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/github_actions_badge_verification_examples.md`: GitHub Actions badge verification examples for missing badges, stale badges, wrong workflow badges, skipped workflow badges, and fork-PR confusion.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
+- `docs/dependabot_secret_scanning_verification_examples.md`: Dependabot and secret-scanning verification examples for source policy, account-level settings, generated alerts, and local safety scans.
 - `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, copyable scenario-draft controls, local draft diffs, no-build local UI posture, and review framing.
 - `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and review framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
@@ -279,6 +280,7 @@ Release and growth:
 - `docs/development_issue_solutions.md`: issue and solution log for recurring local, GitHub, PR, and publication problems.
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/post_publish_warning_examples.md`: post-publish warning examples for remote file lag, raw README failures, GitHub Actions pending state, readiness warning rows, and manual account settings.
+- `docs/dependabot_secret_scanning_verification_examples.md`: Dependabot and secret-scanning verification examples for missing config, stale alerts, setting confusion, false-positive alerts, and local safety scan boundaries.
 - `docs/github_actions_warning_examples.md`: GitHub Actions warning examples for pending quality-gate, missing workflow runs, stale badges, skipped workflows, and fork PR permission limits.
 - `docs/github_actions_badge_verification_examples.md`: GitHub Actions badge verification examples for README badge URL, current remote workflow evidence, stale badge rendering, skipped workflows, and fork PR confusion.
 - `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.

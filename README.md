@@ -266,7 +266,7 @@ Use [Container Release Hygiene](docs/container_release_hygiene.md), [Docker Runt
 
 Dependency surface readiness:
 
-Use [Supply Chain Security](docs/supply_chain_security.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), the [Contributor Route Map](#contributor-route-map), [Development Issue Solutions](docs/development_issue_solutions.md), and the [Evidence Matrix](#evidence-matrix) before adding packages, CDNs, or runtime manifests. The default posture is stdlib-only Python, first-party frontend assets, pinned Docker bases, and explicit Dependabot coverage until a dependency is intentionally reviewed; run `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
+Use [Supply Chain Security](docs/supply_chain_security.md), [Dependabot And Secret-Scanning Verification Examples](docs/dependabot_secret_scanning_verification_examples.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), the [Contributor Route Map](#contributor-route-map), [Development Issue Solutions](docs/development_issue_solutions.md), and the [Evidence Matrix](#evidence-matrix) before adding packages, CDNs, runtime manifests, or dependency-monitoring claims. The default posture is stdlib-only Python, first-party frontend assets, pinned Docker bases, and explicit Dependabot coverage until a dependency is intentionally reviewed; run `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
 
 API contract readiness:
 
@@ -625,6 +625,7 @@ repository/
 - [README Navigation Audit](docs/readme_navigation_audit.md)
 - [README Navigation Drift Examples](docs/readme_navigation_drift_examples.md)
 - [Workflow Security](docs/workflow_security.md)
+- [Dependabot And Secret-Scanning Verification Examples](docs/dependabot_secret_scanning_verification_examples.md)
 - [GitHub Actions Warning Examples](docs/github_actions_warning_examples.md)
 - [GitHub Actions Badge Verification Examples](docs/github_actions_badge_verification_examples.md)
 - [Final Completion Audit](docs/final_completion_audit.md)

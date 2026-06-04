@@ -16,6 +16,8 @@ Verify the dependency surface:
 python -B scripts/dev.py dependency-surface
 ```
 
+Use `docs/dependabot_secret_scanning_verification_examples.md` before claiming Dependabot alerts, Dependabot security updates, secret scanning, or push protection are enabled on GitHub.
+
 The full release gate also runs this check:
 
 ```bash

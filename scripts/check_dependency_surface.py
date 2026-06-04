@@ -8,6 +8,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
+SUPPLY_CHAIN_DOC = ROOT / "docs" / "supply_chain_security.md"
+GITHUB_SETTINGS_DOC = ROOT / "docs" / "github_repository_settings.md"
+DEPENDABOT_SECRET_SCANNING_DOC = ROOT / "docs" / "dependabot_secret_scanning_verification_examples.md"
 
 FORBIDDEN_DEPENDENCY_FILES = {
     "package.json",
@@ -153,6 +156,36 @@ def check_dependabot() -> list[str]:
     return failures
 
 
+def check_policy_docs() -> list[str]:
+    failures: list[str] = []
+    expected_files = [
+        ("docs/supply_chain_security.md", SUPPLY_CHAIN_DOC),
+        ("docs/github_repository_settings.md", GITHUB_SETTINGS_DOC),
+        ("docs/dependabot_secret_scanning_verification_examples.md", DEPENDABOT_SECRET_SCANNING_DOC),
+    ]
+    for rel_path, path in expected_files:
+        if not path.exists():
+            failures.append(f"missing {rel_path}")
+
+    if failures:
+        return failures
+
+    supply_chain = SUPPLY_CHAIN_DOC.read_text(encoding="utf-8")
+    github_settings = GITHUB_SETTINGS_DOC.read_text(encoding="utf-8")
+    verification = DEPENDABOT_SECRET_SCANNING_DOC.read_text(encoding="utf-8")
+    expectations = [
+        ("docs/supply_chain_security.md", supply_chain, "docs/dependabot_secret_scanning_verification_examples.md"),
+        ("docs/github_repository_settings.md", github_settings, "docs/dependabot_secret_scanning_verification_examples.md"),
+        ("docs/dependabot_secret_scanning_verification_examples.md", verification, ".github/dependabot.yml"),
+        ("docs/dependabot_secret_scanning_verification_examples.md", verification, "python -B scripts/dev.py dependency-surface"),
+        ("docs/dependabot_secret_scanning_verification_examples.md", verification, "Do not claim Dependabot or secret-scanning setup is complete until public/account-level evidence confirms it"),
+    ]
+    for rel_path, text, phrase in expectations:
+        if phrase not in text:
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def main() -> int:
     files = tracked_files()
     failures: list[str] = []
@@ -161,6 +194,7 @@ def main() -> int:
     failures.extend(check_frontend_remote_dependencies(files))
     failures.extend(check_dockerfiles(files))
     failures.extend(check_dependabot())
+    failures.extend(check_policy_docs())
 
     if failures:
         print("Dependency surface check failed:")
