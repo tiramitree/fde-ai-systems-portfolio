@@ -22,6 +22,7 @@ REQUIRED_FILES = [
     "docs/differentiation_strategy.md",
     "docs/published_repository_status.md",
     "docs/post_publish_checklist.md",
+    "docs/post_publish_warning_examples.md",
     "docs/release_attachment_verification_examples.md",
     "docs/github_repository_settings.md",
     "docs/final_readiness_report.md",
@@ -107,12 +108,14 @@ REQUIRED_PHRASES = {
         "docs/star_growth_plan.md",
         "docs/launch_copy_pack.md",
         "docs/release_attachment_verification_examples.md",
+        "docs/post_publish_warning_examples.md",
     ],
     "PROJECT_CONTENT_INDEX.md": [
         "launch-assets",
         "scripts/check_launch_assets.py",
         "docs/launch_assets_hygiene.md",
         "docs/release_attachment_verification_examples.md",
+        "docs/post_publish_warning_examples.md",
     ],
     "docs/portfolio_evidence_matrix.md": [
         "Launch materials are complete without overclaiming",
@@ -126,6 +129,7 @@ REQUIRED_PHRASES = {
     "docs/post_publish_checklist.md": [
         "the launch asset hygiene script and documentation are published",
         "the release attachment verification examples are published",
+        "the post-publish warning examples are published",
         "python -B scripts/dev.py launch-assets",
     ],
     "docs/final_readiness_report.md": [
@@ -151,6 +155,23 @@ REQUIRED_PHRASES = {
         "out/demo_replay_artifact.json",
         "Do not commit",
     ],
+    "docs/post_publish_warning_examples.md": [
+        "# Post-Publish Warning Examples",
+        "docs/post_publish_checklist.md",
+        "docs/published_repository_status.md",
+        "docs/github_release_commands.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Remote File Lag",
+        "Raw README Failures",
+        "GitHub Actions Pending State",
+        "Readiness Warning Rows",
+        "Manual Account Settings",
+        "python -B scripts/dev.py fresh-clone",
+        "python -B scripts/post_publish_check.py",
+        "python -B scripts/dev.py github-readiness",
+        "local quality evidence and remote GitHub evidence prove different things",
+        "Do not claim published evidence until the remote checks pass",
+    ],
 }
 
 PUBLIC_POSITIONING_FILES = [
@@ -163,6 +184,7 @@ PUBLIC_POSITIONING_FILES = [
     "docs/github_launch_plan.md",
     "docs/published_repository_status.md",
     "docs/post_publish_checklist.md",
+    "docs/post_publish_warning_examples.md",
     "docs/release_attachment_verification_examples.md",
     "docs/final_readiness_report.md",
 ]

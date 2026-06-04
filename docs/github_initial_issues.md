@@ -89,6 +89,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact release attachment verification examples
 - Add compact eval CSV troubleshooting examples
 - Add compact branch protection verification examples
+- Add compact post-publish warning examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -213,28 +214,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact post-publish warning examples
+Add compact GitHub label troubleshooting examples
 ```
 
 Labels:
 
 ```text
-documentation, release, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for handling post-publish warnings without confusing local quality evidence with remote GitHub evidence.
+Add compact examples for troubleshooting GitHub label sync without creating unnecessary public roadmap churn.
 
 Acceptance criteria:
 
-- Add docs/post_publish_warning_examples.md with examples for remote file lag, raw README failures, GitHub Actions pending state, readiness warning rows, and manual account settings.
-- Reference docs/post_publish_checklist.md, docs/published_repository_status.md, docs/github_release_commands.md, and docs/command_output_troubleshooting_map.md.
-- Keep post-publish warnings separate from local quality failures and do not claim published evidence until remote checks pass.
+- Add docs/github_label_troubleshooting_examples.md with examples for missing labels, color drift, template mismatch, dry-run output, and issue-pack label mismatch.
+- Reference docs/github_labels.json, docs/github_initial_issues.md, docs/github_repository_settings.md, and docs/post_publish_checklist.md.
+- Keep label sync separate from creating public roadmap issues unless the repository is intentionally ready for open issue work.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py launch-assets still passes.
-- python -B scripts/dev.py assets still passes.
+- python -B scripts/dev.py github-community still passes in dry-run mode.
+- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

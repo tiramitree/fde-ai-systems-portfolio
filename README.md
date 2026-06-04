@@ -306,7 +306,7 @@ Use [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md), [F
 
 Post-publish readiness:
 
-Use [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), [GitHub Repository Settings](docs/github_repository_settings.md), [GitHub Release Commands](docs/github_release_commands.md), the [Release Evidence FAQ](#release-evidence-faq), and the published repository row in the [Evidence Freshness Checklist](#evidence-freshness-checklist) before sharing the public branch or claiming published evidence. Remote clone results, published files, raw README/workflow reachability, and GitHub readiness warnings are separate from local quality evidence; after push, run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
+Use [Post-Publish Checklist](docs/post_publish_checklist.md), [Post-Publish Warning Examples](docs/post_publish_warning_examples.md), [Published Repository Status](docs/published_repository_status.md), [GitHub Repository Settings](docs/github_repository_settings.md), [GitHub Release Commands](docs/github_release_commands.md), the [Release Evidence FAQ](#release-evidence-faq), and the published repository row in the [Evidence Freshness Checklist](#evidence-freshness-checklist) before sharing the public branch or claiming published evidence. Remote clone results, published files, raw README/workflow reachability, and GitHub readiness warnings are separate from local quality evidence; after push, run `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
 
 GitHub readiness:
 
@@ -628,6 +628,7 @@ repository/
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
 - [Published Repository Status](docs/published_repository_status.md)
+- [Post-Publish Warning Examples](docs/post_publish_warning_examples.md)
 - [GitHub Repository Settings](docs/github_repository_settings.md)
 - [Branch Protection Verification Examples](docs/branch_protection_verification_examples.md)
 - [Community Backlog](docs/community_backlog.md)

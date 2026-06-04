@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact post-publish warning examples.
-3. Add compact GitHub label troubleshooting examples.
-4. Add compact GitHub Actions warning examples.
-5. Add compact GitHub release page troubleshooting examples.
+2. Add compact GitHub label troubleshooting examples.
+3. Add compact GitHub Actions warning examples.
+4. Add compact GitHub release page troubleshooting examples.
+5. Add compact social preview verification examples.
 
 ## Intermediate Issues
 
@@ -115,3 +115,4 @@ Contributions should preserve these invariants:
 - Add compact release attachment verification examples.
 - Add compact eval CSV troubleshooting examples.
 - Add compact branch protection verification examples.
+- Add compact post-publish warning examples.
