@@ -268,6 +268,10 @@ Dependency surface readiness:
 
 Use [Supply Chain Security](docs/supply_chain_security.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), the [Contributor Route Map](#contributor-route-map), [Development Issue Solutions](docs/development_issue_solutions.md), and the [Evidence Matrix](#evidence-matrix) before adding packages, CDNs, or runtime manifests. The default posture is stdlib-only Python, first-party frontend assets, pinned Docker bases, and explicit Dependabot coverage until a dependency is intentionally reviewed; run `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
 
+API contract readiness:
+
+Use [API Contracts](docs/api_contracts.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Architecture Boundaries](docs/architecture_boundaries.md), [Runtime UI Contracts](docs/runtime_ui_contracts.md), and the [Evidence Matrix](#evidence-matrix) before changing backend routes or frontend API calls. Documented response shapes, read-only scenario snapshot endpoints, static route handling, and frontend API modules must stay aligned; run `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py ui-contracts`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
