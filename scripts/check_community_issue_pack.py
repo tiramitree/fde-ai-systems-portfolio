@@ -32,6 +32,7 @@ ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
+GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
 GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troubleshooting_examples.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
@@ -370,6 +371,56 @@ def check_post_publish_warning_examples() -> list[str]:
         "README.md": "docs/post_publish_warning_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/post_publish_warning_examples.md",
         "docs/post_publish_checklist.md": "docs/post_publish_warning_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_github_actions_warning_examples() -> list[str]:
+    failures: list[str] = []
+    if not GITHUB_ACTIONS_WARNING_EXAMPLES.exists():
+        return ["missing docs/github_actions_warning_examples.md"]
+
+    text = GITHUB_ACTIONS_WARNING_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "GitHub Actions Warning Examples",
+        ".github/workflows/ci.yml",
+        "docs/workflow_security.md",
+        "docs/post_publish_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Actions Evidence",
+        "Pending Quality Gate",
+        "Missing Workflow Run",
+        "Stale Badge",
+        "Skipped Workflow",
+        "Fork PR Permission Limits",
+        "Review Checklist",
+        "python -B scripts/dev.py workflow-security",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone-local",
+        "python -B scripts/dev.py fresh-clone",
+        "python -B scripts/post_publish_check.py",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/check_github_readiness.py --strict",
+        "local quality evidence and remote GitHub Actions evidence prove different things",
+        "Do not claim a green workflow until the current remote `quality-gate` run passes",
+        "permissions remain `contents: read`",
+        "persist-credentials: false",
+        "does not reference `secrets.*`",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/github_actions_warning_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/github_actions_warning_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/github_actions_warning_examples.md",
+        "docs/workflow_security.md": "docs/github_actions_warning_examples.md",
+        "docs/post_publish_checklist.md": "docs/github_actions_warning_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/github_actions_warning_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -846,6 +897,7 @@ def main() -> int:
     failures.extend(check_eval_csv_troubleshooting_examples())
     failures.extend(check_branch_protection_verification_examples())
     failures.extend(check_post_publish_warning_examples())
+    failures.extend(check_github_actions_warning_examples())
     failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_docs_only_review_comment_examples())

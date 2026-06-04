@@ -8,6 +8,8 @@ Run the workflow security gate with:
 python -B scripts/dev.py workflow-security
 ```
 
+Use `docs/github_actions_warning_examples.md` when GitHub Actions or `github-readiness` reports pending, missing, skipped, stale, or fork-permission workflow states.
+
 ## CI Contract
 
 The GitHub Actions workflow keeps these rules:

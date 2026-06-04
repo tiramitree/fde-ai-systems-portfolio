@@ -267,6 +267,7 @@ Release and growth:
 - `docs/development_issue_solutions.md`: issue and solution log for recurring local, GitHub, PR, and publication problems.
 - `docs/post_publish_checklist.md`: post-publish verification checklist.
 - `docs/post_publish_warning_examples.md`: post-publish warning examples for remote file lag, raw README failures, GitHub Actions pending state, readiness warning rows, and manual account settings.
+- `docs/github_actions_warning_examples.md`: GitHub Actions warning examples for pending quality-gate, missing workflow runs, stale badges, skipped workflows, and fork PR permission limits.
 - `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: completed launch issues and current community issue pack with labels, acceptance criteria, and guardrails.
