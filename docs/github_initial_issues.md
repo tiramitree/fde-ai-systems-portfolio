@@ -102,6 +102,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact GitHub public PR API fallback troubleshooting examples
 - Add compact repository settings screenshot checklist
 - Add compact launch feedback collection examples
+- Add compact GitHub release attachment screenshot checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -226,7 +227,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact GitHub release attachment screenshot checklist
+Add compact GitHub Actions badge verification examples
 ```
 
 Labels:
@@ -238,16 +239,16 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add a compact checklist for GitHub release attachment screenshots without confusing generated local artifacts, release-page screenshots, and current public release evidence.
+Add compact examples for checking the README GitHub Actions badge without confusing local quality output, remote workflow status, skipped workflows, and stale badge rendering.
 
 Acceptance criteria:
 
-- Add docs/github_release_attachment_screenshot_checklist.md with examples for replay artifact attachment screenshots, missing attachment screenshots, stale attachment screenshots, wrong tag screenshots, and latest-release attachment screenshots.
-- Reference docs/release_attachment_verification_examples.md, docs/github_release_page_troubleshooting_examples.md, docs/github_latest_release_troubleshooting_examples.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
-- Keep generated local artifacts, release-page screenshots, and current public release evidence separate; do not commit private account screenshots, generated out/ files, or release-attachment claims without matching public evidence.
+- Add docs/github_actions_badge_verification_examples.md with examples for missing badges, stale badges, wrong workflow badges, skipped workflow badges, and fork-PR badge confusion.
+- Reference .github/workflows/ci.yml, docs/github_actions_warning_examples.md, docs/post_publish_checklist.md, docs/post_publish_warning_examples.md, and docs/workflow_security.md.
+- Keep local quality output, remote workflow status, skipped workflows, and README badge rendering separate; do not claim a green workflow badge until the current remote quality-gate run is public and current.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py replay-artifact still passes.
-- python -B scripts/dev.py launch-assets still passes.
+- python -B scripts/dev.py workflow-security still passes.
+- python -B scripts/dev.py github-readiness still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

@@ -194,6 +194,7 @@ Start here:
 - `docs/demo_report.md`: generated verification report.
 - `docs/demo_replay_artifact.md`: release-attachable replay evidence artifact instructions and review framing.
 - `docs/release_attachment_verification_examples.md`: examples for missing replay artifacts, stale attachments, wrong release tags, generated `out/` handling, and post-publish mismatch.
+- `docs/github_release_attachment_screenshot_checklist.md`: screenshot checklist for replay artifact attachments, missing attachments, stale attachments, wrong tags, and latest-release attachment evidence.
 - `docs/completion_checklist.md`: current status and remaining blockers.
 - `docs/final_completion_audit.md`: objective-by-objective audit.
 
@@ -268,6 +269,7 @@ Release and growth:
 - `docs/github_release_commands.md`: publication commands.
 - `docs/github_release_notes_v0.1.0.md`: release notes used by `scripts/configure_github_launch.py`.
 - `docs/release_attachment_verification_examples.md`: release attachment verification examples for replay artifacts, tag mismatch, generated `out/` handling, and post-publish drift.
+- `docs/github_release_attachment_screenshot_checklist.md`: release attachment screenshot checklist for public evidence, stale screenshots, wrong tags, and latest-release attachment review.
 - `docs/github_release_page_troubleshooting_examples.md`: GitHub release page troubleshooting examples for missing page, wrong tag, stale notes, missing replay attachments, and latest-release mismatch.
 - `docs/github_latest_release_troubleshooting_examples.md`: latest-release troubleshooting examples for missing latest release, wrong latest tag, draft or prerelease confusion, stale release page, and artifact drift.
 - `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.

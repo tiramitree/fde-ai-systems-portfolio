@@ -141,6 +141,7 @@ def main() -> int:
         "docs/final_readiness_report.md",
         "docs/demo_replay_artifact.md",
         "docs/release_attachment_verification_examples.md",
+        "docs/github_release_attachment_screenshot_checklist.md",
         "docs/demo_state_presets.json",
         "docs/container_release_hygiene.md",
         "docs/pr_review_runbook.md",
