@@ -65,6 +65,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README post-publish evidence pointer
 - Add a compact README GitHub readiness evidence pointer
 - Add a compact README release page evidence pointer
+- Add an API request cookbook for canonical demo paths
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -189,29 +190,29 @@ Acceptance criteria:
 Title:
 
 ```text
-Add an API request cookbook for canonical demo paths
+Add a contributor code-tour page for service boundaries
 ```
 
 Labels:
 
 ```text
-documentation, demo, good first issue
+documentation, design, good first issue
 ```
 
 Body:
 
 ```text
-Add a contributor-friendly API request cookbook for the three canonical demo paths so readers can exercise the backend directly without using the browser UI.
+Add a contributor-friendly code tour that maps each project from HTTP shell to API layer, domain logic, storage, evals, optional model gateway, and frontend modules.
 
 Acceptance criteria:
 
-- Add a docs/api_request_cookbook.md page with copyable requests for Project 1 question answering, Project 2 investigation plus supervisor approval, and Project 3 release triage.
-- Use only local host URLs, checked-in sample users/cases/incidents, and synthetic data already present in the repo.
-- Link the cookbook from README.md and PROJECT_CONTENT_INDEX.md without duplicating the full API contract tables.
-- Keep examples usable from a local shell and avoid secrets, API keys, private files, external accounts, or paid services.
+- Add a docs/code_tour.md page with one section per project and one shared boundary summary.
+- Map app.py, src API classes, domain/service modules, storage, evals, optional model gateways, and web/js modules without duplicating full architecture docs.
+- Link the code tour from README.md and PROJECT_CONTENT_INDEX.md.
+- Keep the page source-linked and local-first; do not include generated runtime files, private paths, secrets, external accounts, or paid-service requirements.
+- python -B scripts/dev.py architecture still passes.
 - python -B scripts/dev.py api-docs still passes.
-- python -B scripts/dev.py contracts still passes.
-- python -B scripts/dev.py smoke still passes.
+- python -B scripts/dev.py frontend still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

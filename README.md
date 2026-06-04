@@ -630,6 +630,7 @@ repository/
 - [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md)
 - [Fresh Clone Experience](docs/fresh_clone_experience.md)
 - [API Contracts](docs/api_contracts.md)
+- [API Request Cookbook](docs/api_request_cookbook.md)
 - [PR Review Security](docs/pr_review_security.md)
 - [Pull Request Review Runbook](docs/pr_review_runbook.md)
 - [GitHub Release Commands](docs/github_release_commands.md)
