@@ -13,6 +13,7 @@ DOCS_ONLY_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.
 PUBLIC_ROADMAP_COMMENT_EXAMPLES = ROOT / "docs" / "public_roadmap_issue_comment_examples.md"
 CONTRIBUTOR_ATTRIBUTION_EXAMPLES = ROOT / "docs" / "contributor_attribution_examples.md"
 ISSUE_TRIAGE_SLA_WORDING_EXAMPLES = ROOT / "docs" / "issue_triage_sla_wording_examples.md"
+DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLES = ROOT / "docs" / "discussion_to_issue_conversion_examples.md"
 TEMPLATE = ROOT / ".github" / "pull_request_template.md"
 
 
@@ -185,6 +186,7 @@ REQUIRED_PUBLIC_ROADMAP_COMMENT_EXAMPLE_PHRASES = [
     "docs/maintainer_review_policy.md",
     "docs/contributor_attribution_examples.md",
     "docs/issue_triage_sla_wording_examples.md",
+    "docs/discussion_to_issue_conversion_examples.md",
     "Accept Scoped Roadmap Issue",
     "Narrow Oversized Request",
     "Close Low-Signal Activity",
@@ -198,6 +200,7 @@ REQUIRED_PUBLIC_ROADMAP_COMMENT_EXAMPLE_PHRASES = [
     "python -B scripts/dev.py pr-policy",
     "python -B scripts/dev.py safety",
     "python -B scripts/dev.py quality",
+    "Use `docs/discussion_to_issue_conversion_examples.md` before accepting a discussion as issue scope",
 ]
 
 REQUIRED_ISSUE_TRIAGE_SLA_WORDING_EXAMPLE_PHRASES = [
@@ -205,6 +208,7 @@ REQUIRED_ISSUE_TRIAGE_SLA_WORDING_EXAMPLE_PHRASES = [
     "docs/maintainer_review_policy.md",
     "docs/public_roadmap_issue_comment_examples.md",
     "docs/github_discussions_launch_checklist.md",
+    "docs/discussion_to_issue_conversion_examples.md",
     "docs/launch_feedback_collection_examples.md",
     "First-Response Wording",
     "Accepted Follow-Up Wording",
@@ -214,6 +218,30 @@ REQUIRED_ISSUE_TRIAGE_SLA_WORDING_EXAMPLE_PHRASES = [
     "best-effort open-source triage, not a support SLA or delivery commitment",
     "python -B scripts/dev.py community-issues",
     "python -B scripts/dev.py pr-policy",
+    "python -B scripts/dev.py safety",
+    "python -B scripts/dev.py quality",
+    "Discussion-to-issue conversions are reviewed with `docs/discussion_to_issue_conversion_examples.md`",
+]
+
+REQUIRED_DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLE_PHRASES = [
+    "Discussion To Issue Conversion Examples",
+    "docs/github_discussions_launch_checklist.md",
+    "docs/public_roadmap_issue_comment_examples.md",
+    "docs/issue_triage_sla_wording_examples.md",
+    "docs/launch_feedback_collection_examples.md",
+    "Conversion Principles",
+    "Setup Questions",
+    "Broad Ideas",
+    "Reproducible Bugs",
+    "Private Feedback",
+    "Low-Signal Discussions",
+    "Review Checklist",
+    "discussion volume, untriaged ideas, private feedback, and accepted issue scope are different things",
+    "Do not create issues just to make activity visible",
+    "support SLAs, production support, delivery dates, private-account access, or guaranteed roadmap acceptance",
+    "python -B scripts/dev.py community-issues",
+    "python -B scripts/dev.py pr-policy",
+    "python -B scripts/dev.py launch-assets",
     "python -B scripts/dev.py safety",
     "python -B scripts/dev.py quality",
 ]
@@ -324,6 +352,7 @@ def check_docs() -> list[str]:
         PUBLIC_ROADMAP_COMMENT_EXAMPLES,
         CONTRIBUTOR_ATTRIBUTION_EXAMPLES,
         ISSUE_TRIAGE_SLA_WORDING_EXAMPLES,
+        DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLES,
         TEMPLATE,
     ):
         if not path.exists():
@@ -373,6 +402,14 @@ def check_docs() -> list[str]:
                 "docs/issue_triage_sla_wording_examples.md",
             )
         )
+    if DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLES.exists():
+        failures.extend(
+            require_contains(
+                read(DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLES),
+                REQUIRED_DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLE_PHRASES,
+                "docs/discussion_to_issue_conversion_examples.md",
+            )
+        )
     if TEMPLATE.exists():
         failures.extend(require_contains(read(TEMPLATE), REQUIRED_TEMPLATE_PHRASES, ".github/pull_request_template.md"))
     return failures
@@ -388,6 +425,7 @@ def check_cross_references() -> list[str]:
             "docs/public_roadmap_issue_comment_examples.md",
             "docs/contributor_attribution_examples.md",
             "docs/issue_triage_sla_wording_examples.md",
+            "docs/discussion_to_issue_conversion_examples.md",
             "python -B scripts/dev.py pr-policy",
         ],
         "PROJECT_CONTENT_INDEX.md": [
@@ -397,6 +435,7 @@ def check_cross_references() -> list[str]:
             "docs/public_roadmap_issue_comment_examples.md",
             "docs/contributor_attribution_examples.md",
             "docs/issue_triage_sla_wording_examples.md",
+            "docs/discussion_to_issue_conversion_examples.md",
             "scripts/check_pr_review_policy.py",
         ],
         "docs/threat_model.md": ["python -B scripts/dev.py pr-policy"],
@@ -422,7 +461,7 @@ def main() -> int:
             print(f"- {failure}")
         return 1
 
-    print("PR review policy check passed: triage heuristics, runbook, policy, docs-only examples, roadmap issue comments, contributor attribution examples, issue triage wording examples, docs-only comment examples, and template remain safety-focused.")
+    print("PR review policy check passed: triage heuristics, runbook, policy, docs-only examples, roadmap issue comments, contributor attribution examples, issue triage wording examples, discussion-to-issue examples, docs-only comment examples, and template remain safety-focused.")
     return 0
 
 

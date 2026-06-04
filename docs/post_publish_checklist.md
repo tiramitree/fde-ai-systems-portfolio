@@ -29,6 +29,7 @@ The post-publish check must prove:
 - the public roadmap issue comment examples are published: `docs/public_roadmap_issue_comment_examples.md`.
 - the contributor attribution examples are published: `docs/contributor_attribution_examples.md`.
 - the issue triage SLA wording examples are published: `docs/issue_triage_sla_wording_examples.md`.
+- the discussion-to-issue conversion examples are published: `docs/discussion_to_issue_conversion_examples.md`.
 - the GitHub Discussions launch checklist is published: `docs/github_discussions_launch_checklist.md`.
 - the Dependabot and secret-scanning verification examples are published: `docs/dependabot_secret_scanning_verification_examples.md`.
 - the GitHub repository metadata troubleshooting examples are published.
@@ -85,7 +86,8 @@ After the automated check passes:
 24. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
 25. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
 26. Compare GitHub Discussions setup, categories, pinned starter topics, moderation rules, and launch-feedback boundaries with `docs/github_discussions_launch_checklist.md` before claiming Discussions are launch-ready.
-27. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
+27. Compare discussion-to-issue conversions with `docs/discussion_to_issue_conversion_examples.md` before turning Q&A, ideas, private feedback, or low-signal discussions into public issue scope.
+28. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
 
 ## Optional Backlog Seeding
 

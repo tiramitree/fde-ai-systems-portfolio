@@ -230,7 +230,7 @@ Use the [Launch Copy Pack](docs/launch_copy_pack.md) with the [Star Growth Plan]
 
 Contribution safety readiness:
 
-Use [CONTRIBUTING](CONTRIBUTING.md), [SECURITY](SECURITY.md), [PR Review Security](docs/pr_review_security.md), [Docs-Only PR Review Examples](docs/docs_only_pr_review_examples.md), [Contributor Attribution Examples](docs/contributor_attribution_examples.md), [Issue Triage SLA Wording Examples](docs/issue_triage_sla_wording_examples.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), and the [Contributor Route Map](#contributor-route-map) before reviewing outside changes. For external PRs, inspect the diff before running untrusted code, then run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`; keep public credit tied to useful public GitHub activity or explicitly permissioned public attribution, and keep issue replies separate from support SLAs or delivery guarantees.
+Use [CONTRIBUTING](CONTRIBUTING.md), [SECURITY](SECURITY.md), [PR Review Security](docs/pr_review_security.md), [Docs-Only PR Review Examples](docs/docs_only_pr_review_examples.md), [Contributor Attribution Examples](docs/contributor_attribution_examples.md), [Issue Triage SLA Wording Examples](docs/issue_triage_sla_wording_examples.md), [Discussion To Issue Conversion Examples](docs/discussion_to_issue_conversion_examples.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), and the [Contributor Route Map](#contributor-route-map) before reviewing outside changes. For external PRs, inspect the diff before running untrusted code, then run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`; keep public credit tied to useful public GitHub activity or explicitly permissioned public attribution, keep issue replies separate from support SLAs or delivery guarantees, and keep discussion feedback separate from accepted issue scope.
 
 Release artifact readiness:
 
@@ -624,6 +624,7 @@ repository/
 - [Issue To PR Handoff Flow](docs/issue_to_pr_handoff_flow.md)
 - [Contributor Attribution Examples](docs/contributor_attribution_examples.md)
 - [Issue Triage SLA Wording Examples](docs/issue_triage_sla_wording_examples.md)
+- [Discussion To Issue Conversion Examples](docs/discussion_to_issue_conversion_examples.md)
 - [Public Roadmap Issue Comment Examples](docs/public_roadmap_issue_comment_examples.md)
 - [README Navigation Audit](docs/readme_navigation_audit.md)
 - [README Navigation Drift Examples](docs/readme_navigation_drift_examples.md)

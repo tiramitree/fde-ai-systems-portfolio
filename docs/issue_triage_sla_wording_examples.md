@@ -1,6 +1,6 @@
 # Issue Triage SLA Wording Examples
 
-Use this page when setting public response expectations for GitHub issues. Read it with `docs/maintainer_review_policy.md`, `docs/public_roadmap_issue_comment_examples.md`, `docs/github_discussions_launch_checklist.md`, and `docs/launch_feedback_collection_examples.md`.
+Use this page when setting public response expectations for GitHub issues. Read it with `docs/maintainer_review_policy.md`, `docs/public_roadmap_issue_comment_examples.md`, `docs/github_discussions_launch_checklist.md`, `docs/discussion_to_issue_conversion_examples.md`, and `docs/launch_feedback_collection_examples.md`.
 
 The core rule: issue triage expectations, support SLAs, delivery dates, private-account access, roadmap acceptance, and production support are different things. Keep issue replies factual, best-effort, and reversible.
 
@@ -146,4 +146,5 @@ python -B scripts/dev.py quality
 - Unsafe requests are closed or redirected through `docs/maintainer_review_policy.md`.
 - Accepted-scope comments stay aligned with `docs/public_roadmap_issue_comment_examples.md`.
 - Discussion-style questions are routed with `docs/github_discussions_launch_checklist.md`.
+- Discussion-to-issue conversions are reviewed with `docs/discussion_to_issue_conversion_examples.md` before they become public issue expectations.
 - Private feedback and launch-channel feedback are summarized through `docs/launch_feedback_collection_examples.md` before they become source-visible issue content.

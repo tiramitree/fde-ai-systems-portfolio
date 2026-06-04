@@ -111,6 +111,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact release note refresh checklist
 - Add compact contributor attribution examples
 - Add compact issue triage SLA wording examples
+- Add compact discussion-to-issue conversion examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -235,7 +236,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact discussion-to-issue conversion examples
+Add compact release-note changelog drift examples
 ```
 
 Labels:
@@ -247,15 +248,14 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact discussion-to-issue conversion examples that explain when a GitHub Discussion should become a scoped issue and when it should stay as discussion feedback.
+Add compact release-note changelog drift examples that explain how to detect and correct drift between checked-in release notes, changelog-style summaries, GitHub release-page text, and post-publish evidence.
 
 Acceptance criteria:
 
-- Add docs/discussion_to_issue_conversion_examples.md with examples for setup questions, broad ideas, reproducible bugs, private feedback, and low-signal discussions.
-- Reference docs/github_discussions_launch_checklist.md, docs/public_roadmap_issue_comment_examples.md, docs/issue_triage_sla_wording_examples.md, and docs/launch_feedback_collection_examples.md.
-- Keep discussion volume, untriaged ideas, private feedback, and accepted issue scope separate; do not create issues just to make activity visible.
+- Add docs/release_note_changelog_drift_examples.md with examples for checked-in release notes drift, changelog-style summary drift, GitHub release-page drift, and post-publish evidence mismatch.
+- Reference docs/release_note_refresh_checklist.md, docs/github_release_page_troubleshooting_examples.md, docs/github_latest_release_troubleshooting_examples.md, and docs/post_publish_checklist.md.
+- Keep release notes, changelog summaries, release page text, and remote evidence separate; do not claim changelog freshness until public evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

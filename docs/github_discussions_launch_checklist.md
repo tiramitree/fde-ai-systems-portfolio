@@ -1,6 +1,6 @@
 # GitHub Discussions Launch Checklist
 
-Use this page before enabling or announcing GitHub Discussions for the repository. Read it with `docs/community_backlog.md`, `docs/github_initial_issues.md`, `docs/launch_feedback_collection_examples.md`, `docs/issue_triage_sla_wording_examples.md`, `docs/maintainer_review_policy.md`, and `docs/post_publish_checklist.md`.
+Use this page before enabling or announcing GitHub Discussions for the repository. Read it with `docs/community_backlog.md`, `docs/github_initial_issues.md`, `docs/launch_feedback_collection_examples.md`, `docs/issue_triage_sla_wording_examples.md`, `docs/discussion_to_issue_conversion_examples.md`, `docs/maintainer_review_policy.md`, and `docs/post_publish_checklist.md`.
 
 The core rule: GitHub Discussions, issues, PRs, private feedback, and roadmap acceptance are different channels. Do not promise support SLAs, private account access, or guaranteed feature acceptance from a discussion thread.
 
@@ -109,6 +109,8 @@ Review with `docs/launch_feedback_collection_examples.md` before turning discuss
 
 Use `docs/issue_triage_sla_wording_examples.md` before converting discussion replies into public issue response expectations.
 
+Use `docs/discussion_to_issue_conversion_examples.md` before turning a discussion into a scoped issue.
+
 ## Review Checklist
 
 - Discussions are enabled only when the repository is intentionally ready for public conversation.
@@ -116,5 +118,6 @@ Use `docs/issue_triage_sla_wording_examples.md` before converting discussion rep
 - Pinned starter topics link source docs and avoid support SLAs, private account access, and roadmap guarantees.
 - Moderation rules follow `docs/maintainer_review_policy.md`.
 - Issues, PRs, Discussions, private feedback, and roadmap acceptance stay separate.
+- Discussion volume, untriaged ideas, private feedback, and accepted issue scope stay separate.
 - No private messages, account analytics, personal account details, secrets, customer data, or private screenshots are committed.
 - `python -B scripts/dev.py community-issues`, `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality` pass after changing Discussions launch wording.
