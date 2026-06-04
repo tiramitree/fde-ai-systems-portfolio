@@ -1,6 +1,6 @@
 # Post-Publish Warning Examples
 
-Use this page when post-publish checks or GitHub readiness checks produce warnings. Read it with `docs/post_publish_checklist.md`, `docs/published_repository_status.md`, `docs/github_release_commands.md`, `docs/github_latest_release_troubleshooting_examples.md`, `docs/github_authenticated_maintenance_troubleshooting_examples.md`, `docs/github_public_pr_api_fallback_troubleshooting_examples.md`, `docs/github_api_rate_limit_troubleshooting_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/social_preview_verification_examples.md`, `docs/profile_pin_verification_examples.md`, `docs/github_actions_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when post-publish checks or GitHub readiness checks produce warnings. Read it with `docs/post_publish_checklist.md`, `docs/published_repository_status.md`, `docs/github_release_commands.md`, `docs/github_latest_release_troubleshooting_examples.md`, `docs/github_authenticated_maintenance_troubleshooting_examples.md`, `docs/github_public_pr_api_fallback_troubleshooting_examples.md`, `docs/github_api_rate_limit_troubleshooting_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/launch_feedback_collection_examples.md`, `docs/social_preview_verification_examples.md`, `docs/profile_pin_verification_examples.md`, `docs/github_actions_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local quality evidence and remote GitHub evidence prove different things. Do not claim published evidence until the remote checks pass, and do not treat GitHub warning rows as local code failures unless strict launch verification is required.
 
@@ -140,6 +140,8 @@ python -B scripts/dev.py github-readiness
 ```
 
 Use `docs/github_repository_settings.md` for the expected account settings, `docs/github_repository_settings_screenshot_checklist.md` before retaining or sharing settings screenshots, `docs/social_preview_verification_examples.md` before treating social preview image checks as account-level setup evidence, and `docs/profile_pin_verification_examples.md` before treating profile-page state as complete. Keep manual rows visible until the account action is done and rechecked.
+
+Use `docs/launch_feedback_collection_examples.md` before treating stars, forks, public comments, private messages, or analytics screenshots as launch-feedback evidence.
 
 ## Review Checklist
 

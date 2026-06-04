@@ -101,6 +101,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact authenticated maintenance troubleshooting examples
 - Add compact GitHub public PR API fallback troubleshooting examples
 - Add compact repository settings screenshot checklist
+- Add compact launch feedback collection examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -225,7 +226,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact launch feedback collection examples
+Add compact GitHub release attachment screenshot checklist
 ```
 
 Labels:
@@ -237,14 +238,15 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add compact examples for collecting launch feedback without confusing public engagement, private messages, analytics, and source evidence.
+Add a compact checklist for GitHub release attachment screenshots without confusing generated local artifacts, release-page screenshots, and current public release evidence.
 
 Acceptance criteria:
 
-- Add docs/launch_feedback_collection_examples.md with examples for GitHub stars/forks, issue feedback, launch-post comments, private-message feedback, and analytics screenshots.
-- Reference docs/launch_copy_pack.md, docs/star_growth_plan.md, docs/published_repository_status.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
-- Keep public feedback, private messages, analytics screenshots, and source evidence separate; do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence.
+- Add docs/github_release_attachment_screenshot_checklist.md with examples for replay artifact attachment screenshots, missing attachment screenshots, stale attachment screenshots, wrong tag screenshots, and latest-release attachment screenshots.
+- Reference docs/release_attachment_verification_examples.md, docs/github_release_page_troubleshooting_examples.md, docs/github_latest_release_troubleshooting_examples.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep generated local artifacts, release-page screenshots, and current public release evidence separate; do not commit private account screenshots, generated out/ files, or release-attachment claims without matching public evidence.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py replay-artifact still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

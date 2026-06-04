@@ -132,4 +132,4 @@ Confirmed:
 - Pin repository on profile.
 - Verify Docker runtime with `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; static Docker/Compose release hygiene is already gated.
 - Verify optional OpenAI mode with `python -B scripts/dev.py openai-live` and a live API key.
-- Collect launch feedback and star-growth evidence.
+- Collect launch feedback and star-growth evidence using `docs/launch_feedback_collection_examples.md`.
