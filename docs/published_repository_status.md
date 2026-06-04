@@ -1,6 +1,6 @@
 # Published Repository Status
 
-Date: 2026-06-02
+Date: 2026-06-04
 
 ## Repository
 
@@ -43,7 +43,7 @@ https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml
 Latest observed successful main run:
 
 ```text
-https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26861617523/job/79216313917
+https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26943158269/job/79489403121
 ```
 
 Current expected result:
@@ -74,7 +74,7 @@ Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 Project 3 eval: 6/6 passed, unsafe release approval failures 0
 Smoke tests: 13/13 passed
 API contract checks: 43/43 passed
-Runtime UI contracts: 123/123 passed
+Runtime UI contracts: 159/159 passed
 Observability integrity: 42/42 passed
 Threat model: 12/12 mapped
 PR review policy: passed
@@ -103,6 +103,7 @@ Confirmed:
 - container release hygiene script and documentation published
 - visual asset manifest script, documentation, and manifest published
 - README screenshots and demo walkthrough GIF are tracked and published
+- trace deep links, copy-link controls, and refreshed README screenshots are tracked and published
 - launch copy and star-growth materials published with a deterministic anti-hype gate
 - remote `main` exists
 - local tracked worktree clean
