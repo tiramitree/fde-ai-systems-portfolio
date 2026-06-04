@@ -1,6 +1,6 @@
 # Launch Feedback Collection Examples
 
-Use this page after sharing the public repository or launch copy. Read it with `docs/launch_copy_pack.md`, `docs/star_growth_plan.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/public_maintainer_status_update_examples.md`, `docs/github_discussions_launch_checklist.md`, `docs/discussion_to_issue_conversion_examples.md`, `docs/contributor_attribution_examples.md`, `docs/issue_triage_sla_wording_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page after sharing the public repository or launch copy. Read it with `docs/launch_copy_pack.md`, `docs/star_growth_plan.md`, `docs/stale_launch_feedback_claim_examples.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/public_maintainer_status_update_examples.md`, `docs/github_discussions_launch_checklist.md`, `docs/discussion_to_issue_conversion_examples.md`, `docs/contributor_attribution_examples.md`, `docs/issue_triage_sla_wording_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: public feedback, private messages, analytics screenshots, and source evidence prove different things. Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence.
 
@@ -158,6 +158,8 @@ Use `docs/contributor_attribution_examples.md` before turning public feedback or
 
 Use `docs/public_maintainer_status_update_examples.md` before turning launch feedback or repository progress into a public maintainer update.
 
+Use `docs/stale_launch_feedback_claim_examples.md` before treating stale feedback counts, stale comments, private feedback summaries, analytics screenshots, or launch-post reposts as public evidence.
+
 ## Analytics Screenshots
 
 Use this only when reviewing launch reach or traffic privately. Analytics screenshots are account-level artifacts, not source content.
@@ -187,6 +189,7 @@ Analytics can shape future launch posts and docs, but they do not replace public
 
 - `docs/launch_copy_pack.md` remains the source for public launch copy.
 - `docs/star_growth_plan.md` keeps stars as a byproduct of usefulness, not the product goal.
+- `docs/stale_launch_feedback_claim_examples.md` keeps stale launch-feedback claims separate from current public evidence.
 - `docs/published_repository_status.md` records only evidence that is current and reviewable.
 - `docs/post_publish_checklist.md` keeps launch feedback separate from source verification.
 - `docs/post_publish_warning_examples.md` is used before claiming launch feedback or star-growth evidence.

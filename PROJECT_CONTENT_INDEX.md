@@ -305,6 +305,7 @@ Release and growth:
 - `docs/star_growth_plan.md`: plan for distribution and feedback loops.
 - `docs/launch_copy_pack.md`: copy-ready launch posts for GitHub, LinkedIn, X, Hacker News, and communities.
 - `docs/launch_feedback_collection_examples.md`: launch feedback collection examples for GitHub stars/forks, issue feedback, launch-post comments, private-message feedback, and analytics screenshots.
+- `docs/stale_launch_feedback_claim_examples.md`: stale launch-feedback claim examples for old stars/forks, stale public comments, private feedback summaries, analytics screenshots, launch-post reposts, and evidence-boundary review.
 - `docs/differentiation_strategy.md`: why this differs from ordinary AI demos.
 - `docs/assets/demo-walkthrough.gif`: README walkthrough animation for the core demo flows.
 - `docs/assets/github-preview.png`: upload-ready GitHub social preview image.
