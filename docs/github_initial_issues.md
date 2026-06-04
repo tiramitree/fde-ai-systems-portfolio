@@ -18,6 +18,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact diff view for browser-local scenario drafts
 - Add a reduced-motion and focus-visible accessibility pass
 - Add browser-local light/dark theme controls to all demo UIs
+- Add high-contrast screenshot checks for visual assets
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -142,7 +143,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add high-contrast screenshot checks for visual assets
+Add mobile viewport screenshots to the visual asset manifest
 ```
 
 Labels:
@@ -154,16 +155,15 @@ enhancement, frontend, demo
 Body:
 
 ```text
-Add a deterministic check that catches low-contrast visual asset refreshes before screenshots are published.
+Add mobile viewport screenshots to complement the existing desktop README screenshots.
 
 Acceptance criteria:
 
-- The check runs against the existing README screenshot assets or their source pages.
-- It reports the asset, sampled region, and approximate contrast problem.
-- It does not require paid APIs or remote frontend dependencies.
-- It preserves the existing restrained product UI style.
-- Do not introduce remote frontend dependencies.
-- Visual asset manifest verification still passes after refresh.
+- Capture one mobile-width screenshot for each demo.
+- Record mobile asset hashes, dimensions, source file hashes, and contrast samples in docs/visual_assets_manifest.json.
+- Keep desktop screenshots as the primary README assets unless the README layout is intentionally changed.
+- Do not introduce paid APIs or remote frontend dependencies.
+- Visual asset manifest verification still passes for desktop and mobile assets.
 - python -B scripts/dev.py visual-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
