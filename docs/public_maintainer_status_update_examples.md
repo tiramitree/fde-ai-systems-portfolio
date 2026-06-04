@@ -1,6 +1,6 @@
 # Public Maintainer Status Update Examples
 
-Use this page when publishing a maintainer update in an issue, discussion, release note, launch thread, or repository status note. Read it with `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_authenticated_maintenance_troubleshooting_examples.md`, and `docs/launch_feedback_collection_examples.md`.
+Use this page when publishing a maintainer update in an issue, discussion, release note, launch thread, or repository status note. Read it with `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/issue_template_stale_evidence_examples.md`, `docs/github_authenticated_maintenance_troubleshooting_examples.md`, and `docs/launch_feedback_collection_examples.md`.
 
 The core rule: local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises are separate. Do not imply delivery dates, production support, private access, or completed setup before evidence exists.
 
@@ -149,6 +149,7 @@ Avoid:
 - The update names whether evidence is local-only, pushed, remote-verified, account-level/manual, or roadmap scope.
 - The update references `docs/published_repository_status.md` only for current, reviewable repository facts.
 - The update uses `docs/post_publish_warning_examples.md` before explaining `[WARN]` or `[MANUAL]` rows.
+- The update uses `docs/issue_template_stale_evidence_examples.md` before treating issue-template evidence requests, stale command output, screenshots, generated artifacts, or account-level material as public proof.
 - The update uses `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level setup or maintenance has been applied.
 - The update uses `docs/launch_feedback_collection_examples.md` before treating feedback, stars, forks, comments, or analytics as public evidence.
 - The update does not imply delivery dates, production support, private access, or completed setup before evidence exists.

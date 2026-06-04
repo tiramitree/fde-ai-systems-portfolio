@@ -262,6 +262,7 @@ Release and growth:
 - `docs/discussion_to_issue_conversion_examples.md`: discussion-to-issue conversion examples for setup questions, broad ideas, reproducible bugs, private feedback, and low-signal discussions.
 - `docs/public_roadmap_issue_comment_examples.md`: public roadmap issue comment examples for scoped acceptance, oversized requests, low-signal issues, unsafe requests, and useful PR links.
 - `docs/roadmap_duplicate_issue_handling_examples.md`: roadmap duplicate issue handling examples for exact duplicates, overlapping roadmap ideas, duplicate bugs with new evidence, issue-vs-discussion duplicates, and stale duplicate references.
+- `docs/issue_template_stale_evidence_examples.md`: issue template stale-evidence examples for stale command output, stale screenshots, stale labels or template links, stale generated artifacts, and private/account-level evidence requests.
 - `docs/readme_navigation_drift_examples.md`: README navigation drift fix examples for docs-only reviews that touch public navigation or evidence wording.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
