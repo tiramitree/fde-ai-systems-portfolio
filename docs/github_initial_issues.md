@@ -87,6 +87,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact Docker runtime failure examples
 - Add compact docs for issue-to-PR handoff flow
 - Add compact release attachment verification examples
+- Add compact eval CSV troubleshooting examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -211,28 +212,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact eval CSV troubleshooting examples
+Add compact branch protection verification examples
 ```
 
 Labels:
 
 ```text
-documentation, eval, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for troubleshooting eval CSV output without committing generated eval artifacts as source.
+Add compact examples for checking branch-protection status without treating local docs as remote account evidence.
 
 Acceptance criteria:
 
-- Add docs/eval_csv_troubleshooting_examples.md with examples for missing CSV output, stale eval state, changed case ids, unsafe failure counts, and generated artifact handling.
-- Reference docs/demo_report.md, docs/command_output_troubleshooting_map.md, docs/eval_authoring_guide.md, and docs/local_artifact_glossary.md.
-- Keep eval_summaries.csv separate from source content unless a release process explicitly asks for it.
+- Add docs/branch_protection_verification_examples.md with examples for missing protection, stale payloads, API warning rows, manual account settings, and post-publish mismatch.
+- Reference docs/github_repository_settings.md, docs/github_branch_protection.json, docs/published_repository_status.md, and docs/post_publish_checklist.md.
+- Keep branch-protection wording manual until GitHub readiness or account-level evidence confirms the remote state.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py eval-csv still passes.
-- python -B scripts/dev.py assets still passes.
+- python -B scripts/dev.py github-readiness still passes without strict mode.
+- python -B scripts/dev.py governance still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

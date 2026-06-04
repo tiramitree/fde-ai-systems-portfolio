@@ -2,7 +2,7 @@
 
 This guide shows how to add local-first eval cases for the three systems without changing the repository's safety posture. Evals use only checked-in fictional seed data, deterministic local behavior, and JSON fixtures. Do not add secrets, private paths, real customer data, external accounts, paid-service requirements, or generated runtime state.
 
-Use this guide with `docs/scenario_data_integrity.md`, `docs/local_artifact_glossary.md`, `docs/eval_gate_troubleshooting_examples.md`, `docs/api_contracts.md`, and the project-level `evals.py` runner before changing regression coverage.
+Use this guide with `docs/scenario_data_integrity.md`, `docs/local_artifact_glossary.md`, `docs/eval_gate_troubleshooting_examples.md`, `docs/eval_csv_troubleshooting_examples.md`, `docs/api_contracts.md`, and the project-level `evals.py` runner before changing regression coverage.
 
 ## Authoring Flow
 

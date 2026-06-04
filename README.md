@@ -246,7 +246,7 @@ Use [Production Upgrade Notes](docs/production_upgrade_notes.md), [Project Case 
 
 Eval regression readiness:
 
-Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.
+Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), [Eval CSV Troubleshooting Examples](docs/eval_csv_troubleshooting_examples.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.
 
 Storage adapter readiness:
 
@@ -611,6 +611,7 @@ repository/
 - [Command Output Troubleshooting Map](docs/command_output_troubleshooting_map.md)
 - [Eval Authoring Guide](docs/eval_authoring_guide.md)
 - [Eval Gate Troubleshooting Examples](docs/eval_gate_troubleshooting_examples.md)
+- [Eval CSV Troubleshooting Examples](docs/eval_csv_troubleshooting_examples.md)
 - [Seed Data Extension Examples](docs/seed_data_extension_examples.md)
 - [Error Hygiene](docs/error_hygiene.md)
 - [Container Release Hygiene](docs/container_release_hygiene.md)
