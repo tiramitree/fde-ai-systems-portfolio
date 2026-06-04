@@ -1,6 +1,6 @@
 # Launch Feedback Collection Examples
 
-Use this page after sharing the public repository or launch copy. Read it with `docs/launch_copy_pack.md`, `docs/star_growth_plan.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page after sharing the public repository or launch copy. Read it with `docs/launch_copy_pack.md`, `docs/star_growth_plan.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_discussions_launch_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: public feedback, private messages, analytics screenshots, and source evidence prove different things. Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence.
 
@@ -100,6 +100,33 @@ python -B scripts/dev.py safety
 
 If a public comment identifies a bug, missing setup step, or unclear claim, fix the repository artifact first. A launch thread is feedback, not a source file.
 
+## GitHub Discussions Feedback
+
+Use this when feedback arrives through GitHub Discussions after the feature is intentionally enabled.
+
+Useful evidence:
+
+- public discussion URL
+- category name
+- short maintainer summary of the technical point
+- linked issue or PR only when there is concrete follow-up work
+
+Wrong use:
+
+- treating discussion volume as star-growth success or production proof
+- promising support SLAs, private account access, or guaranteed roadmap acceptance
+- copying private messages, account screenshots, customer data, or personal details into source docs
+
+Review with:
+
+```bash
+python -B scripts/dev.py community-issues
+python -B scripts/dev.py launch-assets
+python -B scripts/dev.py safety
+```
+
+Use `docs/github_discussions_launch_checklist.md` before enabling Discussions, pinning starter topics, or treating discussion feedback as launch evidence.
+
 ## Private-Message Feedback
 
 Use this only for internal triage. Private feedback can guide fixes, but the private message itself should not become repository content.
@@ -157,6 +184,7 @@ Analytics can shape future launch posts and docs, but they do not replace public
 - `docs/published_repository_status.md` records only evidence that is current and reviewable.
 - `docs/post_publish_checklist.md` keeps launch feedback separate from source verification.
 - `docs/post_publish_warning_examples.md` is used before claiming launch feedback or star-growth evidence.
+- `docs/github_discussions_launch_checklist.md` keeps Discussions separate from issues, PRs, private feedback, and roadmap acceptance.
 - Public feedback links are used only when the source is actually public.
 - Private messages, account analytics, personal account details, and screenshots with private UI are not committed.
 - `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality` pass after changing launch-feedback wording.
