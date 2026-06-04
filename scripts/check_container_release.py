@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 COMPOSE = ROOT / "docker-compose.yml"
 DOCKER_RUNTIME_EVIDENCE_CHECKLIST = ROOT / "docs" / "docker_runtime_evidence_checklist.md"
+DOCKER_RUNTIME_FAILURE_EXAMPLES = ROOT / "docs" / "docker_runtime_failure_examples.md"
 
 PROJECTS = [
     {
@@ -185,10 +186,34 @@ def check_runtime_evidence_checklist() -> list[str]:
     return failures
 
 
+def check_runtime_failure_examples() -> list[str]:
+    failures: list[str] = []
+    if not DOCKER_RUNTIME_FAILURE_EXAMPLES.exists():
+        return ["missing docs/docker_runtime_failure_examples.md"]
+
+    text = normalized_text(DOCKER_RUNTIME_FAILURE_EXAMPLES)
+    required = [
+        "python -B scripts/dev.py container-release",
+        "python -B scripts/dev.py docker-runtime",
+        "`python -B scripts/dev.py quality` must not require Docker",
+        "Missing Docker Daemon",
+        "Compose Command Mismatch",
+        "Unhealthy Service",
+        "Stale Generated Logs",
+        "Port Conflicts",
+        "Do not claim Docker runtime proof",
+        "Do not commit generated container logs",
+    ]
+    for marker in required:
+        require_contains(text, marker, "docs/docker_runtime_failure_examples.md", failures)
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
     failures.extend(check_compose())
     failures.extend(check_runtime_evidence_checklist())
+    failures.extend(check_runtime_failure_examples())
     for project in PROJECTS:
         failures.extend(check_dockerfile(project))
         failures.extend(check_dockerignore(project))

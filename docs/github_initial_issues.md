@@ -84,6 +84,7 @@ The first public issue wave was created after the initial release and is now com
 - Add OpenTelemetry collector handoff troubleshooting notes
 - Add optional OpenAI live-mode troubleshooting notes
 - Add a Docker runtime evidence collection checklist
+- Add compact Docker runtime failure examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -208,28 +209,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact Docker runtime failure examples
+Add compact docs for issue-to-PR handoff flow
 ```
 
 Labels:
 
 ```text
-documentation, docker, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for common Docker runtime verification failures without making Docker required for the default local demo.
+Add a compact handoff flow that shows contributors how to turn one approved public issue into a small, reviewable pull request.
 
 Acceptance criteria:
 
-- Add docs/docker_runtime_failure_examples.md with examples for missing Docker daemon, Compose command mismatch, unhealthy service, stale generated logs, and port conflicts.
-- Reference docs/docker_runtime_evidence_checklist.md, docs/container_release_hygiene.md, and docs/command_output_troubleshooting_map.md.
-- Keep Docker runtime verification optional and do not make it part of the default local demo path.
-- Link the notes from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py container-release still passes.
-- python -B scripts/dev.py docker-runtime remains environment-dependent and is not required for quality.
+- Add docs/issue_to_pr_handoff_flow.md with issue selection, branch naming, route-specific gates, PR body, and maintainer review notes.
+- Reference docs/github_initial_issues.md, docs/first_pull_request_checklist.md, docs/docs_only_review_comment_examples.md, and docs/pr_review_security.md.
+- Keep the flow local-first and do not require external accounts, paid APIs, generated runtime files, private paths, or real customer data.
+- Link the flow from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py community-issues still passes.
+- python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
