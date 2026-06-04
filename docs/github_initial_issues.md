@@ -31,6 +31,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README troubleshooting pointer
 - Add a compact README screenshot reviewer checklist
 - Add a compact README command decision tree
+- Add a compact README evidence legend
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -155,7 +156,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README evidence legend
+Add a compact README contributor route map
 ```
 
 Labels:
@@ -167,14 +168,14 @@ documentation, automation, good first issue
 Body:
 
 ```text
-Add a compact README legend that distinguishes smoke, eval, trace, audit, and visual gates.
+Add a compact README route map that tells contributors which checks to run for docs-only, frontend, backend, eval, visual asset, and GitHub-maintenance changes.
 
 Acceptance criteria:
 
-- Explain what each gate proves and what it does not prove.
-- Link to docs/portfolio_evidence_matrix.md, docs/observability_integrity.md, and docs/visual_asset_hygiene.md.
-- Avoid repeating the full evidence matrix; link out for detail.
-- Keep the section compact enough for README scanning.
+- Cover docs-only, frontend, backend/API, eval/data, visual asset, and GitHub-maintenance changes.
+- Point to the existing command decision tree, maintainer PR checklist, and PR review docs instead of duplicating every command.
+- Keep local-first checks as the default.
+- Keep account-level GitHub actions as dry-run or authenticated-only work.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.

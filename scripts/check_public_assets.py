@@ -75,6 +75,14 @@ REQUIRED_README_GLOSSARY = [
     "| Audit log | Structured records of security, workflow, approval, and release-decision events that explain what happened after a run; see [threat model](docs/threat_model.md) and [observability integrity](docs/observability_integrity.md). |",
     "| Abstention | The answer behavior used when accessible evidence is missing, unauthorized, or unsafe after filtering; see [Project 1](#project-1-secure-enterprise-knowledge-copilot) and the [System Evidence Matrix](docs/portfolio_evidence_matrix.md). |",
 ]
+REQUIRED_EVIDENCE_LEGEND = [
+    "Evidence legend:",
+    "| Smoke | `python -B scripts/dev.py smoke` proves the three running demos complete the canonical permission, approval, and release-blocking flows. | It is not exhaustive security, load, or browser-compatibility coverage. |",
+    "| Eval | `python -B scripts/dev.py evals` proves deterministic regression cases keep unsafe leak, direct side-effect, and release-approval failures at zero; see [System Evidence Matrix](docs/portfolio_evidence_matrix.md). | It does not cover every possible prompt, data set, or production integration. |",
+    "| Trace | `python -B scripts/dev.py observability` proves responses can be followed through stored trace records, IDs, and linked decisions; see [Observability Integrity](docs/observability_integrity.md). | It does not mean an external OpenTelemetry backend is configured by default. |",
+    "| Audit | The same observability gate proves security, approval, blocked-action, and release-decision events are recorded and link back to the run. | It does not replace enterprise retention, SIEM, or compliance controls. |",
+    "| Visual | `python -B scripts/dev.py visual-assets` proves desktop and mobile screenshots match the recorded manifest, source hashes, and contrast samples; see [Visual Asset Hygiene](docs/visual_asset_hygiene.md). | It is a deterministic screenshot guard, not a complete accessibility audit. |",
+]
 REQUIRED_README_PR_CHECKLIST = [
     "## Maintainer PR Checklist",
     "Public PRs are treated as untrusted input. Before approving workflows, running contributor code, or merging:",
@@ -347,6 +355,18 @@ def check_readme_glossary() -> list[str]:
     return failures
 
 
+def check_evidence_legend() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_EVIDENCE_LEGEND:
+        if expected not in text:
+            failures.append(f"README.md: missing evidence legend entry: {expected}")
+    return failures
+
+
 def check_readme_pr_checklist() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -382,6 +402,7 @@ def main() -> int:
     failures.extend(check_command_output_expectations())
     failures.extend(check_troubleshooting_pointers())
     failures.extend(check_readme_glossary())
+    failures.extend(check_evidence_legend())
     failures.extend(check_readme_pr_checklist())
     failures.extend(check_demo_path_map())
     if failures:
