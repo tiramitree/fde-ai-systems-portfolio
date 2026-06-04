@@ -1,4 +1,4 @@
-export function installTraceCopyButton(button, getTraceId) {
+export function installCopyButton(button, getText) {
   const idleText = button.textContent;
 
   async function copyText(text) {
@@ -27,19 +27,23 @@ export function installTraceCopyButton(button, getTraceId) {
 
   button.disabled = true;
   button.addEventListener("click", async () => {
-    const traceId = getTraceId();
-    if (!traceId) {
+    const text = getText();
+    if (!text) {
       return;
     }
     try {
-      await copyText(traceId);
+      await copyText(text);
       flash("Copied");
     } catch {
       flash("Copy failed");
     }
   });
 
-  return function setTraceId(traceId) {
-    button.disabled = !traceId;
+  return function setCopyValue(value) {
+    button.disabled = !value;
   };
+}
+
+export function installTraceCopyButton(button, getTraceId) {
+  return installCopyButton(button, getTraceId);
 }

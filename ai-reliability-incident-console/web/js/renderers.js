@@ -1,4 +1,5 @@
 import { byId, setOptions } from "./dom.js";
+import { traceHash } from "./traceLinks.js";
 
 export function populateUserSelect(users, selectedUser) {
   setOptions(byId("userSelect"), users, selectedUser, (user) => `${user.name} (${user.role})`);
@@ -82,18 +83,18 @@ export function renderAudit(events) {
       .join("") || '<div class="item">No audit events yet.</div>';
 }
 
-export function renderTraces(traces) {
+export function renderTraces(traces, selectedTraceId = "") {
   byId("traces").innerHTML =
     traces
       .map(
         (trace) => `
-          <div class="item">
+          <a class="item traceLink ${trace.id === selectedTraceId ? "selectedTrace" : ""}" href="${traceHash(trace.id)}" data-trace-id="${trace.id}">
             <strong>${trace.id}</strong>
             <div>${trace.incident_id} - ${trace.result.recommendation}</div>
             <span class="tag ${trace.result.release_blocked ? "danger" : "warn"}">
               ${trace.result.release_blocked ? "blocked" : "monitor"}
             </span>
-          </div>
+          </a>
         `,
       )
       .join("") || '<div class="item">No traces yet.</div>';

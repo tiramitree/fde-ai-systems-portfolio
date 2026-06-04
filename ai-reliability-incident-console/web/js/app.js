@@ -1,6 +1,7 @@
 import { api } from "./api.js";
 import { byId } from "./dom.js";
-import { installTraceCopyButton } from "./clipboard.js";
+import { installCopyButton, installTraceCopyButton } from "./clipboard.js";
+import { installTraceHashSync, selectedTraceId, setTraceHash, syncTraceSelection, traceUrl } from "./traceLinks.js";
 import {
   populateIncidentSelect,
   populateReleaseSelect,
@@ -24,6 +25,7 @@ const state = {
 };
 
 const setTraceCopyState = installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId);
+const setTraceLinkCopyState = installCopyButton(byId("copyTraceLink"), () => traceUrl(state.lastTraceId));
 
 async function loadUsers() {
   const data = await api("/api/users");
@@ -58,6 +60,8 @@ async function runTriage() {
   renderFailedEvals(data.failed_evals);
   state.lastTraceId = data.trace_id;
   setTraceCopyState(data.trace_id);
+  setTraceLinkCopyState(data.trace_id);
+  setTraceHash(data.trace_id);
   await refreshEvidence();
 }
 
@@ -68,7 +72,8 @@ async function loadAudit() {
 
 async function loadTraces() {
   const data = await api("/api/traces?limit=8");
-  renderTraces(data.traces);
+  renderTraces(data.traces, selectedTraceId());
+  syncTraceSelection();
 }
 
 async function runEval() {
@@ -108,6 +113,7 @@ byId("incidentSelect").addEventListener("change", (event) => {
 
 byId("runTriage").addEventListener("click", runTriage);
 byId("runEval").addEventListener("click", runEval);
+installTraceHashSync();
 
 document.querySelectorAll("[data-incident]").forEach((button) => {
   button.addEventListener("click", () => {

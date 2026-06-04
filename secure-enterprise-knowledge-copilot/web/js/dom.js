@@ -21,6 +21,9 @@ export function element(tagName, options = {}, children = []) {
   if (options.htmlFor) {
     node.htmlFor = options.htmlFor;
   }
+  if (options.href) {
+    node.href = options.href;
+  }
   if (options.dataset) {
     Object.entries(options.dataset).forEach(([key, value]) => {
       node.dataset[key] = value;

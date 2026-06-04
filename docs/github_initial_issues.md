@@ -11,6 +11,7 @@ The first public issue wave was created after the initial release and is now com
 - Add OpenTelemetry-compatible trace export
 - Add PostgreSQL and pgvector adapter design
 - Add replayable demo reset script
+- Add trace deep links in the demo UI
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -135,28 +136,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add trace deep links in the demo UI
+Add a local seed-data editor prototype
 ```
 
 Labels:
 
 ```text
-enhancement, frontend, observability
+enhancement, frontend, demo
 ```
 
 Body:
 
 ```text
-Make it easier to inspect a specific trace from the browser demo.
+Prototype a small local-only editor for fictional seed data so demo scenarios can be adjusted without editing JSON by hand.
 
 Acceptance criteria:
 
-- Trace IDs in responses can be copied or opened as a local deep link.
-- Existing trace-copy controls keep working.
+- Editor is clearly local-only and does not write secrets or private data.
+- JSON seed files remain the source of truth unless a deliberate save action is added.
+- Any generated draft data stays ignored unless intentionally committed.
 - Frontend modules remain local to each service web boundary.
-- Runtime UI contracts are updated if routes or anchors change.
 - python -B scripts/dev.py frontend still passes.
-- python -B scripts/dev.py ui-contracts still passes.
+- python -B scripts/dev.py scenario-data still passes.
 ```
 
 ## Issue 6

@@ -11,7 +11,8 @@ All demos keep the frontend deliberately simple: first-party HTML, CSS, and ES m
 - required DOM ids exist and are unique.
 - form controls used in the demo have labels.
 - quick-action buttons are wired through data attributes.
-- trace panels expose a copy trace ID command backed by a local clipboard module.
+- trace panels expose copy trace ID and copy trace link commands backed by a local clipboard module.
+- recent trace lists expose local `#trace=` links and selected-trace highlighting.
 - local ES module imports resolve inside the project `web/js` directory.
 - every `byId(...)` target used by JavaScript exists in the HTML.
 
@@ -23,4 +24,4 @@ python -B scripts/dev.py verify
 
 ## Technical Review Framing
 
-The frontend is intentionally boring in the best sense: it is a thin operational surface over separately testable backend APIs. That keeps the demo inspectable, avoids supply-chain noise, and makes the important product behavior visible: permissions, citations, abstention, traces, audit logs, evals, side-effect blocking, approvals, and rollout decisions.
+The frontend is intentionally boring in the best sense: it is a thin operational surface over separately testable backend APIs. That keeps the demo inspectable, avoids supply-chain noise, and makes the important product behavior visible: permissions, citations, abstention, traces, audit logs, evals, side-effect blocking, approvals, and rollout decisions. Trace links are local URL fragments, so they improve repeatable review without adding routing infrastructure or external state.

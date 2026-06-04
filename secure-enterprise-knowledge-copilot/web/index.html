@@ -54,16 +54,28 @@
             <div>
               <div class="sectionHeader">
                 <h2>Trace Summary</h2>
-                <button
-                  id="copyTraceId"
-                  class="secondaryButton"
-                  type="button"
-                  title="Copy trace ID"
-                  aria-label="Copy trace ID"
-                  disabled
-                >
-                  Copy ID
-                </button>
+                <div class="sectionActions">
+                  <button
+                    id="copyTraceId"
+                    class="secondaryButton"
+                    type="button"
+                    title="Copy trace ID"
+                    aria-label="Copy trace ID"
+                    disabled
+                  >
+                    Copy ID
+                  </button>
+                  <button
+                    id="copyTraceLink"
+                    class="secondaryButton"
+                    type="button"
+                    title="Copy trace link"
+                    aria-label="Copy trace link"
+                    disabled
+                  >
+                    Copy Link
+                  </button>
+                </div>
               </div>
               <pre id="trace" class="pre">No trace yet.</pre>
             </div>

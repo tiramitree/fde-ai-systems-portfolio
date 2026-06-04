@@ -1,6 +1,7 @@
 import { api } from "./api.js";
 import { byId } from "./dom.js";
-import { installTraceCopyButton } from "./clipboard.js";
+import { installCopyButton, installTraceCopyButton } from "./clipboard.js";
+import { installTraceHashSync, selectedTraceId, setTraceHash, syncTraceSelection, traceUrl } from "./traceLinks.js";
 import {
   populateUserSelect,
   renderAnswer,
@@ -17,6 +18,7 @@ const state = {
 };
 
 const setTraceCopyState = installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId);
+const setTraceLinkCopyState = installCopyButton(byId("copyTraceLink"), () => traceUrl(state.lastTraceId));
 
 async function loadUsers() {
   const data = await api("/api/users");
@@ -37,7 +39,8 @@ async function loadAudit() {
 
 async function loadTraces() {
   const data = await api("/api/traces?limit=8");
-  renderTraces(data.traces);
+  renderTraces(data.traces, selectedTraceId());
+  syncTraceSelection();
 }
 
 async function ask() {
@@ -53,6 +56,8 @@ async function ask() {
   renderAnswer(data);
   state.lastTraceId = data.trace_id;
   setTraceCopyState(data.trace_id);
+  setTraceLinkCopyState(data.trace_id);
+  setTraceHash(data.trace_id);
   await refreshObservability();
 }
 
@@ -89,6 +94,7 @@ byId("userSelect").addEventListener("change", async (event) => {
 
 byId("ask").addEventListener("click", ask);
 byId("runEval").addEventListener("click", runEval);
+installTraceHashSync();
 
 document.querySelectorAll("[data-question]").forEach((button) => {
   button.addEventListener("click", () => {
