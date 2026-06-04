@@ -193,6 +193,7 @@ Start here:
 - `docs/final_readiness_report.md`: compact launch, blocker, and release review status.
 - `docs/demo_report.md`: generated verification report.
 - `docs/demo_replay_artifact.md`: release-attachable replay evidence artifact instructions and review framing.
+- `docs/release_attachment_verification_examples.md`: examples for missing replay artifacts, stale attachments, wrong release tags, generated `out/` handling, and post-publish mismatch.
 - `docs/completion_checklist.md`: current status and remaining blockers.
 - `docs/final_completion_audit.md`: objective-by-objective audit.
 
@@ -258,6 +259,7 @@ Release and growth:
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
 - `docs/github_release_commands.md`: publication commands.
 - `docs/github_release_notes_v0.1.0.md`: release notes used by `scripts/configure_github_launch.py`.
+- `docs/release_attachment_verification_examples.md`: release attachment verification examples for replay artifacts, tag mismatch, generated `out/` handling, and post-publish drift.
 - `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.
 - `docs/pr_review_runbook.md`: concrete PR review command sequence and merge bar.
 - `docs/development_issue_solutions.md`: issue and solution log for recurring local, GitHub, PR, and publication problems.

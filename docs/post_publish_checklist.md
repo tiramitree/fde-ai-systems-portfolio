@@ -28,6 +28,7 @@ The post-publish check must prove:
 - the fresh clone script and documentation are published.
 - the API documentation script and documentation are published.
 - the demo replay artifact script and documentation are published.
+- the release attachment verification examples are published.
 - the container release hygiene script and documentation are published.
 - the visual asset manifest script, documentation, manifest, and desktop/mobile screenshot assets are published.
 - the launch asset hygiene script and documentation are published.
@@ -47,12 +48,13 @@ After the automated check passes:
 9. Pin the repository on the GitHub profile.
 10. Run `python -B scripts/dev.py fresh-clone` after the push is visible. Use `python -B scripts/dev.py fresh-clone-local` before pushing when validating local-only commits.
 11. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
-12. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
-13. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
-14. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
-15. Run `python -B scripts/dev.py visual-asset-diff` and `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
-16. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
-17. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
+12. Compare release attachments with `docs/release_attachment_verification_examples.md` before claiming the release page is current.
+13. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
+14. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
+15. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
+16. Run `python -B scripts/dev.py visual-asset-diff` and `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
+17. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
+18. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
 
 ## Optional Backlog Seeding
 
