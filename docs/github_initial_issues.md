@@ -17,6 +17,7 @@ The first public issue wave was created after the initial release and is now com
 - Add copyable scenario-draft import/export snippets for local demos
 - Add a compact diff view for browser-local scenario drafts
 - Add a reduced-motion and focus-visible accessibility pass
+- Add browser-local light/dark theme controls to all demo UIs
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -141,7 +142,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a small dark-mode toggle to all demo UIs
+Add high-contrast screenshot checks for visual assets
 ```
 
 Labels:
@@ -153,18 +154,18 @@ enhancement, frontend, demo
 Body:
 
 ```text
-Add an optional dark-mode theme while preserving the default restrained product UI.
+Add a deterministic check that catches low-contrast visual asset refreshes before screenshots are published.
 
 Acceptance criteria:
 
-- Theme tokens cover all three demos without duplicating large CSS blocks.
-- The toggle persists only in browser-local state and does not add backend mutation.
-- Text contrast remains readable in both themes.
-- Preserve the existing restrained product UI style.
+- The check runs against the existing README screenshot assets or their source pages.
+- It reports the asset, sampled region, and approximate contrast problem.
+- It does not require paid APIs or remote frontend dependencies.
+- It preserves the existing restrained product UI style.
 - Do not introduce remote frontend dependencies.
-- Frontend modules remain local to each service web boundary.
-- python -B scripts/dev.py frontend still passes.
-- python -B scripts/dev.py ui-contracts still passes.
+- Visual asset manifest verification still passes after refresh.
+- python -B scripts/dev.py visual-assets still passes.
+- python -B scripts/dev.py quality still passes.
 ```
 
 ## Issue 6

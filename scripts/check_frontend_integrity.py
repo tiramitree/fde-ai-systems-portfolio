@@ -26,6 +26,7 @@ PROJECTS = [
         title="Secure Enterprise Knowledge Copilot",
         required_ids={
             "health",
+            "themeToggle",
             "userSelect",
             "userMeta",
             "documents",
@@ -58,6 +59,7 @@ PROJECTS = [
         title="Regulated Customer Operations Agent",
         required_ids={
             "health",
+            "themeToggle",
             "userSelect",
             "caseSelect",
             "caseSummary",
@@ -90,6 +92,7 @@ PROJECTS = [
         title="AI Reliability Incident Console",
         required_ids={
             "health",
+            "themeToggle",
             "userSelect",
             "releaseSelect",
             "releaseSummary",
@@ -240,7 +243,16 @@ def api_paths(js_path: Path) -> set[str]:
 def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     failures: list[str] = []
     js_dir = project.root / "web" / "js"
-    expected_modules = {"api.js", "app.js", "clipboard.js", "dom.js", "renderers.js", "scenarioEditor.js", "traceLinks.js"}
+    expected_modules = {
+        "api.js",
+        "app.js",
+        "clipboard.js",
+        "dom.js",
+        "renderers.js",
+        "scenarioEditor.js",
+        "theme.js",
+        "traceLinks.js",
+    }
     present_modules = {path.name for path in js_dir.glob("*.js")}
     missing_modules = sorted(expected_modules - present_modules)
     if missing_modules:
@@ -268,6 +280,8 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     required_app_markers = [
         'import { installCopyButton, installTraceCopyButton } from "./clipboard.js";',
         'import { installScenarioEditor } from "./scenarioEditor.js";',
+        'import { installThemeToggle } from "./theme.js";',
+        'installThemeToggle(byId("themeToggle"))',
         "installTraceKeyboardNavigation",
         'lastTraceId: ""',
         'loadScenario: () => api("/api/scenario")',
@@ -341,6 +355,19 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     for marker in required_scenario_markers:
         if marker not in scenario_text and marker not in app_text:
             failures.append(f"{project.name}: scenarioEditor.js missing marker: {marker}")
+
+    theme_text = (js_dir / "theme.js").read_text(encoding="utf-8")
+    required_theme_markers = [
+        "export function installThemeToggle",
+        "localStorage.getItem",
+        "localStorage.setItem",
+        "prefers-color-scheme: dark",
+        "document.documentElement.dataset.theme",
+        "aria-checked",
+    ]
+    for marker in required_theme_markers:
+        if marker not in theme_text:
+            failures.append(f"{project.name}: theme.js missing marker: {marker}")
     return failures
 
 
@@ -358,9 +385,13 @@ def check_project(project: FrontendProject) -> list[str]:
         ".sectionActions",
         ".secondaryButton",
         ".secondaryButton:disabled",
+        ".topbarActions",
+        ".themeToggle",
+        ':root[data-theme="dark"]',
         "button:focus-visible",
         "select:focus-visible",
         "textarea:focus-visible",
+        "input:focus-visible",
         ".traceLink",
         ".traceLink:focus-visible",
         "prefers-reduced-motion",
@@ -391,7 +422,7 @@ def main() -> int:
 
     print(
         "Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, "
-        "trace-copy controls, keyboard trace navigation, copyable scenario drafts, local diffs, accessibility CSS, and quick actions are intact."
+        "trace-copy controls, keyboard trace navigation, copyable scenario drafts, local diffs, accessibility CSS, theme controls, and quick actions are intact."
     )
     return 0
 

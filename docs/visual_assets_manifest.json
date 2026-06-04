@@ -17,15 +17,15 @@
         1400,
         900
       ],
-      "sha256": "b2cb875ddbbc4dbf1bc814c8ee609c6a5767aa67416da3d4cb7a367bea0f3d87",
+      "sha256": "f0fc147835c313439ab7d0691cd897ec3bd3bb8102c541da9ccba636c13d03c0",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "74a89f99d801188d7ffff1e408c5bc2e570f5cb148128e0bfe907679ed8a1d2b"
+          "sha256": "4c93f58f75fb5ef41af78f965453c0af24b4e4d20068aa2dc4958f9dddaa721b"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "c1105101040d516f7ed5516f25274f85051506a44b845a33fb3674c3d0a4b17d"
+          "sha256": "5ea56183ce6bf864047e8cd258ebf0fb1ef77650b6b6650d4c024150455556f9"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -33,7 +33,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "08b416c7501681a6ed63d91c768ec3e74761ba63d31018bad1671e65f920c232"
+          "sha256": "fd8470f82f8594acf4b9bbbb62c346e747c113127fda609021c7de176669e945"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -52,6 +52,10 @@
           "sha256": "ea5c5917985e877b81647547e28bfc8642cb62247e87003cb2771cbc42c4492f"
         },
         {
+          "path": "secure-enterprise-knowledge-copilot/web/js/theme.js",
+          "sha256": "e3289016f41a5a7cfa4a4871fcf75061c5790ef0ff23b64154faf1a56844fc2c"
+        },
+        {
           "path": "secure-enterprise-knowledge-copilot/web/js/traceLinks.js",
           "sha256": "452c297a4909cc1bd632ab81eb0f13994448f5bfb91be344dd98b8853f8c4373"
         }
@@ -64,15 +68,15 @@
         1400,
         900
       ],
-      "sha256": "0f83ddc7ca4955ffad2c9b9875c14751d210bf5fb8daf7b2952845678be9f4fc",
+      "sha256": "85977d836b8675a60a54bcf9f49ef203e8d48d858021b06cb8ed422d6159fe0c",
       "source_files": [
         {
           "path": "regulated-customer-operations-agent/web/index.html",
-          "sha256": "9af9b9594f66ec40d70963b4095bfa9eca32d16fd8b5cd0775be8e07fcd8f728"
+          "sha256": "088b8010342bdfbbf6d298378a8f383b62e89f82ec0d3c600dbd66433b2311fe"
         },
         {
           "path": "regulated-customer-operations-agent/web/styles.css",
-          "sha256": "abb727661cc06d27884b1182bb9063cfca0551e77a016403c9820f8484bbd36a"
+          "sha256": "72ff5608dec9a8cab8a69c748e2f532e2951f710b8936678c890d878a6614930"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/api.js",
@@ -80,7 +84,7 @@
         },
         {
           "path": "regulated-customer-operations-agent/web/js/app.js",
-          "sha256": "af13e5a0e91ca4a2f3c74235d5d42a10fab195f04111ebc8fd00263f69f411bc"
+          "sha256": "3387775a34a5c532c3a122fe3e9bab4c5168f081052fde5623d16ae23cbe88b8"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/clipboard.js",
@@ -99,6 +103,10 @@
           "sha256": "ea5c5917985e877b81647547e28bfc8642cb62247e87003cb2771cbc42c4492f"
         },
         {
+          "path": "regulated-customer-operations-agent/web/js/theme.js",
+          "sha256": "639ac8edbbe7c203e1ff2cb62c86dcf56d0ff81f43188f546714641d537d7aa1"
+        },
+        {
           "path": "regulated-customer-operations-agent/web/js/traceLinks.js",
           "sha256": "452c297a4909cc1bd632ab81eb0f13994448f5bfb91be344dd98b8853f8c4373"
         }
@@ -111,15 +119,15 @@
         1400,
         900
       ],
-      "sha256": "bbd0fd95ac9c37cc1df9cf3fcf548daaf0575761df2f88ebd1da98a76b243e54",
+      "sha256": "5ebdb958f6ec45c3546afc062bbe3c33d877116e6c008f86d9e2fa1d2e771110",
       "source_files": [
         {
           "path": "ai-reliability-incident-console/web/index.html",
-          "sha256": "1349400e8917bef179865c36f22ab5bc87ba2bc874fced08fcb85537aeb1657a"
+          "sha256": "e557038f77bff0540b55c6a12f2ee0286a360716a555283f17d9cdfc1d3dfe04"
         },
         {
           "path": "ai-reliability-incident-console/web/styles.css",
-          "sha256": "01f31fe1c707a1d9afdcca5bf4cae7ab5cbd8ed9262752a7eae463a333eb949a"
+          "sha256": "974a21d5340a87bd85e51fda5a671b63131ec25dfbb17c45ef36eefc075ecdf3"
         },
         {
           "path": "ai-reliability-incident-console/web/js/api.js",
@@ -127,7 +135,7 @@
         },
         {
           "path": "ai-reliability-incident-console/web/js/app.js",
-          "sha256": "d8133b40a0f9952439f2e31d22192e2ec9d7a607e827f428ddff7a286af21586"
+          "sha256": "a940f9c054871154ba1be9b5bc070ad0a30585486a46daf39190d116b5f82bf4"
         },
         {
           "path": "ai-reliability-incident-console/web/js/clipboard.js",
@@ -144,6 +152,10 @@
         {
           "path": "ai-reliability-incident-console/web/js/scenarioEditor.js",
           "sha256": "ea5c5917985e877b81647547e28bfc8642cb62247e87003cb2771cbc42c4492f"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/theme.js",
+          "sha256": "a9c87873538b90d67be14d5be6757ef55f45474b1cd9881d78541d51b6d1c768"
         },
         {
           "path": "ai-reliability-incident-console/web/js/traceLinks.js",

@@ -74,7 +74,7 @@ Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 Project 3 eval: 6/6 passed, unsafe release approval failures 0
 Smoke tests: 13/13 passed
 API contract checks: 55/55 passed
-Runtime UI contracts: 240/240 passed
+Runtime UI contracts: 285/285 passed
 Observability integrity: 42/42 passed
 Threat model: 12/12 mapped
 PR review policy: passed
@@ -106,6 +106,7 @@ Confirmed:
 - keyboard-friendly trace deep links, copy-link controls, and refreshed README screenshots are tracked and published
 - copyable and diffable browser-local scenario drafts and read-only scenario snapshot endpoints are tracked and published
 - focus-visible and reduced-motion CSS markers are tracked and verified across all browser demos
+- browser-local light/dark theme controls are tracked and verified across all browser demos
 - launch copy and star-growth materials published with a deterministic anti-hype gate
 - remote `main` exists
 - local tracked worktree clean

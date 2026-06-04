@@ -7,9 +7,27 @@
   --line: #d9dee7;
   --accent: #136f63;
   --accent-2: #1f4f82;
+  --accent-soft: #eaf3f1;
+  --accent-text: #164c43;
   --danger: #9f2b2b;
   --warn: #8a5a00;
   --focus-ring: rgba(19, 111, 99, 0.24);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101418;
+  --panel: #171d24;
+  --text: #edf2f7;
+  --muted: #a8b3bf;
+  --line: #34414f;
+  --accent: #5ab8a8;
+  --accent-2: #8bbde8;
+  --accent-soft: #1f3634;
+  --accent-text: #bdf4ea;
+  --danger: #ff9696;
+  --warn: #f0c36b;
+  --focus-ring: rgba(90, 184, 168, 0.28);
 }
 
 * {
@@ -35,6 +53,14 @@ body {
   justify-content: space-between;
   gap: 16px;
   padding: 16px 0;
+}
+
+.topbarActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 h1,
@@ -96,6 +122,47 @@ label {
   color: var(--muted);
 }
 
+.themeToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  min-height: 36px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.themeToggle input {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  margin: 0;
+  cursor: pointer;
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #e6ebf1;
+}
+
+.themeToggle input::before {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border-radius: 999px;
+  background: var(--panel);
+  transition: transform 0.16s ease;
+}
+
+.themeToggle input:checked {
+  background: var(--accent);
+}
+
+.themeToggle input:checked::before {
+  transform: translateX(18px);
+}
+
 select,
 textarea,
 button {
@@ -138,6 +205,7 @@ button:disabled {
 
 select:focus-visible,
 textarea:focus-visible,
+input:focus-visible,
 button:focus-visible,
 .traceLink:focus-visible {
   border-color: var(--accent);
@@ -155,8 +223,8 @@ button:focus-visible,
 .quick button {
   margin: 0;
   padding: 8px;
-  background: #eaf3f1;
-  color: #164c43;
+  background: var(--accent-soft);
+  color: var(--accent-text);
   font-size: 12px;
 }
 
@@ -373,6 +441,55 @@ button:focus-visible,
 
 .scenarioStatus[data-state="error"] {
   color: var(--danger);
+}
+
+:root[data-theme="dark"] h2 {
+  color: #d8e0ea;
+}
+
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background: #111820;
+}
+
+:root[data-theme="dark"] .themeToggle input {
+  background: #25303c;
+}
+
+:root[data-theme="dark"] .themeToggle input:checked {
+  background: var(--accent);
+}
+
+:root[data-theme="dark"] .userMeta,
+:root[data-theme="dark"] .box,
+:root[data-theme="dark"] .item,
+:root[data-theme="dark"] .answer,
+:root[data-theme="dark"] .pre {
+  background: #1b232c;
+}
+
+:root[data-theme="dark"] .secondaryButton,
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .scenarioDiffState {
+  background: #263241;
+  color: #d2dbe6;
+}
+
+:root[data-theme="dark"] .tag.warn,
+:root[data-theme="dark"] .scenarioDiffState.changed {
+  background: #443719;
+  color: var(--warn);
+}
+
+:root[data-theme="dark"] .tag.danger,
+:root[data-theme="dark"] .scenarioDiffState.removed {
+  background: #482828;
+  color: var(--danger);
+}
+
+:root[data-theme="dark"] .scenarioDiffState.added {
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 
 @media (max-width: 1100px) {

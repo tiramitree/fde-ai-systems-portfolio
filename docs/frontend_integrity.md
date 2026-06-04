@@ -15,6 +15,7 @@ All demos keep the frontend deliberately simple: first-party HTML, CSS, and ES m
 - recent trace lists expose local `#trace=` links, selected-trace highlighting, visible focus styling, and keyboard navigation.
 - scenario draft panels load read-only seed snapshots, copy/export local JSON drafts, show compact local diffs, and store edited drafts in browser `localStorage`.
 - shared accessibility CSS keeps focus-visible rings for buttons, selects, textareas, and trace links, plus a reduced-motion rule for motion-sensitive users.
+- browser-local light/dark theme controls are backed by local ES modules and tolerate disabled browser storage.
 - local ES module imports resolve inside the project `web/js` directory.
 - every `byId(...)` target used by JavaScript exists in the HTML.
 
@@ -26,4 +27,4 @@ python -B scripts/dev.py verify
 
 ## Technical Review Framing
 
-The frontend is intentionally boring in the best sense: it is a thin operational surface over separately testable backend APIs. That keeps the demo inspectable, avoids supply-chain noise, and makes the important product behavior visible: permissions, citations, abstention, traces, audit logs, evals, side-effect blocking, approvals, rollout decisions, and fictional scenario data. Trace links are local URL fragments with keyboard-friendly navigation, scenario drafts are copyable browser-local storage with browser-computed diffs, and focus/reduced-motion rules keep the demos reviewable without adding routing infrastructure or server-side mutation.
+The frontend is intentionally boring in the best sense: it is a thin operational surface over separately testable backend APIs. That keeps the demo inspectable, avoids supply-chain noise, and makes the important product behavior visible: permissions, citations, abstention, traces, audit logs, evals, side-effect blocking, approvals, rollout decisions, and fictional scenario data. Trace links are local URL fragments with keyboard-friendly navigation, scenario drafts are copyable browser-local storage with browser-computed diffs, and focus/reduced-motion/theme controls keep the demos reviewable without adding routing infrastructure or server-side mutation.

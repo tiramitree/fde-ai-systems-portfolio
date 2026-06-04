@@ -10,6 +10,7 @@ import {
   syncTraceSelection,
   traceUrl,
 } from "./traceLinks.js";
+import { installThemeToggle } from "./theme.js";
 import {
   populateIncidentSelect,
   populateReleaseSelect,
@@ -45,6 +46,7 @@ installScenarioEditor({
   clearButton: byId("clearScenarioDraft"),
   copyButton: byId("copyScenarioDraft"),
 });
+installThemeToggle(byId("themeToggle"));
 
 async function loadUsers() {
   const data = await api("/api/users");

@@ -4,11 +4,11 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 
 ## Good First Issues
 
-1. Add a small dark-mode toggle to all demo UIs.
-2. Add a narrated demo video using the walkthrough GIF as the storyboard.
-3. Add compact per-project architecture cards to the README.
-4. Add shareable demo-state reset presets.
-5. Add high-contrast screenshot checks for future visual asset refreshes.
+1. Add a narrated demo video using the walkthrough GIF as the storyboard.
+2. Add compact per-project architecture cards to the README.
+3. Add shareable demo-state reset presets.
+4. Add high-contrast screenshot checks for future visual asset refreshes.
+5. Add mobile viewport screenshots to the visual asset manifest.
 
 ## Intermediate Issues
 
@@ -43,3 +43,4 @@ Contributions should preserve these invariants:
 - Add copyable scenario-draft import/export snippets for local demos.
 - Add a compact diff view for browser-local scenario drafts.
 - Add a reduced-motion and focus-visible accessibility pass for all demo UIs.
+- Add browser-local light/dark theme controls to all demo UIs.
