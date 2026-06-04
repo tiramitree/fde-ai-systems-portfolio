@@ -97,6 +97,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact GitHub repository metadata troubleshooting examples
 - Add compact GitHub API rate-limit troubleshooting examples
 - Add compact GitHub latest release troubleshooting examples
+- Add compact profile pin verification examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -221,7 +222,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact profile pin verification examples
+Add compact authenticated maintenance troubleshooting examples
 ```
 
 Labels:
@@ -233,13 +234,13 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add compact examples for verifying GitHub profile pin setup without confusing repository readiness, social preview setup, and account-profile visibility.
+Add compact examples for authenticated GitHub maintenance without confusing dry-run plans, account permissions, and remote state changes.
 
 Acceptance criteria:
 
-- Add docs/profile_pin_verification_examples.md with examples for missing profile pin, wrong pinned repository, stale profile cache, social-preview confusion, and account visibility.
-- Reference docs/github_repository_settings.md, docs/social_preview_verification_examples.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
-- Keep repository readiness, social preview setup, and profile pin setup separate; do not claim the profile pin is configured until account-profile evidence confirms it.
+- Add docs/github_authenticated_maintenance_troubleshooting_examples.md with examples for missing gh auth, wrong account or repository, dry-run versus apply, branch protection or release side effects, and PR maintenance safeguards.
+- Reference docs/github_repository_settings.md, docs/post_publish_checklist.md, docs/post_publish_warning_examples.md, docs/pr_review_runbook.md, and docs/maintainer_review_policy.md.
+- Keep dry-run planning, authenticated account permissions, repository metadata changes, and PR maintenance separate; do not claim remote maintenance applied until authenticated evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py github-readiness still has no hard failures when the GitHub API is reachable.
 - python -B scripts/dev.py launch-assets still passes.

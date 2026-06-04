@@ -35,6 +35,7 @@ The post-publish check must prove:
 - the GitHub latest release troubleshooting examples are published.
 - the branch protection verification examples are published.
 - the social preview verification examples are published.
+- the profile pin verification examples are published.
 - the post-publish warning examples are published.
 - the GitHub Actions warning examples are published.
 - the container release hygiene script and documentation are published.
@@ -54,7 +55,7 @@ After the automated check passes:
 7. Compare branch protection state with `docs/branch_protection_verification_examples.md` before claiming the remote policy is active.
 8. Add repository social preview using `docs/assets/github-preview.png`, then compare the result with `docs/social_preview_verification_examples.md` before claiming social preview setup.
 9. Create a GitHub release page for `v0.1.0`.
-10. Pin the repository on the GitHub profile.
+10. Pin the repository on the GitHub profile, then compare the visible account-profile state with `docs/profile_pin_verification_examples.md` before claiming profile pin setup.
 11. Run `python -B scripts/dev.py fresh-clone` after the push is visible. Use `python -B scripts/dev.py fresh-clone-local` before pushing when validating local-only commits.
 12. Compare warning rows with `docs/post_publish_warning_examples.md` before claiming published evidence.
 13. Compare Actions warnings with `docs/github_actions_warning_examples.md` before claiming the remote workflow is green.
