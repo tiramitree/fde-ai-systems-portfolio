@@ -41,6 +41,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README reviewer handoff checklist
 - Add compact per-project architecture cards to the README
 - Add shareable demo-state reset presets
+- Add a compact README demo recording checklist pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -165,26 +166,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README demo recording checklist pointer
+Add a compact README launch-channel checklist pointer
 ```
 
 Labels:
 
 ```text
-documentation, demo, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells maintainers where the demo recording checklist lives and which verification commands should run before recording.
+Add a compact README pointer that tells maintainers where launch-channel materials live and which checks should run before sharing public launch posts.
 
 Acceptance criteria:
 
-- Link to Demo Recording Checklist, Demo Path Map, Demo State Presets, Visual Asset Hygiene, and Demo Replay Artifact.
-- Cover pre-recording checks: `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py visual-assets`, and `python -B scripts/dev.py replay-artifact`.
+- Link to Launch Copy Pack, Star Growth Plan, Launch Assets Hygiene, GitHub Launch Plan, and Published Repository Status.
+- Cover pre-sharing checks: `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py assets`, `python -B scripts/dev.py fresh-clone`, and `python -B scripts/post_publish_check.py`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Avoid claiming Docker runtime, OpenAI live mode, or GitHub account-level setup unless those checks or manual actions are complete.
+- Avoid claiming Docker runtime, OpenAI live mode, branch protection, release pages, repo topics, profile pins, or social preview setup unless those checks or manual actions are complete.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.

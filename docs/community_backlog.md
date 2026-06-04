@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add a compact README demo recording checklist pointer for maintainers.
-3. Add a compact README launch-channel checklist pointer for maintainers.
-4. Add a compact README contribution safety summary pointer.
-5. Add a compact README release artifact attachment pointer.
+2. Add a compact README launch-channel checklist pointer for maintainers.
+3. Add a compact README contribution safety summary pointer.
+4. Add a compact README release artifact attachment pointer.
+5. Add a compact README optional-environment evidence pointer.
 
 ## Intermediate Issues
 
@@ -67,3 +67,4 @@ Contributions should preserve these invariants:
 - Add a compact README reviewer handoff checklist for local, remote, visual, and GitHub account-level checks.
 - Add compact per-project architecture cards to the README.
 - Add shareable demo-state reset presets.
+- Add a compact README demo recording checklist pointer for maintainers.

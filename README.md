@@ -220,6 +220,10 @@ Demo-state reset presets:
 
 `docs/demo_state_presets.json` stores the shareable local reset presets for the canonical Project 1 finance-access path, Project 2 `case-1001` approval path, and Project 3 unsafe canary release path. Run `python -B scripts/dev.py demo-presets` to verify the preset IDs, reset commands, seed references, eval references, and POST payloads still match the fictional seed data before recording or sharing.
 
+Demo recording readiness:
+
+Use the [Demo Recording Checklist](docs/demo_recording_checklist.md) with the [Demo Path Map](#demo-path-map), [Demo State Presets](docs/demo_state_presets.json), [Visual Asset Hygiene](docs/visual_asset_hygiene.md), and [Demo Replay Artifact](docs/demo_replay_artifact.md). Before recording, run `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py visual-assets`, and `python -B scripts/dev.py replay-artifact`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
