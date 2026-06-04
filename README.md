@@ -288,6 +288,10 @@ Threat model readiness:
 
 Use [Threat Model](docs/threat_model.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), the [Evidence Legend](#evidence-legend), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Evidence Matrix](#evidence-matrix) before changing security-sensitive behavior. Information disclosure, prompt injection, unsafe side effects, public PR abuse, dependency drift, optional model gateway risk, observability gaps, and UI route surprises must map to deterministic owners and evidence commands; run `python -B scripts/dev.py threat-model`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py evals`, and `python -B scripts/dev.py quality`.
 
+Workflow security readiness:
+
+Use [Workflow Security](docs/workflow_security.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), and the GitHub Actions row in the [Evidence Matrix](#evidence-matrix) before changing GitHub Actions or automation paths. Public PR workflows must preserve read-only tokens, no secrets, safe triggers, hardened checkout, approved actions, and no CI push or GitHub authentication path; run `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
