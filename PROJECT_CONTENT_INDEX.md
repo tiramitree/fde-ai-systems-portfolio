@@ -246,6 +246,7 @@ Release and growth:
 - `docs/reviewer_perspective_checklist.md`: checks from user and reviewer perspectives.
 - `docs/pr_review_security.md`: PR review policy gate and malicious-contribution review framing.
 - `docs/docs_only_pr_review_examples.md`: docs-only PR review examples for useful docs, low-signal docs, unsafe docs, claim checks, link checks, generated artifact checks, and issue-pack drift.
+- `docs/docs_only_review_comment_examples.md`: maintainer comment templates for approving, requesting changes, closing unsafe changes, or closing low-signal docs-only PRs.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_branch_protection.json`: branch-protection payload for `main`.

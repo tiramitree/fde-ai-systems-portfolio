@@ -647,6 +647,7 @@ repository/
 - [API Error Examples](docs/api_error_examples.md)
 - [PR Review Security](docs/pr_review_security.md)
 - [Docs-Only PR Review Examples](docs/docs_only_pr_review_examples.md)
+- [Docs-Only Review Comment Examples](docs/docs_only_review_comment_examples.md)
 - [Pull Request Review Runbook](docs/pr_review_runbook.md)
 - [GitHub Release Commands](docs/github_release_commands.md)
 - [Post-Publish Checklist](docs/post_publish_checklist.md)
