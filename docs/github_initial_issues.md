@@ -46,6 +46,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README contribution safety summary pointer
 - Add a compact README release artifact attachment pointer
 - Add a compact README optional-environment evidence pointer
+- Add a compact README connector roadmap pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -170,28 +171,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README connector roadmap pointer
+Add a compact README eval regression report pointer
 ```
 
 Labels:
 
 ```text
-documentation, production-upgrade, good first issue
+documentation, eval, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where connector roadmap materials live and which boundaries must be preserved before adding external-system stubs.
+Add a compact README pointer that tells contributors where eval reporting materials live and which commands should run before changing regression evidence.
 
 Acceptance criteria:
 
-- Link to Production Upgrade Notes, Project Case Notes, Model Gateway Safety, Architecture Boundaries, and the connector-stub row in the Contributor Route Map.
-- Cover connector checks: `python -B scripts/dev.py architecture`, `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
+- Link to Demo Report, Demo Replay Artifact, System Evidence Matrix, Scenario Data Integrity, and the eval row in the Evidence Legend.
+- Cover eval checks: `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that connector stubs must not execute external side effects without approval, idempotency, audit, and trace boundaries.
+- Make clear that unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py architecture still passes.
+- python -B scripts/dev.py scenario-data still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
