@@ -51,6 +51,7 @@ COMMANDS = {
     "ui-contracts": ["scripts/check_runtime_ui_contracts.py"],
     "verify": ["scripts/ci_quality_gate.py"],
     "visual-assets": ["scripts/check_visual_asset_manifest.py"],
+    "visual-asset-diff": ["scripts/summarize_visual_asset_diff.py"],
     "workflow-security": ["scripts/check_workflow_security.py"],
 }
 
@@ -67,7 +68,8 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/workflow-security: run individual gates; "
+            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/visual-asset-diff/workflow-security: run individual gates; "
+            "visual-asset-diff: summarize changed visual assets without printing binary image contents; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
     )

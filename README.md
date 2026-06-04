@@ -104,6 +104,7 @@ python -B scripts/dev.py safety
 python -B scripts/dev.py threat-model
 python -B scripts/dev.py ui-contracts
 python -B scripts/dev.py visual-assets
+python -B scripts/dev.py visual-asset-diff
 python -B scripts/dev.py workflow-security
 python -B scripts/dev.py quality
 python -B scripts/post_publish_check.py

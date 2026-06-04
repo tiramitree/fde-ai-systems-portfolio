@@ -7,8 +7,8 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
 2. Add compact per-project architecture cards to the README.
 3. Add shareable demo-state reset presets.
-4. Add a compact visual asset diff summary for screenshot refresh pull requests.
-5. Add visual asset refresh troubleshooting notes for browser capture failures.
+4. Add visual asset refresh troubleshooting notes for browser capture failures.
+5. Add per-asset captions for the desktop and mobile screenshot gallery.
 
 ## Intermediate Issues
 
@@ -46,3 +46,4 @@ Contributions should preserve these invariants:
 - Add browser-local light/dark theme controls to all demo UIs.
 - Add high-contrast screenshot checks for future visual asset refreshes.
 - Add mobile viewport screenshots to the visual asset manifest.
+- Add compact visual asset diff summaries for screenshot refreshes.

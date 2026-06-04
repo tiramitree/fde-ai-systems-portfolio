@@ -20,6 +20,7 @@ STATIC_COMMANDS = [
     "safety",
     "assets",
     "visual-assets",
+    "visual-asset-diff",
     "container-release",
     "dependency-surface",
     "governance",

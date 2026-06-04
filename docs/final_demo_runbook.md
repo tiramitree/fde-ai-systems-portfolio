@@ -94,6 +94,7 @@ python -B scripts/dev.py docker-runtime
 Verify desktop and mobile demo screenshots still match the recorded frontend source hashes:
 
 ```bash
+python -B scripts/dev.py visual-asset-diff
 python -B scripts/dev.py visual-assets
 ```
 

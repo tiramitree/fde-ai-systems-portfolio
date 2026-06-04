@@ -20,6 +20,7 @@ The first public issue wave was created after the initial release and is now com
 - Add browser-local light/dark theme controls to all demo UIs
 - Add high-contrast screenshot checks for visual assets
 - Add mobile viewport screenshots to the visual asset manifest
+- Add compact visual asset diff summaries for screenshot refreshes
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -144,27 +145,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact visual asset diff summaries for screenshot refreshes
+Add visual asset refresh troubleshooting notes
 ```
 
 Labels:
 
 ```text
-enhancement, frontend, demo, automation
+documentation, frontend, demo
 ```
 
 Body:
 
 ```text
-Add a compact visual asset diff summary for screenshot refresh pull requests.
+Add troubleshooting notes for browser-based visual asset refresh failures.
 
 Acceptance criteria:
 
-- Summarize changed screenshot paths, dimensions, hashes, and contrast sample status after a refresh.
-- Cover both desktop and mobile visual assets.
-- Keep generated binary image contents out of logs; report only paths, hashes, dimensions, and ratios.
-- Document the summary workflow in docs/visual_asset_hygiene.md.
+- Document what to check when Chrome, Chromium, or Edge is not found.
+- Explain how to set FDE_BROWSER_BIN without committing local paths.
+- Include guidance for screenshot size mismatch, tiny screenshot files, and contrast sample failures.
+- Reference both desktop and mobile visual assets.
 - Do not introduce paid APIs or remote frontend dependencies.
+- python -B scripts/dev.py visual-asset-diff still passes.
 - python -B scripts/dev.py visual-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
