@@ -48,6 +48,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README optional-environment evidence pointer
 - Add a compact README connector roadmap pointer
 - Add a compact README eval regression report pointer
+- Add a compact README storage adapter evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -172,26 +173,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README storage adapter evidence pointer
+Add a compact README red-team eval expansion pointer
 ```
 
 Labels:
 
 ```text
-documentation, production-upgrade, good first issue
+documentation, security, eval, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where storage-adapter materials live and which boundaries must be preserved before adding persistent storage prototypes.
+Add a compact README pointer that tells contributors where red-team eval expansion materials live and which safety invariants must remain unchanged when adding attack cases.
 
 Acceptance criteria:
 
-- Link to PostgreSQL And pgvector Adapter Design, Production Upgrade Notes, Scenario Data Integrity, Architecture Boundaries, and the storage-related row in the Evidence Matrix.
-- Cover storage checks: `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
+- Link to Threat Model, System Evidence Matrix, Scenario Data Integrity, Technical Review Playbook, and the eval row in the Evidence Legend.
+- Cover red-team checks: `python -B scripts/dev.py threat-model`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py evals`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that permission checks, eval-state isolation, trace/audit compatibility, and local JSON default behavior must be preserved.
+- Make clear that prompt-injection, unauthorized-access, approval-bypass, and unsafe-release cases must keep unsafe failure counts at zero.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py scenario-data still passes.
 - python -B scripts/dev.py quality still passes.
