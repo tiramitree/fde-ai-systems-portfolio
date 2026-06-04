@@ -11,6 +11,7 @@ from .storage import (
     list_traces,
     list_users,
     list_visible_documents,
+    load_scenario_snapshot,
 )
 
 
@@ -42,6 +43,10 @@ class CopilotApi:
                 return {"events": list_audit_events(conn, limit=self._int(query, "limit", 50))}
             if path == "/api/eval/latest":
                 return {"eval_run": latest_eval_run(conn)}
+            if path == "/api/scenario":
+                snapshot = load_scenario_snapshot()
+                snapshot["app"] = self.app_name
+                return {"scenario": snapshot}
         raise ApiError(404, f"Unknown endpoint: {path}")
 
     def post(self, path: str, body: dict) -> dict:

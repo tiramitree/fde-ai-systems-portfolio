@@ -12,6 +12,7 @@ The first public issue wave was created after the initial release and is now com
 - Add PostgreSQL and pgvector adapter design
 - Add replayable demo reset script
 - Add trace deep links in the demo UI
+- Add a local seed-data editor prototype
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -136,7 +137,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a local seed-data editor prototype
+Add keyboard-friendly trace navigation for recent trace lists
 ```
 
 Labels:
@@ -148,16 +149,16 @@ enhancement, frontend, demo
 Body:
 
 ```text
-Prototype a small local-only editor for fictional seed data so demo scenarios can be adjusted without editing JSON by hand.
+Improve keyboard navigation for recent trace lists across all browser demos.
 
 Acceptance criteria:
 
-- Editor is clearly local-only and does not write secrets or private data.
-- JSON seed files remain the source of truth unless a deliberate save action is added.
-- Any generated draft data stays ignored unless intentionally committed.
+- Recent trace links can be reached predictably with keyboard navigation.
+- Selected trace state is visible without relying only on hover.
+- Focus styling is visible and consistent across all three demos.
 - Frontend modules remain local to each service web boundary.
 - python -B scripts/dev.py frontend still passes.
-- python -B scripts/dev.py scenario-data still passes.
+- python -B scripts/dev.py ui-contracts still passes.
 ```
 
 ## Issue 6

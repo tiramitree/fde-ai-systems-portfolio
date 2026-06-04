@@ -14,6 +14,7 @@ from .storage import (
     list_cases,
     list_traces,
     list_users,
+    load_scenario_snapshot,
 )
 from .tools import approve_action
 
@@ -44,6 +45,10 @@ class OpsAgentApi:
                 return {"events": list_audit(store, self._int(query, "limit", 50))}
             if path == "/api/eval/latest":
                 return {"eval_run": latest_eval_run(store)}
+            if path == "/api/scenario":
+                snapshot = load_scenario_snapshot()
+                snapshot["app"] = self.app_name
+                return {"scenario": snapshot}
         raise ApiError(404, f"Unknown endpoint: {path}")
 
     def post(self, path: str, body: dict) -> dict:

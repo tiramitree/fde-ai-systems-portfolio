@@ -188,6 +188,8 @@ def project_checks(project: Project) -> list[Check]:
                 project.primary_button,
                 'id="copyTraceId"',
                 'id="copyTraceLink"',
+                'id="scenarioDraft"',
+                'id="saveScenarioDraft"',
             ],
         )
     )
@@ -204,7 +206,15 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/js/app.js",
             "text/javascript",
-            ['import { api } from "./api.js"', 'from "./traceLinks.js"', "boot"],
+            ['import { api } from "./api.js"', 'from "./traceLinks.js"', 'from "./scenarioEditor.js"', "boot"],
+        )
+    )
+    checks.extend(
+        check_text_asset(
+            project,
+            "/js/scenarioEditor.js",
+            "text/javascript",
+            ["installScenarioEditor", "localStorage", "JSON.parse", "JSON.stringify"],
         )
     )
     checks.extend(

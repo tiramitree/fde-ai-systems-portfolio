@@ -33,6 +33,7 @@ Source:
 | GET | `/api/traces?limit=25` | Recent trace records. |
 | GET | `/api/audit?limit=50` | Recent audit events. |
 | GET | `/api/eval/latest` | Latest eval run record. |
+| GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/query` | Permission-aware answer generation with citations or abstention. |
 | POST | `/api/eval/run` | Run the project eval suite. |
 
@@ -63,6 +64,26 @@ Security contract:
 - inaccessible document bodies are not returned in `/api/documents`
 - document body is never returned
 
+### Scenario Snapshot Shape
+
+`GET /api/scenario` returns:
+
+- `scenario.app`
+- `scenario.draft_mode`
+- `scenario.write_policy`
+- `scenario.files`
+- `scenario.files[].path`
+- `scenario.files[].kind`
+- `scenario.files[].record_count`
+- `scenario.files[].content`
+
+Scenario contract:
+
+- only allowlisted fictional seed and eval files are returned
+- runtime state files are not returned
+- `draft_mode` is `browser_local_storage`
+- `write_policy` is `read_only_seed_snapshot`
+
 ## Regulated Customer Operations Agent
 
 Source:
@@ -81,6 +102,7 @@ Source:
 | GET | `/api/traces?limit=25` | Recent trace records. |
 | GET | `/api/audit?limit=50` | Recent audit events. |
 | GET | `/api/eval/latest` | Latest eval run record. |
+| GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/agent` | Process an investigator/supervisor workflow message. |
 | POST | `/api/approval/approve` | Supervisor-only approval execution. |
 | POST | `/api/eval/run` | Reset state and run the project eval suite. |
@@ -108,6 +130,26 @@ Security contract:
 - bypass instructions create blocked-action evidence instead of side effects
 - `model_router` reports the actual routing source for the intent classification path, not just whether OpenAI mode was configured
 
+### Scenario Snapshot Shape
+
+`GET /api/scenario` returns:
+
+- `scenario.app`
+- `scenario.draft_mode`
+- `scenario.write_policy`
+- `scenario.files`
+- `scenario.files[].path`
+- `scenario.files[].kind`
+- `scenario.files[].record_count`
+- `scenario.files[].content`
+
+Scenario contract:
+
+- only allowlisted fictional seed and eval files are returned
+- runtime state files are not returned
+- `draft_mode` is `browser_local_storage`
+- `write_policy` is `read_only_seed_snapshot`
+
 ## AI Reliability Incident Console
 
 Source:
@@ -128,6 +170,7 @@ Source:
 | GET | `/api/traces?limit=25` | Recent triage trace records. |
 | GET | `/api/audit?limit=50` | Recent audit events. |
 | GET | `/api/eval/latest` | Latest release reliability eval run record. |
+| GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/triage` | Triage an incident against a release and produce rollout decision evidence. |
 | POST | `/api/eval/run` | Reset state and run the project eval suite. |
 
@@ -163,10 +206,30 @@ Release reliability contract:
 - evidence includes linked eval case IDs, runbook IDs, and incident signals
 - trace and audit records are created for triage decisions
 
+### Scenario Snapshot Shape
+
+`GET /api/scenario` returns:
+
+- `scenario.app`
+- `scenario.draft_mode`
+- `scenario.write_policy`
+- `scenario.files`
+- `scenario.files[].path`
+- `scenario.files[].kind`
+- `scenario.files[].record_count`
+- `scenario.files[].content`
+
+Scenario contract:
+
+- only allowlisted fictional seed and eval files are returned
+- runtime state files are not returned
+- `draft_mode` is `browser_local_storage`
+- `write_policy` is `read_only_seed_snapshot`
+
 ## Technical Review Framing
 
 Use this answer:
 
 ```text
-The browser talks to a small documented API surface. I verify the response shapes at runtime with `contracts`, and I verify the public API documentation with `api-docs` so a reviewer can map UI behavior to backend responsibilities. The important boundary is that permissions and side effects are enforced before the JSON response, while rollout decisions are backed by deterministic eval and incident evidence instead of trusting model text.
+The browser talks to a small documented API surface. I verify the response shapes at runtime with `contracts`, and I verify the public API documentation with `api-docs` so a reviewer can map UI behavior to backend responsibilities. The important boundary is that permissions and side effects are enforced before the JSON response, while rollout decisions are backed by deterministic eval and incident evidence instead of trusting model text. Scenario editing is deliberately browser-local: the API exposes a read-only seed snapshot, and the UI stores drafts in localStorage instead of mutating repository data.
 ```

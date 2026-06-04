@@ -1,6 +1,7 @@
 import { api } from "./api.js";
 import { byId } from "./dom.js";
 import { installCopyButton, installTraceCopyButton } from "./clipboard.js";
+import { installScenarioEditor } from "./scenarioEditor.js";
 import { installTraceHashSync, selectedTraceId, setTraceHash, syncTraceSelection, traceUrl } from "./traceLinks.js";
 import {
   populateIncidentSelect,
@@ -26,6 +27,15 @@ const state = {
 
 const setTraceCopyState = installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId);
 const setTraceLinkCopyState = installCopyButton(byId("copyTraceLink"), () => traceUrl(state.lastTraceId));
+installScenarioEditor({
+  loadScenario: () => api("/api/scenario"),
+  summary: byId("scenarioSummary"),
+  draft: byId("scenarioDraft"),
+  status: byId("scenarioStatus"),
+  saveButton: byId("saveScenarioDraft"),
+  resetButton: byId("resetScenarioDraft"),
+  clearButton: byId("clearScenarioDraft"),
+});
 
 async function loadUsers() {
   const data = await api("/api/users");

@@ -40,6 +40,12 @@ PROJECTS = [
             "copyTraceLink",
             "audit",
             "traces",
+            "scenarioSummary",
+            "scenarioDraft",
+            "scenarioStatus",
+            "saveScenarioDraft",
+            "resetScenarioDraft",
+            "clearScenarioDraft",
         },
         required_data_attribute="data-question",
         minimum_quick_actions=4,
@@ -64,6 +70,12 @@ PROJECTS = [
             "copyTraceLink",
             "audit",
             "traces",
+            "scenarioSummary",
+            "scenarioDraft",
+            "scenarioStatus",
+            "saveScenarioDraft",
+            "resetScenarioDraft",
+            "clearScenarioDraft",
         },
         required_data_attribute="data-message",
         minimum_quick_actions=4,
@@ -89,6 +101,12 @@ PROJECTS = [
             "copyTraceLink",
             "audit",
             "traces",
+            "scenarioSummary",
+            "scenarioDraft",
+            "scenarioStatus",
+            "saveScenarioDraft",
+            "resetScenarioDraft",
+            "clearScenarioDraft",
         },
         required_data_attribute="data-incident",
         minimum_quick_actions=2,
@@ -216,7 +234,7 @@ def api_paths(js_path: Path) -> set[str]:
 def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     failures: list[str] = []
     js_dir = project.root / "web" / "js"
-    expected_modules = {"api.js", "app.js", "clipboard.js", "dom.js", "renderers.js", "traceLinks.js"}
+    expected_modules = {"api.js", "app.js", "clipboard.js", "dom.js", "renderers.js", "scenarioEditor.js", "traceLinks.js"}
     present_modules = {path.name for path in js_dir.glob("*.js")}
     missing_modules = sorted(expected_modules - present_modules)
     if missing_modules:
@@ -243,8 +261,10 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     clipboard_text = (js_dir / "clipboard.js").read_text(encoding="utf-8")
     required_app_markers = [
         'import { installCopyButton, installTraceCopyButton } from "./clipboard.js";',
+        'import { installScenarioEditor } from "./scenarioEditor.js";',
         'import { installTraceHashSync, selectedTraceId, setTraceHash, syncTraceSelection, traceUrl } from "./traceLinks.js";',
         'lastTraceId: ""',
+        'loadScenario: () => api("/api/scenario")',
         'installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId)',
         'installCopyButton(byId("copyTraceLink"), () => traceUrl(state.lastTraceId))',
         "state.lastTraceId = data.trace_id",
@@ -290,6 +310,20 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
             failures.append(f"{project.name}: renderers.js missing trace deep-link marker: {marker}")
     if "data-trace-id" not in renderers_text and "dataset: { traceId: trace.id }" not in renderers_text:
         failures.append(f"{project.name}: renderers.js missing trace id data marker")
+
+    scenario_text = (js_dir / "scenarioEditor.js").read_text(encoding="utf-8")
+    required_scenario_markers = [
+        "export function installScenarioEditor",
+        "localStorage.getItem",
+        "localStorage.setItem",
+        "localStorage.removeItem",
+        "JSON.parse",
+        "JSON.stringify",
+        "saveScenarioDraft",
+    ]
+    for marker in required_scenario_markers:
+        if marker not in scenario_text and marker not in app_text:
+            failures.append(f"{project.name}: scenarioEditor.js missing marker: {marker}")
     return failures
 
 
@@ -302,7 +336,16 @@ def check_project(project: FrontendProject) -> list[str]:
     failures.extend(check_html(project, parser))
     failures.extend(check_javascript(project, set(parser.ids)))
     styles = (project.root / "web" / "styles.css").read_text(encoding="utf-8")
-    for marker in [".sectionHeader", ".sectionActions", ".secondaryButton", ".secondaryButton:disabled", ".traceLink", ".selectedTrace"]:
+    for marker in [
+        ".sectionHeader",
+        ".sectionActions",
+        ".secondaryButton",
+        ".secondaryButton:disabled",
+        ".traceLink",
+        ".selectedTrace",
+        ".scenarioDraft",
+        ".scenarioStatus",
+    ]:
         if marker not in styles:
             failures.append(f"{project.name}: styles.css missing trace-copy style marker: {marker}")
     return failures
@@ -321,7 +364,7 @@ def main() -> int:
 
     print(
         "Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, "
-        "trace-copy controls, and quick actions are intact."
+        "trace-copy controls, scenario drafts, and quick actions are intact."
     )
     return 0
 
