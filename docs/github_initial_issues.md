@@ -53,6 +53,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README OpenTelemetry backend pointer
 - Add a compact README Docker runtime evidence pointer
 - Add a compact README dependency surface evidence pointer
+- Add a compact README API contract evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -177,28 +178,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README API contract evidence pointer
+Add a compact README error hygiene evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, design, good first issue
+documentation, security, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where API contract materials live and which response-shape boundaries must be preserved before changing backend routes or frontend API calls.
+Add a compact README pointer that tells contributors where error hygiene materials live and which browser-visible failure boundaries must be preserved before changing app shells or API error handling.
 
 Acceptance criteria:
 
-- Link to API Contracts, System Evidence Matrix, Architecture Boundaries, Runtime UI Contracts, and the API contract row in the Evidence Matrix.
-- Cover API checks: `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py ui-contracts`, and `python -B scripts/dev.py quality`.
+- Link to Error Hygiene, System Evidence Matrix, Runtime UI Contracts, API Contracts, and the error hygiene row in the Evidence Matrix.
+- Cover failure-safety checks: `python -B scripts/dev.py error-hygiene`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py ui-contracts`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that documented response shapes, read-only scenario snapshot endpoints, static route handling, and frontend API modules must remain aligned.
+- Make clear that unexpected server exceptions return generic JSON errors without local paths, stack details, source file names, or secret-like markers, while typed application errors can still return user-safe messages.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py contracts still passes.
+- python -B scripts/dev.py error-hygiene still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
