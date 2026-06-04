@@ -9,6 +9,7 @@ TRIAGE = ROOT / "scripts" / "review_open_prs.py"
 RUNBOOK = ROOT / "docs" / "pr_review_runbook.md"
 POLICY = ROOT / "docs" / "maintainer_review_policy.md"
 DOCS_ONLY_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
+DOCS_ONLY_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 TEMPLATE = ROOT / ".github" / "pull_request_template.md"
 
 
@@ -147,6 +148,27 @@ REQUIRED_DOCS_ONLY_EXAMPLE_PHRASES = [
     "python -B scripts/dev.py quality",
 ]
 
+REQUIRED_DOCS_ONLY_COMMENT_EXAMPLE_PHRASES = [
+    "docs/docs_only_pr_review_examples.md",
+    "docs/pr_review_security.md",
+    "docs/first_pull_request_checklist.md",
+    "approve",
+    "request-changes",
+    "close-as-unsafe",
+    "close-as-low-signal",
+    "Do not run contributor commands",
+    "generated runtime files",
+    "private paths",
+    "external accounts",
+    "paid-service requirements",
+    "real customer data",
+    "python -B scripts/dev.py community-issues",
+    "python -B scripts/dev.py assets",
+    "python -B scripts/dev.py pr-policy",
+    "python -B scripts/dev.py safety",
+    "python -B scripts/dev.py quality",
+]
+
 
 def read(rel_path: Path) -> str:
     return rel_path.read_text(encoding="utf-8")
@@ -225,7 +247,7 @@ def check_triage_script() -> list[str]:
 
 def check_docs() -> list[str]:
     failures: list[str] = []
-    for path in (RUNBOOK, POLICY, DOCS_ONLY_EXAMPLES, TEMPLATE):
+    for path in (RUNBOOK, POLICY, DOCS_ONLY_EXAMPLES, DOCS_ONLY_COMMENT_EXAMPLES, TEMPLATE):
         if not path.exists():
             failures.append(f"missing PR review policy file: {path.relative_to(ROOT)}")
 
@@ -241,6 +263,14 @@ def check_docs() -> list[str]:
                 "docs/docs_only_pr_review_examples.md",
             )
         )
+    if DOCS_ONLY_COMMENT_EXAMPLES.exists():
+        failures.extend(
+            require_contains(
+                read(DOCS_ONLY_COMMENT_EXAMPLES),
+                REQUIRED_DOCS_ONLY_COMMENT_EXAMPLE_PHRASES,
+                "docs/docs_only_review_comment_examples.md",
+            )
+        )
     if TEMPLATE.exists():
         failures.extend(require_contains(read(TEMPLATE), REQUIRED_TEMPLATE_PHRASES, ".github/pull_request_template.md"))
     return failures
@@ -249,8 +279,18 @@ def check_docs() -> list[str]:
 def check_cross_references() -> list[str]:
     failures: list[str] = []
     references = {
-        "README.md": ["docs/pr_review_security.md", "docs/docs_only_pr_review_examples.md", "python -B scripts/dev.py pr-policy"],
-        "PROJECT_CONTENT_INDEX.md": ["docs/pr_review_security.md", "docs/docs_only_pr_review_examples.md", "scripts/check_pr_review_policy.py"],
+        "README.md": [
+            "docs/pr_review_security.md",
+            "docs/docs_only_pr_review_examples.md",
+            "docs/docs_only_review_comment_examples.md",
+            "python -B scripts/dev.py pr-policy",
+        ],
+        "PROJECT_CONTENT_INDEX.md": [
+            "docs/pr_review_security.md",
+            "docs/docs_only_pr_review_examples.md",
+            "docs/docs_only_review_comment_examples.md",
+            "scripts/check_pr_review_policy.py",
+        ],
         "docs/threat_model.md": ["python -B scripts/dev.py pr-policy"],
         "docs/portfolio_evidence_matrix.md": ["python -B scripts/dev.py pr-policy"],
     }
@@ -274,7 +314,7 @@ def main() -> int:
             print(f"- {failure}")
         return 1
 
-    print("PR review policy check passed: triage heuristics, runbook, policy, docs-only examples, and template remain safety-focused.")
+    print("PR review policy check passed: triage heuristics, runbook, policy, docs-only examples, docs-only comment examples, and template remain safety-focused.")
     return 0
 
 

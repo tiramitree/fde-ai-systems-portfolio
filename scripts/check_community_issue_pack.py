@@ -29,6 +29,7 @@ REQUIRED_LABELS = {
 
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
+DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
 OPENAI_LIVE_MODE_TROUBLESHOOTING = ROOT / "docs" / "openai_live_mode_troubleshooting.md"
 DOCKER_RUNTIME_EVIDENCE_CHECKLIST = ROOT / "docs" / "docker_runtime_evidence_checklist.md"
@@ -235,6 +236,54 @@ def check_docs_only_pr_review_examples() -> list[str]:
     return failures
 
 
+def check_docs_only_review_comment_examples() -> list[str]:
+    failures: list[str] = []
+    if not DOCS_ONLY_REVIEW_COMMENT_EXAMPLES.exists():
+        return ["missing docs/docs_only_review_comment_examples.md"]
+
+    text = DOCS_ONLY_REVIEW_COMMENT_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "docs/docs_only_pr_review_examples.md",
+        "docs/pr_review_security.md",
+        "docs/first_pull_request_checklist.md",
+        "approve",
+        "request-changes",
+        "close-as-unsafe",
+        "close-as-low-signal",
+        "Approve",
+        "Request Changes: Missing Link Or Evidence",
+        "Request Changes: Claim Is Too Broad",
+        "Close As Unsafe",
+        "Close As Low Signal",
+        "Reviewer Checklist Before Posting",
+        "Comment Selection Map",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py assets",
+        "python -B scripts/dev.py pr-policy",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "generated runtime files",
+        "private paths",
+        "external accounts",
+        "paid-service requirements",
+        "real customer data",
+        "Do not run contributor commands",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/docs_only_review_comment_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/docs_only_review_comment_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/docs_only_review_comment_examples.md",
+        "docs/docs_only_pr_review_examples.md": "docs/docs_only_review_comment_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_readme_navigation_audit() -> list[str]:
     failures: list[str] = []
     if not README_NAVIGATION_AUDIT.exists():
@@ -422,6 +471,7 @@ def main() -> int:
     failures.extend(check_public_backlog())
     failures.extend(check_first_pull_request_checklist())
     failures.extend(check_docs_only_pr_review_examples())
+    failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())
     failures.extend(check_openai_live_mode_troubleshooting())
     failures.extend(check_docker_runtime_evidence_checklist())

@@ -78,6 +78,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a seed fixture data-flow map
 - Add a contributor onboarding checklist for the first local pull request
 - Add docs-only pull request review examples
+- Add docs-only review comments for common PR outcomes
 - Add a README-to-docs navigation audit
 - Add optional OpenAI live-mode troubleshooting notes
 - Add a Docker runtime evidence collection checklist
@@ -205,7 +206,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add docs-only review comments for common PR outcomes
+Add README navigation drift fix examples
 ```
 
 Labels:
@@ -217,15 +218,16 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact review-comment examples that maintainers can adapt for common docs-only PR outcomes.
+Add compact examples that show how to fix README navigation drift without broad rewrites.
 
 Acceptance criteria:
 
-- Add docs/docs_only_review_comment_examples.md with approve, request-changes, close-as-unsafe, and close-as-low-signal examples.
-- Reference docs/docs_only_pr_review_examples.md, docs/pr_review_security.md, and docs/first_pull_request_checklist.md.
-- Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
+- Add docs/readme_navigation_drift_examples.md with examples for stale links, unsupported claims, missing source docs, and manual evidence drift.
+- Reference docs/readme_navigation_audit.md, docs/command_output_troubleshooting_map.md, and docs/docs_only_review_comment_examples.md.
+- Keep examples narrow, local-first, and free of secrets, private paths, private account data, generated runtime files, and real customer data.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py community-issues still passes.
+- python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
