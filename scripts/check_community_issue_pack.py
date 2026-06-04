@@ -40,6 +40,7 @@ GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_api_rat
 GITHUB_REPOSITORY_METADATA_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_repository_metadata_troubleshooting_examples.md"
 GITHUB_REPOSITORY_SETTINGS_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_repository_settings_screenshot_checklist.md"
 LAUNCH_FEEDBACK_COLLECTION_EXAMPLES = ROOT / "docs" / "launch_feedback_collection_examples.md"
+GITHUB_DISCUSSIONS_LAUNCH_CHECKLIST = ROOT / "docs" / "github_discussions_launch_checklist.md"
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
 PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
@@ -622,6 +623,7 @@ def check_github_repository_metadata_troubleshooting_examples() -> list[str]:
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
+        "docs/github_discussions_launch_checklist.md",
         "docs/command_output_troubleshooting_map.md",
         "Expected Evidence Split",
         "Missing Description",
@@ -730,6 +732,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "Issue Feedback",
         "Launch-Post Comments",
         "Private-Message Feedback",
+        "GitHub Discussions Feedback",
         "Analytics Screenshots",
         "Review Checklist",
         "python -B scripts/dev.py launch-assets",
@@ -738,6 +741,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "python -B scripts/dev.py github-readiness",
         "python -B scripts/post_publish_check.py",
         "public feedback, private messages, analytics screenshots, and source evidence prove different things",
+        "support SLAs, private account access, or guaranteed roadmap acceptance",
         "Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence",
     ]
     for phrase in required_phrases:
@@ -752,6 +756,61 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/published_repository_status.md": "docs/launch_feedback_collection_examples.md",
         "docs/post_publish_checklist.md": "docs/launch_feedback_collection_examples.md",
         "docs/post_publish_warning_examples.md": "docs/launch_feedback_collection_examples.md",
+        "docs/github_discussions_launch_checklist.md": "docs/launch_feedback_collection_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_github_discussions_launch_checklist() -> list[str]:
+    failures: list[str] = []
+    if not GITHUB_DISCUSSIONS_LAUNCH_CHECKLIST.exists():
+        return ["missing docs/github_discussions_launch_checklist.md"]
+
+    text = GITHUB_DISCUSSIONS_LAUNCH_CHECKLIST.read_text(encoding="utf-8")
+    required_phrases = [
+        "GitHub Discussions Launch Checklist",
+        "docs/community_backlog.md",
+        "docs/github_initial_issues.md",
+        "docs/launch_feedback_collection_examples.md",
+        "docs/maintainer_review_policy.md",
+        "docs/post_publish_checklist.md",
+        "Evidence Boundaries",
+        "Suggested Categories",
+        "Pinned Starter Topics",
+        "Moderation Rules",
+        "Channel Routing",
+        "Launch Feedback Boundary",
+        "Review Checklist",
+        "GitHub Discussions, issues, PRs, private feedback, and roadmap acceptance are different channels",
+        "Do not promise support SLAs, private account access, or guaranteed feature acceptance",
+        "GitHub Discussions is an account-level repository feature",
+        "Announcements",
+        "Q&A",
+        "Ideas",
+        "Show and tell",
+        "General",
+        "global pins and category-specific pins",
+        "Use Q&A answer marking only for factual setup answers",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "private messages, account analytics, personal account details, secrets, customer data, or private screenshots",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/github_discussions_launch_checklist.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/github_discussions_launch_checklist.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/github_discussions_launch_checklist.md",
+        "docs/launch_feedback_collection_examples.md": "docs/github_discussions_launch_checklist.md",
+        "docs/maintainer_review_policy.md": "github_discussions_launch_checklist.md",
+        "docs/post_publish_checklist.md": "docs/github_discussions_launch_checklist.md",
+        "docs/published_repository_status.md": "docs/github_discussions_launch_checklist.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1702,6 +1761,7 @@ def main() -> int:
     failures.extend(check_github_repository_metadata_troubleshooting_examples())
     failures.extend(check_github_repository_settings_screenshot_checklist())
     failures.extend(check_launch_feedback_collection_examples())
+    failures.extend(check_github_discussions_launch_checklist())
     failures.extend(check_social_preview_verification_examples())
     failures.extend(check_profile_pin_verification_examples())
     failures.extend(check_github_actions_warning_examples())

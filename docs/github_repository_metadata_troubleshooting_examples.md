@@ -1,6 +1,6 @@
 # GitHub Repository Metadata Troubleshooting Examples
 
-Use this page when `github-readiness` reports repository metadata warnings, or when public launch docs mention repository description, topics, or repository URL state. Read it with `docs/github_repository_settings.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when `github-readiness` reports repository metadata warnings, or when public launch docs mention repository description, topics, repository URL state, or Discussions setup. Read it with `docs/github_repository_settings.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_discussions_launch_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local launch docs and GitHub account-level repository metadata prove different things. Do not claim metadata is current until GitHub readiness or authenticated maintenance confirms it.
 
@@ -23,6 +23,8 @@ python -B scripts/dev.py github-maintenance
 ```
 
 `github-readiness` reports the public remote state. `github-maintenance` shows the authenticated maintenance plan, and only an applied authenticated path can change account-level repository metadata.
+
+Use `docs/github_discussions_launch_checklist.md` before treating GitHub Discussions setup, categories, pinned starter topics, or moderation rules as account-level launch evidence.
 
 ## Missing Description
 

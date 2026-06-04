@@ -633,6 +633,7 @@ repository/
 - [GitHub Launch Plan](docs/github_launch_plan.md)
 - [Published Repository Status](docs/published_repository_status.md)
 - [Post-Publish Warning Examples](docs/post_publish_warning_examples.md)
+- [GitHub Discussions Launch Checklist](docs/github_discussions_launch_checklist.md)
 - [GitHub Repository Settings](docs/github_repository_settings.md)
 - [GitHub Repository Settings Screenshot Checklist](docs/github_repository_settings_screenshot_checklist.md)
 - [GitHub Label Troubleshooting Examples](docs/github_label_troubleshooting_examples.md)

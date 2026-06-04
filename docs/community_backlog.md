@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact repository discussions launch checklist.
-3. Add compact release note refresh checklist.
-4. Add compact contributor attribution examples.
-5. Add compact issue triage SLA wording examples.
+2. Add compact release note refresh checklist.
+3. Add compact contributor attribution examples.
+4. Add compact issue triage SLA wording examples.
+5. Add compact discussion-to-issue conversion examples.
 
 ## Intermediate Issues
 
@@ -133,3 +133,4 @@ Contributions should preserve these invariants:
 - Add compact Dependabot and secret-scanning verification examples.
 - Add compact public roadmap issue comment examples.
 - Add compact release asset upload dry-run examples.
+- Add compact repository discussions launch checklist.

@@ -107,6 +107,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact Dependabot and secret-scanning verification examples
 - Add compact public roadmap issue comment examples
 - Add compact release asset upload dry-run examples
+- Add compact repository discussions launch checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -231,27 +232,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact repository discussions launch checklist
+Add compact release note refresh checklist
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact checklist for launching GitHub Discussions without confusing issue triage, release support, roadmap planning, and general feedback.
+Add a compact release note refresh checklist that keeps checked-in release notes, GitHub release-page text, replay artifacts, and post-publish evidence aligned.
 
 Acceptance criteria:
 
-- Add docs/github_discussions_launch_checklist.md with categories, pinned starter topics, moderation rules, and evidence boundaries for launch feedback.
-- Reference docs/community_backlog.md, docs/github_initial_issues.md, docs/launch_feedback_collection_examples.md, docs/maintainer_review_policy.md, and docs/post_publish_checklist.md.
-- Keep GitHub Discussions, issues, PRs, private feedback, and roadmap acceptance separate; do not promise support SLAs, private account access, or guaranteed feature acceptance.
+- Add docs/release_note_refresh_checklist.md with examples for stale release notes, stale GitHub release-page text, replay artifact drift, and post-publish evidence mismatch.
+- Reference docs/github_release_notes_v0.1.0.md, docs/github_release_commands.md, docs/release_asset_upload_dry_run_examples.md, docs/github_latest_release_troubleshooting_examples.md, and docs/post_publish_checklist.md.
+- Keep checked-in release notes, generated replay artifacts, GitHub release-page text, and post-publish evidence separate; do not claim release notes are current until public release evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
