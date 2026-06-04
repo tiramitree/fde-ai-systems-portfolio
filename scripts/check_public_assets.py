@@ -38,7 +38,7 @@ REQUIRED_SCREENSHOT_REVIEWER_CHECKLIST = [
 REQUIRED_COMMAND_QUICK_REFERENCE = [
     "Command quick-reference:",
     "| Local run | `python -B scripts/dev.py start` |",
-    "| Verification | `python -B scripts/dev.py verify`, `python -B scripts/dev.py quality`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py safety` |",
+    "| Verification | `python -B scripts/dev.py verify`, `python -B scripts/dev.py quality`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py safety` |",
     "| Release evidence | `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py report`, `python -B scripts/dev.py readiness-report`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py` |",
     "| Visual assets | `python -B scripts/dev.py visual-assets`, `python -B scripts/dev.py visual-asset-diff`, `python -B scripts/dev.py refresh-visual-assets` |",
     "| GitHub maintenance | `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community` |",
@@ -58,6 +58,7 @@ REQUIRED_COMMAND_OUTPUT_EXPECTATIONS = [
     "Command output expectations:",
     "| `python -B scripts/dev.py verify` | Starts or reuses the three local services, runs the CI-quality gate, and ends with `Quality gate passed.` | Use before local release review when the demo services should be exercised. |",
     "| `python -B scripts/dev.py quality` | Runs repository safety, docs/assets, UI contracts, service health, smoke flows, evals, replay artifacts, and claim checks; ends with `Quality gate passed.` | This is the main local quality gate. |",
+    "| `python -B scripts/dev.py demo-presets` | Validates `docs/demo_state_presets.json` against seed and eval data; ends with `Demo state presets check passed.` | Use before recording, reviewing, or sharing canonical local demo paths. |",
     "| `python -B scripts/dev.py fresh-clone-local` | Clones the current checkout into `out/fresh-clone-tmp/`, runs release-facing checks, starts isolated demo ports, and ends with `Fresh clone experience check passed.` | Use before push when the remote branch may not include the current commit yet. |",
     "| `python -B scripts/dev.py fresh-clone` | Clones `origin`, runs the same fresh-clone checks, starts isolated demo ports, and ends with `Fresh clone experience check passed.` | Requires network access and a pushed commit. |",
     "| `python -B scripts/post_publish_check.py` | Prints `[PASS]` rows for the GitHub page, raw README/workflow, and required published files; ends with `Post-publish check passed.` | Use after push to confirm public GitHub assets are reachable. |",
@@ -155,6 +156,10 @@ REQUIRED_DEMO_PATH_MAP = [
     "| [Secure Enterprise Knowledge Copilot](#project-1-secure-enterprise-knowledge-copilot) | Open `http://127.0.0.1:8765`, select Alice, and ask `What is the finance retention plan?`; then switch to Morgan for the same question. | Compare abstention vs citation-backed access, copy the trace ID, then run `python -B scripts/dev.py smoke`. |",
     "| [Regulated Customer Operations Agent](#project-2-regulated-customer-operations-agent) | Open `http://127.0.0.1:8770`, select Ivy and `case-1001`, then run the investigation. | Inspect the pending approval, blocked side effect, audit event, and `python -B scripts/dev.py smoke`. |",
     "| [AI Reliability Incident Console](ai-reliability-incident-console/README.md) | Open `http://127.0.0.1:8780`, select the unsafe canary incident, then run triage. | Inspect failed eval evidence, blocked rollout, remediation steps, trace/audit records, and `python -B scripts/dev.py smoke`. |",
+]
+REQUIRED_DEMO_STATE_PRESETS = [
+    "Demo-state reset presets:",
+    "`docs/demo_state_presets.json` stores the shareable local reset presets for the canonical Project 1 finance-access path, Project 2 `case-1001` approval path, and Project 3 unsafe canary release path. Run `python -B scripts/dev.py demo-presets` to verify the preset IDs, reset commands, seed references, eval references, and POST payloads still match the fictional seed data before recording or sharing.",
 ]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
@@ -540,6 +545,18 @@ def check_demo_path_map() -> list[str]:
     return failures
 
 
+def check_demo_state_presets() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_DEMO_STATE_PRESETS:
+        if expected not in text:
+            failures.append(f"README.md: missing demo-state preset entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -573,6 +590,7 @@ def main() -> int:
     failures.extend(check_contributor_route_map())
     failures.extend(check_production_upgrade_pointer())
     failures.extend(check_demo_path_map())
+    failures.extend(check_demo_state_presets())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")

@@ -38,6 +38,7 @@ python -B scripts/dev.py community-issues
 python -B scripts/dev.py container-release
 python -B scripts/dev.py docker-runtime
 python -B scripts/dev.py dependency-surface
+python -B scripts/dev.py demo-presets
 python -B scripts/dev.py contracts
 python -B scripts/dev.py error-hygiene
 python -B scripts/dev.py health
@@ -125,7 +126,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -134,6 +135,7 @@ Local Git state:
 - `scripts/check_observability_integrity.py`: starts isolated services and verifies trace, audit, approval, blocked-action, unauthorized-query, and release-decision evidence stay consistent with demo outcomes.
 - `scripts/check_threat_model.py`: verifies repository threat IDs map to deterministic controls, source files, supporting docs, and evidence commands.
 - `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent for the local scenario draft surface.
+- `scripts/check_demo_state_presets.py`: verifies shareable demo reset presets in `docs/demo_state_presets.json` still reference valid fictional seed and eval data.
 - `scripts/check_error_hygiene.py`: verifies unexpected backend exceptions return generic JSON errors without leaking internals.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_visual_asset_manifest.py`: verifies desktop and mobile demo screenshots match recorded asset hashes, dimensions, contrast samples, and frontend source hashes.

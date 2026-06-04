@@ -18,6 +18,7 @@ COMMANDS = {
     "container-release": ["scripts/check_container_release.py"],
     "docker-runtime": ["scripts/check_docker_runtime.py"],
     "dependency-surface": ["scripts/check_dependency_surface.py"],
+    "demo-presets": ["scripts/check_demo_state_presets.py"],
     "contracts": ["scripts/check_api_contracts.py"],
     "error-hygiene": ["scripts/check_error_hygiene.py"],
     "health": ["scripts/check_health.py"],
@@ -68,7 +69,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/visual-asset-diff/workflow-security: run individual gates; "
+            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/demo-presets/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/visual-asset-diff/workflow-security: run individual gates; "
             "visual-asset-diff: summarize changed visual assets without printing binary image contents; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
