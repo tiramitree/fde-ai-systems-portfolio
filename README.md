@@ -184,6 +184,16 @@ Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 | Audit log | Structured records of security, workflow, approval, and release-decision events that explain what happened after a run; see [threat model](docs/threat_model.md) and [observability integrity](docs/observability_integrity.md). |
 | Abstention | The answer behavior used when accessible evidence is missing, unauthorized, or unsafe after filtering; see [Project 1](#project-1-secure-enterprise-knowledge-copilot) and the [System Evidence Matrix](docs/portfolio_evidence_matrix.md). |
 
+Evidence legend:
+
+| Gate | Proves | Does Not Prove |
+| --- | --- | --- |
+| Smoke | `python -B scripts/dev.py smoke` proves the three running demos complete the canonical permission, approval, and release-blocking flows. | It is not exhaustive security, load, or browser-compatibility coverage. |
+| Eval | `python -B scripts/dev.py evals` proves deterministic regression cases keep unsafe leak, direct side-effect, and release-approval failures at zero; see [System Evidence Matrix](docs/portfolio_evidence_matrix.md). | It does not cover every possible prompt, data set, or production integration. |
+| Trace | `python -B scripts/dev.py observability` proves responses can be followed through stored trace records, IDs, and linked decisions; see [Observability Integrity](docs/observability_integrity.md). | It does not mean an external OpenTelemetry backend is configured by default. |
+| Audit | The same observability gate proves security, approval, blocked-action, and release-decision events are recorded and link back to the run. | It does not replace enterprise retention, SIEM, or compliance controls. |
+| Visual | `python -B scripts/dev.py visual-assets` proves desktop and mobile screenshots match the recorded manifest, source hashes, and contrast samples; see [Visual Asset Hygiene](docs/visual_asset_hygiene.md). | It is a deterministic screenshot guard, not a complete accessibility audit. |
+
 ## Maintainer PR Checklist
 
 Public PRs are treated as untrusted input. Before approving workflows, running contributor code, or merging:
