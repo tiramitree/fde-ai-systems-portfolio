@@ -38,6 +38,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact per-project risk badges
 - Add a compact README operational runbook index
 - Add a compact README evidence freshness checklist
+- Add a compact README reviewer handoff checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -162,26 +163,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README reviewer handoff checklist
+Add compact per-project architecture cards to the README
 ```
 
 Labels:
 
 ```text
-documentation, security, demo, good first issue
+documentation, design, demo, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README checklist that tells reviewers how to confirm local gates, remote evidence, visual assets, PR state, and GitHub account-level follow-up before approving or sharing the repository.
+Add compact README architecture cards that summarize the backend boundary, frontend boundary, safety controls, and evidence path for each project.
 
 Acceptance criteria:
 
-- Cover local quality, local fresh-clone, remote fresh-clone, post-publish, visual asset, PR triage, and GitHub readiness checks.
-- Link to Maintainer PR Checklist, Contributor route map, Visual Asset Hygiene, Published Repository Status, PR Review Runbook, and the release-evidence FAQ.
-- Distinguish blocking gate failures from `[WARN]` and `[MANUAL]` account-level follow-up rows.
-- Keep the checklist local-first and avoid asking maintainers to expose private tokens or private account settings in public issues.
+- Cover Secure Enterprise Knowledge Copilot, Regulated Customer Operations Agent, and AI Reliability Incident Console.
+- For each project, include the backend package, browser module boundary, core safety controls, and fastest evidence command.
+- Link to Architecture Boundaries, API Contracts, Runtime UI Contracts, and the project-specific architecture docs.
+- Keep the cards compact enough for README scanning and avoid duplicating full architecture documents.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.

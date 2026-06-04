@@ -115,8 +115,18 @@ REQUIRED_README_PR_CHECKLIST = [
     "| Secrets and access | Do not ask contributors for secrets, tokens, account access, private files, local paths, or collaborator permissions. |",
     "| Merge bar | Use the [PR review security gate](docs/pr_review_security.md) and [PR review runbook](docs/pr_review_runbook.md); merge only after `pr-policy`, `governance`, `workflow-security`, `safety`, and `verify` pass. |",
 ]
+REQUIRED_REVIEWER_HANDOFF_CHECKLIST = [
+    "## Reviewer Handoff Checklist",
+    "Use this with the [Maintainer PR Checklist](#maintainer-pr-checklist), [Contributor Route Map](#contributor-route-map), [Visual Asset Hygiene](docs/visual_asset_hygiene.md), [Published Repository Status](docs/published_repository_status.md), [PR Review Runbook](docs/pr_review_runbook.md), and [Release Evidence FAQ](#release-evidence-faq).",
+    "| Local quality | Run `python -B scripts/dev.py quality` after source, docs, asset, or runtime changes. | Any failure blocks commit, approval, or public sharing. |",
+    "| Local fresh clone | Run `python -B scripts/dev.py fresh-clone-local` before push when setup paths, README guidance, public assets, or runtime wiring changed. | Any failure blocks push until a clean checkout works. |",
+    "| Visual evidence | Run `python -B scripts/dev.py visual-assets` and `python -B scripts/dev.py visual-asset-diff`; use `refresh-visual-assets` only for intentional screenshot updates. | Unexpected screenshot or manifest drift blocks visual claims. |",
+    "| Remote evidence | After push, run `python -B scripts/dev.py fresh-clone` and `python -B scripts/post_publish_check.py`. | Remote clone or published-file failures block sharing the public branch. |",
+    "| PR state | Run `python -B scripts/dev.py pr-triage`, then inspect high-risk diffs before running contributor code. | Do not merge while review findings, high-risk files, or required gates are unresolved. |",
+    "| GitHub readiness | Run `python -B scripts/dev.py github-readiness`; treat `[WARN]` and `[MANUAL]` rows as account-level follow-up unless strict mode is required. | Do not claim metadata, branch protection, release page, social preview, or profile pin freshness until those actions are complete. |",
+]
 REQUIRED_CONTRIBUTOR_ROUTE_MAP = [
-    "Contributor route map:",
+    "## Contributor Route Map",
     "| Docs-only | The command decision tree above, [Launch Asset Hygiene](docs/launch_assets_hygiene.md), and [System Evidence Matrix](docs/portfolio_evidence_matrix.md). | `python -B scripts/dev.py assets`, `python -B scripts/dev.py launch-assets`, then `python -B scripts/dev.py quality` before publishing. |",
     "| Frontend/UI | [Frontend Integrity](docs/frontend_integrity.md), [Runtime UI Contracts](docs/runtime_ui_contracts.md), and [Visual Asset Hygiene](docs/visual_asset_hygiene.md). | `python -B scripts/dev.py frontend`, `python -B scripts/dev.py ui-contracts`, `python -B scripts/dev.py visual-assets`, then `python -B scripts/dev.py quality`. |",
     "| Backend/API | [API Contracts](docs/api_contracts.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the service `src/` package being changed. | `python -B scripts/dev.py contracts`, `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py architecture`, then `python -B scripts/dev.py quality`. |",
@@ -463,6 +473,18 @@ def check_readme_pr_checklist() -> list[str]:
     return failures
 
 
+def check_reviewer_handoff_checklist() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_REVIEWER_HANDOFF_CHECKLIST:
+        if expected not in text:
+            failures.append(f"README.md: missing reviewer handoff checklist entry: {expected}")
+    return failures
+
+
 def check_contributor_route_map() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -527,6 +549,7 @@ def main() -> int:
     failures.extend(check_readme_glossary())
     failures.extend(check_evidence_legend())
     failures.extend(check_readme_pr_checklist())
+    failures.extend(check_reviewer_handoff_checklist())
     failures.extend(check_contributor_route_map())
     failures.extend(check_production_upgrade_pointer())
     failures.extend(check_demo_path_map())

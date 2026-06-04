@@ -7,8 +7,8 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
 2. Add compact per-project architecture cards to the README.
 3. Add shareable demo-state reset presets.
-4. Add a compact README reviewer handoff checklist for local, remote, visual, and GitHub account-level checks.
-5. Add a compact README architecture card for each project.
+4. Add a compact README architecture card for each project.
+5. Add a compact README demo recording checklist pointer for maintainers.
 
 ## Intermediate Issues
 
@@ -64,3 +64,4 @@ Contributions should preserve these invariants:
 - Add compact per-project risk badges for permissions, approvals, evals, traces, and release blocking.
 - Add a compact README operational runbook index for retrieval, approval, and release-blocking scenarios.
 - Add a compact README evidence freshness checklist for screenshots, eval summaries, and published status.
+- Add a compact README reviewer handoff checklist for local, remote, visual, and GitHub account-level checks.
