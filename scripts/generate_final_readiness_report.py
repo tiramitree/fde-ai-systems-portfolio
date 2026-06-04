@@ -157,7 +157,7 @@ def render() -> str:
         "5. Run `python -B scripts/dev.py container-release` to prove Docker/Compose release hygiene without claiming Docker runtime verification.",
         "6. On a Docker-enabled machine, run `python -B scripts/dev.py docker-runtime` before claiming Compose runtime verification.",
         "7. With a live API key, run `python -B scripts/dev.py openai-live` before claiming OpenAI runtime verification.",
-        "8. Run `python -B scripts/dev.py visual-assets` to prove README screenshots are tied to current frontend source hashes.",
+        "8. Run `python -B scripts/dev.py visual-assets` to prove desktop and mobile screenshots are tied to current frontend source hashes.",
         "9. Open Project 1 and show permission-aware retrieval, citations, abstention, and prompt-injection handling.",
         "10. Open Project 2 and show investigation, approval queue, supervisor approval, trace, and audit log evidence.",
         "11. Open Project 3 and show failed eval evidence, blocked rollout, remediation steps, trace records, and audit log evidence.",

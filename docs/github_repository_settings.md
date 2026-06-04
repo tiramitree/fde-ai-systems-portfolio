@@ -166,6 +166,6 @@ Verified locally:
 Pin this repository only after:
 
 - GitHub Actions is green.
-- README screenshots render correctly.
+- README desktop and mobile screenshots render correctly.
 - repo topics are set.
 - static badge is replaced with the real Actions badge.

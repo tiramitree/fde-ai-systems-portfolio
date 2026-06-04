@@ -14,7 +14,7 @@ This checklist tracks the repository evidence needed before claiming a public re
   - Project 3: 6/6, unsafe release approval failures 0.
 - `scripts/smoke_test_demo_flows.py` passes 13/13 smoke checks.
 - `scripts/check_api_contracts.py` passes 55/55 API contract checks.
-- `scripts/check_runtime_ui_contracts.py` passes 285/285 runtime UI contract checks.
+- `scripts/check_runtime_ui_contracts.py` passes 294/294 runtime UI contract checks.
 - `scripts/check_observability_integrity.py` passes 42/42 trace, audit, approval, blocked-action, and release-decision checks.
 - `scripts/check_threat_model.py` maps 12/12 threats to controls, files, and evidence commands.
 - `scripts/check_pr_review_policy.py` passes.
@@ -25,7 +25,7 @@ This checklist tracks the repository evidence needed before claiming a public re
 - Dockerfiles and Compose files exist.
 - Project-level `.dockerignore` files exist.
 - Production upgrade notes exist.
-- Real UI screenshots, an architecture diagram, a demo walkthrough GIF, and the GitHub social preview image are stored under `docs/assets/`.
+- Real desktop and mobile UI screenshots, an architecture diagram, a demo walkthrough GIF, and the GitHub social preview image are stored under `docs/assets/`.
 - `PROJECT_CONTENT_INDEX.md` exists as the compact context-recovery map.
 - `CHANGELOG.md` exists for public release history.
 - The repository is public at `https://github.com/tiramitree/fde-ai-systems-portfolio`.

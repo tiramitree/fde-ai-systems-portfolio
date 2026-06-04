@@ -135,8 +135,8 @@ Local Git state:
 - `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent for the local scenario draft surface.
 - `scripts/check_error_hygiene.py`: verifies unexpected backend exceptions return generic JSON errors without leaking internals.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
-- `scripts/check_visual_asset_manifest.py`: verifies README screenshots match recorded asset hashes, dimensions, and frontend source hashes.
-- `scripts/refresh_visual_assets.py`: starts live local apps, captures README screenshots with a local browser, and rewrites the visual asset manifest.
+- `scripts/check_visual_asset_manifest.py`: verifies desktop and mobile demo screenshots match recorded asset hashes, dimensions, contrast samples, and frontend source hashes.
+- `scripts/refresh_visual_assets.py`: starts live local apps, captures desktop and mobile demo screenshots with a local browser, and rewrites the visual asset manifest.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.
 - `scripts/check_docker_runtime.py`: optionally builds the Compose stack, waits for container health, runs smoke flows, and tears the stack down on Docker-enabled machines.
@@ -206,7 +206,7 @@ Design Review Docs:
 - `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and review framing.
 - `docs/error_hygiene.md`: generic error response contract for unexpected backend failures.
 - `docs/container_release_hygiene.md`: Docker/Compose release hygiene gate and honest runtime-verification framing.
-- `docs/visual_asset_hygiene.md`: README screenshot manifest, source-hash drift protection, and review framing.
+- `docs/visual_asset_hygiene.md`: desktop/mobile screenshot manifest, source-hash drift protection, and review framing.
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
@@ -257,7 +257,11 @@ Visual assets:
 - `docs/assets/github-preview.png`
 - `docs/assets/architecture-overview.svg`
 - `docs/assets/secure-knowledge-copilot-screenshot.png`
+- `docs/assets/secure-knowledge-copilot-mobile.png`
 - `docs/assets/regulated-ops-agent-screenshot.png`
+- `docs/assets/regulated-ops-agent-mobile.png`
+- `docs/assets/ai-reliability-incident-console-screenshot.png`
+- `docs/assets/ai-reliability-incident-console-mobile.png`
 
 ## Project 1 Contents
 

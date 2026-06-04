@@ -1,12 +1,18 @@
 {
   "version": 1,
-  "purpose": "Keep README screenshots tied to the frontend source files they were captured from.",
+  "purpose": "Keep desktop and mobile demo screenshots tied to the frontend source files they were captured from.",
   "capture": {
     "date": "2026-06-04",
-    "viewport": [
-      1400,
-      900
-    ],
+    "viewports": {
+      "desktop": [
+        1400,
+        900
+      ],
+      "mobile": [
+        500,
+        844
+      ]
+    },
     "method": "scripts/refresh_visual_assets.py after local demo services reached /api/health"
   },
   "assets": [
@@ -25,7 +31,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "5ea56183ce6bf864047e8cd258ebf0fb1ef77650b6b6650d4c024150455556f9"
+          "sha256": "62fbfe97b253e5302476657d66a1123878084c02f3d245fae4f79d158aa41cb4"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -105,6 +111,89 @@
       ]
     },
     {
+      "path": "docs/assets/secure-knowledge-copilot-mobile.png",
+      "kind": "mobile_screenshot",
+      "size": [
+        500,
+        844
+      ],
+      "sha256": "8f3c25b1729ddb01d5737cde46eede05d30bb06e66dfebe06dcd379f1e02d758",
+      "source_files": [
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/index.html",
+          "sha256": "4c93f58f75fb5ef41af78f965453c0af24b4e4d20068aa2dc4958f9dddaa721b"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/styles.css",
+          "sha256": "62fbfe97b253e5302476657d66a1123878084c02f3d245fae4f79d158aa41cb4"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
+          "sha256": "9f2c817469819e5dc4722e1a8e58823f9c0178e495007a5d0073d37c3b65869b"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
+          "sha256": "fd8470f82f8594acf4b9bbbb62c346e747c113127fda609021c7de176669e945"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
+          "sha256": "0041f9892ada2d1056164f59659381248ebd4a06c6728ae8eea33fc4478b0c3f"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/dom.js",
+          "sha256": "d778c3e77a18bb562f59ba1d1a41de168d01116415c7566e40730a6014a1ae67"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
+          "sha256": "ccd4fbac121b1be6ab940d45f6bd4c54171e05b0f61f58e7740b66836fe6f525"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/scenarioEditor.js",
+          "sha256": "ea5c5917985e877b81647547e28bfc8642cb62247e87003cb2771cbc42c4492f"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/theme.js",
+          "sha256": "e3289016f41a5a7cfa4a4871fcf75061c5790ef0ff23b64154faf1a56844fc2c"
+        },
+        {
+          "path": "secure-enterprise-knowledge-copilot/web/js/traceLinks.js",
+          "sha256": "452c297a4909cc1bd632ab81eb0f13994448f5bfb91be344dd98b8853f8c4373"
+        }
+      ],
+      "contrast_samples": [
+        {
+          "name": "title text",
+          "kind": "dark_text_on_light",
+          "region": [
+            16,
+            38,
+            340,
+            58
+          ],
+          "background": [
+            20,
+            20
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "session heading",
+          "kind": "dark_text_on_light",
+          "region": [
+            31,
+            216,
+            110,
+            22
+          ],
+          "background": [
+            20,
+            190
+          ],
+          "minimum_ratio": 4.5
+        }
+      ]
+    },
+    {
       "path": "docs/assets/regulated-ops-agent-screenshot.png",
       "kind": "readme_screenshot",
       "size": [
@@ -119,7 +208,7 @@
         },
         {
           "path": "regulated-customer-operations-agent/web/styles.css",
-          "sha256": "72ff5608dec9a8cab8a69c748e2f532e2951f710b8936678c890d878a6614930"
+          "sha256": "6c27f47ab47b273a613c2638dc2949633410b2a91f6bd49f6257ea8a207e74fb"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/api.js",
@@ -199,6 +288,89 @@
       ]
     },
     {
+      "path": "docs/assets/regulated-ops-agent-mobile.png",
+      "kind": "mobile_screenshot",
+      "size": [
+        500,
+        844
+      ],
+      "sha256": "c0e2ecfe237d4dcaa325f42a6a46f334ecb500cc10c840001d3c54d1cfed1e23",
+      "source_files": [
+        {
+          "path": "regulated-customer-operations-agent/web/index.html",
+          "sha256": "088b8010342bdfbbf6d298378a8f383b62e89f82ec0d3c600dbd66433b2311fe"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/styles.css",
+          "sha256": "6c27f47ab47b273a613c2638dc2949633410b2a91f6bd49f6257ea8a207e74fb"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/api.js",
+          "sha256": "9f2c817469819e5dc4722e1a8e58823f9c0178e495007a5d0073d37c3b65869b"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/app.js",
+          "sha256": "3387775a34a5c532c3a122fe3e9bab4c5168f081052fde5623d16ae23cbe88b8"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/clipboard.js",
+          "sha256": "0041f9892ada2d1056164f59659381248ebd4a06c6728ae8eea33fc4478b0c3f"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/dom.js",
+          "sha256": "2143a9716c6228d3a5969d0096f4a92460ceb1654d2155d44997aa6f88b5d7a7"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/renderers.js",
+          "sha256": "1d54c464ce823f6e074abb7e249c884a19af10205ffbb00b9d63df204511972e"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/scenarioEditor.js",
+          "sha256": "ea5c5917985e877b81647547e28bfc8642cb62247e87003cb2771cbc42c4492f"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/theme.js",
+          "sha256": "639ac8edbbe7c203e1ff2cb62c86dcf56d0ff81f43188f546714641d537d7aa1"
+        },
+        {
+          "path": "regulated-customer-operations-agent/web/js/traceLinks.js",
+          "sha256": "452c297a4909cc1bd632ab81eb0f13994448f5bfb91be344dd98b8853f8c4373"
+        }
+      ],
+      "contrast_samples": [
+        {
+          "name": "title text",
+          "kind": "dark_text_on_light",
+          "region": [
+            16,
+            38,
+            340,
+            58
+          ],
+          "background": [
+            20,
+            20
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "session heading",
+          "kind": "dark_text_on_light",
+          "region": [
+            31,
+            216,
+            110,
+            22
+          ],
+          "background": [
+            20,
+            190
+          ],
+          "minimum_ratio": 4.5
+        }
+      ]
+    },
+    {
       "path": "docs/assets/ai-reliability-incident-console-screenshot.png",
       "kind": "readme_screenshot",
       "size": [
@@ -213,7 +385,7 @@
         },
         {
           "path": "ai-reliability-incident-console/web/styles.css",
-          "sha256": "974a21d5340a87bd85e51fda5a671b63131ec25dfbb17c45ef36eefc075ecdf3"
+          "sha256": "5ca252d65e1e075dd8a9f8addcf353a9370045cb33b47a768363c8d694427050"
         },
         {
           "path": "ai-reliability-incident-console/web/js/api.js",
@@ -287,6 +459,89 @@
           "background": [
             360,
             348
+          ],
+          "minimum_ratio": 4.5
+        }
+      ]
+    },
+    {
+      "path": "docs/assets/ai-reliability-incident-console-mobile.png",
+      "kind": "mobile_screenshot",
+      "size": [
+        500,
+        844
+      ],
+      "sha256": "8f70941c95d55a84cf7504801ea71dd53d45e401f4df86b0b3054576cfa0bab4",
+      "source_files": [
+        {
+          "path": "ai-reliability-incident-console/web/index.html",
+          "sha256": "e557038f77bff0540b55c6a12f2ee0286a360716a555283f17d9cdfc1d3dfe04"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/styles.css",
+          "sha256": "5ca252d65e1e075dd8a9f8addcf353a9370045cb33b47a768363c8d694427050"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/api.js",
+          "sha256": "8af3bcca52c8cc85752300d2ea5c2b6d0b2c0863f0e93773631950703e914860"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/app.js",
+          "sha256": "a940f9c054871154ba1be9b5bc070ad0a30585486a46daf39190d116b5f82bf4"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/clipboard.js",
+          "sha256": "0041f9892ada2d1056164f59659381248ebd4a06c6728ae8eea33fc4478b0c3f"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/dom.js",
+          "sha256": "dc2ef305519a67ed67391f59d16d06c173dddf9d679b311bc1bac7c96cd9652d"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/renderers.js",
+          "sha256": "ca5b9497b58ae6a18c66803dd45dcc5a35b355ae9fe2f97f4c41adf1c119a983"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/scenarioEditor.js",
+          "sha256": "ea5c5917985e877b81647547e28bfc8642cb62247e87003cb2771cbc42c4492f"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/theme.js",
+          "sha256": "a9c87873538b90d67be14d5be6757ef55f45474b1cd9881d78541d51b6d1c768"
+        },
+        {
+          "path": "ai-reliability-incident-console/web/js/traceLinks.js",
+          "sha256": "452c297a4909cc1bd632ab81eb0f13994448f5bfb91be344dd98b8853f8c4373"
+        }
+      ],
+      "contrast_samples": [
+        {
+          "name": "title text",
+          "kind": "dark_text_on_light",
+          "region": [
+            16,
+            38,
+            340,
+            58
+          ],
+          "background": [
+            20,
+            20
+          ],
+          "minimum_ratio": 4.5
+        },
+        {
+          "name": "release heading",
+          "kind": "dark_text_on_light",
+          "region": [
+            31,
+            216,
+            110,
+            22
+          ],
+          "background": [
+            20,
+            190
           ],
           "minimum_ratio": 4.5
         }

@@ -12,8 +12,11 @@ MANIFEST = ROOT / "docs" / "visual_assets_manifest.json"
 
 REQUIRED_ASSETS = {
     "docs/assets/secure-knowledge-copilot-screenshot.png",
+    "docs/assets/secure-knowledge-copilot-mobile.png",
     "docs/assets/regulated-ops-agent-screenshot.png",
+    "docs/assets/regulated-ops-agent-mobile.png",
     "docs/assets/ai-reliability-incident-console-screenshot.png",
+    "docs/assets/ai-reliability-incident-console-mobile.png",
 }
 
 
@@ -241,7 +244,7 @@ def main() -> int:
             print(f"- {failure}")
         return 1
 
-    print("Visual asset manifest check passed: README screenshots match recorded assets, source hashes, and contrast samples.")
+    print("Visual asset manifest check passed: desktop and mobile screenshots match recorded assets, source hashes, and contrast samples.")
     return 0
 
 

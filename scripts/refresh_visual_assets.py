@@ -18,33 +18,65 @@ from check_visual_asset_manifest import png_size, sha256
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs" / "visual_assets_manifest.json"
-VIEWPORT = [1400, 900]
+DESKTOP_VIEWPORT = [1400, 900]
+MOBILE_VIEWPORT = [500, 844]
 PROJECTS = [
     {
         "name": "secure-enterprise-knowledge-copilot",
         "path": ROOT / "secure-enterprise-knowledge-copilot",
         "preferred_port": 8765,
-        "asset": ROOT / "docs" / "assets" / "secure-knowledge-copilot-screenshot.png",
-        "contrast_samples": [
+        "screenshots": [
             {
-                "name": "title text",
-                "kind": "dark_text_on_light",
-                "region": [16, 38, 460, 26],
-                "background": [20, 20],
-                "minimum_ratio": 4.5,
+                "name": "desktop",
+                "kind": "readme_screenshot",
+                "asset": ROOT / "docs" / "assets" / "secure-knowledge-copilot-screenshot.png",
+                "viewport": DESKTOP_VIEWPORT,
+                "minimum_bytes": 30_000,
+                "contrast_samples": [
+                    {
+                        "name": "title text",
+                        "kind": "dark_text_on_light",
+                        "region": [16, 38, 460, 26],
+                        "background": [20, 20],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "primary action text",
+                        "kind": "light_text_on_fill",
+                        "region": [346, 354, 668, 40],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "quick action text",
+                        "kind": "dark_text_on_light",
+                        "region": [345, 166, 162, 33],
+                        "background": [360, 184],
+                        "minimum_ratio": 4.5,
+                    },
+                ],
             },
             {
-                "name": "primary action text",
-                "kind": "light_text_on_fill",
-                "region": [346, 354, 668, 40],
-                "minimum_ratio": 4.5,
-            },
-            {
-                "name": "quick action text",
-                "kind": "dark_text_on_light",
-                "region": [345, 166, 162, 33],
-                "background": [360, 184],
-                "minimum_ratio": 4.5,
+                "name": "mobile",
+                "kind": "mobile_screenshot",
+                "asset": ROOT / "docs" / "assets" / "secure-knowledge-copilot-mobile.png",
+                "viewport": MOBILE_VIEWPORT,
+                "minimum_bytes": 20_000,
+                "contrast_samples": [
+                    {
+                        "name": "title text",
+                        "kind": "dark_text_on_light",
+                        "region": [16, 38, 340, 58],
+                        "background": [20, 20],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "session heading",
+                        "kind": "dark_text_on_light",
+                        "region": [31, 216, 110, 22],
+                        "background": [20, 190],
+                        "minimum_ratio": 4.5,
+                    },
+                ],
             },
         ],
     },
@@ -52,27 +84,58 @@ PROJECTS = [
         "name": "regulated-customer-operations-agent",
         "path": ROOT / "regulated-customer-operations-agent",
         "preferred_port": 8770,
-        "asset": ROOT / "docs" / "assets" / "regulated-ops-agent-screenshot.png",
-        "contrast_samples": [
+        "screenshots": [
             {
-                "name": "title text",
-                "kind": "dark_text_on_light",
-                "region": [16, 38, 430, 26],
-                "background": [20, 20],
-                "minimum_ratio": 4.5,
+                "name": "desktop",
+                "kind": "readme_screenshot",
+                "asset": ROOT / "docs" / "assets" / "regulated-ops-agent-screenshot.png",
+                "viewport": DESKTOP_VIEWPORT,
+                "minimum_bytes": 30_000,
+                "contrast_samples": [
+                    {
+                        "name": "title text",
+                        "kind": "dark_text_on_light",
+                        "region": [16, 38, 430, 26],
+                        "background": [20, 20],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "primary action text",
+                        "kind": "light_text_on_fill",
+                        "region": [346, 358, 668, 40],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "quick action text",
+                        "kind": "dark_text_on_light",
+                        "region": [345, 166, 162, 36],
+                        "background": [360, 184],
+                        "minimum_ratio": 4.5,
+                    },
+                ],
             },
             {
-                "name": "primary action text",
-                "kind": "light_text_on_fill",
-                "region": [346, 358, 668, 40],
-                "minimum_ratio": 4.5,
-            },
-            {
-                "name": "quick action text",
-                "kind": "dark_text_on_light",
-                "region": [345, 166, 162, 36],
-                "background": [360, 184],
-                "minimum_ratio": 4.5,
+                "name": "mobile",
+                "kind": "mobile_screenshot",
+                "asset": ROOT / "docs" / "assets" / "regulated-ops-agent-mobile.png",
+                "viewport": MOBILE_VIEWPORT,
+                "minimum_bytes": 20_000,
+                "contrast_samples": [
+                    {
+                        "name": "title text",
+                        "kind": "dark_text_on_light",
+                        "region": [16, 38, 340, 58],
+                        "background": [20, 20],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "session heading",
+                        "kind": "dark_text_on_light",
+                        "region": [31, 216, 110, 22],
+                        "background": [20, 190],
+                        "minimum_ratio": 4.5,
+                    },
+                ],
             },
         ],
     },
@@ -80,27 +143,58 @@ PROJECTS = [
         "name": "ai-reliability-incident-console",
         "path": ROOT / "ai-reliability-incident-console",
         "preferred_port": 8780,
-        "asset": ROOT / "docs" / "assets" / "ai-reliability-incident-console-screenshot.png",
-        "contrast_samples": [
+        "screenshots": [
             {
-                "name": "title text",
-                "kind": "dark_text_on_light",
-                "region": [16, 38, 390, 26],
-                "background": [20, 20],
-                "minimum_ratio": 4.5,
+                "name": "desktop",
+                "kind": "readme_screenshot",
+                "asset": ROOT / "docs" / "assets" / "ai-reliability-incident-console-screenshot.png",
+                "viewport": DESKTOP_VIEWPORT,
+                "minimum_bytes": 30_000,
+                "contrast_samples": [
+                    {
+                        "name": "title text",
+                        "kind": "dark_text_on_light",
+                        "region": [16, 38, 390, 26],
+                        "background": [20, 20],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "primary action text",
+                        "kind": "light_text_on_fill",
+                        "region": [346, 379, 668, 40],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "quick action text",
+                        "kind": "dark_text_on_light",
+                        "region": [345, 330, 330, 37],
+                        "background": [360, 348],
+                        "minimum_ratio": 4.5,
+                    },
+                ],
             },
             {
-                "name": "primary action text",
-                "kind": "light_text_on_fill",
-                "region": [346, 379, 668, 40],
-                "minimum_ratio": 4.5,
-            },
-            {
-                "name": "quick action text",
-                "kind": "dark_text_on_light",
-                "region": [345, 330, 330, 37],
-                "background": [360, 348],
-                "minimum_ratio": 4.5,
+                "name": "mobile",
+                "kind": "mobile_screenshot",
+                "asset": ROOT / "docs" / "assets" / "ai-reliability-incident-console-mobile.png",
+                "viewport": MOBILE_VIEWPORT,
+                "minimum_bytes": 20_000,
+                "contrast_samples": [
+                    {
+                        "name": "title text",
+                        "kind": "dark_text_on_light",
+                        "region": [16, 38, 340, 58],
+                        "background": [20, 20],
+                        "minimum_ratio": 4.5,
+                    },
+                    {
+                        "name": "release heading",
+                        "kind": "dark_text_on_light",
+                        "region": [31, 216, 110, 22],
+                        "background": [20, 190],
+                        "minimum_ratio": 4.5,
+                    },
+                ],
             },
         ],
     },
@@ -183,7 +277,7 @@ def find_browser() -> Path:
     raise RuntimeError("No Chrome/Chromium/Edge executable found. Set FDE_BROWSER_BIN to refresh screenshots.")
 
 
-def capture(browser: Path, url: str, output: Path, profile_dir: Path) -> None:
+def capture(browser: Path, url: str, output: Path, profile_dir: Path, viewport: list[int], minimum_bytes: int) -> None:
     if output.exists():
         output.unlink()
     args = [
@@ -195,7 +289,7 @@ def capture(browser: Path, url: str, output: Path, profile_dir: Path) -> None:
         "--disable-extensions",
         "--hide-scrollbars",
         f"--user-data-dir={profile_dir}",
-        f"--window-size={VIEWPORT[0]},{VIEWPORT[1]}",
+        f"--window-size={viewport[0]},{viewport[1]}",
         "--virtual-time-budget=5000",
         f"--screenshot={output}",
         url,
@@ -208,9 +302,9 @@ def capture(browser: Path, url: str, output: Path, profile_dir: Path) -> None:
         detail = (result.stdout + result.stderr).strip()
         raise RuntimeError(f"browser did not write screenshot for {url}: {detail}")
     size = png_size(output)
-    if size != tuple(VIEWPORT):
-        raise RuntimeError(f"{output.relative_to(ROOT).as_posix()}: expected {VIEWPORT}, found {size}")
-    if output.stat().st_size < 30_000:
+    if size != tuple(viewport):
+        raise RuntimeError(f"{output.relative_to(ROOT).as_posix()}: expected {viewport}, found {size}")
+    if output.stat().st_size < minimum_bytes:
         raise RuntimeError(f"{output.relative_to(ROOT).as_posix()}: screenshot is suspiciously small")
 
 
@@ -222,31 +316,38 @@ def source_files(project: dict) -> list[Path]:
 
 
 def render_manifest() -> dict:
+    assets = []
+    for project in PROJECTS:
+        source_entries = [
+            {
+                "path": source.relative_to(ROOT).as_posix(),
+                "sha256": sha256(source),
+            }
+            for source in source_files(project)
+        ]
+        for screenshot in project["screenshots"]:
+            assets.append(
+                {
+                    "path": screenshot["asset"].relative_to(ROOT).as_posix(),
+                    "kind": screenshot["kind"],
+                    "size": screenshot["viewport"],
+                    "sha256": sha256(screenshot["asset"]),
+                    "source_files": source_entries,
+                    "contrast_samples": screenshot["contrast_samples"],
+                }
+            )
     return {
         "version": 1,
-        "purpose": "Keep README screenshots tied to the frontend source files they were captured from.",
+        "purpose": "Keep desktop and mobile demo screenshots tied to the frontend source files they were captured from.",
         "capture": {
             "date": datetime.now().date().isoformat(),
-            "viewport": VIEWPORT,
+            "viewports": {
+                "desktop": DESKTOP_VIEWPORT,
+                "mobile": MOBILE_VIEWPORT,
+            },
             "method": "scripts/refresh_visual_assets.py after local demo services reached /api/health",
         },
-        "assets": [
-            {
-                "path": project["asset"].relative_to(ROOT).as_posix(),
-                "kind": "readme_screenshot",
-                "size": VIEWPORT,
-                "sha256": sha256(project["asset"]),
-                "source_files": [
-                    {
-                        "path": source.relative_to(ROOT).as_posix(),
-                        "sha256": sha256(source),
-                    }
-                    for source in source_files(project)
-                ],
-                "contrast_samples": project["contrast_samples"],
-            }
-            for project in PROJECTS
-        ],
+        "assets": assets,
     }
 
 
@@ -255,7 +356,7 @@ def write_manifest() -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Refresh README screenshots and visual asset manifest.")
+    parser = argparse.ArgumentParser(description="Refresh desktop/mobile screenshots and visual asset manifest.")
     parser.add_argument("--check-browser", action="store_true", help="Only verify that a browser executable is available.")
     args = parser.parse_args()
 
@@ -277,17 +378,20 @@ def main() -> int:
                     if not wait_for_health(port):
                         raise RuntimeError(f"{project['name']} did not become healthy on port {port}")
                 for project, port in zip(PROJECTS, ports):
-                    print(f"Capturing {project['asset'].relative_to(ROOT).as_posix()}")
-                    capture(
-                        browser,
-                        f"http://127.0.0.1:{port}/",
-                        project["asset"],
-                        temp_root / f"profile-{project['name']}",
-                    )
+                    for screenshot in project["screenshots"]:
+                        print(f"Capturing {screenshot['asset'].relative_to(ROOT).as_posix()}")
+                        capture(
+                            browser,
+                            f"http://127.0.0.1:{port}/",
+                            screenshot["asset"],
+                            temp_root / f"profile-{project['name']}-{screenshot['name']}",
+                            screenshot["viewport"],
+                            screenshot["minimum_bytes"],
+                        )
             finally:
                 stop_processes(processes)
         write_manifest()
-        print("Refreshed README screenshots and docs/visual_assets_manifest.json")
+        print("Refreshed desktop/mobile screenshots and docs/visual_assets_manifest.json")
         return 0
     except Exception as exc:
         print(f"Visual asset refresh failed: {exc}", file=sys.stderr)
