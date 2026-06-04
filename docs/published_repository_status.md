@@ -84,6 +84,7 @@ API documentation gate: passed
 Demo replay artifact: command published; writes ignored files under `out/`
 Container release hygiene: passed
 Visual asset manifest: passed
+Visual asset diff summary: passed
 Launch asset hygiene: passed
 Quality gate: passed
 ```
@@ -101,7 +102,7 @@ Confirmed:
 - API documentation script and documentation published
 - demo replay artifact script and documentation published
 - container release hygiene script and documentation published
-- visual asset manifest script, documentation, manifest, and desktop/mobile screenshot contrast samples published
+- visual asset manifest script, visual asset diff script, documentation, manifest, and desktop/mobile screenshot contrast samples published
 - README desktop screenshots, mobile / narrow viewport screenshots, and demo walkthrough GIF are tracked and published
 - keyboard-friendly trace deep links, copy-link controls, and refreshed desktop/mobile screenshots are tracked and published
 - copyable and diffable browser-local scenario drafts and read-only scenario snapshot endpoints are tracked and published

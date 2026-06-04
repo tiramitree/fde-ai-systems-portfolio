@@ -19,6 +19,7 @@ This checklist tracks the repository evidence needed before claiming a public re
 - `scripts/check_threat_model.py` maps 12/12 threats to controls, files, and evidence commands.
 - `scripts/check_pr_review_policy.py` passes.
 - `scripts/check_launch_assets.py` passes.
+- `scripts/summarize_visual_asset_diff.py` passes without printing binary image contents.
 - `scripts/quality_gate.py` passes.
 - All three projects have README files, architecture docs, demo scripts, threat models, implementation status files, and technical review notes.
 - Optional OpenAI Responses API gateway code exists but is disabled by default.

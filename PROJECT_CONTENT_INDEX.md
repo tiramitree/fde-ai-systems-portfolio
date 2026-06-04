@@ -69,6 +69,7 @@ python -B scripts/dev.py safety
 python -B scripts/dev.py threat-model
 python -B scripts/dev.py ui-contracts
 python -B scripts/dev.py visual-assets
+python -B scripts/dev.py visual-asset-diff
 python -B scripts/dev.py workflow-security
 python -B scripts/dev.py quality
 ```
@@ -124,7 +125,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -136,6 +137,7 @@ Local Git state:
 - `scripts/check_error_hygiene.py`: verifies unexpected backend exceptions return generic JSON errors without leaking internals.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_visual_asset_manifest.py`: verifies desktop and mobile demo screenshots match recorded asset hashes, dimensions, contrast samples, and frontend source hashes.
+- `scripts/summarize_visual_asset_diff.py`: summarizes changed visual asset paths, dimensions, hash prefixes, source-hash changes, and contrast ratios without printing binary image contents.
 - `scripts/refresh_visual_assets.py`: starts live local apps, captures desktop and mobile demo screenshots with a local browser, and rewrites the visual asset manifest.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.

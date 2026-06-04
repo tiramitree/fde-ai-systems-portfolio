@@ -20,6 +20,7 @@ The command verifies:
 - public safety scan
 - Markdown links and public assets
 - desktop/mobile screenshot manifest
+- visual asset diff summary command
 - Docker/Compose release hygiene
 - dependency-surface policy
 - repository governance files

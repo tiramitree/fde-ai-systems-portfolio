@@ -22,7 +22,7 @@ Use this before showing the repo to a technical reviewer or GitHub audience.
 - Error messages are not raw stack traces in the browser.
 - Trace IDs, audit events, approval records, and blocked actions can be verified with `python -B scripts/dev.py observability`.
 - Trace IDs can be copied from the demo UIs without selecting raw JSON.
-- Desktop and mobile screenshots are checked against the visual asset manifest with `python -B scripts/dev.py visual-assets`.
+- Desktop and mobile screenshots are checked against the visual asset manifest with `python -B scripts/dev.py visual-assets`, and changed screenshot refreshes can be summarized with `python -B scripts/dev.py visual-asset-diff`.
 - Threats, deterministic controls, evidence files, and proof commands can be verified with `python -B scripts/dev.py threat-model`.
 - Public PR review rules and malicious-contribution heuristics can be verified with `python -B scripts/dev.py pr-policy`.
 - Release-attachable replay evidence can be generated with `python -B scripts/dev.py replay-artifact`.

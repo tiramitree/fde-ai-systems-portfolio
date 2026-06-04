@@ -50,7 +50,7 @@ After the automated check passes:
 12. Run `python -B scripts/dev.py container-release` before claiming Docker packaging is release-clean.
 13. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming Docker runtime verification.
 14. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
-15. Run `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
+15. Run `python -B scripts/dev.py visual-asset-diff` and `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
 16. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
 17. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
 
