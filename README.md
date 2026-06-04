@@ -244,6 +244,10 @@ Connector roadmap readiness:
 
 Use [Production Upgrade Notes](docs/production_upgrade_notes.md), [Project Case Notes](docs/project_case_notes.md), [Model Gateway Safety](docs/model_gateway_safety.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Connector stubs](#contributor-route-map) row before adding external-system adapters. Connector stubs must keep external side effects behind approval, idempotency, audit, and trace boundaries; run `python -B scripts/dev.py architecture`, `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
 
+Eval regression readiness:
+
+Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
@@ -263,7 +267,7 @@ Operational runbook index:
 | Audit log | Structured records of security, workflow, approval, and release-decision events that explain what happened after a run; see [threat model](docs/threat_model.md) and [observability integrity](docs/observability_integrity.md). |
 | Abstention | The answer behavior used when accessible evidence is missing, unauthorized, or unsafe after filtering; see [Project 1](#project-1-secure-enterprise-knowledge-copilot) and the [System Evidence Matrix](docs/portfolio_evidence_matrix.md). |
 
-Evidence legend:
+## Evidence Legend
 
 | Gate | Proves | Does Not Prove |
 | --- | --- | --- |
