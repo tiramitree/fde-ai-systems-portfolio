@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add an eval authoring guide for safe retrieval, approval, and release-blocking cases.
-3. Add seed-data extension examples for one document, one operations case, and one incident.
-4. Add local API error examples for 403, 404, and invalid JSON responses.
-5. Add a trace timeline explainer for one canonical flow per project.
+2. Add seed-data extension examples for one document, one operations case, and one incident.
+3. Add local API error examples for 403, 404, and invalid JSON responses.
+4. Add a trace timeline explainer for one canonical flow per project.
+5. Add contributor-local troubleshooting examples for failed eval gates.
 
 ## Intermediate Issues
 
@@ -93,3 +93,4 @@ Contributions should preserve these invariants:
 - Add a compact README release page evidence pointer.
 - Add an API request cookbook for the canonical demo paths.
 - Add a contributor code-tour page for API, service, storage, and frontend boundaries.
+- Add an eval authoring guide for safe retrieval, approval, and release-blocking cases.
