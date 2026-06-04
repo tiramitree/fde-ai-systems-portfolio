@@ -284,6 +284,10 @@ PR triage readiness:
 
 Use [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), [Development Issue Solutions](docs/development_issue_solutions.md), and the [Evidence Matrix](#evidence-matrix) before approving workflows, running contributor code, or merging public contributions. Treat public PRs as untrusted input: read changed files and diffs before running code, and give workflow, dependency, model gateway, safety, eval, binary, network, shell, and environment changes extra scrutiny; run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
 
+Threat model readiness:
+
+Use [Threat Model](docs/threat_model.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), the [Evidence Legend](#evidence-legend), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Evidence Matrix](#evidence-matrix) before changing security-sensitive behavior. Information disclosure, prompt injection, unsafe side effects, public PR abuse, dependency drift, optional model gateway risk, observability gaps, and UI route surprises must map to deterministic owners and evidence commands; run `python -B scripts/dev.py threat-model`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py evals`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |

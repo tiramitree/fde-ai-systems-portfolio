@@ -57,6 +57,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README error hygiene evidence pointer
 - Add a compact README model gateway safety evidence pointer
 - Add a compact README PR triage evidence pointer
+- Add a compact README threat model evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -181,7 +182,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README threat model evidence pointer
+Add a compact README workflow security evidence pointer
 ```
 
 Labels:
@@ -193,16 +194,16 @@ documentation, security, good first issue
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where threat model materials live and which deterministic controls must be preserved before changing security-sensitive behavior.
+Add a compact README pointer that tells contributors where workflow security materials live and which CI privilege boundaries must be preserved before changing GitHub Actions or automation paths.
 
 Acceptance criteria:
 
-- Link to Threat Model, System Evidence Matrix, Evidence Legend, Architecture Boundaries, and the threat model row in the Evidence Matrix.
-- Cover threat-model checks: `python -B scripts/dev.py threat-model`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py evals`, and `python -B scripts/dev.py quality`.
+- Link to Workflow Security, System Evidence Matrix, PR Review Security, Pull Request Review Runbook, and the GitHub Actions row in the Evidence Matrix.
+- Cover workflow checks: `python -B scripts/dev.py workflow-security`, `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that information disclosure, prompt injection, unsafe side effects, public PR abuse, dependency drift, optional model gateway risk, observability gaps, and UI route surprises map to deterministic owners and evidence commands.
+- Make clear that public PR workflows use read-only tokens, no secrets, safe triggers, hardened checkout, approved actions, and no CI push or GitHub authentication path.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py threat-model still passes.
+- python -B scripts/dev.py workflow-security still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 
