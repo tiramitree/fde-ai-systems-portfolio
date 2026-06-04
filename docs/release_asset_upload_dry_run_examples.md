@@ -1,6 +1,6 @@
 # Release Asset Upload Dry-Run Examples
 
-Use this page when planning or reviewing release asset uploads. Read it with `docs/release_attachment_verification_examples.md`, `docs/github_release_commands.md`, `docs/release_note_refresh_checklist.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, and `docs/post_publish_checklist.md`.
+Use this page when planning or reviewing release asset uploads. Read it with `docs/release_attachment_verification_examples.md`, `docs/release_asset_checksum_mismatch_examples.md`, `docs/github_release_commands.md`, `docs/release_note_refresh_checklist.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, and `docs/post_publish_checklist.md`.
 
 The core rule: dry-run plans, generated replay artifacts, source-controlled docs, and published GitHub release state prove different things. Do not claim release assets were uploaded until public release evidence confirms it.
 
@@ -36,6 +36,8 @@ python -B scripts/dev.py github-maintenance
 ```
 
 `python -B scripts/dev.py github-maintenance` prints the release setup plan. It does not prove the release page exists, and it does not upload `out/demo_replay_artifact.md` or `out/demo_replay_artifact.json`.
+
+Use `docs/release_asset_checksum_mismatch_examples.md` before treating local hashes, changed generated artifact hashes, public attachment hashes, or screenshot-visible attachments as uploaded release evidence.
 
 ## Missing Replay Artifacts
 
@@ -170,5 +172,6 @@ Generated replay artifacts should stay ignored and be uploaded externally to the
 - Checked-in release notes and release-page text are reviewed with `docs/release_note_refresh_checklist.md`.
 - The release page exists before upload commands are treated as actionable.
 - Dry-run output is not described as an applied GitHub release state.
+- Checksum mismatches are reviewed with `docs/release_asset_checksum_mismatch_examples.md` before upload plans are treated as current release evidence.
 - `out/` files remain ignored and are not committed as ordinary source content.
 - `docs/github_release_attachment_screenshot_checklist.md` is used before screenshots become release evidence.

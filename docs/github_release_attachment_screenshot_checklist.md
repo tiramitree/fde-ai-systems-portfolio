@@ -1,6 +1,6 @@
 # GitHub Release Attachment Screenshot Checklist
 
-Use this page when collecting or reviewing screenshots that show release replay artifacts attached to GitHub. Read it with `docs/release_attachment_verification_examples.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_latest_release_troubleshooting_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when collecting or reviewing screenshots that show release replay artifacts attached to GitHub. Read it with `docs/release_attachment_verification_examples.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/release_asset_checksum_mismatch_examples.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_latest_release_troubleshooting_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: generated local artifacts, release-page screenshots, and current public release evidence prove different things. Do not commit private account screenshots, generated `out/` files, or release-attachment claims without matching public evidence.
 
@@ -48,6 +48,8 @@ python -B scripts/dev.py github-readiness
 ```
 
 Use `docs/release_attachment_verification_examples.md` before turning the screenshot into a release claim.
+
+Use `docs/release_asset_checksum_mismatch_examples.md` before treating screenshot-visible attachments, filenames, local hashes, or changed generated artifact hashes as current release evidence.
 
 ## Missing Attachment Screenshots
 
@@ -166,6 +168,7 @@ Use `docs/github_latest_release_troubleshooting_examples.md` when latest-release
 
 - `docs/release_attachment_verification_examples.md` remains the source for attachment troubleshooting.
 - `docs/release_asset_upload_dry_run_examples.md` remains the source for upload-plan and generated-`out/` boundaries.
+- `docs/release_asset_checksum_mismatch_examples.md` remains the source for checksum mismatch review.
 - `docs/github_release_page_troubleshooting_examples.md` remains the source for release-page drift.
 - `docs/github_latest_release_troubleshooting_examples.md` remains the source for latest-release ambiguity.
 - `docs/post_publish_checklist.md` keeps release attachment review as a manual GitHub step.

@@ -117,6 +117,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact roadmap duplicate-issue handling examples
 - Add compact issue template stale-evidence examples
 - Add compact stale launch-feedback claim examples
+- Add compact release asset checksum mismatch examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -241,7 +242,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact release asset checksum mismatch examples
+Add compact stale GitHub Discussions pin examples
 ```
 
 Labels:
@@ -253,14 +254,15 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact release asset checksum mismatch examples that explain how to handle mismatches between generated replay artifacts, release attachment hashes, local manifests, and public GitHub release evidence.
+Add compact stale GitHub Discussions pin examples that explain how to handle old pinned topics, stale starter posts, wrong category pins, and discussion links that no longer reflect the current repository state.
 
 Acceptance criteria:
 
-- Add docs/release_asset_checksum_mismatch_examples.md with examples for stale local replay artifacts, changed generated artifact hashes, missing public attachments, wrong release tag checksums, and post-publish checksum drift.
-- Reference docs/release_attachment_verification_examples.md, docs/release_asset_upload_dry_run_examples.md, docs/github_release_attachment_screenshot_checklist.md, and docs/post_publish_warning_examples.md.
-- Keep generated local artifacts, source-controlled docs, uploaded release attachments, screenshots, checksums, and post-publish evidence separate; do not claim release assets are current until public evidence confirms them.
+- Add docs/stale_github_discussions_pin_examples.md with examples for stale global pins, stale category pins, outdated starter topics, wrong-category links, and old launch-feedback discussion references.
+- Reference docs/github_discussions_launch_checklist.md, docs/discussion_to_issue_conversion_examples.md, docs/launch_feedback_collection_examples.md, and docs/post_publish_warning_examples.md.
+- Keep GitHub Discussions setup, pinned topics, issue scope, launch feedback, private feedback, and roadmap acceptance separate; do not claim Discussions are current until visible public evidence confirms the pins.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
