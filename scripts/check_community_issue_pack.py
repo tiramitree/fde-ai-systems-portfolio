@@ -27,6 +27,8 @@ REQUIRED_LABELS = {
     "release",
 }
 
+FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
+
 FORBIDDEN_ISSUE_TEXT = [
     "look active",
     "look alive",
@@ -124,6 +126,60 @@ def check_public_backlog() -> list[str]:
     return failures
 
 
+def check_first_pull_request_checklist() -> list[str]:
+    failures: list[str] = []
+    if not FIRST_PULL_REQUEST_CHECKLIST.exists():
+        return ["missing docs/first_pull_request_checklist.md"]
+
+    text = FIRST_PULL_REQUEST_CHECKLIST.read_text(encoding="utf-8")
+    required_phrases = [
+        "CONTRIBUTING.md",
+        "docs/code_tour.md",
+        "docs/pr_review_security.md",
+        "docs/command_output_troubleshooting_map.md",
+        "docs/local_demo_reset_troubleshooting.md",
+        "git status --short --branch",
+        "git switch -c",
+        "git diff --stat",
+        "git diff --check",
+        "Docs-only",
+        "Frontend",
+        "Backend/API",
+        "Seed/eval",
+        "Visual-asset",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py frontend",
+        "python -B scripts/dev.py ui-contracts",
+        "python -B scripts/dev.py api-docs",
+        "python -B scripts/dev.py contracts",
+        "python -B scripts/dev.py scenario-data",
+        "python -B scripts/dev.py demo-presets",
+        "python -B scripts/dev.py visual-assets",
+        "python -B scripts/dev.py visual-asset-diff",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone-local",
+        "*/data/runtime_state.json",
+        "*/data/eval_runtime_state.json",
+        "out/demo_replay_artifact.*",
+        "Do not commit these as source content",
+        "Public PRs are untrusted input",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/first_pull_request_checklist.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/first_pull_request_checklist.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/first_pull_request_checklist.md",
+        "CONTRIBUTING.md": "docs/first_pull_request_checklist.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_templates(labels: dict[str, object]) -> list[str]:
     failures: list[str] = []
     for rel_path, template_label_names in template_labels().items():
@@ -168,6 +224,7 @@ def main() -> int:
     failures.extend(label_failures)
     failures.extend(check_issue_pack(labels))
     failures.extend(check_public_backlog())
+    failures.extend(check_first_pull_request_checklist())
     failures.extend(check_templates(labels))
     failures.extend(check_cross_references())
 

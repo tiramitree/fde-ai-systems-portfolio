@@ -12,7 +12,7 @@ This repository is designed as a practical reference for building enterprise AI 
 
 ## Contribution Rules
 
-- Keep both projects runnable with only Python standard library unless the change is behind an optional adapter.
+- Keep all projects runnable with only Python standard library unless the change is behind an optional adapter.
 - Do not make OpenAI API calls required for the basic demo.
 - Do not move safety enforcement into model prompts only.
 - Do not request, print, upload, or depend on secrets, local files, private user data, or account credentials.
@@ -106,4 +106,4 @@ python -B scripts/dev.py verify
 - [ ] Security or governance behavior is not weakened.
 - [ ] README or docs are updated if the user-facing workflow changed.
 
-See [Maintainer Review Policy](docs/maintainer_review_policy.md) for how reviews and external PRs are triaged.
+See [First Pull Request Checklist](docs/first_pull_request_checklist.md) before opening a local PR, and [Maintainer Review Policy](docs/maintainer_review_policy.md) for how reviews and external PRs are triaged.

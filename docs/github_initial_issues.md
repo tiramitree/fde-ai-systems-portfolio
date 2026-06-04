@@ -76,6 +76,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a command-output troubleshooting map for common gates
 - Add a local demo reset troubleshooting guide for stale runtime state
 - Add a seed fixture data-flow map
+- Add a contributor onboarding checklist for the first local pull request
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -200,7 +201,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a contributor onboarding checklist for the first local pull request
+Add docs-only pull request review examples
 ```
 
 Labels:
@@ -212,14 +213,14 @@ documentation, good first issue
 Body:
 
 ```text
-Add a contributor-friendly checklist for opening the first local pull request without weakening safety or reproducibility.
+Add concrete examples for reviewing docs-only pull requests without running unnecessary code or weakening public claims.
 
 Acceptance criteria:
 
-- Add docs/first_pull_request_checklist.md covering clone, branch, diff review, route selection, targeted gates, full quality checks, and PR handoff.
-- Reference CONTRIBUTING.md, docs/code_tour.md, docs/pr_review_security.md, docs/command_output_troubleshooting_map.md, and docs/local_demo_reset_troubleshooting.md.
-- Include separate paths for docs-only, frontend, backend/API, seed/eval, and visual-asset changes.
-- Link the checklist from README.md and PROJECT_CONTENT_INDEX.md.
+- Add docs/docs_only_pr_review_examples.md with examples of useful docs PRs, low-signal docs PRs, and unsafe docs PRs.
+- Include reviewer steps for checking public claims, links, generated artifacts, private paths, and issue-pack drift.
+- Reference docs/pr_review_security.md, docs/command_output_troubleshooting_map.md, docs/github_initial_issues.md, and docs/first_pull_request_checklist.md.
+- Link the examples page from README.md and PROJECT_CONTENT_INDEX.md.
 - Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
 - python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py safety still passes.
