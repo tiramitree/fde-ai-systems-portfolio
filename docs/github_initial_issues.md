@@ -62,6 +62,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README governance evidence pointer
 - Add a compact README launch asset evidence pointer
 - Add a compact README reviewer handoff evidence pointer
+- Add a compact README post-publish evidence pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -186,28 +187,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README post-publish evidence pointer
+Add a compact README GitHub readiness evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, release, good first issue
+documentation, automation, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where post-publish materials live and which remote checks must pass before sharing the public branch or claiming published evidence.
+Add a compact README pointer that tells contributors where GitHub readiness materials live and how to interpret account-level warnings before changing repository metadata, topics, branch protection, releases, social preview, or profile-pin guidance.
 
 Acceptance criteria:
 
-- Link to Post-Publish Checklist, Published Repository Status, GitHub Repository Settings, GitHub Release Commands, Release Evidence FAQ, and the published repository status row in the Evidence Freshness Checklist.
-- Cover post-publish checks: `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
+- Link to Published Repository Status, GitHub Repository Settings, GitHub Release Commands, Development Issue Solutions, and the GitHub readiness row in the Evidence Freshness Checklist.
+- Cover GitHub readiness checks: `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that remote clone, published file, raw README/workflow, and GitHub readiness warnings must be treated separately from local quality evidence.
+- Make clear that repository metadata, topics, branch protection, release pages, social preview, profile pins, and rate-limit warnings are account-level or remote freshness items until the matching public check or authenticated maintenance action is complete.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py launch-assets still passes.
+- python -B scripts/dev.py github-readiness still runs without treating `[WARN]` or `[MANUAL]` rows as local quality failures.
 - python -B scripts/dev.py quality still passes.
 ```
 
