@@ -12,6 +12,7 @@ DOCS_ONLY_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 PUBLIC_ROADMAP_COMMENT_EXAMPLES = ROOT / "docs" / "public_roadmap_issue_comment_examples.md"
 CONTRIBUTOR_ATTRIBUTION_EXAMPLES = ROOT / "docs" / "contributor_attribution_examples.md"
+ISSUE_TRIAGE_SLA_WORDING_EXAMPLES = ROOT / "docs" / "issue_triage_sla_wording_examples.md"
 TEMPLATE = ROOT / ".github" / "pull_request_template.md"
 
 
@@ -120,6 +121,7 @@ REQUIRED_POLICY_PHRASES = [
     "Confirm GitHub Actions is green",
     "Public Roadmap Issue Comment Examples",
     "Contributor Attribution Examples",
+    "Issue Triage SLA Wording Examples",
 ]
 
 REQUIRED_TEMPLATE_PHRASES = [
@@ -182,6 +184,7 @@ REQUIRED_PUBLIC_ROADMAP_COMMENT_EXAMPLE_PHRASES = [
     "docs/docs_only_review_comment_examples.md",
     "docs/maintainer_review_policy.md",
     "docs/contributor_attribution_examples.md",
+    "docs/issue_triage_sla_wording_examples.md",
     "Accept Scoped Roadmap Issue",
     "Narrow Oversized Request",
     "Close Low-Signal Activity",
@@ -189,7 +192,26 @@ REQUIRED_PUBLIC_ROADMAP_COMMENT_EXAMPLE_PHRASES = [
     "Link Useful PR",
     "accepted scope, backlog ideas, implementation promises, and low-signal activity",
     "do not promise delivery dates, external-account access, private data, or guaranteed roadmap acceptance",
+    "support SLAs, production support, or private-account access",
     "secrets, credentials, private files, real customer data, or local machine details",
+    "python -B scripts/dev.py community-issues",
+    "python -B scripts/dev.py pr-policy",
+    "python -B scripts/dev.py safety",
+    "python -B scripts/dev.py quality",
+]
+
+REQUIRED_ISSUE_TRIAGE_SLA_WORDING_EXAMPLE_PHRASES = [
+    "Issue Triage SLA Wording Examples",
+    "docs/maintainer_review_policy.md",
+    "docs/public_roadmap_issue_comment_examples.md",
+    "docs/github_discussions_launch_checklist.md",
+    "docs/launch_feedback_collection_examples.md",
+    "First-Response Wording",
+    "Accepted Follow-Up Wording",
+    "Delayed-Response Wording",
+    "No-Guarantee Closure Wording",
+    "issue triage expectations, support SLAs, delivery dates, private-account access, roadmap acceptance, and production support are different things",
+    "best-effort open-source triage, not a support SLA or delivery commitment",
     "python -B scripts/dev.py community-issues",
     "python -B scripts/dev.py pr-policy",
     "python -B scripts/dev.py safety",
@@ -301,6 +323,7 @@ def check_docs() -> list[str]:
         DOCS_ONLY_COMMENT_EXAMPLES,
         PUBLIC_ROADMAP_COMMENT_EXAMPLES,
         CONTRIBUTOR_ATTRIBUTION_EXAMPLES,
+        ISSUE_TRIAGE_SLA_WORDING_EXAMPLES,
         TEMPLATE,
     ):
         if not path.exists():
@@ -342,6 +365,14 @@ def check_docs() -> list[str]:
                 "docs/contributor_attribution_examples.md",
             )
         )
+    if ISSUE_TRIAGE_SLA_WORDING_EXAMPLES.exists():
+        failures.extend(
+            require_contains(
+                read(ISSUE_TRIAGE_SLA_WORDING_EXAMPLES),
+                REQUIRED_ISSUE_TRIAGE_SLA_WORDING_EXAMPLE_PHRASES,
+                "docs/issue_triage_sla_wording_examples.md",
+            )
+        )
     if TEMPLATE.exists():
         failures.extend(require_contains(read(TEMPLATE), REQUIRED_TEMPLATE_PHRASES, ".github/pull_request_template.md"))
     return failures
@@ -356,6 +387,7 @@ def check_cross_references() -> list[str]:
             "docs/docs_only_review_comment_examples.md",
             "docs/public_roadmap_issue_comment_examples.md",
             "docs/contributor_attribution_examples.md",
+            "docs/issue_triage_sla_wording_examples.md",
             "python -B scripts/dev.py pr-policy",
         ],
         "PROJECT_CONTENT_INDEX.md": [
@@ -364,6 +396,7 @@ def check_cross_references() -> list[str]:
             "docs/docs_only_review_comment_examples.md",
             "docs/public_roadmap_issue_comment_examples.md",
             "docs/contributor_attribution_examples.md",
+            "docs/issue_triage_sla_wording_examples.md",
             "scripts/check_pr_review_policy.py",
         ],
         "docs/threat_model.md": ["python -B scripts/dev.py pr-policy"],
@@ -389,7 +422,7 @@ def main() -> int:
             print(f"- {failure}")
         return 1
 
-    print("PR review policy check passed: triage heuristics, runbook, policy, docs-only examples, roadmap issue comments, contributor attribution examples, docs-only comment examples, and template remain safety-focused.")
+    print("PR review policy check passed: triage heuristics, runbook, policy, docs-only examples, roadmap issue comments, contributor attribution examples, issue triage wording examples, docs-only comment examples, and template remain safety-focused.")
     return 0
 
 

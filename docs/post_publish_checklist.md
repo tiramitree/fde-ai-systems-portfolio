@@ -28,6 +28,7 @@ The post-publish check must prove:
 - the GitHub repository settings screenshot checklist is published: `docs/github_repository_settings_screenshot_checklist.md`.
 - the public roadmap issue comment examples are published: `docs/public_roadmap_issue_comment_examples.md`.
 - the contributor attribution examples are published: `docs/contributor_attribution_examples.md`.
+- the issue triage SLA wording examples are published: `docs/issue_triage_sla_wording_examples.md`.
 - the GitHub Discussions launch checklist is published: `docs/github_discussions_launch_checklist.md`.
 - the Dependabot and secret-scanning verification examples are published: `docs/dependabot_secret_scanning_verification_examples.md`.
 - the GitHub repository metadata troubleshooting examples are published.
