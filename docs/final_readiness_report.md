@@ -70,9 +70,9 @@ python -B scripts/check_github_readiness.py --strict
 | license detected as MIT | PASS | mit |
 | default branch is main | PASS | main |
 | main branch protection enabled | WARN | not protected |
-| stars observed at generation | PASS | 5 |
+| stars observed at generation | PASS | 6 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26861617523/job/79216313917 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26943158269/job/79489403121 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
