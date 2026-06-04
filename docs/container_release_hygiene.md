@@ -27,6 +27,8 @@ python -B scripts/dev.py docker-runtime
 
 That command verifies Docker CLI and Compose availability, runs the static container release gate, brings the Compose stack up with a dedicated project name, waits for all health endpoints, runs the smoke flows against the containerized services, and then tears the stack down. It is intentionally not part of `quality` because Docker availability is environment-specific.
 
+Use [Docker Runtime Evidence Checklist](docker_runtime_evidence_checklist.md) before collecting or publishing Docker runtime evidence.
+
 ## Technical Review Framing
 
 The honest claim is:

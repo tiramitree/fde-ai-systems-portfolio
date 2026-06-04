@@ -220,6 +220,7 @@ Design Review Docs:
 - `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.
 - `docs/error_hygiene.md`: generic error response contract for unexpected backend failures.
 - `docs/container_release_hygiene.md`: Docker/Compose release hygiene gate and honest runtime-verification framing.
+- `docs/docker_runtime_evidence_checklist.md`: Docker-enabled runtime evidence checklist, expected output, failure notes, and claim wording.
 - `docs/visual_asset_hygiene.md`: desktop/mobile screenshot manifest, source-hash drift protection, refresh troubleshooting, and review framing.
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
 - `docs/code_tour.md`: contributor map from HTTP shells to API classes, domain modules, storage, evals, and frontend modules.
