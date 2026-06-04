@@ -57,7 +57,7 @@ python -B scripts/dev.py verify
 6. Confirm GitHub Actions is green. External PR workflows that require approval should be approved only after the diff review is clean.
 7. Merge only if the contribution strengthens the public repository or an explicit roadmap item.
 
-See [Pull Request Review Runbook](pr_review_runbook.md) for the concrete review sequence.
+See [Pull Request Review Runbook](pr_review_runbook.md) for the concrete review sequence. Use [GitHub Authenticated Maintenance Troubleshooting Examples](github_authenticated_maintenance_troubleshooting_examples.md) before treating dry-run maintenance output as applied repository state.
 
 ## Current External PR Rule
 

@@ -2,7 +2,7 @@
 
 Use this before approving external PR workflows, running contributor code, or merging a public contribution.
 
-For recurring PR, GitHub, and local-environment problems, also check `docs/development_issue_solutions.md` before changing code.
+For recurring PR, GitHub, and local-environment problems, also check `docs/development_issue_solutions.md` and `docs/github_authenticated_maintenance_troubleshooting_examples.md` before changing code.
 
 ## Fast Path
 
