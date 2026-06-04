@@ -230,7 +230,7 @@ Use the [Launch Copy Pack](docs/launch_copy_pack.md) with the [Star Growth Plan]
 
 Contribution safety readiness:
 
-Use [CONTRIBUTING](CONTRIBUTING.md), [SECURITY](SECURITY.md), [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), and the [Contributor Route Map](#contributor-route-map) before reviewing outside changes. For external PRs, inspect the diff before running untrusted code, then run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
+Use [CONTRIBUTING](CONTRIBUTING.md), [SECURITY](SECURITY.md), [PR Review Security](docs/pr_review_security.md), [Docs-Only PR Review Examples](docs/docs_only_pr_review_examples.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), and the [Contributor Route Map](#contributor-route-map) before reviewing outside changes. For external PRs, inspect the diff before running untrusted code, then run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
 
 Release artifact readiness:
 
@@ -282,7 +282,7 @@ Use [Model Gateway Safety](docs/model_gateway_safety.md), [Model Runtime Configu
 
 PR triage readiness:
 
-Use [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), [Development Issue Solutions](docs/development_issue_solutions.md), and the [Evidence Matrix](#evidence-matrix) before approving workflows, running contributor code, or merging public contributions. Treat public PRs as untrusted input: read changed files and diffs before running code, and give workflow, dependency, model gateway, safety, eval, binary, network, shell, and environment changes extra scrutiny; run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
+Use [PR Review Security](docs/pr_review_security.md), [Docs-Only PR Review Examples](docs/docs_only_pr_review_examples.md), [PR Review Runbook](docs/pr_review_runbook.md), the [Maintainer PR Checklist](#maintainer-pr-checklist), [Development Issue Solutions](docs/development_issue_solutions.md), and the [Evidence Matrix](#evidence-matrix) before approving workflows, running contributor code, or merging public contributions. Treat public PRs as untrusted input: read changed files and diffs before running code, and give workflow, dependency, model gateway, safety, eval, binary, network, shell, and environment changes extra scrutiny; run `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality`.
 
 Threat model readiness:
 
@@ -643,6 +643,7 @@ repository/
 - [API Request Cookbook](docs/api_request_cookbook.md)
 - [API Error Examples](docs/api_error_examples.md)
 - [PR Review Security](docs/pr_review_security.md)
+- [Docs-Only PR Review Examples](docs/docs_only_pr_review_examples.md)
 - [Pull Request Review Runbook](docs/pr_review_runbook.md)
 - [GitHub Release Commands](docs/github_release_commands.md)
 - [Post-Publish Checklist](docs/post_publish_checklist.md)
