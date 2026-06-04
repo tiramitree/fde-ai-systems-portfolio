@@ -1,22 +1,22 @@
+export async function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.append(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+}
+
 export function installCopyButton(button, getText) {
   const idleText = button.textContent;
-
-  async function copyText(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(text);
-      return;
-    }
-
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.setAttribute("readonly", "");
-    textarea.style.position = "fixed";
-    textarea.style.left = "-9999px";
-    document.body.append(textarea);
-    textarea.select();
-    document.execCommand("copy");
-    textarea.remove();
-  }
 
   function flash(label) {
     button.textContent = label;

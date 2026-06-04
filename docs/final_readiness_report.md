@@ -72,7 +72,7 @@ python -B scripts/check_github_readiness.py --strict
 | main branch protection enabled | WARN | not protected |
 | stars observed at generation | PASS | 6 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26944355939/job/79493476519 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26945014975/job/79495695197 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |

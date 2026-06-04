@@ -42,6 +42,7 @@ installScenarioEditor({
   saveButton: byId("saveScenarioDraft"),
   resetButton: byId("resetScenarioDraft"),
   clearButton: byId("clearScenarioDraft"),
+  copyButton: byId("copyScenarioDraft"),
 });
 
 async function loadUsers() {
