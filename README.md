@@ -131,6 +131,14 @@ Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 ```
 
+## Demo Path Map
+
+| Project | Fastest Useful Path | Inspect Next |
+| --- | --- | --- |
+| [Secure Enterprise Knowledge Copilot](#project-1-secure-enterprise-knowledge-copilot) | Open `http://127.0.0.1:8765`, select Alice, and ask `What is the finance retention plan?`; then switch to Morgan for the same question. | Compare abstention vs citation-backed access, copy the trace ID, then run `python -B scripts/dev.py smoke`. |
+| [Regulated Customer Operations Agent](#project-2-regulated-customer-operations-agent) | Open `http://127.0.0.1:8770`, select Ivy and `case-1001`, then run the investigation. | Inspect the pending approval, blocked side effect, audit event, and `python -B scripts/dev.py smoke`. |
+| [AI Reliability Incident Console](ai-reliability-incident-console/README.md) | Open `http://127.0.0.1:8780`, select the unsafe canary incident, then run triage. | Inspect failed eval evidence, blocked rollout, remediation steps, trace/audit records, and `python -B scripts/dev.py smoke`. |
+
 ## Core Terms
 
 | Term | Meaning In This Repository |
