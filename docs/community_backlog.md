@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add a compact README Docker verification evidence pointer.
-3. Add a compact README OpenAI live-mode evidence pointer.
-4. Add a compact README social preview and profile-pin evidence pointer.
-5. Add a compact README branch protection evidence pointer.
+2. Add an API request cookbook for the canonical demo paths.
+3. Add a contributor code-tour page for API, service, storage, and frontend boundaries.
+4. Add an eval authoring guide for safe retrieval, approval, and release-blocking cases.
+5. Add seed-data extension examples for one document, one operations case, and one incident.
 
 ## Intermediate Issues
 

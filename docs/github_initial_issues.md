@@ -189,28 +189,29 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README Docker verification evidence pointer
+Add an API request cookbook for canonical demo paths
 ```
 
 Labels:
 
 ```text
-documentation, docker, good first issue
+documentation, demo, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where Docker verification evidence lives and how to avoid claiming runtime container evidence before a Docker-enabled machine has passed the runtime check.
+Add a contributor-friendly API request cookbook for the three canonical demo paths so readers can exercise the backend directly without using the browser UI.
 
 Acceptance criteria:
 
-- Link to Container Release Hygiene, Production Upgrade Notes, Published Repository Status, System Evidence Matrix, and the Release Evidence FAQ.
-- Cover Docker-facing checks: `python -B scripts/dev.py container-release`, `python -B scripts/dev.py fresh-clone-local`, `python -B scripts/dev.py quality`, and `python -B scripts/dev.py docker-runtime` as the environment-dependent runtime proof.
-- Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that `container-release` is static configuration evidence and that Docker runtime evidence should not be claimed until `docker-runtime` passes on a Docker-enabled machine.
-- python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py container-release still passes.
+- Add a docs/api_request_cookbook.md page with copyable requests for Project 1 question answering, Project 2 investigation plus supervisor approval, and Project 3 release triage.
+- Use only local host URLs, checked-in sample users/cases/incidents, and synthetic data already present in the repo.
+- Link the cookbook from README.md and PROJECT_CONTENT_INDEX.md without duplicating the full API contract tables.
+- Keep examples usable from a local shell and avoid secrets, API keys, private files, external accounts, or paid services.
+- python -B scripts/dev.py api-docs still passes.
+- python -B scripts/dev.py contracts still passes.
+- python -B scripts/dev.py smoke still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

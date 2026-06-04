@@ -37,6 +37,13 @@ FORBIDDEN_ISSUE_TEXT = [
     "account credentials",
 ]
 
+COVERED_README_POINTER_ALIASES = {
+    "Add a compact README Docker verification evidence pointer": "Add a compact README Docker runtime evidence pointer",
+    "Add a compact README OpenAI live-mode evidence pointer": "Add a compact README optional-environment evidence pointer",
+    "Add a compact README social preview and profile-pin evidence pointer": "Add a compact README GitHub readiness evidence pointer",
+    "Add a compact README branch protection evidence pointer": "Add a compact README governance evidence pointer",
+}
+
 
 def check_labels() -> tuple[dict[str, object], list[str]]:
     failures: list[str] = []
@@ -56,6 +63,8 @@ def check_labels() -> tuple[dict[str, object], list[str]]:
 def check_issue_pack(labels: dict[str, object]) -> list[str]:
     failures: list[str] = []
     issues = parse_issue_pack()
+    issue_pack_text = ISSUE_PACK.read_text(encoding="utf-8")
+    issue_pack_lower = issue_pack_text.casefold()
     if len(issues) < 5:
         failures.append(f"docs/github_initial_issues.md: expected at least 5 current issues, found {len(issues)}")
 
@@ -67,6 +76,9 @@ def check_issue_pack(labels: dict[str, object]) -> list[str]:
         elif issue.title in seen_titles:
             failures.append(f"{label}: duplicate title {issue.title!r}")
         seen_titles.add(issue.title)
+        covered_by = COVERED_README_POINTER_ALIASES.get(issue.title)
+        if covered_by and covered_by.casefold() in issue_pack_lower:
+            failures.append(f"{label}: {issue.title!r} is already covered by completed issue {covered_by!r}")
 
         if len(issue.title) > 90:
             failures.append(f"{label}: title is too long")
@@ -91,6 +103,24 @@ def check_issue_pack(labels: dict[str, object]) -> list[str]:
         for command in sorted(commands):
             if command not in COMMANDS:
                 failures.append(f"{label}: unknown dev command in acceptance criteria: {command}")
+    return failures
+
+
+def check_public_backlog() -> list[str]:
+    failures: list[str] = []
+    backlog_path = ROOT / "docs/community_backlog.md"
+    star_plan_path = ROOT / "docs/star_growth_plan.md"
+    issue_pack_text = ISSUE_PACK.read_text(encoding="utf-8")
+    issue_pack_lower = issue_pack_text.casefold()
+    for rel_path, path in [
+        ("docs/community_backlog.md", backlog_path),
+        ("docs/star_growth_plan.md", star_plan_path),
+    ]:
+        text = path.read_text(encoding="utf-8")
+        text_lower = text.casefold()
+        for alias, completed in COVERED_README_POINTER_ALIASES.items():
+            if alias.casefold() in text_lower and completed.casefold() in issue_pack_lower:
+                failures.append(f"{rel_path}: {alias!r} is already covered by completed issue {completed!r}")
     return failures
 
 
@@ -137,6 +167,7 @@ def main() -> int:
     labels, label_failures = check_labels()
     failures.extend(label_failures)
     failures.extend(check_issue_pack(labels))
+    failures.extend(check_public_backlog())
     failures.extend(check_templates(labels))
     failures.extend(check_cross_references())
 
