@@ -69,6 +69,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a contributor code-tour page for service boundaries
 - Add an eval authoring guide for safe AI workflows
 - Add seed-data extension examples for canonical scenarios
+- Add local API error examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -193,28 +194,29 @@ Acceptance criteria:
 Title:
 
 ```text
-Add local API error examples
+Add a trace timeline explainer for canonical flows
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+documentation, observability, good first issue
 ```
 
 Body:
 
 ```text
-Add contributor-friendly local API error examples for expected 403, 404, and invalid JSON responses across the demo services.
+Add a contributor-friendly trace timeline explainer that walks through one canonical flow per project from request to trace, audit event, and decision evidence.
 
 Acceptance criteria:
 
-- Add docs/api_error_examples.md with copyable local requests for forbidden static traversal, missing static asset, invalid JSON, and representative typed API errors.
-- Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, and generated runtime files.
-- Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py api-docs still passes.
-- python -B scripts/dev.py error-hygiene still passes.
-- python -B scripts/dev.py ui-contracts still passes.
+- Add docs/trace_timeline_examples.md with one timeline each for Project 1 finance-access abstention, Project 2 case-1001 approval, and Project 3 unsafe canary triage.
+- Include the local request, trace id location, audit/approval/decision evidence, and the verification command that protects each flow.
+- Link the explainer from README.md and PROJECT_CONTENT_INDEX.md.
+- Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
+- python -B scripts/dev.py observability still passes.
+- python -B scripts/dev.py smoke still passes.
+- python -B scripts/dev.py claims still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

@@ -222,6 +222,7 @@ Design Review Docs:
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
 - `docs/api_contracts.md`: documented backend API surface, response-shape boundaries, and review framing.
 - `docs/api_request_cookbook.md`: copyable local API requests for the canonical Project 1, Project 2, and Project 3 demo paths.
+- `docs/api_error_examples.md`: copyable local requests for expected 403, 404, invalid JSON, and typed API error responses.
 - `docs/portfolio_evidence_matrix.md`: system claim-to-evidence map.
 - `docs/case_study_secure_enterprise_knowledge_copilot.md`: Project 1 case study.
 - `docs/case_study_regulated_customer_operations_agent.md`: Project 2 case study.

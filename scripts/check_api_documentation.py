@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOC = ROOT / "docs" / "api_contracts.md"
 COOKBOOK = ROOT / "docs" / "api_request_cookbook.md"
+ERROR_EXAMPLES = ROOT / "docs" / "api_error_examples.md"
 
 PROJECTS = {
     "Secure Enterprise Knowledge Copilot": {
@@ -118,8 +119,18 @@ PROJECTS = {
 }
 
 CROSS_REFERENCES = {
-    "README.md": ["docs/api_contracts.md", "docs/api_request_cookbook.md", "python -B scripts/dev.py api-docs"],
-    "PROJECT_CONTENT_INDEX.md": ["docs/api_contracts.md", "docs/api_request_cookbook.md", "scripts/check_api_documentation.py"],
+    "README.md": [
+        "docs/api_contracts.md",
+        "docs/api_request_cookbook.md",
+        "docs/api_error_examples.md",
+        "python -B scripts/dev.py api-docs",
+    ],
+    "PROJECT_CONTENT_INDEX.md": [
+        "docs/api_contracts.md",
+        "docs/api_request_cookbook.md",
+        "docs/api_error_examples.md",
+        "scripts/check_api_documentation.py",
+    ],
     "docs/portfolio_evidence_matrix.md": ["python -B scripts/dev.py api-docs"],
 }
 
@@ -207,6 +218,32 @@ def check_cookbook() -> list[str]:
     return failures
 
 
+def check_error_examples() -> list[str]:
+    if not ERROR_EXAMPLES.exists():
+        return ["missing docs/api_error_examples.md"]
+    text = ERROR_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "python -B scripts/dev.py start",
+        "curl.exe",
+        "--path-as-is",
+        "/../app.py",
+        "missing-static.js",
+        "Invalid JSON body",
+        "Unknown user_id: missing-user",
+        "Invalid integer query parameter: limit",
+        "Only supervisors can approve actions.",
+        "Unknown incident_id: missing-incident",
+        "Internal server error",
+        "python -B scripts/dev.py api-docs",
+        "python -B scripts/dev.py error-hygiene",
+        "python -B scripts/dev.py ui-contracts",
+    ]
+    failures = []
+    for phrase in required_phrases:
+        failures.extend(require_text(text, phrase, "docs/api_error_examples.md"))
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
     if not DOC.exists():
@@ -230,6 +267,7 @@ def main() -> int:
 
     failures.extend(check_cross_references())
     failures.extend(check_cookbook())
+    failures.extend(check_error_examples())
 
     if failures:
         print("API documentation check failed:")
