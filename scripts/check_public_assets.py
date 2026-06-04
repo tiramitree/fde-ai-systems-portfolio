@@ -161,6 +161,10 @@ REQUIRED_DEMO_STATE_PRESETS = [
     "Demo-state reset presets:",
     "`docs/demo_state_presets.json` stores the shareable local reset presets for the canonical Project 1 finance-access path, Project 2 `case-1001` approval path, and Project 3 unsafe canary release path. Run `python -B scripts/dev.py demo-presets` to verify the preset IDs, reset commands, seed references, eval references, and POST payloads still match the fictional seed data before recording or sharing.",
 ]
+REQUIRED_DEMO_RECORDING_READINESS = [
+    "Demo recording readiness:",
+    "Use the [Demo Recording Checklist](docs/demo_recording_checklist.md) with the [Demo Path Map](#demo-path-map), [Demo State Presets](docs/demo_state_presets.json), [Visual Asset Hygiene](docs/visual_asset_hygiene.md), and [Demo Replay Artifact](docs/demo_replay_artifact.md). Before recording, run `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py visual-assets`, and `python -B scripts/dev.py replay-artifact`.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -557,6 +561,18 @@ def check_demo_state_presets() -> list[str]:
     return failures
 
 
+def check_demo_recording_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_DEMO_RECORDING_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing demo recording readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -591,6 +607,7 @@ def main() -> int:
     failures.extend(check_production_upgrade_pointer())
     failures.extend(check_demo_path_map())
     failures.extend(check_demo_state_presets())
+    failures.extend(check_demo_recording_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
