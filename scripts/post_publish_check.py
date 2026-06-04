@@ -121,6 +121,7 @@ def main() -> int:
         "docs/profile_pin_verification_examples.md",
         "docs/post_publish_warning_examples.md",
         "docs/github_actions_warning_examples.md",
+        "docs/github_actions_badge_verification_examples.md",
         "docs/github_label_troubleshooting_examples.md",
         "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_latest_release_troubleshooting_examples.md",

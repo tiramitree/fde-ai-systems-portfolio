@@ -125,7 +125,7 @@ python -B scripts/post_publish_check.py
 python -B scripts/dev.py github-readiness
 ```
 
-Use local checks for local commits and remote checks only after the intended push is visible. Keep status wording conservative until remote clone, raw files, and API readiness agree.
+Use local checks for local commits and remote checks only after the intended push is visible. Use `docs/github_actions_badge_verification_examples.md` when the disagreement is specifically about README badge rendering or badge URLs. Keep status wording conservative until remote clone, raw files, and API readiness agree.
 
 ## Strict-Mode Review
 

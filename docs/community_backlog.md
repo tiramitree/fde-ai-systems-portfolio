@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact GitHub Actions badge verification examples.
-3. Add compact Dependabot and secret-scanning verification examples.
-4. Add compact public roadmap issue comment examples.
-5. Add compact release asset upload dry-run examples.
+2. Add compact Dependabot and secret-scanning verification examples.
+3. Add compact public roadmap issue comment examples.
+4. Add compact release asset upload dry-run examples.
+5. Add compact repository discussions launch checklist.
 
 ## Intermediate Issues
 
@@ -129,3 +129,4 @@ Contributions should preserve these invariants:
 - Add compact repository settings screenshot checklist.
 - Add compact launch feedback collection examples.
 - Add compact GitHub release attachment screenshot checklist.
+- Add compact GitHub Actions badge verification examples.

@@ -8,7 +8,7 @@ Run the workflow security gate with:
 python -B scripts/dev.py workflow-security
 ```
 
-Use `docs/github_actions_warning_examples.md` when GitHub Actions or `github-readiness` reports pending, missing, skipped, stale, or fork-permission workflow states.
+Use `docs/github_actions_warning_examples.md` when GitHub Actions or `github-readiness` reports pending, missing, skipped, stale, or fork-permission workflow states. Use `docs/github_actions_badge_verification_examples.md` before changing README badge URLs or claiming badge evidence.
 
 ## CI Contract
 

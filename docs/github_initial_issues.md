@@ -103,6 +103,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact repository settings screenshot checklist
 - Add compact launch feedback collection examples
 - Add compact GitHub release attachment screenshot checklist
+- Add compact GitHub Actions badge verification examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -227,27 +228,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact GitHub Actions badge verification examples
+Add compact Dependabot and secret-scanning verification examples
 ```
 
 Labels:
 
 ```text
-documentation, release, good first issue
+documentation, security, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for checking the README GitHub Actions badge without confusing local quality output, remote workflow status, skipped workflows, and stale badge rendering.
+Add compact examples for checking Dependabot and secret-scanning posture without confusing checked-in policy files, GitHub account-level security settings, generated alerts, and local safety scans.
 
 Acceptance criteria:
 
-- Add docs/github_actions_badge_verification_examples.md with examples for missing badges, stale badges, wrong workflow badges, skipped workflow badges, and fork-PR badge confusion.
-- Reference .github/workflows/ci.yml, docs/github_actions_warning_examples.md, docs/post_publish_checklist.md, docs/post_publish_warning_examples.md, and docs/workflow_security.md.
-- Keep local quality output, remote workflow status, skipped workflows, and README badge rendering separate; do not claim a green workflow badge until the current remote quality-gate run is public and current.
+- Add docs/dependabot_secret_scanning_verification_examples.md with examples for missing Dependabot config, stale dependency alerts, secret-scanning setting confusion, false positive secret alerts, and local safety scan confusion.
+- Reference .github/dependabot.yml, docs/supply_chain_security.md, docs/post_publish_checklist.md, docs/post_publish_warning_examples.md, and docs/github_repository_settings.md.
+- Keep checked-in policy files, GitHub account-level security settings, generated alerts, and local safety scans separate; do not claim Dependabot or secret-scanning setup is complete until public/account-level evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py workflow-security still passes.
+- python -B scripts/dev.py dependency-surface still passes.
 - python -B scripts/dev.py github-readiness still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

@@ -41,6 +41,7 @@ LAUNCH_FEEDBACK_COLLECTION_EXAMPLES = ROOT / "docs" / "launch_feedback_collectio
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
 PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
+GITHUB_ACTIONS_BADGE_VERIFICATION_EXAMPLES = ROOT / "docs" / "github_actions_badge_verification_examples.md"
 GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troubleshooting_examples.md"
 GITHUB_RELEASE_PAGE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_release_page_troubleshooting_examples.md"
 GITHUB_LATEST_RELEASE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_latest_release_troubleshooting_examples.md"
@@ -365,6 +366,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/social_preview_verification_examples.md",
         "docs/profile_pin_verification_examples.md",
         "docs/command_output_troubleshooting_map.md",
+        "docs/github_actions_badge_verification_examples.md",
         "Expected Evidence Split",
         "Remote File Lag",
         "Raw README Failures",
@@ -382,6 +384,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "[MANUAL]",
         "local quality evidence and remote GitHub evidence prove different things",
         "Do not claim published evidence until the remote checks pass",
+        "README badge, Actions page, and current `github-readiness` output disagree",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -810,6 +813,7 @@ def check_github_actions_warning_examples() -> list[str]:
         "GitHub Actions Warning Examples",
         ".github/workflows/ci.yml",
         "docs/workflow_security.md",
+        "docs/github_actions_badge_verification_examples.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/github_api_rate_limit_troubleshooting_examples.md",
@@ -830,6 +834,7 @@ def check_github_actions_warning_examples() -> list[str]:
         "python -B scripts/check_github_readiness.py --strict",
         "local quality evidence and remote GitHub Actions evidence prove different things",
         "Do not claim a green workflow until the current remote `quality-gate` run passes",
+        "README badge URL and link are reviewed with `docs/github_actions_badge_verification_examples.md`",
         "permissions remain `contents: read`",
         "persist-credentials: false",
         "does not reference `secrets.*`",
@@ -842,8 +847,59 @@ def check_github_actions_warning_examples() -> list[str]:
         "README.md": "docs/github_actions_warning_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/github_actions_warning_examples.md",
         "docs/workflow_security.md": "docs/github_actions_warning_examples.md",
+        "docs/github_actions_badge_verification_examples.md": "docs/github_actions_warning_examples.md",
         "docs/post_publish_checklist.md": "docs/github_actions_warning_examples.md",
         "docs/post_publish_warning_examples.md": "docs/github_actions_warning_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_github_actions_badge_verification_examples() -> list[str]:
+    failures: list[str] = []
+    if not GITHUB_ACTIONS_BADGE_VERIFICATION_EXAMPLES.exists():
+        return ["missing docs/github_actions_badge_verification_examples.md"]
+
+    text = GITHUB_ACTIONS_BADGE_VERIFICATION_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "GitHub Actions Badge Verification Examples",
+        ".github/workflows/ci.yml",
+        "docs/github_actions_warning_examples.md",
+        "docs/post_publish_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/workflow_security.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Evidence Split",
+        "Missing Badge",
+        "Stale Badge",
+        "Wrong Workflow Badge",
+        "Skipped Workflow Badge",
+        "Fork-PR Badge Confusion",
+        "Review Checklist",
+        "python -B scripts/dev.py workflow-security",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py fresh-clone",
+        "https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml/badge.svg",
+        "https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml",
+        "local quality output, remote workflow status, skipped workflows, and README badge rendering prove different things",
+        "Do not claim a green workflow badge until the current remote `quality-gate` run is public and current",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/github_actions_badge_verification_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/github_actions_badge_verification_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/github_actions_badge_verification_examples.md",
+        "docs/workflow_security.md": "docs/github_actions_badge_verification_examples.md",
+        "docs/github_actions_warning_examples.md": "docs/github_actions_badge_verification_examples.md",
+        "docs/post_publish_checklist.md": "docs/github_actions_badge_verification_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/github_actions_badge_verification_examples.md",
+        "docs/published_repository_status.md": "docs/github_actions_badge_verification_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1486,6 +1542,7 @@ def main() -> int:
     failures.extend(check_social_preview_verification_examples())
     failures.extend(check_profile_pin_verification_examples())
     failures.extend(check_github_actions_warning_examples())
+    failures.extend(check_github_actions_badge_verification_examples())
     failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_github_release_attachment_screenshot_checklist())
     failures.extend(check_github_release_page_troubleshooting_examples())

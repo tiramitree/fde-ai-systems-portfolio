@@ -52,6 +52,8 @@ Current expected result:
 success
 ```
 
+README badge and workflow status should be compared with `docs/github_actions_badge_verification_examples.md` before claiming the rendered badge is current.
+
 ## Post-Publish Check
 
 Command:
