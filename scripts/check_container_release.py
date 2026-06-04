@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPOSE = ROOT / "docker-compose.yml"
+DOCKER_RUNTIME_EVIDENCE_CHECKLIST = ROOT / "docs" / "docker_runtime_evidence_checklist.md"
 
 PROJECTS = [
     {
@@ -161,9 +162,33 @@ def check_compose() -> list[str]:
     return failures
 
 
+def check_runtime_evidence_checklist() -> list[str]:
+    failures: list[str] = []
+    if not DOCKER_RUNTIME_EVIDENCE_CHECKLIST.exists():
+        return ["missing docs/docker_runtime_evidence_checklist.md"]
+
+    text = normalized_text(DOCKER_RUNTIME_EVIDENCE_CHECKLIST)
+    required = [
+        "python -B scripts/dev.py container-release",
+        "python -B scripts/dev.py docker-runtime",
+        "static config evidence",
+        "runtime evidence only on a Docker-enabled machine",
+        "Docker CLI version output",
+        "Docker Compose version output",
+        "Smoke tests: 13/13 passed",
+        "Docker runtime check passed",
+        "Do not claim Docker runtime verification until",
+        "Do not commit generated container logs",
+    ]
+    for marker in required:
+        require_contains(text, marker, "docs/docker_runtime_evidence_checklist.md", failures)
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
     failures.extend(check_compose())
+    failures.extend(check_runtime_evidence_checklist())
     for project in PROJECTS:
         failures.extend(check_dockerfile(project))
         failures.extend(check_dockerignore(project))

@@ -31,6 +31,7 @@ FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
 OPENAI_LIVE_MODE_TROUBLESHOOTING = ROOT / "docs" / "openai_live_mode_troubleshooting.md"
+DOCKER_RUNTIME_EVIDENCE_CHECKLIST = ROOT / "docs" / "docker_runtime_evidence_checklist.md"
 
 FORBIDDEN_ISSUE_TEXT = [
     "look active",
@@ -330,6 +331,51 @@ def check_openai_live_mode_troubleshooting() -> list[str]:
     return failures
 
 
+def check_docker_runtime_evidence_checklist() -> list[str]:
+    failures: list[str] = []
+    if not DOCKER_RUNTIME_EVIDENCE_CHECKLIST.exists():
+        return ["missing docs/docker_runtime_evidence_checklist.md"]
+
+    text = DOCKER_RUNTIME_EVIDENCE_CHECKLIST.read_text(encoding="utf-8")
+    required_phrases = [
+        "Docker Runtime Evidence Checklist",
+        "docs/container_release_hygiene.md",
+        "docs/readme_navigation_audit.md",
+        "docs/command_output_troubleshooting_map.md",
+        "python -B scripts/dev.py container-release",
+        "python -B scripts/dev.py docker-runtime",
+        "static config evidence",
+        "runtime evidence only on a Docker-enabled machine",
+        "Environment Capture",
+        "Command Sequence",
+        "Expected Evidence",
+        "Failure Notes",
+        "Review Guardrails",
+        "Claim Wording",
+        "Docker CLI version output",
+        "Docker Compose version output",
+        "Smoke tests: 13/13 passed",
+        "Docker runtime check passed",
+        "Do not claim Docker runtime verification until",
+        "Do not commit generated container logs",
+        "Do not add required Docker runtime verification to the default",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/docker_runtime_evidence_checklist.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/docker_runtime_evidence_checklist.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/docker_runtime_evidence_checklist.md",
+        "docs/container_release_hygiene.md": "docker_runtime_evidence_checklist.md",
+        "docs/readme_navigation_audit.md": "docs/docker_runtime_evidence_checklist.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_templates(labels: dict[str, object]) -> list[str]:
     failures: list[str] = []
     for rel_path, template_label_names in template_labels().items():
@@ -378,6 +424,7 @@ def main() -> int:
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_readme_navigation_audit())
     failures.extend(check_openai_live_mode_troubleshooting())
+    failures.extend(check_docker_runtime_evidence_checklist())
     failures.extend(check_templates(labels))
     failures.extend(check_cross_references())
 

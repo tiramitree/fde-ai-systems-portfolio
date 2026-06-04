@@ -80,6 +80,7 @@ The first public issue wave was created after the initial release and is now com
 - Add docs-only pull request review examples
 - Add a README-to-docs navigation audit
 - Add optional OpenAI live-mode troubleshooting notes
+- Add a Docker runtime evidence collection checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -204,27 +205,27 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a Docker runtime evidence collection checklist
+Add docs-only review comments for common PR outcomes
 ```
 
 Labels:
 
 ```text
-documentation, docker, good first issue
+documentation, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact checklist for collecting Docker runtime evidence without claiming container runtime verification before it actually passes.
+Add compact review-comment examples that maintainers can adapt for common docs-only PR outcomes.
 
 Acceptance criteria:
 
-- Add docs/docker_runtime_evidence_checklist.md with environment capture, command sequence, expected artifacts, and failure notes.
-- Reference docs/container_release_hygiene.md, docs/readme_navigation_audit.md, and docs/command_output_troubleshooting_map.md.
-- Make clear that `python -B scripts/dev.py container-release` is static config evidence, while `python -B scripts/dev.py docker-runtime` is runtime evidence only on a Docker-enabled machine.
-- Link the checklist from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py container-release still passes.
+- Add docs/docs_only_review_comment_examples.md with approve, request-changes, close-as-unsafe, and close-as-low-signal examples.
+- Reference docs/docs_only_pr_review_examples.md, docs/pr_review_security.md, and docs/first_pull_request_checklist.md.
+- Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
+- Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
