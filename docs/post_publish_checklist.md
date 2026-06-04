@@ -22,6 +22,7 @@ The post-publish check must prove:
 - raw README is reachable.
 - GitHub Actions workflow is reachable.
 - key documentation files are published.
+- the GitHub repository metadata troubleshooting examples are published.
 - the observability integrity script and documentation are published.
 - the threat model script and documentation are published.
 - the PR review policy script and documentation are published.
@@ -46,7 +47,7 @@ After the automated check passes:
 2. Confirm screenshots render.
 3. Confirm the `quality-gate` workflow completes successfully.
 4. Confirm the README quality badge points to the real GitHub Actions workflow.
-5. Apply repository description and topics from `docs/github_repository_settings.md`.
+5. Apply repository description and topics from `docs/github_repository_settings.md`, then compare warning rows with `docs/github_repository_metadata_troubleshooting_examples.md` before claiming repository metadata is current.
 6. Enable branch protection on `main` using `docs/github_branch_protection.json`.
 7. Compare branch protection state with `docs/branch_protection_verification_examples.md` before claiming the remote policy is active.
 8. Add repository social preview using `docs/assets/github-preview.png`, then compare the result with `docs/social_preview_verification_examples.md` before claiming social preview setup.
