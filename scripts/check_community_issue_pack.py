@@ -30,6 +30,7 @@ REQUIRED_LABELS = {
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
+OPENAI_LIVE_MODE_TROUBLESHOOTING = ROOT / "docs" / "openai_live_mode_troubleshooting.md"
 
 FORBIDDEN_ISSUE_TEXT = [
     "look active",
@@ -285,6 +286,50 @@ def check_readme_navigation_audit() -> list[str]:
     return failures
 
 
+def check_openai_live_mode_troubleshooting() -> list[str]:
+    failures: list[str] = []
+    if not OPENAI_LIVE_MODE_TROUBLESHOOTING.exists():
+        return ["missing docs/openai_live_mode_troubleshooting.md"]
+
+    text = OPENAI_LIVE_MODE_TROUBLESHOOTING.read_text(encoding="utf-8")
+    required_phrases = [
+        "OpenAI Live Mode Troubleshooting",
+        "docs/model_runtime_configuration.md",
+        "docs/model_gateway_safety.md",
+        "docs/command_output_troubleshooting_map.md",
+        "python -B scripts/dev.py openai-live",
+        "python -B scripts/dev.py model-gateway-safety",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "OPENAI_API_KEY",
+        "COPILOT_MODEL_PROVIDER",
+        "OPS_AGENT_MODEL_ROUTER",
+        "local and deterministic",
+        "Safe Failure Modes",
+        "Rollback",
+        "Review Guardrails",
+        "never paste API keys",
+        "never make OpenAI live mode required",
+        "never treat model output as the permission",
+        "do not claim live OpenAI evidence unless",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/openai_live_mode_troubleshooting.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/openai_live_mode_troubleshooting.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/openai_live_mode_troubleshooting.md",
+        "docs/model_runtime_configuration.md": "openai_live_mode_troubleshooting.md",
+        "docs/model_gateway_safety.md": "openai_live_mode_troubleshooting.md",
+        "docs/readme_navigation_audit.md": "docs/openai_live_mode_troubleshooting.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_templates(labels: dict[str, object]) -> list[str]:
     failures: list[str] = []
     for rel_path, template_label_names in template_labels().items():
@@ -332,6 +377,7 @@ def main() -> int:
     failures.extend(check_first_pull_request_checklist())
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_readme_navigation_audit())
+    failures.extend(check_openai_live_mode_troubleshooting())
     failures.extend(check_templates(labels))
     failures.extend(check_cross_references())
 

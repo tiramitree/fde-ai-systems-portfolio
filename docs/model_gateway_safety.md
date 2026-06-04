@@ -14,6 +14,8 @@ With a real API key, run the live mode proof with:
 python -B scripts/dev.py openai-live
 ```
 
+Use [OpenAI Live Mode Troubleshooting](openai_live_mode_troubleshooting.md) for expected setup, safe failure modes, rollback, and no-secret review rules.
+
 ## Safety Contract
 
 The gate verifies that:
