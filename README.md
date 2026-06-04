@@ -300,6 +300,10 @@ Launch asset readiness:
 
 Use [Launch Assets Hygiene](docs/launch_assets_hygiene.md), [Launch Copy Pack](docs/launch_copy_pack.md), [Star Growth Plan](docs/star_growth_plan.md), [GitHub Launch Plan](docs/github_launch_plan.md), [Published Repository Status](docs/published_repository_status.md), and the launch materials row in the [Evidence Matrix](#evidence-matrix) before changing launch docs, posts, screenshots, or release-facing status. Public copy must keep Docker runtime, OpenAI live mode, branch protection, release pages, social preview, profile pins, launch feedback, star-growth success, and production readiness unclaimed until the matching evidence or account-level action exists; run `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py assets`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality`.
 
+Reviewer handoff readiness:
+
+Use [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md), [Final Demo Runbook](docs/final_demo_runbook.md), [Final Readiness Report](docs/final_readiness_report.md), the [Demo Path Map](#demo-path-map), the [Evidence Matrix](#evidence-matrix), and [Published Repository Status](docs/published_repository_status.md) before presenting, sharing, or reviewing the repository. Reviewer-facing claims must match current evidence, and post-push GitHub readiness warnings remain manual until the matching account-level action or public check is complete; run `python -B scripts/dev.py quality`, `python -B scripts/dev.py fresh-clone-local`, `python -B scripts/dev.py visual-assets`, and `python -B scripts/dev.py launch-assets`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
