@@ -38,6 +38,7 @@ SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verificat
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
 GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troubleshooting_examples.md"
 GITHUB_RELEASE_PAGE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_release_page_troubleshooting_examples.md"
+GITHUB_LATEST_RELEASE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_latest_release_troubleshooting_examples.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
@@ -630,6 +631,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
     text = GITHUB_RELEASE_PAGE_TROUBLESHOOTING_EXAMPLES.read_text(encoding="utf-8")
     required_phrases = [
         "GitHub Release Page Troubleshooting Examples",
+        "docs/github_latest_release_troubleshooting_examples.md",
         "docs/github_release_commands.md",
         "docs/github_release_notes_v0.1.0.md",
         "docs/release_attachment_verification_examples.md",
@@ -664,6 +666,55 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/release_attachment_verification_examples.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/post_publish_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
+        "docs/github_latest_release_troubleshooting_examples.md": "docs/github_release_page_troubleshooting_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_github_latest_release_troubleshooting_examples() -> list[str]:
+    failures: list[str] = []
+    if not GITHUB_LATEST_RELEASE_TROUBLESHOOTING_EXAMPLES.exists():
+        return ["missing docs/github_latest_release_troubleshooting_examples.md"]
+
+    text = GITHUB_LATEST_RELEASE_TROUBLESHOOTING_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "GitHub Latest Release Troubleshooting Examples",
+        "docs/github_release_page_troubleshooting_examples.md",
+        "docs/github_release_commands.md",
+        "docs/release_attachment_verification_examples.md",
+        "docs/post_publish_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Evidence Split",
+        "Missing Latest Release",
+        "Wrong Latest Tag",
+        "Draft Or Prerelease Confusion",
+        "Stale Release Page",
+        "Attached Artifact Drift",
+        "Review Checklist",
+        "python -B scripts/dev.py replay-artifact",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone",
+        "python -B scripts/post_publish_check.py",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/check_github_readiness.py --strict",
+        "tag existence, release-page existence, and latest-release selection prove different things",
+        "Do not claim the latest release is current until GitHub readiness or direct release-page evidence confirms it",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/github_latest_release_troubleshooting_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/github_latest_release_troubleshooting_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/github_release_page_troubleshooting_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/post_publish_checklist.md": "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1102,6 +1153,7 @@ def main() -> int:
     failures.extend(check_github_actions_warning_examples())
     failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_github_release_page_troubleshooting_examples())
+    failures.extend(check_github_latest_release_troubleshooting_examples())
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())
