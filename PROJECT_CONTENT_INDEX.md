@@ -208,7 +208,7 @@ Design Review Docs:
 - `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and review framing.
 - `docs/error_hygiene.md`: generic error response contract for unexpected backend failures.
 - `docs/container_release_hygiene.md`: Docker/Compose release hygiene gate and honest runtime-verification framing.
-- `docs/visual_asset_hygiene.md`: desktop/mobile screenshot manifest, source-hash drift protection, and review framing.
+- `docs/visual_asset_hygiene.md`: desktop/mobile screenshot manifest, source-hash drift protection, refresh troubleshooting, and review framing.
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
