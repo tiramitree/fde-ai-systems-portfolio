@@ -24,6 +24,7 @@ The first public issue wave was created after the initial release and is now com
 - Add visual asset refresh troubleshooting notes
 - Add per-asset captions for screenshot galleries
 - Add a README command quick-reference
+- Add a compact README glossary for core gates
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -148,27 +149,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README glossary for core gates
+Add a README maintainer workflow checklist
 ```
 
 Labels:
 
 ```text
-documentation, design, good first issue
+documentation, security, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README glossary for release gates, eval gates, approval gates, trace IDs, audit logs, and abstention.
+Add a compact README maintainer workflow checklist for reviewing external PRs without running untrusted code first.
 
 Acceptance criteria:
 
-- Define each term in one concise sentence using repository-specific language.
-- Link each term to at least one existing evidence section, project, or document.
-- Keep the glossary factual and avoid production-readiness claims.
+- Include a short read-first checklist for PR diffs, workflow changes, dependency changes, model gateway changes, and generated artifacts.
+- Link to docs/pr_review_security.md, docs/pr_review_runbook.md, and python -B scripts/dev.py pr-triage.
+- Keep the checklist factual and avoid asking contributors for secrets or account access.
 - Do not introduce paid APIs, remote frontend dependencies, or unrelated code changes.
 - python -B scripts/dev.py assets still passes.
+- python -B scripts/dev.py pr-policy still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
