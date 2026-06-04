@@ -198,7 +198,7 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/styles.css",
             "text/css",
-            [".grid", ".panel", ".quick"],
+            [".grid", ".panel", ".quick", ".traceLink:focus-visible"],
         )
     )
     checks.extend(
@@ -222,7 +222,16 @@ def project_checks(project: Project) -> list[Check]:
             project,
             "/js/traceLinks.js",
             "text/javascript",
-            ["traceHash", "traceUrl", "selectedTraceId", "syncTraceSelection", "[data-trace-id]"],
+            [
+                "traceHash",
+                "traceUrl",
+                "selectedTraceId",
+                "syncTraceSelection",
+                "installTraceKeyboardNavigation",
+                "ArrowDown",
+                "focus(",
+                "[data-trace-id]",
+            ],
         )
     )
     checks.extend(

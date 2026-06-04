@@ -262,7 +262,7 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     required_app_markers = [
         'import { installCopyButton, installTraceCopyButton } from "./clipboard.js";',
         'import { installScenarioEditor } from "./scenarioEditor.js";',
-        'import { installTraceHashSync, selectedTraceId, setTraceHash, syncTraceSelection, traceUrl } from "./traceLinks.js";',
+        "installTraceKeyboardNavigation",
         'lastTraceId: ""',
         'loadScenario: () => api("/api/scenario")',
         'installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId)',
@@ -273,6 +273,7 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
         "setTraceHash(data.trace_id)",
         "selectedTraceId()",
         "syncTraceSelection()",
+        'installTraceKeyboardNavigation(byId("traces"))',
     ]
     for marker in required_app_markers:
         if marker not in app_text:
@@ -296,8 +297,11 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
         "export function selectedTraceId",
         "export function setTraceHash",
         "export function syncTraceSelection",
+        "export function installTraceKeyboardNavigation",
         "export function installTraceHashSync",
         "[data-trace-id]",
+        "ArrowDown",
+        "focus(",
         "URLSearchParams",
     ]
     for marker in required_trace_link_markers:
@@ -342,6 +346,7 @@ def check_project(project: FrontendProject) -> list[str]:
         ".secondaryButton",
         ".secondaryButton:disabled",
         ".traceLink",
+        ".traceLink:focus-visible",
         ".selectedTrace",
         ".scenarioDraft",
         ".scenarioStatus",
@@ -364,7 +369,7 @@ def main() -> int:
 
     print(
         "Frontend integrity check passed: HTML assets, ES modules, DOM wiring, labels, "
-        "trace-copy controls, scenario drafts, and quick actions are intact."
+        "trace-copy controls, keyboard trace navigation, scenario drafts, and quick actions are intact."
     )
     return 0
 

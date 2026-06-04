@@ -44,6 +44,46 @@ export function syncTraceSelection() {
   }
 }
 
+export function installTraceKeyboardNavigation(container) {
+  const navigationKeys = ["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"];
+
+  container.addEventListener("keydown", (event) => {
+    const traceNodes = Array.from(container.querySelectorAll("[data-trace-id]"));
+    if (!traceNodes.length) {
+      return;
+    }
+
+    if (event.key === " " && traceNodes.includes(document.activeElement)) {
+      event.preventDefault();
+      document.activeElement.click();
+      return;
+    }
+
+    if (!navigationKeys.includes(event.key)) {
+      return;
+    }
+
+    event.preventDefault();
+    const selectedIndex = traceNodes.findIndex((node) => node.classList.contains("selectedTrace"));
+    const activeIndex = traceNodes.indexOf(document.activeElement);
+    const currentIndex = activeIndex >= 0 ? activeIndex : Math.max(selectedIndex, 0);
+    let nextIndex = currentIndex;
+
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      nextIndex = Math.min(currentIndex + 1, traceNodes.length - 1);
+    } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      nextIndex = Math.max(currentIndex - 1, 0);
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = traceNodes.length - 1;
+    }
+
+    traceNodes[nextIndex].focus({ preventScroll: true });
+    traceNodes[nextIndex].scrollIntoView({ block: "nearest" });
+  });
+}
+
 export function installTraceHashSync(onHashChange = () => {}) {
   window.addEventListener("hashchange", () => {
     syncTraceSelection();

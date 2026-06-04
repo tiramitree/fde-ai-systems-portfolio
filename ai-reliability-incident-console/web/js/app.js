@@ -2,7 +2,14 @@ import { api } from "./api.js";
 import { byId } from "./dom.js";
 import { installCopyButton, installTraceCopyButton } from "./clipboard.js";
 import { installScenarioEditor } from "./scenarioEditor.js";
-import { installTraceHashSync, selectedTraceId, setTraceHash, syncTraceSelection, traceUrl } from "./traceLinks.js";
+import {
+  installTraceHashSync,
+  installTraceKeyboardNavigation,
+  selectedTraceId,
+  setTraceHash,
+  syncTraceSelection,
+  traceUrl,
+} from "./traceLinks.js";
 import {
   populateIncidentSelect,
   populateReleaseSelect,
@@ -124,6 +131,7 @@ byId("incidentSelect").addEventListener("change", (event) => {
 byId("runTriage").addEventListener("click", runTriage);
 byId("runEval").addEventListener("click", runEval);
 installTraceHashSync();
+installTraceKeyboardNavigation(byId("traces"));
 
 document.querySelectorAll("[data-incident]").forEach((button) => {
   button.addEventListener("click", () => {
