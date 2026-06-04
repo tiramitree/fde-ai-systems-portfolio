@@ -2,6 +2,12 @@
 
 Use this checklist immediately after creating the GitHub repository.
 
+Screenshot review and redaction guidance lives in:
+
+```text
+docs/github_repository_settings_screenshot_checklist.md
+```
+
 ## Name
 
 ```text

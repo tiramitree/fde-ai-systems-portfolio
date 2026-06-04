@@ -36,6 +36,7 @@ GITHUB_AUTHENTICATED_MAINTENANCE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "git
 GITHUB_PUBLIC_PR_API_FALLBACK_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_public_pr_api_fallback_troubleshooting_examples.md"
 GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_api_rate_limit_troubleshooting_examples.md"
 GITHUB_REPOSITORY_METADATA_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_repository_metadata_troubleshooting_examples.md"
+GITHUB_REPOSITORY_SETTINGS_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_repository_settings_screenshot_checklist.md"
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
 PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
@@ -356,6 +357,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
         "docs/github_api_rate_limit_troubleshooting_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md",
         "docs/social_preview_verification_examples.md",
         "docs/profile_pin_verification_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -595,6 +597,59 @@ def check_github_repository_metadata_troubleshooting_examples() -> list[str]:
     return failures
 
 
+def check_github_repository_settings_screenshot_checklist() -> list[str]:
+    failures: list[str] = []
+    if not GITHUB_REPOSITORY_SETTINGS_SCREENSHOT_CHECKLIST.exists():
+        return ["missing docs/github_repository_settings_screenshot_checklist.md"]
+
+    text = GITHUB_REPOSITORY_SETTINGS_SCREENSHOT_CHECKLIST.read_text(encoding="utf-8")
+    required_phrases = [
+        "GitHub Repository Settings Screenshot Checklist",
+        "docs/github_repository_settings.md",
+        "docs/post_publish_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/github_repository_metadata_troubleshooting_examples.md",
+        "docs/branch_protection_verification_examples.md",
+        "docs/github_release_page_troubleshooting_examples.md",
+        "docs/profile_pin_verification_examples.md",
+        "docs/social_preview_verification_examples.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Evidence Split",
+        "Description And Topics Screenshots",
+        "Branch Protection Screenshots",
+        "Social Preview Screenshots",
+        "Release Page Screenshots",
+        "Profile Pin Screenshots",
+        "Screenshot Handling Rules",
+        "Review Checklist",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py github-maintenance",
+        "local docs, authenticated settings screenshots, and public repository evidence prove different things",
+        "Do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/github_repository_settings_screenshot_checklist.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/github_repository_settings.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/post_publish_checklist.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/post_publish_warning_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/social_preview_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/profile_pin_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_social_preview_verification_examples() -> list[str]:
     failures: list[str] = []
     if not SOCIAL_PREVIEW_VERIFICATION_EXAMPLES.exists():
@@ -604,6 +659,7 @@ def check_social_preview_verification_examples() -> list[str]:
     required_phrases = [
         "Social Preview Verification Examples",
         "docs/github_repository_settings.md",
+        "docs/github_repository_settings_screenshot_checklist.md",
         "docs/assets/github-preview.png",
         "docs/profile_pin_verification_examples.md",
         "docs/post_publish_checklist.md",
@@ -652,6 +708,7 @@ def check_profile_pin_verification_examples() -> list[str]:
     required_phrases = [
         "GitHub Profile Pin Verification Examples",
         "docs/github_repository_settings.md",
+        "docs/github_repository_settings_screenshot_checklist.md",
         "docs/social_preview_verification_examples.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
@@ -1313,6 +1370,7 @@ def main() -> int:
     failures.extend(check_github_public_pr_api_fallback_troubleshooting_examples())
     failures.extend(check_github_api_rate_limit_troubleshooting_examples())
     failures.extend(check_github_repository_metadata_troubleshooting_examples())
+    failures.extend(check_github_repository_settings_screenshot_checklist())
     failures.extend(check_social_preview_verification_examples())
     failures.extend(check_profile_pin_verification_examples())
     failures.extend(check_github_actions_warning_examples())

@@ -100,6 +100,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact profile pin verification examples
 - Add compact authenticated maintenance troubleshooting examples
 - Add compact GitHub public PR API fallback troubleshooting examples
+- Add compact repository settings screenshot checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -224,7 +225,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact repository settings screenshot checklist
+Add compact launch feedback collection examples
 ```
 
 Labels:
@@ -236,15 +237,14 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add a compact checklist for repository settings screenshots without confusing local docs, authenticated settings, and public repository evidence.
+Add compact examples for collecting launch feedback without confusing public engagement, private messages, analytics, and source evidence.
 
 Acceptance criteria:
 
-- Add docs/github_repository_settings_screenshot_checklist.md with examples for description/topics screenshots, branch protection screenshots, social preview screenshots, release page screenshots, and profile pin screenshots.
-- Reference docs/github_repository_settings.md, docs/post_publish_checklist.md, docs/post_publish_warning_examples.md, docs/profile_pin_verification_examples.md, and docs/social_preview_verification_examples.md.
-- Keep local docs, authenticated settings screenshots, and public repository evidence separate; do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them.
+- Add docs/launch_feedback_collection_examples.md with examples for GitHub stars/forks, issue feedback, launch-post comments, private-message feedback, and analytics screenshots.
+- Reference docs/launch_copy_pack.md, docs/star_growth_plan.md, docs/published_repository_status.md, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep public feedback, private messages, analytics screenshots, and source evidence separate; do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py github-readiness still has no hard failures when the GitHub API is reachable.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
