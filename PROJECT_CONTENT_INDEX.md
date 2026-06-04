@@ -258,6 +258,7 @@ Release and growth:
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_branch_protection.json`: branch-protection payload for `main`.
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
+- `docs/github_repository_metadata_troubleshooting_examples.md`: repository metadata troubleshooting examples for missing descriptions, missing topics, wrong repository URLs, stale public status, and unauthenticated maintenance output.
 - `docs/branch_protection_verification_examples.md`: branch-protection verification examples for missing protection, stale payloads, API warning rows, manual account settings, and post-publish mismatch.
 - `docs/social_preview_verification_examples.md`: social preview verification examples for missing previews, stale images, wrong uploads, cache delay, and profile-pin confusion.
 - `docs/github_release_commands.md`: publication commands.

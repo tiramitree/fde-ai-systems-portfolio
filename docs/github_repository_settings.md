@@ -35,6 +35,12 @@ ai-safety
 python
 ```
 
+Repository metadata troubleshooting examples live in:
+
+```text
+docs/github_repository_metadata_troubleshooting_examples.md
+```
+
 ## Social Preview
 
 Use:

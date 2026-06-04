@@ -1,6 +1,6 @@
 # Post-Publish Warning Examples
 
-Use this page when post-publish checks or GitHub readiness checks produce warnings. Read it with `docs/post_publish_checklist.md`, `docs/published_repository_status.md`, `docs/github_release_commands.md`, `docs/social_preview_verification_examples.md`, `docs/github_actions_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when post-publish checks or GitHub readiness checks produce warnings. Read it with `docs/post_publish_checklist.md`, `docs/published_repository_status.md`, `docs/github_release_commands.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/social_preview_verification_examples.md`, `docs/github_actions_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local quality evidence and remote GitHub evidence prove different things. Do not claim published evidence until the remote checks pass, and do not treat GitHub warning rows as local code failures unless strict launch verification is required.
 
@@ -117,7 +117,7 @@ python -B scripts/dev.py github-readiness
 python -B scripts/dev.py launch-assets
 ```
 
-Non-strict warnings mean account-level or remote-freshness follow-up. Strict warnings block claims that GitHub setup is finished.
+Non-strict warnings mean account-level or remote-freshness follow-up. Use `docs/github_repository_metadata_troubleshooting_examples.md` for description, topics, URL, stale public status, and unauthenticated maintenance warnings. Strict warnings block claims that GitHub setup is finished.
 
 ## Manual Account Settings
 
