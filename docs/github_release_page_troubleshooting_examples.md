@@ -1,6 +1,6 @@
 # GitHub Release Page Troubleshooting Examples
 
-Use this page when release page evidence, release notes, tags, or replay attachments drift. Read it with `docs/github_latest_release_troubleshooting_examples.md`, `docs/github_release_commands.md`, `docs/github_release_notes_v0.1.0.md`, `docs/release_attachment_verification_examples.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/post_publish_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when release page evidence, release notes, tags, or replay attachments drift. Read it with `docs/github_latest_release_troubleshooting_examples.md`, `docs/github_release_commands.md`, `docs/github_release_notes_v0.1.0.md`, `docs/release_note_refresh_checklist.md`, `docs/release_attachment_verification_examples.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/post_publish_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local replay-artifact evidence and published release page evidence prove different things. Do not claim the release page is current until the tag, release notes, and current replay attachments are visible on GitHub.
 
@@ -106,7 +106,7 @@ python -B scripts/dev.py replay-artifact
 python -B scripts/dev.py launch-assets
 ```
 
-Update checked-in release notes first, then refresh the release page through the reviewed maintenance path or GitHub UI.
+Update checked-in release notes first, review `docs/release_note_refresh_checklist.md`, then refresh the release page through the reviewed maintenance path or GitHub UI.
 
 ## Missing Replay Attachments
 
@@ -160,6 +160,7 @@ Use `docs/github_latest_release_troubleshooting_examples.md` when the release pa
 ## Review Checklist
 
 - `docs/github_release_notes_v0.1.0.md` matches the current release claim.
+- `docs/release_note_refresh_checklist.md` was used before claiming the release notes, public release page text, or post-publish evidence are current.
 - `docs/github_release_commands.md` points to the intended tag and notes file.
 - `python -B scripts/dev.py replay-artifact` regenerated the expected `out/` files.
 - `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` are not committed as ordinary source files.

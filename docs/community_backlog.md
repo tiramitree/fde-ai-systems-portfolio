@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact release note refresh checklist.
-3. Add compact contributor attribution examples.
-4. Add compact issue triage SLA wording examples.
-5. Add compact discussion-to-issue conversion examples.
+2. Add compact contributor attribution examples.
+3. Add compact issue triage SLA wording examples.
+4. Add compact discussion-to-issue conversion examples.
+5. Add compact release-note changelog drift examples.
 
 ## Intermediate Issues
 
@@ -43,6 +43,7 @@ Contributions should preserve these invariants:
 - Add copyable scenario-draft import/export snippets for local demos.
 - Add a compact diff view for browser-local scenario drafts.
 - Add a reduced-motion and focus-visible accessibility pass for all demo UIs.
+- Add compact release note refresh checklist.
 - Add browser-local light/dark theme controls to all demo UIs.
 - Add high-contrast screenshot checks for future visual asset refreshes.
 - Add mobile viewport screenshots to the visual asset manifest.
