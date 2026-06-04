@@ -258,6 +258,7 @@ Release and growth:
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_branch_protection.json`: branch-protection payload for `main`.
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
+- `docs/branch_protection_verification_examples.md`: branch-protection verification examples for missing protection, stale payloads, API warning rows, manual account settings, and post-publish mismatch.
 - `docs/github_release_commands.md`: publication commands.
 - `docs/github_release_notes_v0.1.0.md`: release notes used by `scripts/configure_github_launch.py`.
 - `docs/release_attachment_verification_examples.md`: release attachment verification examples for replay artifacts, tag mismatch, generated `out/` handling, and post-publish drift.

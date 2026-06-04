@@ -30,6 +30,7 @@ REQUIRED_LABELS = {
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
 ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
+BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
@@ -278,6 +279,50 @@ def check_eval_csv_troubleshooting_examples() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/eval_csv_troubleshooting_examples.md",
         "docs/eval_authoring_guide.md": "docs/eval_csv_troubleshooting_examples.md",
         "docs/local_artifact_glossary.md": "docs/eval_csv_troubleshooting_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_branch_protection_verification_examples() -> list[str]:
+    failures: list[str] = []
+    if not BRANCH_PROTECTION_VERIFICATION_EXAMPLES.exists():
+        return ["missing docs/branch_protection_verification_examples.md"]
+
+    text = BRANCH_PROTECTION_VERIFICATION_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Branch Protection Verification Examples",
+        "docs/github_repository_settings.md",
+        "docs/github_branch_protection.json",
+        "docs/published_repository_status.md",
+        "docs/post_publish_checklist.md",
+        "Expected Protection Shape",
+        "Missing Protection",
+        "Stale Payloads",
+        "API Warning Rows",
+        "Manual Account Settings",
+        "Post-Publish Mismatch",
+        "Review Checklist",
+        "python -B scripts/dev.py governance",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/check_github_readiness.py --strict",
+        "python -B scripts/maintain_github_state.py --apply --skip-release",
+        "quality-gate",
+        "CODEOWNERS",
+        "account-level evidence",
+        "remote evidence confirms",
+        "not proof that GitHub has applied that policy",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/branch_protection_verification_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/branch_protection_verification_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/branch_protection_verification_examples.md",
+        "docs/post_publish_checklist.md": "docs/branch_protection_verification_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -708,6 +753,7 @@ def main() -> int:
     failures.extend(check_first_pull_request_checklist())
     failures.extend(check_issue_to_pr_handoff_flow())
     failures.extend(check_eval_csv_troubleshooting_examples())
+    failures.extend(check_branch_protection_verification_examples())
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())
