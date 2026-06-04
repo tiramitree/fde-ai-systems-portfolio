@@ -43,6 +43,13 @@ REQUIRED_COMMAND_OUTPUT_EXPECTATIONS = [
     "| `python -B scripts/dev.py pr-triage` | Prints `Open PRs: 0` when no visible PRs await review, or lists each PR with risk findings and required gates. | If the API is rate-limited, public HTML fallback can prove no visible open PRs; authenticate before approving workflows or merging. |",
     "For recurring environment-specific failures, see [Development Issue Solutions](docs/development_issue_solutions.md).",
 ]
+REQUIRED_TROUBLESHOOTING_POINTERS = [
+    "Troubleshooting pointers:",
+    "| GitHub API rate limits or pending Actions status | Rerun `python -B scripts/dev.py github-readiness` after a short wait, or use an authenticated GitHub environment for account-level checks; see [Development Issue Solutions](docs/development_issue_solutions.md). |",
+    "| Docker is unavailable locally | The verified default path is local Python. `python -B scripts/dev.py container-release` checks container files without Docker, while `python -B scripts/dev.py docker-runtime` is only for Docker-enabled machines; see [Container Release Hygiene](docs/container_release_hygiene.md). |",
+    "| Optional OpenAI mode is unavailable | Local deterministic mode remains the default. `python -B scripts/dev.py openai-live` is an optional API-key-environment proof for model-facing routes only; see [Model Runtime Configuration](docs/model_runtime_configuration.md). |",
+    "| Generated local artifacts appear | Runtime outputs under ignored paths such as `out/` are local evidence, not source changes. Run `python -B scripts/dev.py safety` before committing if a generated file appears in the worktree. |",
+]
 REQUIRED_README_GLOSSARY = [
     "## Core Terms",
     "| Release gate | The repository-level checks that keep public docs, evidence, runtime contracts, screenshots, and safety claims aligned before a change is published; see the [Evidence Matrix](#evidence-matrix) and [launch asset hygiene](docs/launch_assets_hygiene.md). |",
@@ -276,6 +283,18 @@ def check_command_output_expectations() -> list[str]:
     return failures
 
 
+def check_troubleshooting_pointers() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_TROUBLESHOOTING_POINTERS:
+        if expected not in text:
+            failures.append(f"README.md: missing troubleshooting pointer entry: {expected}")
+    return failures
+
+
 def check_readme_glossary() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -319,6 +338,7 @@ def main() -> int:
     failures.extend(check_readme_captions())
     failures.extend(check_command_quick_reference())
     failures.extend(check_command_output_expectations())
+    failures.extend(check_troubleshooting_pointers())
     failures.extend(check_readme_glossary())
     failures.extend(check_readme_pr_checklist())
     failures.extend(check_demo_path_map())
