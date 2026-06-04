@@ -163,13 +163,13 @@ See [System Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full cla
 
 | Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
 | --- | --- | --- |
-| ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png) | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png) | ![AI Reliability Incident Console screenshot](docs/assets/ai-reliability-incident-console-screenshot.png) |
+| ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png)<br>Desktop: role-aware knowledge access, visible documents, eval gate, and trace/audit surfaces for permission-aware RAG. | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png)<br>Desktop: investigator workflow with case context, governed action buttons, eval gate, and approval-driven operations controls. | ![AI Reliability Incident Console screenshot](docs/assets/ai-reliability-incident-console-screenshot.png)<br>Desktop: release and incident triage workspace with eval evidence, rollout blocking, and audit/trace context. |
 
 Mobile / narrow viewport captures are checked by the same visual asset manifest:
 
 | Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
 | --- | --- | --- |
-| ![Secure Enterprise Knowledge Copilot mobile screenshot](docs/assets/secure-knowledge-copilot-mobile.png) | ![Regulated Customer Operations Agent mobile screenshot](docs/assets/regulated-ops-agent-mobile.png) | ![AI Reliability Incident Console mobile screenshot](docs/assets/ai-reliability-incident-console-mobile.png) |
+| ![Secure Enterprise Knowledge Copilot mobile screenshot](docs/assets/secure-knowledge-copilot-mobile.png)<br>Mobile: narrow layout keeps user context, visible documents, and permission-aware knowledge controls readable. | ![Regulated Customer Operations Agent mobile screenshot](docs/assets/regulated-ops-agent-mobile.png)<br>Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning. | ![AI Reliability Incident Console mobile screenshot](docs/assets/ai-reliability-incident-console-mobile.png)<br>Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence. |
 
 ## Project 1: Secure Enterprise Knowledge Copilot
 
