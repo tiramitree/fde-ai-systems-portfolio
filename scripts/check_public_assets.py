@@ -189,6 +189,10 @@ REQUIRED_EVAL_REGRESSION_READINESS = [
     "Eval regression readiness:",
     "Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.",
 ]
+REQUIRED_STORAGE_ADAPTER_READINESS = [
+    "Storage adapter readiness:",
+    "Use [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Evidence Matrix](#evidence-matrix) before adding persistent storage prototypes. Storage adapters must preserve permission checks before retrieval or side effects, eval-state isolation, trace/audit compatibility, and local JSON default behavior; run `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -669,6 +673,18 @@ def check_eval_regression_readiness() -> list[str]:
     return failures
 
 
+def check_storage_adapter_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_STORAGE_ADAPTER_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing storage adapter readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -710,6 +726,7 @@ def main() -> int:
     failures.extend(check_optional_environment_readiness())
     failures.extend(check_connector_roadmap_readiness())
     failures.extend(check_eval_regression_readiness())
+    failures.extend(check_storage_adapter_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
