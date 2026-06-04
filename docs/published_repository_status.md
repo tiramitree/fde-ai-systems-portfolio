@@ -134,4 +134,5 @@ Confirmed:
 - Pin repository on profile.
 - Verify Docker runtime with `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; static Docker/Compose release hygiene is already gated.
 - Verify optional OpenAI mode with `python -B scripts/dev.py openai-live` and a live API key.
+- Verify Dependabot alerts, Dependabot security updates, secret scanning, and push protection using `docs/dependabot_secret_scanning_verification_examples.md`.
 - Collect launch feedback and star-growth evidence using `docs/launch_feedback_collection_examples.md`.

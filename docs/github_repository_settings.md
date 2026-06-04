@@ -107,6 +107,12 @@ Dependabot version updates are tracked in:
 .github/dependabot.yml
 ```
 
+Verification examples live in:
+
+```text
+docs/dependabot_secret_scanning_verification_examples.md
+```
+
 After publishing, enable the repository security features available in the GitHub UI:
 
 - Dependabot alerts
