@@ -45,6 +45,12 @@ docs/assets/github-preview.png
 
 The SVG source is also kept at `docs/assets/github-preview.svg`.
 
+Troubleshooting examples live in:
+
+```text
+docs/social_preview_verification_examples.md
+```
+
 ## Branch Protection
 
 Recommended for `main` after the first push:

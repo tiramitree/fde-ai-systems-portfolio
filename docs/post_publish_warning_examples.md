@@ -1,6 +1,6 @@
 # Post-Publish Warning Examples
 
-Use this page when post-publish checks or GitHub readiness checks produce warnings. Read it with `docs/post_publish_checklist.md`, `docs/published_repository_status.md`, `docs/github_release_commands.md`, `docs/github_actions_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when post-publish checks or GitHub readiness checks produce warnings. Read it with `docs/post_publish_checklist.md`, `docs/published_repository_status.md`, `docs/github_release_commands.md`, `docs/social_preview_verification_examples.md`, `docs/github_actions_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local quality evidence and remote GitHub evidence prove different things. Do not claim published evidence until the remote checks pass, and do not treat GitHub warning rows as local code failures unless strict launch verification is required.
 
@@ -139,7 +139,7 @@ python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py github-readiness
 ```
 
-Use `docs/github_repository_settings.md` for the expected account settings, and keep manual rows visible until the account action is done and rechecked.
+Use `docs/github_repository_settings.md` for the expected account settings, and use `docs/social_preview_verification_examples.md` before treating social preview image checks as account-level setup evidence. Keep manual rows visible until the account action is done and rechecked.
 
 ## Review Checklist
 
