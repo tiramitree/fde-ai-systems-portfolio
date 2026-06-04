@@ -32,6 +32,7 @@ ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
+GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troubleshooting_examples.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
@@ -369,6 +370,50 @@ def check_post_publish_warning_examples() -> list[str]:
         "README.md": "docs/post_publish_warning_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/post_publish_warning_examples.md",
         "docs/post_publish_checklist.md": "docs/post_publish_warning_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_github_label_troubleshooting_examples() -> list[str]:
+    failures: list[str] = []
+    if not GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES.exists():
+        return ["missing docs/github_label_troubleshooting_examples.md"]
+
+    text = GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "GitHub Label Troubleshooting Examples",
+        "docs/github_labels.json",
+        "docs/github_initial_issues.md",
+        "docs/github_repository_settings.md",
+        "docs/post_publish_checklist.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Label Flow",
+        "Missing Labels",
+        "Color Drift",
+        "Template Mismatch",
+        "Dry-Run Output",
+        "Issue-Pack Label Mismatch",
+        "Review Checklist",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py github-community",
+        "python -B scripts/manage_community_issues.py --apply",
+        "python -B scripts/manage_community_issues.py --apply --create-issues",
+        "`docs/github_labels.json` is the source of truth",
+        "label sync and public roadmap issue creation are separate actions",
+        "Public roadmap issues are created only when open issue work is intentionally ready to be visible",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/github_label_troubleshooting_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/github_label_troubleshooting_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/github_label_troubleshooting_examples.md",
+        "docs/github_repository_settings.md": "docs/github_label_troubleshooting_examples.md",
+        "docs/post_publish_checklist.md": "docs/github_label_troubleshooting_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -801,6 +846,7 @@ def main() -> int:
     failures.extend(check_eval_csv_troubleshooting_examples())
     failures.extend(check_branch_protection_verification_examples())
     failures.extend(check_post_publish_warning_examples())
+    failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())

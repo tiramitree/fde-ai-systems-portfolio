@@ -97,6 +97,12 @@ Repository labels are tracked in:
 docs/github_labels.json
 ```
 
+Troubleshooting examples live in:
+
+```text
+docs/github_label_troubleshooting_examples.md
+```
+
 Validate labels, issue templates, and the community issue pack with:
 
 ```powershell
