@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add a compact README error hygiene evidence pointer.
-3. Add a compact README model gateway safety evidence pointer.
-4. Add a compact README PR triage evidence pointer.
-5. Add a compact README threat model evidence pointer.
+2. Add a compact README model gateway safety evidence pointer.
+3. Add a compact README PR triage evidence pointer.
+4. Add a compact README threat model evidence pointer.
+5. Add a compact README workflow security evidence pointer.
 
 ## Intermediate Issues
 
@@ -80,3 +80,4 @@ Contributions should preserve these invariants:
 - Add a compact README Docker runtime evidence pointer.
 - Add a compact README dependency surface evidence pointer.
 - Add a compact README API contract evidence pointer.
+- Add a compact README error hygiene evidence pointer.
