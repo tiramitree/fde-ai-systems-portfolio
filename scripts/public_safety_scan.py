@@ -96,9 +96,26 @@ def tracked_files(root: Path = ROOT) -> set[str] | None:
     return {line.strip() for line in result.stdout.splitlines() if line.strip()}
 
 
+def public_candidate_files(root: Path = ROOT) -> set[str] | None:
+    result = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "--cached", "--others", "--exclude-standard"],
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        return None
+    return {line.strip() for line in result.stdout.splitlines() if line.strip()}
+
+
 def check_forbidden_content(root: Path = ROOT) -> list[str]:
     failures = []
-    for path in root.rglob("*"):
+    candidate_files = public_candidate_files(root)
+    paths = (
+        [root / rel for rel in sorted(candidate_files)]
+        if candidate_files is not None
+        else sorted(path for path in root.rglob("*") if path.is_file())
+    )
+    for path in paths:
         if not path.is_file():
             continue
         rel = path.relative_to(root).as_posix()
