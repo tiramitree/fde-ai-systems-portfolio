@@ -27,6 +27,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README glossary for core gates
 - Add a README maintainer workflow checklist
 - Add a compact README demo path map
+- Add README command output expectations
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -151,7 +152,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add README command output expectations
+Add a compact README troubleshooting pointer
 ```
 
 Labels:
@@ -163,14 +164,14 @@ documentation, automation, good first issue
 Body:
 
 ```text
-Add a compact README table that describes expected output for the most important verification commands.
+Add a compact README troubleshooting pointer for API rate limits, Docker availability, optional OpenAI mode, and generated local artifacts.
 
 Acceptance criteria:
 
-- Cover verify, quality, fresh-clone-local, fresh-clone, post_publish_check.py, github-readiness, and pr-triage.
-- Note that GitHub API checks can be rate-limited without authentication.
-- Keep the section short and link to existing detailed docs when needed.
-- Do not introduce paid APIs, remote frontend dependencies, or unrelated code changes.
+- Cover GitHub API rate limits, Docker availability, optional OpenAI live mode, and generated local artifacts.
+- Link to docs/development_issue_solutions.md, docs/container_release_hygiene.md, and docs/model_runtime_configuration.md.
+- Keep the default local Python path as the verified path.
+- Do not require secret values, token values, account access, or collaborator permissions; do not claim Docker, OpenAI, or GitHub account setup was verified.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
@@ -206,7 +207,7 @@ Acceptance criteria:
 
 ## Guardrails
 
-- Do not create issues that ask for secrets, tokens, private files, or account access.
+- Do not create issues that require secret values, token values, private files, or account access.
 - Do not create issues that weaken permission checks, approval gates, evals, traces, or public safety scans.
 - Keep local-first behavior intact unless an issue explicitly adds an optional production adapter.
 - Every issue should include acceptance criteria and at least one verification command.
