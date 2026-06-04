@@ -114,6 +114,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact discussion-to-issue conversion examples
 - Add compact release-note changelog drift examples
 - Add compact public maintainer status update examples
+- Add compact roadmap duplicate-issue handling examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -238,7 +239,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact roadmap duplicate-issue handling examples
+Add compact issue template stale-evidence examples
 ```
 
 Labels:
@@ -250,13 +251,13 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact roadmap duplicate-issue handling examples that explain how to handle duplicate or overlapping roadmap issues without hiding useful evidence or inflating public activity.
+Add compact issue template stale-evidence examples that explain how to keep issue templates and seeded issue bodies from asking for stale, unverifiable, or private evidence.
 
 Acceptance criteria:
 
-- Add docs/roadmap_duplicate_issue_handling_examples.md with examples for exact duplicates, overlapping roadmap ideas, duplicate bugs with new evidence, issue-vs-discussion duplicates, and stale duplicate references.
-- Reference docs/public_roadmap_issue_comment_examples.md, docs/discussion_to_issue_conversion_examples.md, docs/issue_triage_sla_wording_examples.md, and docs/community_backlog.md.
-- Keep duplicate reports, overlapping ideas, new evidence, accepted scope, and low-signal activity separate; do not close or merge issues just to hide activity.
+- Add docs/issue_template_stale_evidence_examples.md with examples for stale command output, stale screenshots, stale labels or template links, stale generated artifacts, and private/account-level evidence requests.
+- Reference docs/github_initial_issues.md, docs/community_backlog.md, docs/post_publish_warning_examples.md, and docs/public_maintainer_status_update_examples.md.
+- Keep current reproducible evidence, stale evidence, generated artifacts, private/account-level material, and roadmap scope separate; do not ask contributors for secrets, private screenshots, local machine details, or real customer data.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.

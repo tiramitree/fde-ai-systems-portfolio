@@ -1,6 +1,6 @@
 # Public Roadmap Issue Comment Examples
 
-Use this page when replying to public roadmap issues, contributor proposals, or issue-to-PR handoff questions. Read it with `docs/github_initial_issues.md`, `docs/community_backlog.md`, `docs/issue_to_pr_handoff_flow.md`, `docs/docs_only_review_comment_examples.md`, `docs/contributor_attribution_examples.md`, `docs/issue_triage_sla_wording_examples.md`, `docs/discussion_to_issue_conversion_examples.md`, and `docs/maintainer_review_policy.md`.
+Use this page when replying to public roadmap issues, contributor proposals, or issue-to-PR handoff questions. Read it with `docs/github_initial_issues.md`, `docs/community_backlog.md`, `docs/issue_to_pr_handoff_flow.md`, `docs/docs_only_review_comment_examples.md`, `docs/contributor_attribution_examples.md`, `docs/issue_triage_sla_wording_examples.md`, `docs/discussion_to_issue_conversion_examples.md`, `docs/roadmap_duplicate_issue_handling_examples.md`, and `docs/maintainer_review_policy.md`.
 
 The core rule: accepted scope, backlog ideas, implementation promises, and low-signal activity are different things. Keep public issue comments factual, narrow, and reversible; do not promise delivery dates, external-account access, private data, or guaranteed roadmap acceptance.
 
@@ -103,6 +103,8 @@ Use `docs/issue_triage_sla_wording_examples.md` before setting first-response, d
 
 Use `docs/discussion_to_issue_conversion_examples.md` before accepting a discussion as issue scope.
 
+Use `docs/roadmap_duplicate_issue_handling_examples.md` before closing, merging, splitting, or redirecting duplicate or overlapping roadmap issues.
+
 ## Review Checklist
 
 Before posting a public roadmap issue comment:
@@ -120,3 +122,4 @@ python -B scripts/dev.py quality
 - The issue can be completed through a narrow route from `docs/issue_to_pr_handoff_flow.md`.
 - Unsafe requests are closed or redirected without asking for secrets, credentials, private files, or real customer data.
 - Useful PR links stay conditional until the diff and checks are reviewed.
+- Duplicate or overlapping issue scope is handled with `docs/roadmap_duplicate_issue_handling_examples.md`.

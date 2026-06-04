@@ -136,6 +136,7 @@ def main() -> int:
         "docs/contributor_attribution_examples.md",
         "docs/issue_triage_sla_wording_examples.md",
         "docs/discussion_to_issue_conversion_examples.md",
+        "docs/roadmap_duplicate_issue_handling_examples.md",
         "docs/postgres_pgvector_adapter_design.md",
         "docs/otel_trace_export.md",
         "docs/model_gateway_safety.md",

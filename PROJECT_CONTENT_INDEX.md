@@ -261,6 +261,7 @@ Release and growth:
 - `docs/issue_triage_sla_wording_examples.md`: issue triage wording examples for first response, accepted follow-up, delayed response, no-guarantee closure, and channel routing.
 - `docs/discussion_to_issue_conversion_examples.md`: discussion-to-issue conversion examples for setup questions, broad ideas, reproducible bugs, private feedback, and low-signal discussions.
 - `docs/public_roadmap_issue_comment_examples.md`: public roadmap issue comment examples for scoped acceptance, oversized requests, low-signal issues, unsafe requests, and useful PR links.
+- `docs/roadmap_duplicate_issue_handling_examples.md`: roadmap duplicate issue handling examples for exact duplicates, overlapping roadmap ideas, duplicate bugs with new evidence, issue-vs-discussion duplicates, and stale duplicate references.
 - `docs/readme_navigation_drift_examples.md`: README navigation drift fix examples for docs-only reviews that touch public navigation or evidence wording.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
