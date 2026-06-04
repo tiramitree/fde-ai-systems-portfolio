@@ -28,6 +28,7 @@ REQUIRED_LABELS = {
 }
 
 FIRST_PULL_REQUEST_CHECKLIST = ROOT / "docs" / "first_pull_request_checklist.md"
+ISSUE_TO_PR_HANDOFF_FLOW = ROOT / "docs" / "issue_to_pr_handoff_flow.md"
 DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
@@ -142,6 +143,7 @@ def check_first_pull_request_checklist() -> list[str]:
     text = FIRST_PULL_REQUEST_CHECKLIST.read_text(encoding="utf-8")
     required_phrases = [
         "CONTRIBUTING.md",
+        "docs/issue_to_pr_handoff_flow.md",
         "docs/code_tour.md",
         "docs/pr_review_security.md",
         "docs/command_output_troubleshooting_map.md",
@@ -181,6 +183,54 @@ def check_first_pull_request_checklist() -> list[str]:
         "README.md": "docs/first_pull_request_checklist.md",
         "PROJECT_CONTENT_INDEX.md": "docs/first_pull_request_checklist.md",
         "CONTRIBUTING.md": "docs/first_pull_request_checklist.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_issue_to_pr_handoff_flow() -> list[str]:
+    failures: list[str] = []
+    if not ISSUE_TO_PR_HANDOFF_FLOW.exists():
+        return ["missing docs/issue_to_pr_handoff_flow.md"]
+
+    text = ISSUE_TO_PR_HANDOFF_FLOW.read_text(encoding="utf-8")
+    required_phrases = [
+        "Issue To PR Handoff Flow",
+        "docs/github_initial_issues.md",
+        "docs/first_pull_request_checklist.md",
+        "docs/docs_only_review_comment_examples.md",
+        "docs/pr_review_security.md",
+        "Pick One Issue",
+        "Create A Small Branch",
+        "Keep The Diff Narrow",
+        "Review Before Broad Gates",
+        "Run The Local Bar",
+        "PR Body",
+        "Maintainer Review Notes",
+        "Done Criteria",
+        "Route",
+        "Branch Name",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone-local",
+        "generated runtime files",
+        "private paths",
+        "real customer data",
+        "Public PRs are still untrusted input",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/issue_to_pr_handoff_flow.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/issue_to_pr_handoff_flow.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/issue_to_pr_handoff_flow.md",
+        "CONTRIBUTING.md": "docs/issue_to_pr_handoff_flow.md",
+        "docs/first_pull_request_checklist.md": "docs/issue_to_pr_handoff_flow.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -609,6 +659,7 @@ def main() -> int:
     failures.extend(check_issue_pack(labels))
     failures.extend(check_public_backlog())
     failures.extend(check_first_pull_request_checklist())
+    failures.extend(check_issue_to_pr_handoff_flow())
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())

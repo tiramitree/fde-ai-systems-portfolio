@@ -620,6 +620,7 @@ repository/
 - [Architecture Boundaries](docs/architecture_boundaries.md)
 - [Contributor Code Tour](docs/code_tour.md)
 - [First Pull Request Checklist](docs/first_pull_request_checklist.md)
+- [Issue To PR Handoff Flow](docs/issue_to_pr_handoff_flow.md)
 - [README Navigation Audit](docs/readme_navigation_audit.md)
 - [README Navigation Drift Examples](docs/readme_navigation_drift_examples.md)
 - [Workflow Security](docs/workflow_security.md)

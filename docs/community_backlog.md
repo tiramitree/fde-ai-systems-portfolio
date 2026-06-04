@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact docs for issue-to-PR handoff flow.
-3. Add compact release attachment verification examples.
-4. Add compact eval CSV troubleshooting examples.
-5. Add compact branch protection verification examples.
+2. Add compact release attachment verification examples.
+3. Add compact eval CSV troubleshooting examples.
+4. Add compact branch protection verification examples.
+5. Add compact post-publish warning examples.
 
 ## Intermediate Issues
 
@@ -111,3 +111,4 @@ Contributions should preserve these invariants:
 - Add optional OpenAI live-mode troubleshooting notes.
 - Add a Docker runtime evidence collection checklist.
 - Add compact Docker runtime failure examples.
+- Add compact docs for issue-to-PR handoff flow.

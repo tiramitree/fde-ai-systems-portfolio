@@ -106,4 +106,4 @@ python -B scripts/dev.py verify
 - [ ] Security or governance behavior is not weakened.
 - [ ] README or docs are updated if the user-facing workflow changed.
 
-See [First Pull Request Checklist](docs/first_pull_request_checklist.md) before opening a local PR, and [Maintainer Review Policy](docs/maintainer_review_policy.md) for how reviews and external PRs are triaged.
+See [First Pull Request Checklist](docs/first_pull_request_checklist.md) and [Issue To PR Handoff Flow](docs/issue_to_pr_handoff_flow.md) before opening a local PR, and [Maintainer Review Policy](docs/maintainer_review_policy.md) for how reviews and external PRs are triaged.
