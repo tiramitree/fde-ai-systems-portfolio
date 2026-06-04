@@ -244,7 +244,20 @@ Public PRs are treated as untrusted input. Before approving workflows, running c
 | Secrets and access | Do not ask contributors for secrets, tokens, account access, private files, local paths, or collaborator permissions. |
 | Merge bar | Use the [PR review security gate](docs/pr_review_security.md) and [PR review runbook](docs/pr_review_runbook.md); merge only after `pr-policy`, `governance`, `workflow-security`, `safety`, and `verify` pass. |
 
-Contributor route map:
+## Reviewer Handoff Checklist
+
+Use this with the [Maintainer PR Checklist](#maintainer-pr-checklist), [Contributor Route Map](#contributor-route-map), [Visual Asset Hygiene](docs/visual_asset_hygiene.md), [Published Repository Status](docs/published_repository_status.md), [PR Review Runbook](docs/pr_review_runbook.md), and [Release Evidence FAQ](#release-evidence-faq).
+
+| Review Surface | Command Or Source | Blocking Rule |
+| --- | --- | --- |
+| Local quality | Run `python -B scripts/dev.py quality` after source, docs, asset, or runtime changes. | Any failure blocks commit, approval, or public sharing. |
+| Local fresh clone | Run `python -B scripts/dev.py fresh-clone-local` before push when setup paths, README guidance, public assets, or runtime wiring changed. | Any failure blocks push until a clean checkout works. |
+| Visual evidence | Run `python -B scripts/dev.py visual-assets` and `python -B scripts/dev.py visual-asset-diff`; use `refresh-visual-assets` only for intentional screenshot updates. | Unexpected screenshot or manifest drift blocks visual claims. |
+| Remote evidence | After push, run `python -B scripts/dev.py fresh-clone` and `python -B scripts/post_publish_check.py`. | Remote clone or published-file failures block sharing the public branch. |
+| PR state | Run `python -B scripts/dev.py pr-triage`, then inspect high-risk diffs before running contributor code. | Do not merge while review findings, high-risk files, or required gates are unresolved. |
+| GitHub readiness | Run `python -B scripts/dev.py github-readiness`; treat `[WARN]` and `[MANUAL]` rows as account-level follow-up unless strict mode is required. | Do not claim metadata, branch protection, release page, social preview, or profile pin freshness until those actions are complete. |
+
+## Contributor Route Map
 
 | Change Area | Read First | Run Before PR |
 | --- | --- | --- |
