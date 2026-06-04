@@ -110,6 +110,7 @@ def main() -> int:
         "docs/runtime_ui_contracts.md",
         "docs/api_contracts.md",
         "docs/github_branch_protection.json",
+        "docs/branch_protection_verification_examples.md",
         "docs/github_repository_settings.md",
         "docs/github_labels.json",
         "docs/github_release_notes_v0.1.0.md",

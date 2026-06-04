@@ -88,6 +88,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact docs for issue-to-PR handoff flow
 - Add compact release attachment verification examples
 - Add compact eval CSV troubleshooting examples
+- Add compact branch protection verification examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -212,28 +213,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact branch protection verification examples
+Add compact post-publish warning examples
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add compact examples for checking branch-protection status without treating local docs as remote account evidence.
+Add compact examples for handling post-publish warnings without confusing local quality evidence with remote GitHub evidence.
 
 Acceptance criteria:
 
-- Add docs/branch_protection_verification_examples.md with examples for missing protection, stale payloads, API warning rows, manual account settings, and post-publish mismatch.
-- Reference docs/github_repository_settings.md, docs/github_branch_protection.json, docs/published_repository_status.md, and docs/post_publish_checklist.md.
-- Keep branch-protection wording manual until GitHub readiness or account-level evidence confirms the remote state.
+- Add docs/post_publish_warning_examples.md with examples for remote file lag, raw README failures, GitHub Actions pending state, readiness warning rows, and manual account settings.
+- Reference docs/post_publish_checklist.md, docs/published_repository_status.md, docs/github_release_commands.md, and docs/command_output_troubleshooting_map.md.
+- Keep post-publish warnings separate from local quality failures and do not claim published evidence until remote checks pass.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py github-readiness still passes without strict mode.
-- python -B scripts/dev.py governance still passes.
+- python -B scripts/dev.py launch-assets still passes.
+- python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

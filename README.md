@@ -629,6 +629,7 @@ repository/
 - [GitHub Launch Plan](docs/github_launch_plan.md)
 - [Published Repository Status](docs/published_repository_status.md)
 - [GitHub Repository Settings](docs/github_repository_settings.md)
+- [Branch Protection Verification Examples](docs/branch_protection_verification_examples.md)
 - [Community Backlog](docs/community_backlog.md)
 - [Public Release Audit](docs/public_release_audit.md)
 - [Differentiation Strategy](docs/differentiation_strategy.md)
