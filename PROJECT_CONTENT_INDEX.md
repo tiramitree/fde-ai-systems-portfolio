@@ -258,6 +258,7 @@ Release and growth:
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_branch_protection.json`: branch-protection payload for `main`.
 - `docs/github_repository_settings.md`: repository description, topics, social preview, branch protection, and first-release settings.
+- `docs/github_repository_settings_screenshot_checklist.md`: screenshot handling checklist for description/topics, branch protection, social preview, release page, and profile pin evidence.
 - `docs/github_authenticated_maintenance_troubleshooting_examples.md`: authenticated GitHub maintenance troubleshooting examples for missing `gh` auth, wrong account or repository, dry-run versus apply, branch protection or release side effects, and PR maintenance safeguards.
 - `docs/github_api_rate_limit_troubleshooting_examples.md`: GitHub API rate-limit troubleshooting examples for unauthenticated limits, transient failures, pending Actions lookups, stale cached status, and strict-mode review.
 - `docs/github_repository_metadata_troubleshooting_examples.md`: repository metadata troubleshooting examples for missing descriptions, missing topics, wrong repository URLs, stale public status, and unauthenticated maintenance output.
