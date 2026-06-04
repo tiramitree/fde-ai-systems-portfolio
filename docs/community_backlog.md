@@ -7,8 +7,8 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
 2. Add compact per-project architecture cards to the README.
 3. Add shareable demo-state reset presets.
-4. Add a compact README reviewer checklist for comparing the screenshot gallery with live demo behavior.
-5. Add a compact README command decision tree for choosing local, release, GitHub, and optional environment checks.
+4. Add a compact README command decision tree for choosing local, release, GitHub, and optional environment checks.
+5. Add a compact README evidence legend for distinguishing smoke, eval, trace, audit, and visual gates.
 
 ## Intermediate Issues
 
@@ -55,3 +55,4 @@ Contributions should preserve these invariants:
 - Add a compact README section that maps each project to the smallest useful demo path.
 - Add a README command output expectations table for verify, quality, fresh-clone, post-publish, GitHub readiness, and PR triage checks.
 - Add a compact README troubleshooting pointer for API rate limits, Docker availability, optional OpenAI mode, and generated local artifacts.
+- Add a compact README reviewer checklist for comparing the screenshot gallery with live demo behavior.

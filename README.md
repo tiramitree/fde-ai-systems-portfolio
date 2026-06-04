@@ -235,6 +235,15 @@ Mobile / narrow viewport captures are checked by the same visual asset manifest:
 | --- | --- | --- |
 | ![Secure Enterprise Knowledge Copilot mobile screenshot](docs/assets/secure-knowledge-copilot-mobile.png)<br>Mobile: narrow layout keeps user context, visible documents, and permission-aware knowledge controls readable. | ![Regulated Customer Operations Agent mobile screenshot](docs/assets/regulated-ops-agent-mobile.png)<br>Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning. | ![AI Reliability Incident Console mobile screenshot](docs/assets/ai-reliability-incident-console-mobile.png)<br>Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence. |
 
+Screenshot reviewer checklist:
+
+| Check | Evidence |
+| --- | --- |
+| Desktop and mobile assets cover all three demos. | Six PNGs are listed above and checked by `python -B scripts/dev.py visual-assets`. |
+| The screenshots still match the live behavior. | Run `python -B scripts/dev.py start`, follow the [Demo Path Map](#demo-path-map), and compare the visible role, approval, release, trace, and audit surfaces. |
+| Refreshed screenshots are reviewable. | Run `python -B scripts/dev.py visual-asset-diff` and keep refreshed PNGs plus `docs/visual_assets_manifest.json` in the same change. |
+| Reviewer expectations stay honest. | Use [Visual Asset Hygiene](docs/visual_asset_hygiene.md) and the [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md) before publishing or approving visual changes. |
+
 ## Project 1: Secure Enterprise Knowledge Copilot
 
 Open:

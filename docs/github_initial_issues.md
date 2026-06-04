@@ -29,6 +29,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README demo path map
 - Add README command output expectations
 - Add a compact README troubleshooting pointer
+- Add a compact README screenshot reviewer checklist
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -153,7 +154,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README screenshot reviewer checklist
+Add a compact README command decision tree
 ```
 
 Labels:
@@ -165,16 +166,16 @@ documentation, automation, good first issue
 Body:
 
 ```text
-Add a compact README checklist for comparing the screenshot gallery with the live demo behavior.
+Add a compact README decision tree for choosing local, release, GitHub, and optional environment checks.
 
 Acceptance criteria:
 
-- Cover desktop and mobile screenshots for all three demos.
-- Point reviewers to the fastest useful demo paths in README and the screenshot hygiene docs.
-- Link to docs/visual_asset_hygiene.md and docs/reviewer_perspective_checklist.md.
-- Make clear that refreshed screenshots and docs/visual_assets_manifest.json should move together.
+- Cover local verification, release evidence, GitHub maintenance, visual assets, and optional environment checks.
+- Point readers to the existing command quick-reference and output expectations instead of duplicating the full command index.
+- Keep Docker and OpenAI checks clearly optional and environment-specific.
+- Keep the section compact enough for README scanning.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py visual-assets still passes.
+- python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

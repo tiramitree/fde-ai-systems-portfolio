@@ -22,6 +22,13 @@ REQUIRED_README_CAPTIONS = [
     "Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning.",
     "Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence.",
 ]
+REQUIRED_SCREENSHOT_REVIEWER_CHECKLIST = [
+    "Screenshot reviewer checklist:",
+    "| Desktop and mobile assets cover all three demos. | Six PNGs are listed above and checked by `python -B scripts/dev.py visual-assets`. |",
+    "| The screenshots still match the live behavior. | Run `python -B scripts/dev.py start`, follow the [Demo Path Map](#demo-path-map), and compare the visible role, approval, release, trace, and audit surfaces. |",
+    "| Refreshed screenshots are reviewable. | Run `python -B scripts/dev.py visual-asset-diff` and keep refreshed PNGs plus `docs/visual_assets_manifest.json` in the same change. |",
+    "| Reviewer expectations stay honest. | Use [Visual Asset Hygiene](docs/visual_asset_hygiene.md) and the [Reviewer Perspective Checklist](docs/reviewer_perspective_checklist.md) before publishing or approving visual changes. |",
+]
 REQUIRED_COMMAND_QUICK_REFERENCE = [
     "Command quick-reference:",
     "| Local run | `python -B scripts/dev.py start` |",
@@ -259,6 +266,18 @@ def check_readme_captions() -> list[str]:
     return failures
 
 
+def check_screenshot_reviewer_checklist() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_SCREENSHOT_REVIEWER_CHECKLIST:
+        if expected not in text:
+            failures.append(f"README.md: missing screenshot reviewer checklist entry: {expected}")
+    return failures
+
+
 def check_command_quick_reference() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -336,6 +355,7 @@ def main() -> int:
     failures.extend(check_markdown_links())
     failures.extend(check_assets())
     failures.extend(check_readme_captions())
+    failures.extend(check_screenshot_reviewer_checklist())
     failures.extend(check_command_quick_reference())
     failures.extend(check_command_output_expectations())
     failures.extend(check_troubleshooting_pointers())
