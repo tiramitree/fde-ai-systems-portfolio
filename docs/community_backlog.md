@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add a local demo reset troubleshooting guide for stale runtime state.
-3. Add a concise data-flow map for each service's checked-in seed fixtures.
-4. Add a contributor onboarding checklist for the first local pull request.
-5. Add a docs-only pull request review examples page.
+2. Add a concise data-flow map for each service's checked-in seed fixtures.
+3. Add a contributor onboarding checklist for the first local pull request.
+4. Add a docs-only pull request review examples page.
+5. Add a small README-to-docs navigation audit for release-facing docs.
 
 ## Intermediate Issues
 
@@ -100,3 +100,4 @@ Contributions should preserve these invariants:
 - Add contributor-local troubleshooting examples for failed eval gates.
 - Add a small glossary for seed, runtime, eval, replay, and trace artifacts.
 - Add a command-output troubleshooting map for the most common failing gates.
+- Add a local demo reset troubleshooting guide for stale runtime state.

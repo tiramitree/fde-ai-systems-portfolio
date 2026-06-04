@@ -7,6 +7,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRESETS_PATH = ROOT / "docs" / "demo_state_presets.json"
+RESET_TROUBLESHOOTING_PATH = ROOT / "docs" / "local_demo_reset_troubleshooting.md"
 
 PROJECTS = {
     "secure-enterprise-knowledge-copilot": {
@@ -166,6 +167,43 @@ def validate_canonical_coverage(presets: list[dict[str, Any]], failures: list[st
     )
 
 
+def check_reset_troubleshooting_doc(failures: list[str]) -> None:
+    require(RESET_TROUBLESHOOTING_PATH.exists(), failures, "missing docs/local_demo_reset_troubleshooting.md")
+    if not RESET_TROUBLESHOOTING_PATH.exists():
+        return
+
+    text = RESET_TROUBLESHOOTING_PATH.read_text(encoding="utf-8")
+    for expected in (
+        "python -B scripts/dev.py start",
+        "python -B scripts/dev.py demo-presets",
+        "python -B scripts/dev.py fresh-clone-local",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "runtime_state.json",
+        "eval_runtime_state.json",
+        "runtime_state.tmp",
+        "localStorage",
+        "fde-scenario-draft:secure-enterprise-knowledge-copilot",
+        "fde-scenario-draft:regulated-customer-operations-agent",
+        "fde-scenario-draft:ai-reliability-incident-console",
+        "docs/demo_state_presets.json",
+        "p1-finance-access",
+        "p2-case-1001-approval",
+        "p3-unsafe-canary-release",
+        "Do not add secrets, private paths, real customer data, external accounts, paid-service requirements, generated runtime files",
+        "docs/local_artifact_glossary.md",
+        "docs/command_output_troubleshooting_map.md",
+    ):
+        require(expected in text, failures, f"docs/local_demo_reset_troubleshooting.md missing {expected!r}")
+
+    for rel_path in ("README.md", "PROJECT_CONTENT_INDEX.md"):
+        require(
+            "docs/local_demo_reset_troubleshooting.md" in (ROOT / rel_path).read_text(encoding="utf-8"),
+            failures,
+            f"{rel_path}: missing docs/local_demo_reset_troubleshooting.md",
+        )
+
+
 def main() -> int:
     failures: list[str] = []
     require(PRESETS_PATH.exists(), failures, "missing docs/demo_state_presets.json")
@@ -177,6 +215,7 @@ def main() -> int:
 
     payload = read_json(PRESETS_PATH)
     check_text_safety(payload, failures)
+    check_reset_troubleshooting_doc(failures)
     require(payload.get("schema_version") == "1.0", failures, "schema_version must be 1.0")
     verify_commands = payload.get("verify_commands", [])
     for command in ("python -B scripts/dev.py demo-presets", "python -B scripts/dev.py replay", "python -B scripts/dev.py smoke"):
