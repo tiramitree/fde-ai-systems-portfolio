@@ -296,6 +296,10 @@ Governance readiness:
 
 Use [GitHub Repository Settings](docs/github_repository_settings.md), [branch protection payload](docs/github_branch_protection.json), [Maintainer Review Policy](docs/maintainer_review_policy.md), [CODEOWNERS](.github/CODEOWNERS), and the repository governance row in the [Evidence Matrix](#evidence-matrix) before changing maintainer, release, or contribution rules. Repository policy changes must preserve CODEOWNERS coverage, branch-protection expectations, issue and PR templates, security review rules, release evidence gates, and dependency monitoring; run `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.
 
+Launch asset readiness:
+
+Use [Launch Assets Hygiene](docs/launch_assets_hygiene.md), [Launch Copy Pack](docs/launch_copy_pack.md), [Star Growth Plan](docs/star_growth_plan.md), [GitHub Launch Plan](docs/github_launch_plan.md), [Published Repository Status](docs/published_repository_status.md), and the launch materials row in the [Evidence Matrix](#evidence-matrix) before changing launch docs, posts, screenshots, or release-facing status. Public copy must keep Docker runtime, OpenAI live mode, branch protection, release pages, social preview, profile pins, launch feedback, star-growth success, and production readiness unclaimed until the matching evidence or account-level action exists; run `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py assets`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |

@@ -237,6 +237,10 @@ REQUIRED_GOVERNANCE_READINESS = [
     "Governance readiness:",
     "Use [GitHub Repository Settings](docs/github_repository_settings.md), [branch protection payload](docs/github_branch_protection.json), [Maintainer Review Policy](docs/maintainer_review_policy.md), [CODEOWNERS](.github/CODEOWNERS), and the repository governance row in the [Evidence Matrix](#evidence-matrix) before changing maintainer, release, or contribution rules. Repository policy changes must preserve CODEOWNERS coverage, branch-protection expectations, issue and PR templates, security review rules, release evidence gates, and dependency monitoring; run `python -B scripts/dev.py governance`, `python -B scripts/dev.py pr-policy`, `python -B scripts/dev.py workflow-security`, and `python -B scripts/dev.py quality`.",
 ]
+REQUIRED_LAUNCH_ASSET_READINESS = [
+    "Launch asset readiness:",
+    "Use [Launch Assets Hygiene](docs/launch_assets_hygiene.md), [Launch Copy Pack](docs/launch_copy_pack.md), [Star Growth Plan](docs/star_growth_plan.md), [GitHub Launch Plan](docs/github_launch_plan.md), [Published Repository Status](docs/published_repository_status.md), and the launch materials row in the [Evidence Matrix](#evidence-matrix) before changing launch docs, posts, screenshots, or release-facing status. Public copy must keep Docker runtime, OpenAI live mode, branch protection, release pages, social preview, profile pins, launch feedback, star-growth success, and production readiness unclaimed until the matching evidence or account-level action exists; run `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py assets`, `python -B scripts/dev.py fresh-clone-local`, and `python -B scripts/dev.py quality`.",
+]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
     "| Project 1 retrieval, citation-backed answer, and unauthorized abstention | Use the [Demo Path Map](#demo-path-map) Alice/Morgan finance path and the Project 1 sequence in [Final Demo Runbook](docs/final_demo_runbook.md). | [Project Case Notes](docs/project_case_notes.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the permission-aware RAG rows in the [Evidence Matrix](#evidence-matrix). |",
@@ -861,6 +865,18 @@ def check_governance_readiness() -> list[str]:
     return failures
 
 
+def check_launch_asset_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_LAUNCH_ASSET_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing launch asset readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -914,6 +930,7 @@ def main() -> int:
     failures.extend(check_threat_model_readiness())
     failures.extend(check_workflow_security_readiness())
     failures.extend(check_governance_readiness())
+    failures.extend(check_launch_asset_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")

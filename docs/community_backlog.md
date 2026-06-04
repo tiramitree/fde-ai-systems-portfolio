@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add a compact README launch asset evidence pointer.
-3. Add a compact README reviewer handoff evidence pointer.
-4. Add a compact README post-publish evidence pointer.
-5. Add a compact README GitHub readiness evidence pointer.
+2. Add a compact README reviewer handoff evidence pointer.
+3. Add a compact README post-publish evidence pointer.
+4. Add a compact README GitHub readiness evidence pointer.
+5. Add a compact README release page evidence pointer.
 
 ## Intermediate Issues
 
@@ -86,3 +86,4 @@ Contributions should preserve these invariants:
 - Add a compact README threat model evidence pointer.
 - Add a compact README workflow security evidence pointer.
 - Add a compact README governance evidence pointer.
+- Add a compact README launch asset evidence pointer.
