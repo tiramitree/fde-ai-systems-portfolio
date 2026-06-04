@@ -47,6 +47,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README release artifact attachment pointer
 - Add a compact README optional-environment evidence pointer
 - Add a compact README connector roadmap pointer
+- Add a compact README eval regression report pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -171,26 +172,26 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README eval regression report pointer
+Add a compact README storage adapter evidence pointer
 ```
 
 Labels:
 
 ```text
-documentation, eval, good first issue
+documentation, production-upgrade, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where eval reporting materials live and which commands should run before changing regression evidence.
+Add a compact README pointer that tells contributors where storage-adapter materials live and which boundaries must be preserved before adding persistent storage prototypes.
 
 Acceptance criteria:
 
-- Link to Demo Report, Demo Replay Artifact, System Evidence Matrix, Scenario Data Integrity, and the eval row in the Evidence Legend.
-- Cover eval checks: `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`.
+- Link to PostgreSQL And pgvector Adapter Design, Production Upgrade Notes, Scenario Data Integrity, Architecture Boundaries, and the storage-related row in the Evidence Matrix.
+- Cover storage checks: `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.
+- Make clear that permission checks, eval-state isolation, trace/audit compatibility, and local JSON default behavior must be preserved.
 - python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py scenario-data still passes.
 - python -B scripts/dev.py quality still passes.

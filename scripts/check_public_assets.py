@@ -108,7 +108,7 @@ REQUIRED_README_GLOSSARY = [
     "| Abstention | The answer behavior used when accessible evidence is missing, unauthorized, or unsafe after filtering; see [Project 1](#project-1-secure-enterprise-knowledge-copilot) and the [System Evidence Matrix](docs/portfolio_evidence_matrix.md). |",
 ]
 REQUIRED_EVIDENCE_LEGEND = [
-    "Evidence legend:",
+    "## Evidence Legend",
     "| Smoke | `python -B scripts/dev.py smoke` proves the three running demos complete the canonical permission, approval, and release-blocking flows. | It is not exhaustive security, load, or browser-compatibility coverage. |",
     "| Eval | `python -B scripts/dev.py evals` proves deterministic regression cases keep unsafe leak, direct side-effect, and release-approval failures at zero; see [System Evidence Matrix](docs/portfolio_evidence_matrix.md). | It does not cover every possible prompt, data set, or production integration. |",
     "| Trace | `python -B scripts/dev.py observability` proves responses can be followed through stored trace records, IDs, and linked decisions; see [Observability Integrity](docs/observability_integrity.md). | It does not mean an external OpenTelemetry backend is configured by default. |",
@@ -184,6 +184,10 @@ REQUIRED_OPTIONAL_ENVIRONMENT_READINESS = [
 REQUIRED_CONNECTOR_ROADMAP_READINESS = [
     "Connector roadmap readiness:",
     "Use [Production Upgrade Notes](docs/production_upgrade_notes.md), [Project Case Notes](docs/project_case_notes.md), [Model Gateway Safety](docs/model_gateway_safety.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Connector stubs](#contributor-route-map) row before adding external-system adapters. Connector stubs must keep external side effects behind approval, idempotency, audit, and trace boundaries; run `python -B scripts/dev.py architecture`, `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.",
+]
+REQUIRED_EVAL_REGRESSION_READINESS = [
+    "Eval regression readiness:",
+    "Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.",
 ]
 REQUIRED_OPERATIONAL_RUNBOOK_INDEX = [
     "Operational runbook index:",
@@ -653,6 +657,18 @@ def check_connector_roadmap_readiness() -> list[str]:
     return failures
 
 
+def check_eval_regression_readiness() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_EVAL_REGRESSION_READINESS:
+        if expected not in text:
+            failures.append(f"README.md: missing eval regression readiness entry: {expected}")
+    return failures
+
+
 def check_operational_runbook_index() -> list[str]:
     readme = ROOT / "README.md"
     if not readme.exists():
@@ -693,6 +709,7 @@ def main() -> int:
     failures.extend(check_release_artifact_readiness())
     failures.extend(check_optional_environment_readiness())
     failures.extend(check_connector_roadmap_readiness())
+    failures.extend(check_eval_regression_readiness())
     failures.extend(check_operational_runbook_index())
     if failures:
         print("Public asset check failed:")
