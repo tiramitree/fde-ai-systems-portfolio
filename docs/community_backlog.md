@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact authenticated maintenance troubleshooting examples.
-3. Add compact GitHub public PR API fallback troubleshooting examples.
-4. Add compact repository settings screenshot checklist.
-5. Add compact launch feedback collection examples.
+2. Add compact GitHub public PR API fallback troubleshooting examples.
+3. Add compact repository settings screenshot checklist.
+4. Add compact launch feedback collection examples.
+5. Add compact GitHub release attachment screenshot checklist.
 
 ## Intermediate Issues
 
@@ -124,3 +124,4 @@ Contributions should preserve these invariants:
 - Add compact GitHub API rate-limit troubleshooting examples.
 - Add compact GitHub latest release troubleshooting examples.
 - Add compact profile pin verification examples.
+- Add compact authenticated maintenance troubleshooting examples.

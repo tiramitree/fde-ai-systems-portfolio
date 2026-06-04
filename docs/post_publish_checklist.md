@@ -23,6 +23,7 @@ The post-publish check must prove:
 - raw README is reachable.
 - GitHub Actions workflow is reachable.
 - key documentation files are published.
+- the authenticated GitHub maintenance troubleshooting examples are published.
 - the GitHub repository metadata troubleshooting examples are published.
 - the observability integrity script and documentation are published.
 - the threat model script and documentation are published.
@@ -69,6 +70,7 @@ After the automated check passes:
 21. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
 22. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
 23. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
+24. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
 
 ## Optional Backlog Seeding
 

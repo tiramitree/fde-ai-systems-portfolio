@@ -75,6 +75,12 @@ python -B scripts/maintain_github_state.py --apply --skip-release
 
 The maintenance script delegates launch setup to `scripts/configure_github_launch.py` and also provides the guarded PR-maintenance path. Secret scanning and push protection are best effort because availability can depend on account and repository security settings.
 
+Authenticated maintenance troubleshooting examples live in:
+
+```text
+docs/github_authenticated_maintenance_troubleshooting_examples.md
+```
+
 The branch-protection API payload is tracked in:
 
 ```text
