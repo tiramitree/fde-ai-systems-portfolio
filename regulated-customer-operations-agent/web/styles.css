@@ -8,6 +8,7 @@
   --accent-soft: #e7f1f3;
   --danger: #9e2f2f;
   --warn: #8b5f00;
+  --focus-ring: rgba(31, 95, 114, 0.24);
 }
 
 * {
@@ -126,6 +127,21 @@ button {
   color: #fff;
   padding: 10px 12px;
   font-weight: 650;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  filter: none;
+  opacity: 0.68;
+}
+
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+.traceLink:focus-visible {
+  border-color: var(--accent);
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .quick {
@@ -262,7 +278,7 @@ button {
 
 .traceLink:focus-visible {
   border-color: var(--accent);
-  outline: 3px solid rgba(31, 95, 114, 0.2);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -347,5 +363,16 @@ button {
 
   .quick {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

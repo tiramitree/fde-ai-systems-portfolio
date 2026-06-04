@@ -25,7 +25,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "e6bb9a2123e37b08536bda2519cad6de6344b41f6621f9137c593089c0a50bbe"
+          "sha256": "c1105101040d516f7ed5516f25274f85051506a44b845a33fb3674c3d0a4b17d"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -72,7 +72,7 @@
         },
         {
           "path": "regulated-customer-operations-agent/web/styles.css",
-          "sha256": "9ffe488e88ae05227f7ba61fed325d17f00274e7b4dc7cbef2c771ea5c45fe15"
+          "sha256": "abb727661cc06d27884b1182bb9063cfca0551e77a016403c9820f8484bbd36a"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/api.js",
@@ -119,7 +119,7 @@
         },
         {
           "path": "ai-reliability-incident-console/web/styles.css",
-          "sha256": "00628241ba27a725d14a6097746651d64d9cc2cc04b3b9692b72cbcd9b0daac4"
+          "sha256": "01f31fe1c707a1d9afdcca5bf4cae7ab5cbd8ed9262752a7eae463a333eb949a"
         },
         {
           "path": "ai-reliability-incident-console/web/js/api.js",
