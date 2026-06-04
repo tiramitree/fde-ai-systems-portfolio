@@ -1,6 +1,6 @@
 # README Navigation Audit
 
-Use this audit when README links, release-facing sections, or contributor-facing routes change. It maps public README pointers to supporting docs and verification gates so navigation drift is visible before a public push.
+Use this audit when README links, release-facing sections, or contributor-facing routes change. It maps public README pointers to supporting docs and verification gates so navigation drift is visible before a public push. For copyable fix patterns, read `docs/readme_navigation_drift_examples.md`.
 
 This page is local-only. It does not claim fresh runtime, Docker, OpenAI, branch-protection, release-page, social-preview, profile-pin, or account-level evidence unless the matching command or manual proof exists.
 

@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact examples for README navigation drift fixes.
-3. Add OpenTelemetry collector handoff troubleshooting notes.
-4. Add compact Docker runtime failure examples.
-5. Add compact docs for issue-to-PR handoff flow.
+2. Add OpenTelemetry collector handoff troubleshooting notes.
+3. Add compact Docker runtime failure examples.
+4. Add compact docs for issue-to-PR handoff flow.
+5. Add compact release attachment verification examples.
 
 ## Intermediate Issues
 
@@ -106,5 +106,6 @@ Contributions should preserve these invariants:
 - Add docs-only pull request review examples for useful, low-signal, and unsafe documentation changes.
 - Add docs-only review comments for common PR outcomes.
 - Add a README-to-docs navigation audit for release-facing docs.
+- Add compact examples for README navigation drift fixes.
 - Add optional OpenAI live-mode troubleshooting notes.
 - Add a Docker runtime evidence collection checklist.

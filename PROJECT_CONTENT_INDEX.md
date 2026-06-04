@@ -215,6 +215,7 @@ Design Review Docs:
 - `docs/local_demo_reset_troubleshooting.md`: local reset troubleshooting for runtime state, eval runtime state, browser scenario drafts, and canonical demo presets.
 - `docs/command_output_troubleshooting_map.md`: local troubleshooting map from common gate output to first files, narrower commands, and safe follow-up checks.
 - `docs/readme_navigation_audit.md`: README-to-docs navigation audit for release-facing pointers, supporting docs, owner gates, and drift risks.
+- `docs/readme_navigation_drift_examples.md`: examples for fixing stale README links, unsupported claims, missing source docs, and manual-evidence drift.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.
 - `docs/eval_gate_troubleshooting_examples.md`: local troubleshooting map for unsafe retrieval, direct side-effect, and release-blocking eval failures.
 - `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.
@@ -247,6 +248,7 @@ Release and growth:
 - `docs/pr_review_security.md`: PR review policy gate and malicious-contribution review framing.
 - `docs/docs_only_pr_review_examples.md`: docs-only PR review examples for useful docs, low-signal docs, unsafe docs, claim checks, link checks, generated artifact checks, and issue-pack drift.
 - `docs/docs_only_review_comment_examples.md`: maintainer comment templates for approving, requesting changes, closing unsafe changes, or closing low-signal docs-only PRs.
+- `docs/readme_navigation_drift_examples.md`: README navigation drift fix examples for docs-only reviews that touch public navigation or evidence wording.
 - `docs/github_launch_plan.md`: launch sequence.
 - `docs/published_repository_status.md`: current GitHub publication evidence and remaining manual release tasks.
 - `docs/github_branch_protection.json`: branch-protection payload for `main`.
