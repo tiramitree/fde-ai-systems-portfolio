@@ -2,7 +2,7 @@
 
 Use this checklist for the first local pull request. It keeps the contribution path small, reviewable, and safe without requiring external accounts, paid APIs, private files, generated runtime state, or real customer data.
 
-Read this with `CONTRIBUTING.md`, `docs/code_tour.md`, `docs/pr_review_security.md`, `docs/command_output_troubleshooting_map.md`, and `docs/local_demo_reset_troubleshooting.md`.
+Read this with `CONTRIBUTING.md`, `docs/code_tour.md`, `docs/issue_to_pr_handoff_flow.md`, `docs/pr_review_security.md`, `docs/command_output_troubleshooting_map.md`, and `docs/local_demo_reset_troubleshooting.md`.
 
 ## 1. Start Clean
 

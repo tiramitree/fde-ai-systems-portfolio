@@ -228,6 +228,7 @@ Design Review Docs:
 - `docs/architecture_boundaries.md`: app/API/domain/frontend boundary contract and review framing.
 - `docs/code_tour.md`: contributor map from HTTP shells to API classes, domain modules, storage, evals, and frontend modules.
 - `docs/first_pull_request_checklist.md`: first local pull request checklist for clone, branch, diff review, route selection, targeted gates, quality checks, and PR handoff.
+- `docs/issue_to_pr_handoff_flow.md`: contributor handoff flow from one approved public issue to a narrow pull request, including branch naming, route gates, PR body, and maintainer review notes.
 - `docs/docs_only_pr_review_examples.md`: examples for approving, requesting changes, or closing docs-only PRs without weakening public claims.
 - `docs/readme_navigation_audit.md`: README navigation audit for release, contribution, review, optional environment, and technical evidence links.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.

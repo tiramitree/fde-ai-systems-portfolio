@@ -85,6 +85,7 @@ The first public issue wave was created after the initial release and is now com
 - Add optional OpenAI live-mode troubleshooting notes
 - Add a Docker runtime evidence collection checklist
 - Add compact Docker runtime failure examples
+- Add compact docs for issue-to-PR handoff flow
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -209,28 +210,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact docs for issue-to-PR handoff flow
+Add compact release attachment verification examples
 ```
 
 Labels:
 
 ```text
-documentation, good first issue
+documentation, release, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact handoff flow that shows contributors how to turn one approved public issue into a small, reviewable pull request.
+Add compact examples for checking release attachments without committing generated runtime artifacts as source.
 
 Acceptance criteria:
 
-- Add docs/issue_to_pr_handoff_flow.md with issue selection, branch naming, route-specific gates, PR body, and maintainer review notes.
-- Reference docs/github_initial_issues.md, docs/first_pull_request_checklist.md, docs/docs_only_review_comment_examples.md, and docs/pr_review_security.md.
-- Keep the flow local-first and do not require external accounts, paid APIs, generated runtime files, private paths, or real customer data.
-- Link the flow from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py community-issues still passes.
-- python -B scripts/dev.py assets still passes.
+- Add docs/release_attachment_verification_examples.md with examples for missing replay artifacts, stale attachments, wrong release tag, generated out/ handling, and post-publish mismatch.
+- Reference docs/github_release_commands.md, docs/post_publish_checklist.md, docs/command_output_troubleshooting_map.md, and docs/demo_replay_artifact.md.
+- Keep release attachments separate from source content unless a release process explicitly asks for them.
+- Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py replay-artifact still passes.
+- python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```
