@@ -1,6 +1,6 @@
 # GitHub Authenticated Maintenance Troubleshooting Examples
 
-Use this page when authenticated GitHub maintenance is unclear. Read it with `docs/github_repository_settings.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/pr_review_runbook.md`, `docs/maintainer_review_policy.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when authenticated GitHub maintenance is unclear. Read it with `docs/github_repository_settings.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/public_maintainer_status_update_examples.md`, `docs/pr_review_runbook.md`, `docs/maintainer_review_policy.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: dry-run planning, authenticated account permissions, repository metadata changes, and PR maintenance prove different things. Do not claim remote maintenance applied until authenticated evidence confirms it.
 
@@ -102,6 +102,8 @@ python -B scripts/dev.py github-readiness
 
 Treat dry-run output as a reviewable plan. Treat `--apply` plus a fresh readiness check as the evidence path for remote repository settings.
 
+Use `docs/public_maintainer_status_update_examples.md` before announcing that authenticated maintenance has been applied.
+
 ## Branch Protection Or Release Side Effects
 
 Symptom:
@@ -159,3 +161,4 @@ Use `docs/pr_review_runbook.md` and `docs/maintainer_review_policy.md` before cl
 - `docs/github_repository_settings.md` remains the source of truth for expected metadata, branch protection, release, social preview, and profile pin setup.
 - `docs/pr_review_runbook.md` and `docs/maintainer_review_policy.md` stay in force before any PR closure or merge.
 - Public docs do not claim remote maintenance applied until authenticated evidence confirms it.
+- Public maintainer updates separate dry-run planning, authenticated apply output, readiness evidence, and PR maintenance state.

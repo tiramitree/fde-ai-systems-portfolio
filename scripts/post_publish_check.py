@@ -132,6 +132,7 @@ def main() -> int:
         "docs/github_release_notes_v0.1.0.md",
         "docs/launch_copy_pack.md",
         "docs/launch_feedback_collection_examples.md",
+        "docs/public_maintainer_status_update_examples.md",
         "docs/contributor_attribution_examples.md",
         "docs/issue_triage_sla_wording_examples.md",
         "docs/discussion_to_issue_conversion_examples.md",
