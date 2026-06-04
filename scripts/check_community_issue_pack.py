@@ -32,6 +32,7 @@ DOCS_ONLY_PR_REVIEW_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_REVIEW_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 README_NAVIGATION_AUDIT = ROOT / "docs" / "readme_navigation_audit.md"
 README_NAVIGATION_DRIFT_EXAMPLES = ROOT / "docs" / "readme_navigation_drift_examples.md"
+OPENTELEMETRY_COLLECTOR_HANDOFF_TROUBLESHOOTING = ROOT / "docs" / "opentelemetry_collector_handoff_troubleshooting.md"
 OPENAI_LIVE_MODE_TROUBLESHOOTING = ROOT / "docs" / "openai_live_mode_troubleshooting.md"
 DOCKER_RUNTIME_EVIDENCE_CHECKLIST = ROOT / "docs" / "docker_runtime_evidence_checklist.md"
 
@@ -383,6 +384,52 @@ def check_readme_navigation_drift_examples() -> list[str]:
     return failures
 
 
+def check_opentelemetry_collector_handoff_troubleshooting() -> list[str]:
+    failures: list[str] = []
+    if not OPENTELEMETRY_COLLECTOR_HANDOFF_TROUBLESHOOTING.exists():
+        return ["missing docs/opentelemetry_collector_handoff_troubleshooting.md"]
+
+    text = OPENTELEMETRY_COLLECTOR_HANDOFF_TROUBLESHOOTING.read_text(encoding="utf-8")
+    required_phrases = [
+        "OpenTelemetry Collector Handoff Troubleshooting",
+        "docs/otel_trace_export.md",
+        "docs/observability_integrity.md",
+        "docs/command_output_troubleshooting_map.md",
+        "python -B scripts/dev.py replay",
+        "python -B scripts/dev.py otel-traces",
+        "python -B scripts/dev.py observability",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "OTEL_EXPORTER_OTLP_ENDPOINT",
+        "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+        "Collector Endpoint Notes",
+        "Failure Modes",
+        "Rollback",
+        "Review Checklist",
+        "Claim Wording",
+        "hosted collectors",
+        "external accounts",
+        "paid-service requirements",
+        "generated local evidence",
+        "Do not claim live collector verification",
+        "does not make a hosted collector part of the default demo path",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/opentelemetry_collector_handoff_troubleshooting.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/opentelemetry_collector_handoff_troubleshooting.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/opentelemetry_collector_handoff_troubleshooting.md",
+        "docs/otel_trace_export.md": "docs/opentelemetry_collector_handoff_troubleshooting.md",
+        "docs/observability_integrity.md": "docs/opentelemetry_collector_handoff_troubleshooting.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
 def check_openai_live_mode_troubleshooting() -> list[str]:
     failures: list[str] = []
     if not OPENAI_LIVE_MODE_TROUBLESHOOTING.exists():
@@ -521,6 +568,7 @@ def main() -> int:
     failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())
     failures.extend(check_readme_navigation_drift_examples())
+    failures.extend(check_opentelemetry_collector_handoff_troubleshooting())
     failures.extend(check_openai_live_mode_troubleshooting())
     failures.extend(check_docker_runtime_evidence_checklist())
     failures.extend(check_templates(labels))
