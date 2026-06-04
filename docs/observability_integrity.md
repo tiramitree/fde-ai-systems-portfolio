@@ -8,7 +8,7 @@ python -B scripts/dev.py observability
 
 This gate starts the demo systems on isolated ports, resets local demo state, runs the critical technical review flows, and then checks the evidence surfaces that a reviewer would inspect after the fact.
 
-Use `docs/trace_timeline_examples.md` for copyable local timelines that connect each canonical request to its response `trace_id`, persisted trace record, audit event, approval queue entry, or release decision.
+Use `docs/trace_timeline_examples.md` for copyable local timelines that connect each canonical request to its response `trace_id`, persisted trace record, audit event, approval queue entry, or release decision. Use `docs/opentelemetry_collector_handoff_troubleshooting.md` when local OTLP/JSON evidence needs an optional collector handoff without changing the default local proof path.
 
 ## What It Proves
 

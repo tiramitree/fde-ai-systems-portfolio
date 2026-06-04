@@ -203,6 +203,7 @@ Design Review Docs:
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
+- `docs/opentelemetry_collector_handoff_troubleshooting.md`: optional collector handoff troubleshooting, endpoint boundaries, failure modes, rollback, and claim wording.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/openai_live_mode_troubleshooting.md`: optional OpenAI live-mode setup, safe failure modes, rollback, and review guardrails.
 - `docs/model_gateway_safety.md`: optional model gateway key-safety, fallback, and boundary contract.

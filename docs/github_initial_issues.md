@@ -81,6 +81,7 @@ The first public issue wave was created after the initial release and is now com
 - Add docs-only review comments for common PR outcomes
 - Add a README-to-docs navigation audit
 - Add compact examples for README navigation drift fixes
+- Add OpenTelemetry collector handoff troubleshooting notes
 - Add optional OpenAI live-mode troubleshooting notes
 - Add a Docker runtime evidence collection checklist
 
@@ -207,28 +208,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add OpenTelemetry collector handoff troubleshooting notes
+Add compact Docker runtime failure examples
 ```
 
 Labels:
 
 ```text
-documentation, observability, good first issue
+documentation, docker, good first issue
 ```
 
 Body:
 
 ```text
-Add troubleshooting notes for handing local OTLP trace exports to an OpenTelemetry Collector without making a hosted collector part of the default demo path.
+Add compact examples for common Docker runtime verification failures without making Docker required for the default local demo.
 
 Acceptance criteria:
 
-- Add docs/opentelemetry_collector_handoff_troubleshooting.md with local exporter, collector endpoint, failure-mode, and rollback notes.
-- Reference docs/otel_trace_export.md, docs/observability_integrity.md, and docs/command_output_troubleshooting_map.md.
-- Keep the default local trace export path working without Docker, hosted collectors, external accounts, or paid-service requirements.
+- Add docs/docker_runtime_failure_examples.md with examples for missing Docker daemon, Compose command mismatch, unhealthy service, stale generated logs, and port conflicts.
+- Reference docs/docker_runtime_evidence_checklist.md, docs/container_release_hygiene.md, and docs/command_output_troubleshooting_map.md.
+- Keep Docker runtime verification optional and do not make it part of the default local demo path.
 - Link the notes from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py observability still passes.
-- python -B scripts/dev.py otel-traces still passes.
+- python -B scripts/dev.py container-release still passes.
+- python -B scripts/dev.py docker-runtime remains environment-dependent and is not required for quality.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

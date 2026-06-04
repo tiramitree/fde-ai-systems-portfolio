@@ -596,6 +596,7 @@ repository/
 - [Production Upgrade Notes](docs/production_upgrade_notes.md)
 - [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md)
 - [OpenTelemetry Trace Export](docs/otel_trace_export.md)
+- [OpenTelemetry Collector Handoff Troubleshooting](docs/opentelemetry_collector_handoff_troubleshooting.md)
 - [Model Runtime Configuration](docs/model_runtime_configuration.md)
 - [Model Gateway Safety](docs/model_gateway_safety.md)
 - [OpenAI Live Mode Troubleshooting](docs/openai_live_mode_troubleshooting.md)

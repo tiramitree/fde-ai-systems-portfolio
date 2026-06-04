@@ -10,7 +10,7 @@ resourceSpans
   -> span attributes and events
 ```
 
-The exporter is deterministic and local-first. It does not require an OpenTelemetry collector, network access, or an API key.
+The exporter is deterministic and local-first. It does not require an OpenTelemetry collector, network access, or an API key. For optional collector handoff notes, see `docs/opentelemetry_collector_handoff_troubleshooting.md`.
 
 ## Command
 
