@@ -36,6 +36,7 @@ DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLES = ROOT / "docs" / "discussion_to_issue_c
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
+PUBLIC_MAINTAINER_STATUS_UPDATE_EXAMPLES = ROOT / "docs" / "public_maintainer_status_update_examples.md"
 DEPENDABOT_SECRET_SCANNING_VERIFICATION_EXAMPLES = ROOT / "docs" / "dependabot_secret_scanning_verification_examples.md"
 GITHUB_AUTHENTICATED_MAINTENANCE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_authenticated_maintenance_troubleshooting_examples.md"
 GITHUB_PUBLIC_PR_API_FALLBACK_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_public_pr_api_fallback_troubleshooting_examples.md"
@@ -565,6 +566,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "Post-Publish Warning Examples",
         "docs/post_publish_checklist.md",
         "docs/published_repository_status.md",
+        "docs/public_maintainer_status_update_examples.md",
         "docs/github_release_commands.md",
         "docs/github_release_attachment_screenshot_checklist.md",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md",
@@ -597,6 +599,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "Do not claim published evidence until the remote checks pass",
         "README badge, Actions page, and current `github-readiness` output disagree",
         "Dependabot alerts, Dependabot security updates, secret scanning, push protection, or local safety-scan output",
+        "Use `docs/public_maintainer_status_update_examples.md` before summarizing warnings or manual rows in a public maintainer update",
+        "Public maintainer updates keep local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises separate",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -606,6 +610,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "README.md": "docs/post_publish_warning_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/post_publish_warning_examples.md",
         "docs/post_publish_checklist.md": "docs/post_publish_warning_examples.md",
+        "docs/public_maintainer_status_update_examples.md": "docs/post_publish_warning_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -624,6 +629,7 @@ def check_github_authenticated_maintenance_troubleshooting_examples() -> list[st
         "docs/github_repository_settings.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
+        "docs/public_maintainer_status_update_examples.md",
         "docs/pr_review_runbook.md",
         "docs/maintainer_review_policy.md",
         "docs/command_output_troubleshooting_map.md",
@@ -646,6 +652,8 @@ def check_github_authenticated_maintenance_troubleshooting_examples() -> list[st
         "python -B scripts/maintain_github_state.py --apply --skip-launch --close-runtime-bump-prs",
         "dry-run planning, authenticated account permissions, repository metadata changes, and PR maintenance prove different things",
         "Do not claim remote maintenance applied until authenticated evidence confirms it",
+        "Use `docs/public_maintainer_status_update_examples.md` before announcing that authenticated maintenance has been applied",
+        "Public maintainer updates separate dry-run planning, authenticated apply output, readiness evidence, and PR maintenance state",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -657,6 +665,7 @@ def check_github_authenticated_maintenance_troubleshooting_examples() -> list[st
         "docs/github_repository_settings.md": "docs/github_authenticated_maintenance_troubleshooting_examples.md",
         "docs/post_publish_checklist.md": "docs/github_authenticated_maintenance_troubleshooting_examples.md",
         "docs/post_publish_warning_examples.md": "docs/github_authenticated_maintenance_troubleshooting_examples.md",
+        "docs/public_maintainer_status_update_examples.md": "docs/github_authenticated_maintenance_troubleshooting_examples.md",
         "docs/pr_review_runbook.md": "docs/github_authenticated_maintenance_troubleshooting_examples.md",
         "docs/maintainer_review_policy.md": "github_authenticated_maintenance_troubleshooting_examples.md",
     }
@@ -884,6 +893,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
+        "docs/public_maintainer_status_update_examples.md",
         "docs/contributor_attribution_examples.md",
         "docs/issue_triage_sla_wording_examples.md",
         "docs/discussion_to_issue_conversion_examples.md",
@@ -905,6 +915,8 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "support SLAs, private account access, or guaranteed roadmap acceptance",
         "Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence",
         "Use `docs/contributor_attribution_examples.md` before turning public feedback or explicitly permissioned private feedback into source-visible credit",
+        "Use `docs/public_maintainer_status_update_examples.md` before turning launch feedback or repository progress into a public maintainer update",
+        "keeps maintainer updates separate from launch feedback, private messages, analytics, and roadmap promises",
         "docs/issue_triage_sla_wording_examples.md",
         "Use `docs/discussion_to_issue_conversion_examples.md` before turning a discussion into a scoped issue",
         "docs/discussion_to_issue_conversion_examples.md` keeps discussion volume, untriaged ideas, private feedback, and accepted issue scope separate",
@@ -921,10 +933,64 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/published_repository_status.md": "docs/launch_feedback_collection_examples.md",
         "docs/post_publish_checklist.md": "docs/launch_feedback_collection_examples.md",
         "docs/post_publish_warning_examples.md": "docs/launch_feedback_collection_examples.md",
+        "docs/public_maintainer_status_update_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/github_discussions_launch_checklist.md": "docs/launch_feedback_collection_examples.md",
         "docs/discussion_to_issue_conversion_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/contributor_attribution_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/issue_triage_sla_wording_examples.md": "docs/launch_feedback_collection_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_public_maintainer_status_update_examples() -> list[str]:
+    failures: list[str] = []
+    if not PUBLIC_MAINTAINER_STATUS_UPDATE_EXAMPLES.exists():
+        return ["missing docs/public_maintainer_status_update_examples.md"]
+
+    text = PUBLIC_MAINTAINER_STATUS_UPDATE_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Public Maintainer Status Update Examples",
+        "docs/published_repository_status.md",
+        "docs/post_publish_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/github_authenticated_maintenance_troubleshooting_examples.md",
+        "docs/launch_feedback_collection_examples.md",
+        "Expected Evidence Split",
+        "Local-Only Progress",
+        "Pushed-But-Pending Checks",
+        "Remote Warning Or Manual Items",
+        "Accepted Roadmap Items Without Dates",
+        "Blocked Optional Environments",
+        "Review Checklist",
+        "local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises are separate",
+        "Do not imply delivery dates, production support, private access, or completed setup before evidence exists",
+        "git status --short --branch",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py fresh-clone-local",
+        "git ls-remote origin refs/heads/main",
+        "python -B scripts/dev.py fresh-clone",
+        "python -B scripts/post_publish_check.py",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py github-maintenance",
+        "python -B scripts/maintain_github_state.py --apply",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/public_maintainer_status_update_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/public_maintainer_status_update_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/public_maintainer_status_update_examples.md",
+        "docs/published_repository_status.md": "docs/public_maintainer_status_update_examples.md",
+        "docs/post_publish_checklist.md": "docs/public_maintainer_status_update_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/public_maintainer_status_update_examples.md",
+        "docs/github_authenticated_maintenance_troubleshooting_examples.md": "docs/public_maintainer_status_update_examples.md",
+        "docs/launch_feedback_collection_examples.md": "docs/public_maintainer_status_update_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -2059,6 +2125,7 @@ def main() -> int:
     failures.extend(check_github_repository_metadata_troubleshooting_examples())
     failures.extend(check_github_repository_settings_screenshot_checklist())
     failures.extend(check_launch_feedback_collection_examples())
+    failures.extend(check_public_maintainer_status_update_examples())
     failures.extend(check_github_discussions_launch_checklist())
     failures.extend(check_social_preview_verification_examples())
     failures.extend(check_profile_pin_verification_examples())

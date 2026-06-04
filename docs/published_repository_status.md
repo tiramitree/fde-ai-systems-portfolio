@@ -2,6 +2,8 @@
 
 Date: 2026-06-04
 
+Use `docs/public_maintainer_status_update_examples.md` before turning this status page into a public maintainer update. Keep local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises separate.
+
 ## Repository
 
 ```text
@@ -137,3 +139,5 @@ Confirmed:
 - Verify Dependabot alerts, Dependabot security updates, secret scanning, and push protection using `docs/dependabot_secret_scanning_verification_examples.md`.
 - Enable GitHub Discussions only after reviewing `docs/github_discussions_launch_checklist.md`; keep Discussions separate from issues, PRs, private feedback, and roadmap acceptance.
 - Collect launch feedback and star-growth evidence using `docs/launch_feedback_collection_examples.md`.
+
+Public maintainer updates should summarize only current, reviewable evidence from this page and should not imply delivery dates, production support, private access, or completed setup before the matching evidence exists.

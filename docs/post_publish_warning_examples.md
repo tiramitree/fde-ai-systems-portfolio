@@ -1,6 +1,6 @@
 # Post-Publish Warning Examples
 
-Use this page when post-publish checks or GitHub readiness checks produce warnings. Read it with `docs/post_publish_checklist.md`, `docs/published_repository_status.md`, `docs/github_release_commands.md`, `docs/release_note_refresh_checklist.md`, `docs/github_latest_release_troubleshooting_examples.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/github_authenticated_maintenance_troubleshooting_examples.md`, `docs/github_public_pr_api_fallback_troubleshooting_examples.md`, `docs/github_api_rate_limit_troubleshooting_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/dependabot_secret_scanning_verification_examples.md`, `docs/launch_feedback_collection_examples.md`, `docs/social_preview_verification_examples.md`, `docs/profile_pin_verification_examples.md`, `docs/github_actions_warning_examples.md`, `docs/github_actions_badge_verification_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when post-publish checks or GitHub readiness checks produce warnings. Read it with `docs/post_publish_checklist.md`, `docs/published_repository_status.md`, `docs/public_maintainer_status_update_examples.md`, `docs/github_release_commands.md`, `docs/release_note_refresh_checklist.md`, `docs/github_latest_release_troubleshooting_examples.md`, `docs/release_asset_upload_dry_run_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/github_authenticated_maintenance_troubleshooting_examples.md`, `docs/github_public_pr_api_fallback_troubleshooting_examples.md`, `docs/github_api_rate_limit_troubleshooting_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/dependabot_secret_scanning_verification_examples.md`, `docs/launch_feedback_collection_examples.md`, `docs/social_preview_verification_examples.md`, `docs/profile_pin_verification_examples.md`, `docs/github_actions_warning_examples.md`, `docs/github_actions_badge_verification_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local quality evidence and remote GitHub evidence prove different things. Do not claim published evidence until the remote checks pass, and do not treat GitHub warning rows as local code failures unless strict launch verification is required.
 
@@ -153,6 +153,8 @@ Use `docs/release_note_refresh_checklist.md` before treating checked-in release 
 
 Use `docs/release_asset_upload_dry_run_examples.md` before treating a release asset upload dry-run, generated `out/` files, or a local replay artifact as uploaded GitHub release evidence.
 
+Use `docs/public_maintainer_status_update_examples.md` before summarizing warnings or manual rows in a public maintainer update.
+
 ## Review Checklist
 
 - Local `quality` and `fresh-clone-local` passed before push-facing work.
@@ -160,3 +162,4 @@ Use `docs/release_asset_upload_dry_run_examples.md` before treating a release as
 - GitHub readiness has no hard failures.
 - `[WARN]` and `[MANUAL]` rows are described as follow-up unless strict verification is required.
 - Public docs do not claim remote files, release page state, branch protection, social preview, profile pin, or launch feedback before matching evidence exists.
+- Public maintainer updates keep local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises separate.

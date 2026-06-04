@@ -635,6 +635,7 @@ repository/
 - [Final Completion Audit](docs/final_completion_audit.md)
 - [GitHub Launch Plan](docs/github_launch_plan.md)
 - [Published Repository Status](docs/published_repository_status.md)
+- [Public Maintainer Status Update Examples](docs/public_maintainer_status_update_examples.md)
 - [Post-Publish Warning Examples](docs/post_publish_warning_examples.md)
 - [GitHub Discussions Launch Checklist](docs/github_discussions_launch_checklist.md)
 - [GitHub Repository Settings](docs/github_repository_settings.md)
