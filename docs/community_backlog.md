@@ -7,8 +7,8 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
 2. Add compact per-project architecture cards to the README.
 3. Add shareable demo-state reset presets.
-4. Add a compact README operational runbook index for retrieval, approval, and release-blocking scenarios.
-5. Add a compact README evidence freshness checklist for screenshots, eval summaries, and published status.
+4. Add a compact README evidence freshness checklist for screenshots, eval summaries, and published status.
+5. Add a compact README reviewer handoff checklist for local, remote, visual, and GitHub account-level checks.
 
 ## Intermediate Issues
 
@@ -62,3 +62,4 @@ Contributions should preserve these invariants:
 - Add a compact README production-upgrade pointer for FastAPI, PostgreSQL, pgvector, connectors, OpenTelemetry, OpenAI, and Docker paths.
 - Add a compact README release-evidence FAQ for quality, fresh-clone, post-publish, and GitHub readiness warnings.
 - Add compact per-project risk badges for permissions, approvals, evals, traces, and release blocking.
+- Add a compact README operational runbook index for retrieval, approval, and release-blocking scenarios.
