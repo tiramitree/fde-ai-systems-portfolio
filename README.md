@@ -604,6 +604,7 @@ repository/
 - [Threat Model](docs/threat_model.md)
 - [Scenario Data Integrity](docs/scenario_data_integrity.md)
 - [Local Artifact Glossary](docs/local_artifact_glossary.md)
+- [Command Output Troubleshooting Map](docs/command_output_troubleshooting_map.md)
 - [Eval Authoring Guide](docs/eval_authoring_guide.md)
 - [Eval Gate Troubleshooting Examples](docs/eval_gate_troubleshooting_examples.md)
 - [Seed Data Extension Examples](docs/seed_data_extension_examples.md)

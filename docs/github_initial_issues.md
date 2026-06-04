@@ -73,6 +73,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a trace timeline explainer for canonical flows
 - Add local eval gate troubleshooting examples
 - Add a small glossary for local data and evidence artifacts
+- Add a command-output troubleshooting map for common gates
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -197,7 +198,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a command-output troubleshooting map for common gates
+Add a local demo reset troubleshooting guide
 ```
 
 Labels:
@@ -209,16 +210,16 @@ documentation, good first issue
 Body:
 
 ```text
-Add a contributor-friendly troubleshooting map for the most common local command outputs and failure paths.
+Add a contributor-friendly guide for diagnosing stale local demo state without committing generated runtime files.
 
 Acceptance criteria:
 
-- Add docs/command_output_troubleshooting_map.md covering verify, quality, fresh-clone-local, safety, and community-issues failures.
-- For each command, include the success signal, common failure symptom, safest first files to inspect, and next command to run.
-- Link the troubleshooting map from README.md and PROJECT_CONTENT_INDEX.md.
+- Add docs/local_demo_reset_troubleshooting.md covering stale runtime_state.json, eval_runtime_state.json, browser localStorage scenario drafts, and canonical demo reset presets.
+- Include reset commands, files not to commit, and verification commands.
+- Link the guide from README.md and PROJECT_CONTENT_INDEX.md.
 - Keep examples local-only and avoid secrets, private paths, external accounts, paid-service requirements, generated runtime files, and real customer data.
-- python -B scripts/dev.py verify still passes.
-- python -B scripts/dev.py community-issues still passes.
+- python -B scripts/dev.py demo-presets still passes.
+- python -B scripts/dev.py fresh-clone-local still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
 ```

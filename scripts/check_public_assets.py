@@ -7,6 +7,7 @@ from urllib.parse import unquote, urlparse
 
 
 ROOT = Path(__file__).resolve().parents[1]
+COMMAND_OUTPUT_TROUBLESHOOTING = ROOT / "docs" / "command_output_troubleshooting_map.md"
 
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
@@ -65,6 +66,28 @@ REQUIRED_COMMAND_OUTPUT_EXPECTATIONS = [
     "| `python -B scripts/dev.py github-readiness` | Prints `[PASS]`, `[WARN]`, or `[MANUAL]` rows and a `Readiness summary`. | GitHub API rate limits and account-level setup can remain warning/manual items until authenticated launch setup is complete. |",
     "| `python -B scripts/dev.py pr-triage` | Prints `Open PRs: 0` when no visible PRs await review, or lists each PR with risk findings and required gates. | If the API is rate-limited, public HTML fallback can prove no visible open PRs; authenticate before approving workflows or merging. |",
     "For recurring environment-specific failures, see [Development Issue Solutions](docs/development_issue_solutions.md).",
+]
+REQUIRED_COMMAND_OUTPUT_TROUBLESHOOTING_MAP = [
+    "Do not add secrets, private paths, real customer data, external accounts, paid-service requirements, generated runtime files, or real incident details",
+    "python -B scripts/dev.py verify",
+    "Quality gate passed.",
+    "python -B scripts/dev.py quality",
+    "python -B scripts/dev.py fresh-clone-local",
+    "Fresh clone experience check passed.",
+    "Smoke tests: 13/13 passed",
+    "python -B scripts/dev.py safety",
+    "Public safety scan passed.",
+    "python -B scripts/dev.py community-issues",
+    "Community issue pack check passed",
+    "scripts/ci_quality_gate.py",
+    "scripts/quality_gate.py",
+    "scripts/check_fresh_clone_experience.py",
+    "scripts/public_safety_scan.py",
+    "docs/github_initial_issues.md",
+    "docs/github_labels.json",
+    "out/demo_replay_artifact.*",
+    "*/data/runtime_state.json",
+    "*/data/eval_runtime_state.json",
 ]
 REQUIRED_TROUBLESHOOTING_POINTERS = [
     "Troubleshooting pointers:",
@@ -506,6 +529,26 @@ def check_command_output_expectations() -> list[str]:
     for expected in REQUIRED_COMMAND_OUTPUT_EXPECTATIONS:
         if expected not in text:
             failures.append(f"README.md: missing command output expectations entry: {expected}")
+    return failures
+
+
+def check_command_output_troubleshooting_map() -> list[str]:
+    failures: list[str] = []
+    if not COMMAND_OUTPUT_TROUBLESHOOTING.exists():
+        return ["missing docs/command_output_troubleshooting_map.md"]
+
+    text = COMMAND_OUTPUT_TROUBLESHOOTING.read_text(encoding="utf-8")
+    for expected in REQUIRED_COMMAND_OUTPUT_TROUBLESHOOTING_MAP:
+        if expected not in text:
+            failures.append(f"docs/command_output_troubleshooting_map.md: missing {expected!r}")
+
+    cross_references = {
+        ROOT / "README.md": "docs/command_output_troubleshooting_map.md",
+        ROOT / "PROJECT_CONTENT_INDEX.md": "docs/command_output_troubleshooting_map.md",
+    }
+    for path, expected in cross_references.items():
+        if expected not in path.read_text(encoding="utf-8"):
+            failures.append(f"{path.relative_to(ROOT).as_posix()}: missing {expected!r}")
     return failures
 
 
@@ -963,6 +1006,7 @@ def main() -> int:
     failures.extend(check_command_quick_reference())
     failures.extend(check_command_decision_tree())
     failures.extend(check_command_output_expectations())
+    failures.extend(check_command_output_troubleshooting_map())
     failures.extend(check_troubleshooting_pointers())
     failures.extend(check_release_evidence_faq())
     failures.extend(check_architecture_cards())
