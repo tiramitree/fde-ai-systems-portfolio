@@ -49,6 +49,7 @@ The first public issue wave was created after the initial release and is now com
 - Add a compact README connector roadmap pointer
 - Add a compact README eval regression report pointer
 - Add a compact README storage adapter evidence pointer
+- Add a compact README red-team eval expansion pointer
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -173,28 +174,28 @@ Acceptance criteria:
 Title:
 
 ```text
-Add a compact README red-team eval expansion pointer
+Add a compact README OpenTelemetry backend pointer
 ```
 
 Labels:
 
 ```text
-documentation, security, eval, good first issue
+documentation, observability, good first issue
 ```
 
 Body:
 
 ```text
-Add a compact README pointer that tells contributors where red-team eval expansion materials live and which safety invariants must remain unchanged when adding attack cases.
+Add a compact README pointer that tells contributors where OpenTelemetry backend materials live and which evidence boundaries must be preserved before adding hosted collector support.
 
 Acceptance criteria:
 
-- Link to Threat Model, System Evidence Matrix, Scenario Data Integrity, Technical Review Playbook, and the eval row in the Evidence Legend.
-- Cover red-team checks: `python -B scripts/dev.py threat-model`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py evals`, and `python -B scripts/dev.py quality`.
+- Link to OpenTelemetry Trace Export, Observability Integrity, System Evidence Matrix, Production Upgrade Notes, and the trace row in the Evidence Legend.
+- Cover observability checks: `python -B scripts/dev.py replay`, `python -B scripts/dev.py otel-traces`, `python -B scripts/dev.py observability`, and `python -B scripts/dev.py quality`.
 - Keep the pointer compact and local-first; do not require external accounts, paid APIs, private files, or secrets.
-- Make clear that prompt-injection, unauthorized-access, approval-bypass, and unsafe-release cases must keep unsafe failure counts at zero.
+- Make clear that local JSON trace export remains the default proof path and hosted collectors are optional environment-dependent extensions.
 - python -B scripts/dev.py assets still passes.
-- python -B scripts/dev.py scenario-data still passes.
+- python -B scripts/dev.py observability still passes.
 - python -B scripts/dev.py quality still passes.
 ```
 

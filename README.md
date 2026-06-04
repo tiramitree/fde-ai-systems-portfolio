@@ -252,6 +252,10 @@ Storage adapter readiness:
 
 Use [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Evidence Matrix](#evidence-matrix) before adding persistent storage prototypes. Storage adapters must preserve permission checks before retrieval or side effects, eval-state isolation, trace/audit compatibility, and local JSON default behavior; run `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
 
+Red-team eval readiness:
+
+Use [Threat Model](docs/threat_model.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Technical Review Playbook](docs/technical_review_playbook.md), and the [Evidence Legend](#evidence-legend) before adding attack or bypass eval cases. Prompt-injection, unauthorized-access, approval-bypass, and unsafe-release cases must keep unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts at zero; run `python -B scripts/dev.py threat-model`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py evals`, and `python -B scripts/dev.py quality`.
+
 Operational runbook index:
 
 | Scenario | Fast Path | Evidence To Inspect |
