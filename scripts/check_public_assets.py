@@ -32,6 +32,15 @@ REQUIRED_COMMAND_QUICK_REFERENCE = [
     "| Optional environment checks | `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live` |",
     "Full command index:",
 ]
+REQUIRED_README_GLOSSARY = [
+    "## Core Terms",
+    "| Release gate | The repository-level checks that keep public docs, evidence, runtime contracts, screenshots, and safety claims aligned before a change is published; see the [Evidence Matrix](#evidence-matrix) and [launch asset hygiene](docs/launch_assets_hygiene.md). |",
+    "| Eval gate | Deterministic regression cases that must keep permission leaks, unsafe side effects, and unsafe release approvals at zero; see `python -B scripts/dev.py evals` and the [System Evidence Matrix](docs/portfolio_evidence_matrix.md). |",
+    "| Approval gate | Application code that blocks external side effects until an authorized supervisor approves the pending action; see [Project 2](#project-2-regulated-customer-operations-agent) and [observability integrity](docs/observability_integrity.md). |",
+    "| Trace ID | A per-response identifier that connects UI output to stored trace records, linked audit events, approvals, blocked actions, or release decisions; see [observability integrity](docs/observability_integrity.md). |",
+    "| Audit log | Structured records of security, workflow, approval, and release-decision events that explain what happened after a run; see [threat model](docs/threat_model.md) and [observability integrity](docs/observability_integrity.md). |",
+    "| Abstention | The answer behavior used when accessible evidence is missing, unauthorized, or unsafe after filtering; see [Project 1](#project-1-secure-enterprise-knowledge-copilot) and the [System Evidence Matrix](docs/portfolio_evidence_matrix.md). |",
+]
 
 
 def tracked_markdown_files() -> list[Path]:
@@ -230,12 +239,25 @@ def check_command_quick_reference() -> list[str]:
     return failures
 
 
+def check_readme_glossary() -> list[str]:
+    readme = ROOT / "README.md"
+    if not readme.exists():
+        return ["missing README.md"]
+    text = readme.read_text(encoding="utf-8")
+    failures = []
+    for expected in REQUIRED_README_GLOSSARY:
+        if expected not in text:
+            failures.append(f"README.md: missing core glossary entry: {expected}")
+    return failures
+
+
 def main() -> int:
     failures = []
     failures.extend(check_markdown_links())
     failures.extend(check_assets())
     failures.extend(check_readme_captions())
     failures.extend(check_command_quick_reference())
+    failures.extend(check_readme_glossary())
     if failures:
         print("Public asset check failed:")
         for failure in failures:
