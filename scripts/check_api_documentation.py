@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOC = ROOT / "docs" / "api_contracts.md"
+COOKBOOK = ROOT / "docs" / "api_request_cookbook.md"
 
 PROJECTS = {
     "Secure Enterprise Knowledge Copilot": {
@@ -117,8 +118,8 @@ PROJECTS = {
 }
 
 CROSS_REFERENCES = {
-    "README.md": ["docs/api_contracts.md", "python -B scripts/dev.py api-docs"],
-    "PROJECT_CONTENT_INDEX.md": ["docs/api_contracts.md", "scripts/check_api_documentation.py"],
+    "README.md": ["docs/api_contracts.md", "docs/api_request_cookbook.md", "python -B scripts/dev.py api-docs"],
+    "PROJECT_CONTENT_INDEX.md": ["docs/api_contracts.md", "docs/api_request_cookbook.md", "scripts/check_api_documentation.py"],
     "docs/portfolio_evidence_matrix.md": ["python -B scripts/dev.py api-docs"],
 }
 
@@ -180,6 +181,32 @@ def check_cross_references() -> list[str]:
     return failures
 
 
+def check_cookbook() -> list[str]:
+    if not COOKBOOK.exists():
+        return ["missing docs/api_request_cookbook.md"]
+    text = COOKBOOK.read_text(encoding="utf-8")
+    required_phrases = [
+        "python -B scripts/dev.py start",
+        "curl.exe",
+        "no API keys",
+        "/api/query",
+        "/api/agent",
+        "/api/approval/approve",
+        "/api/triage",
+        "finance-retention-plan-2026",
+        "case-1001",
+        "rel-2026-06-01",
+        "inc-2026-014",
+        "trace_id",
+        "python -B scripts/dev.py contracts",
+        "python -B scripts/dev.py smoke",
+    ]
+    failures = []
+    for phrase in required_phrases:
+        failures.extend(require_text(text, phrase, "docs/api_request_cookbook.md"))
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
     if not DOC.exists():
@@ -202,6 +229,7 @@ def main() -> int:
             failures.extend(check_project(name, config, doc_text))
 
     failures.extend(check_cross_references())
+    failures.extend(check_cookbook())
 
     if failures:
         print("API documentation check failed:")
