@@ -314,7 +314,7 @@ Use [Published Repository Status](docs/published_repository_status.md), [GitHub 
 
 Release page readiness:
 
-Use the [Demo Replay Artifact](docs/demo_replay_artifact.md), [GitHub Release Commands](docs/github_release_commands.md), [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), [Final Readiness Report](docs/final_readiness_report.md), and the [Release Evidence FAQ](#release-evidence-faq) before claiming the `v0.1.0` GitHub release page is ready. The release page is remote evidence only after the page exists and current `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` outputs are attached or linked; run `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
+Use the [Demo Replay Artifact](docs/demo_replay_artifact.md), [GitHub Release Commands](docs/github_release_commands.md), [GitHub Release Page Troubleshooting Examples](docs/github_release_page_troubleshooting_examples.md), [Post-Publish Checklist](docs/post_publish_checklist.md), [Published Repository Status](docs/published_repository_status.md), [Final Readiness Report](docs/final_readiness_report.md), and the [Release Evidence FAQ](#release-evidence-faq) before claiming the `v0.1.0` GitHub release page is ready. The release page is remote evidence only after the page exists and current `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` outputs are attached or linked; run `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py`, `python -B scripts/dev.py github-readiness`, and `python -B scripts/dev.py quality`.
 
 Operational runbook index:
 
@@ -633,6 +633,7 @@ repository/
 - [GitHub Repository Settings](docs/github_repository_settings.md)
 - [GitHub Label Troubleshooting Examples](docs/github_label_troubleshooting_examples.md)
 - [Branch Protection Verification Examples](docs/branch_protection_verification_examples.md)
+- [GitHub Release Page Troubleshooting Examples](docs/github_release_page_troubleshooting_examples.md)
 - [Community Backlog](docs/community_backlog.md)
 - [Public Release Audit](docs/public_release_audit.md)
 - [Differentiation Strategy](docs/differentiation_strategy.md)
@@ -647,6 +648,7 @@ repository/
 - [Demo Video Script](docs/demo_video_script.md)
 - [Demo Recording Checklist](docs/demo_recording_checklist.md)
 - [Release Attachment Verification Examples](docs/release_attachment_verification_examples.md)
+- [GitHub Release Page Troubleshooting Examples](docs/github_release_page_troubleshooting_examples.md)
 - [Star Growth Plan](docs/star_growth_plan.md)
 - [Launch Copy Pack](docs/launch_copy_pack.md)
 - [GitHub Community Issue Pack](docs/github_initial_issues.md)

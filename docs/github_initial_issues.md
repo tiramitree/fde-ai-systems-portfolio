@@ -92,6 +92,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact post-publish warning examples
 - Add compact GitHub label troubleshooting examples
 - Add compact GitHub Actions warning examples
+- Add compact GitHub release page troubleshooting examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -216,7 +217,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact GitHub release page troubleshooting examples
+Add compact social preview verification examples
 ```
 
 Labels:
@@ -228,13 +229,13 @@ documentation, release, good first issue
 Body:
 
 ```text
-Add compact examples for troubleshooting GitHub release page evidence without confusing local replay artifacts with published release evidence.
+Add compact examples for verifying GitHub social preview setup without confusing local image assets with account-level GitHub evidence.
 
 Acceptance criteria:
 
-- Add docs/github_release_page_troubleshooting_examples.md with examples for missing release page, wrong tag, stale release notes, missing replay attachments, and latest-release mismatch.
-- Reference docs/github_release_commands.md, docs/github_release_notes_v0.1.0.md, docs/release_attachment_verification_examples.md, and docs/post_publish_checklist.md.
-- Keep local replay-artifact evidence separate from published release page evidence and do not claim the release page is current until remote checks pass.
+- Add docs/social_preview_verification_examples.md with examples for missing social preview, stale preview image, wrong uploaded image, cache delay, and profile-pin confusion.
+- Reference docs/github_repository_settings.md, docs/assets/github-preview.png, docs/post_publish_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep local social-preview image existence separate from account-level GitHub setup and do not claim social preview setup until the GitHub UI is checked.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py assets still passes.
