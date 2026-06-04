@@ -1,6 +1,6 @@
 # Launch Feedback Collection Examples
 
-Use this page after sharing the public repository or launch copy. Read it with `docs/launch_copy_pack.md`, `docs/star_growth_plan.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_discussions_launch_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page after sharing the public repository or launch copy. Read it with `docs/launch_copy_pack.md`, `docs/star_growth_plan.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_discussions_launch_checklist.md`, `docs/contributor_attribution_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: public feedback, private messages, analytics screenshots, and source evidence prove different things. Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence.
 
@@ -152,6 +152,8 @@ python -B scripts/dev.py quality
 
 When private feedback leads to a fix, describe the technical problem in neutral terms. Do not quote private messages unless the sender explicitly asks for public attribution and the attribution is reviewed.
 
+Use `docs/contributor_attribution_examples.md` before turning public feedback or explicitly permissioned private feedback into source-visible credit.
+
 ## Analytics Screenshots
 
 Use this only when reviewing launch reach or traffic privately. Analytics screenshots are account-level artifacts, not source content.
@@ -185,6 +187,7 @@ Analytics can shape future launch posts and docs, but they do not replace public
 - `docs/post_publish_checklist.md` keeps launch feedback separate from source verification.
 - `docs/post_publish_warning_examples.md` is used before claiming launch feedback or star-growth evidence.
 - `docs/github_discussions_launch_checklist.md` keeps Discussions separate from issues, PRs, private feedback, and roadmap acceptance.
+- `docs/contributor_attribution_examples.md` keeps public credit separate from private feedback, account details, and low-signal activity.
 - Public feedback links are used only when the source is actually public.
 - Private messages, account analytics, personal account details, and screenshots with private UI are not committed.
 - `python -B scripts/dev.py launch-assets`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality` pass after changing launch-feedback wording.

@@ -257,6 +257,7 @@ Release and growth:
 - `docs/pr_review_security.md`: PR review policy gate and malicious-contribution review framing.
 - `docs/docs_only_pr_review_examples.md`: docs-only PR review examples for useful docs, low-signal docs, unsafe docs, claim checks, link checks, generated artifact checks, and issue-pack drift.
 - `docs/docs_only_review_comment_examples.md`: maintainer comment templates for approving, requesting changes, closing unsafe changes, or closing low-signal docs-only PRs.
+- `docs/contributor_attribution_examples.md`: contributor attribution examples for useful docs PRs, bug reports, eval-case additions, useful PRs, private feedback credit, and rejected low-signal attribution requests.
 - `docs/public_roadmap_issue_comment_examples.md`: public roadmap issue comment examples for scoped acceptance, oversized requests, low-signal issues, unsafe requests, and useful PR links.
 - `docs/readme_navigation_drift_examples.md`: README navigation drift fix examples for docs-only reviews that touch public navigation or evidence wording.
 - `docs/github_launch_plan.md`: launch sequence.

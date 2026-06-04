@@ -109,6 +109,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact release asset upload dry-run examples
 - Add compact repository discussions launch checklist
 - Add compact release note refresh checklist
+- Add compact contributor attribution examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -233,7 +234,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact contributor attribution examples
+Add compact issue triage SLA wording examples
 ```
 
 Labels:
@@ -245,13 +246,13 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact contributor attribution examples that explain how useful docs, bug reports, eval cases, and PRs should be credited without adding vanity activity or private identity details.
+Add compact issue triage SLA wording examples that set public response expectations without promising support guarantees, delivery dates, or private access.
 
 Acceptance criteria:
 
-- Add docs/contributor_attribution_examples.md with examples for useful docs PRs, bug reports, eval-case additions, and rejected low-signal attribution requests.
-- Reference docs/maintainer_review_policy.md, docs/docs_only_pr_review_examples.md, docs/public_roadmap_issue_comment_examples.md, and docs/launch_feedback_collection_examples.md.
-- Keep attribution tied to public GitHub activity or explicitly permissioned public credit; do not include private messages, account details, emails, or analytics screenshots.
+- Add docs/issue_triage_sla_wording_examples.md with examples for first-response wording, accepted follow-up wording, delayed-response wording, and no-guarantee closure wording.
+- Reference docs/maintainer_review_policy.md, docs/public_roadmap_issue_comment_examples.md, docs/github_discussions_launch_checklist.md, and docs/launch_feedback_collection_examples.md.
+- Keep issue triage expectations separate from support SLAs, delivery dates, private-account access, roadmap acceptance, and production support.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.

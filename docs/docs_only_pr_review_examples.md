@@ -2,7 +2,7 @@
 
 Use this page when a pull request changes documentation, issue templates, launch copy, or repository indexes without changing application code. A docs-only PR is still untrusted input: it can weaken public claims, hide broken links, introduce private paths, or drift the community issue pack away from the real project state.
 
-Read this with `docs/pr_review_security.md`, `docs/command_output_troubleshooting_map.md`, `docs/github_initial_issues.md`, and `docs/first_pull_request_checklist.md`. For reusable maintainer wording after review, use `docs/docs_only_review_comment_examples.md`.
+Read this with `docs/pr_review_security.md`, `docs/command_output_troubleshooting_map.md`, `docs/github_initial_issues.md`, `docs/first_pull_request_checklist.md`, and `docs/contributor_attribution_examples.md`. For reusable maintainer wording after review, use `docs/docs_only_review_comment_examples.md`.
 
 ## Review Goal
 
@@ -141,6 +141,8 @@ For docs-only PRs, inspect these before broad gates:
 - private path markers, account handles, collaborator-access requests, paid-service requirements, and real customer or incident names
 
 If a doc asks the maintainer to upload or paste generated local evidence, require a safer release artifact path instead.
+
+Use `docs/contributor_attribution_examples.md` before adding public credit for a docs-only fix. Docs-only attribution should point to a useful public issue or PR, not private messages, emails, account screenshots, or activity-only comments.
 
 ## Issue-Pack Drift Check
 

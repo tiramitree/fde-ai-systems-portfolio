@@ -1,6 +1,6 @@
 # Public Roadmap Issue Comment Examples
 
-Use this page when replying to public roadmap issues, contributor proposals, or issue-to-PR handoff questions. Read it with `docs/github_initial_issues.md`, `docs/community_backlog.md`, `docs/issue_to_pr_handoff_flow.md`, `docs/docs_only_review_comment_examples.md`, and `docs/maintainer_review_policy.md`.
+Use this page when replying to public roadmap issues, contributor proposals, or issue-to-PR handoff questions. Read it with `docs/github_initial_issues.md`, `docs/community_backlog.md`, `docs/issue_to_pr_handoff_flow.md`, `docs/docs_only_review_comment_examples.md`, `docs/contributor_attribution_examples.md`, and `docs/maintainer_review_policy.md`.
 
 The core rule: accepted scope, backlog ideas, implementation promises, and low-signal activity are different things. Keep public issue comments factual, narrow, and reversible; do not promise delivery dates, external-account access, private data, or guaranteed roadmap acceptance.
 
@@ -96,6 +96,8 @@ I will review the diff against the issue acceptance criteria and the merge bar b
 ```
 
 Do not mark the issue done until the PR is reviewed, merged, and verified through the relevant local gate.
+
+Use `docs/contributor_attribution_examples.md` before adding public credit in issue comments. Credit useful public work without copying private identity details or turning low-signal activity into a roadmap signal.
 
 ## Review Checklist
 

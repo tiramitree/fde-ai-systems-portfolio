@@ -11,6 +11,7 @@ POLICY = ROOT / "docs" / "maintainer_review_policy.md"
 DOCS_ONLY_EXAMPLES = ROOT / "docs" / "docs_only_pr_review_examples.md"
 DOCS_ONLY_COMMENT_EXAMPLES = ROOT / "docs" / "docs_only_review_comment_examples.md"
 PUBLIC_ROADMAP_COMMENT_EXAMPLES = ROOT / "docs" / "public_roadmap_issue_comment_examples.md"
+CONTRIBUTOR_ATTRIBUTION_EXAMPLES = ROOT / "docs" / "contributor_attribution_examples.md"
 TEMPLATE = ROOT / ".github" / "pull_request_template.md"
 
 
@@ -118,6 +119,7 @@ REQUIRED_POLICY_PHRASES = [
     "Run triage before running contributor code",
     "Confirm GitHub Actions is green",
     "Public Roadmap Issue Comment Examples",
+    "Contributor Attribution Examples",
 ]
 
 REQUIRED_TEMPLATE_PHRASES = [
@@ -148,6 +150,7 @@ REQUIRED_DOCS_ONLY_EXAMPLE_PHRASES = [
     "python -B scripts/dev.py pr-policy",
     "python -B scripts/dev.py safety",
     "python -B scripts/dev.py quality",
+    "docs/contributor_attribution_examples.md",
 ]
 
 REQUIRED_DOCS_ONLY_COMMENT_EXAMPLE_PHRASES = [
@@ -178,6 +181,7 @@ REQUIRED_PUBLIC_ROADMAP_COMMENT_EXAMPLE_PHRASES = [
     "docs/issue_to_pr_handoff_flow.md",
     "docs/docs_only_review_comment_examples.md",
     "docs/maintainer_review_policy.md",
+    "docs/contributor_attribution_examples.md",
     "Accept Scoped Roadmap Issue",
     "Narrow Oversized Request",
     "Close Low-Signal Activity",
@@ -186,6 +190,26 @@ REQUIRED_PUBLIC_ROADMAP_COMMENT_EXAMPLE_PHRASES = [
     "accepted scope, backlog ideas, implementation promises, and low-signal activity",
     "do not promise delivery dates, external-account access, private data, or guaranteed roadmap acceptance",
     "secrets, credentials, private files, real customer data, or local machine details",
+    "python -B scripts/dev.py community-issues",
+    "python -B scripts/dev.py pr-policy",
+    "python -B scripts/dev.py safety",
+    "python -B scripts/dev.py quality",
+]
+
+REQUIRED_CONTRIBUTOR_ATTRIBUTION_EXAMPLE_PHRASES = [
+    "Contributor Attribution Examples",
+    "docs/maintainer_review_policy.md",
+    "docs/docs_only_pr_review_examples.md",
+    "docs/public_roadmap_issue_comment_examples.md",
+    "docs/launch_feedback_collection_examples.md",
+    "Useful Docs PR Credit",
+    "Useful Bug Report Credit",
+    "Eval-Case Addition Credit",
+    "Useful PR Credit",
+    "Private Feedback Credit",
+    "Rejected Low-Signal Attribution Requests",
+    "Keep attribution tied to public GitHub activity or explicitly permissioned public credit",
+    "do not include private messages, account details, emails, or analytics screenshots",
     "python -B scripts/dev.py community-issues",
     "python -B scripts/dev.py pr-policy",
     "python -B scripts/dev.py safety",
@@ -270,7 +294,15 @@ def check_triage_script() -> list[str]:
 
 def check_docs() -> list[str]:
     failures: list[str] = []
-    for path in (RUNBOOK, POLICY, DOCS_ONLY_EXAMPLES, DOCS_ONLY_COMMENT_EXAMPLES, PUBLIC_ROADMAP_COMMENT_EXAMPLES, TEMPLATE):
+    for path in (
+        RUNBOOK,
+        POLICY,
+        DOCS_ONLY_EXAMPLES,
+        DOCS_ONLY_COMMENT_EXAMPLES,
+        PUBLIC_ROADMAP_COMMENT_EXAMPLES,
+        CONTRIBUTOR_ATTRIBUTION_EXAMPLES,
+        TEMPLATE,
+    ):
         if not path.exists():
             failures.append(f"missing PR review policy file: {path.relative_to(ROOT)}")
 
@@ -302,6 +334,14 @@ def check_docs() -> list[str]:
                 "docs/public_roadmap_issue_comment_examples.md",
             )
         )
+    if CONTRIBUTOR_ATTRIBUTION_EXAMPLES.exists():
+        failures.extend(
+            require_contains(
+                read(CONTRIBUTOR_ATTRIBUTION_EXAMPLES),
+                REQUIRED_CONTRIBUTOR_ATTRIBUTION_EXAMPLE_PHRASES,
+                "docs/contributor_attribution_examples.md",
+            )
+        )
     if TEMPLATE.exists():
         failures.extend(require_contains(read(TEMPLATE), REQUIRED_TEMPLATE_PHRASES, ".github/pull_request_template.md"))
     return failures
@@ -315,6 +355,7 @@ def check_cross_references() -> list[str]:
             "docs/docs_only_pr_review_examples.md",
             "docs/docs_only_review_comment_examples.md",
             "docs/public_roadmap_issue_comment_examples.md",
+            "docs/contributor_attribution_examples.md",
             "python -B scripts/dev.py pr-policy",
         ],
         "PROJECT_CONTENT_INDEX.md": [
@@ -322,6 +363,7 @@ def check_cross_references() -> list[str]:
             "docs/docs_only_pr_review_examples.md",
             "docs/docs_only_review_comment_examples.md",
             "docs/public_roadmap_issue_comment_examples.md",
+            "docs/contributor_attribution_examples.md",
             "scripts/check_pr_review_policy.py",
         ],
         "docs/threat_model.md": ["python -B scripts/dev.py pr-policy"],
@@ -347,7 +389,7 @@ def main() -> int:
             print(f"- {failure}")
         return 1
 
-    print("PR review policy check passed: triage heuristics, runbook, policy, docs-only examples, roadmap issue comments, docs-only comment examples, and template remain safety-focused.")
+    print("PR review policy check passed: triage heuristics, runbook, policy, docs-only examples, roadmap issue comments, contributor attribution examples, docs-only comment examples, and template remain safety-focused.")
     return 0
 
 
