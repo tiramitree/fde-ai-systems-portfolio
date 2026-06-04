@@ -1,6 +1,6 @@
 # Launch Copy Pack
 
-Use this after the GitHub repository is public and GitHub Actions is green. Before posting, run `python -B scripts/dev.py launch-assets` to check that the launch copy remains complete and does not claim unfinished external blockers.
+Use this after the GitHub repository is public and GitHub Actions is green. Before posting, run `python -B scripts/dev.py launch-assets` to check that the launch copy remains complete and does not claim unfinished external blockers. After posting, use `docs/launch_feedback_collection_examples.md` before recording comments, private messages, analytics, stars, or forks as feedback evidence.
 
 ## One-Line Pitch
 

@@ -37,6 +37,7 @@ GITHUB_PUBLIC_PR_API_FALLBACK_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github
 GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_api_rate_limit_troubleshooting_examples.md"
 GITHUB_REPOSITORY_METADATA_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_repository_metadata_troubleshooting_examples.md"
 GITHUB_REPOSITORY_SETTINGS_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_repository_settings_screenshot_checklist.md"
+LAUNCH_FEEDBACK_COLLECTION_EXAMPLES = ROOT / "docs" / "launch_feedback_collection_examples.md"
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
 PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
@@ -358,6 +359,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/github_api_rate_limit_troubleshooting_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/launch_feedback_collection_examples.md",
         "docs/social_preview_verification_examples.md",
         "docs/profile_pin_verification_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -643,6 +645,54 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/post_publish_warning_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/social_preview_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/profile_pin_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_launch_feedback_collection_examples() -> list[str]:
+    failures: list[str] = []
+    if not LAUNCH_FEEDBACK_COLLECTION_EXAMPLES.exists():
+        return ["missing docs/launch_feedback_collection_examples.md"]
+
+    text = LAUNCH_FEEDBACK_COLLECTION_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Launch Feedback Collection Examples",
+        "docs/launch_copy_pack.md",
+        "docs/star_growth_plan.md",
+        "docs/published_repository_status.md",
+        "docs/post_publish_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/command_output_troubleshooting_map.md",
+        "Expected Evidence Split",
+        "GitHub Stars And Forks",
+        "Issue Feedback",
+        "Launch-Post Comments",
+        "Private-Message Feedback",
+        "Analytics Screenshots",
+        "Review Checklist",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/post_publish_check.py",
+        "public feedback, private messages, analytics screenshots, and source evidence prove different things",
+        "Do not commit private DMs, account analytics, personal account details, or launch-feedback claims without matching evidence",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/launch_feedback_collection_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/launch_feedback_collection_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/launch_feedback_collection_examples.md",
+        "docs/launch_copy_pack.md": "docs/launch_feedback_collection_examples.md",
+        "docs/star_growth_plan.md": "docs/launch_feedback_collection_examples.md",
+        "docs/published_repository_status.md": "docs/launch_feedback_collection_examples.md",
+        "docs/post_publish_checklist.md": "docs/launch_feedback_collection_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/launch_feedback_collection_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1371,6 +1421,7 @@ def main() -> int:
     failures.extend(check_github_api_rate_limit_troubleshooting_examples())
     failures.extend(check_github_repository_metadata_troubleshooting_examples())
     failures.extend(check_github_repository_settings_screenshot_checklist())
+    failures.extend(check_launch_feedback_collection_examples())
     failures.extend(check_social_preview_verification_examples())
     failures.extend(check_profile_pin_verification_examples())
     failures.extend(check_github_actions_warning_examples())

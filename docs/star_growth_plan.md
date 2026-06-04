@@ -39,6 +39,7 @@ Most AI app repos show model calls. This repo shows the missing enterprise contr
 5. Red-team eval pack follow-up.
 
 Ready-to-use copy lives in `docs/launch_copy_pack.md`.
+Launch feedback collection examples live in `docs/launch_feedback_collection_examples.md`.
 The recording checklist lives in `docs/demo_recording_checklist.md`.
 Run `python -B scripts/dev.py launch-assets` before posting so required channels, issue materials, and anti-hype language stay aligned.
 
@@ -50,7 +51,7 @@ Create issues for:
 - add PostgreSQL storage adapter prototype
 - add per-case eval regression reports
 - add red-team eval pack
-- add compact launch feedback collection examples
+- add compact GitHub release attachment screenshot checklist
 - run and publish Docker verification from `python -B scripts/dev.py docker-runtime`
 
 These give contributors clear entry points and connect public issues to real engineering work.

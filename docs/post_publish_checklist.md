@@ -44,6 +44,7 @@ The post-publish check must prove:
 - the container release hygiene script and documentation are published.
 - the visual asset manifest script, documentation, manifest, and desktop/mobile screenshot assets are published.
 - the launch asset hygiene script and documentation are published.
+- the launch feedback collection examples are published: `docs/launch_feedback_collection_examples.md`.
 
 ## Manual GitHub Checks
 
@@ -70,9 +71,10 @@ After the automated check passes:
 19. Run `python -B scripts/dev.py openai-live` with a real API key before claiming OpenAI live-mode verification.
 20. Run `python -B scripts/dev.py visual-asset-diff` and `python -B scripts/dev.py visual-assets` after refreshing desktop or mobile demo screenshots.
 21. Run `python -B scripts/dev.py launch-assets` before publishing launch copy or growth posts.
-22. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
-23. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
-24. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
+22. Compare public comments, private-message summaries, analytics notes, stars, and forks with `docs/launch_feedback_collection_examples.md` before claiming launch feedback or star-growth evidence.
+23. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
+24. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
+25. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
 
 ## Optional Backlog Seeding
 
