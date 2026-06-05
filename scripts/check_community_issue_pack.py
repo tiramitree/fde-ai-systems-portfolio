@@ -41,6 +41,7 @@ STALE_BRANCH_PROTECTION_SCREENSHOT_EXAMPLES = ROOT / "docs" / "stale_branch_prot
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
 PUBLIC_MAINTAINER_STATUS_UPDATE_EXAMPLES = ROOT / "docs" / "public_maintainer_status_update_examples.md"
 DEPENDABOT_SECRET_SCANNING_VERIFICATION_EXAMPLES = ROOT / "docs" / "dependabot_secret_scanning_verification_examples.md"
+STALE_DEPENDABOT_ALERT_EVIDENCE_EXAMPLES = ROOT / "docs" / "stale_dependabot_alert_evidence_examples.md"
 GITHUB_AUTHENTICATED_MAINTENANCE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_authenticated_maintenance_troubleshooting_examples.md"
 GITHUB_PUBLIC_PR_API_FALLBACK_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_public_pr_api_fallback_troubleshooting_examples.md"
 GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_api_rate_limit_troubleshooting_examples.md"
@@ -754,6 +755,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_branch_protection_screenshot_examples.md",
         "docs/dependabot_secret_scanning_verification_examples.md",
+        "docs/stale_dependabot_alert_evidence_examples.md",
         "docs/launch_feedback_collection_examples.md",
         "docs/stale_launch_feedback_claim_examples.md",
         "docs/stale_github_discussions_pin_examples.md",
@@ -793,6 +795,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "Stale repository-topic evidence is reviewed before public docs claim old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops are current",
         "Use `docs/stale_branch_protection_screenshot_examples.md` before treating old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops as current branch-protection evidence",
         "Stale branch-protection screenshots are reviewed before public docs claim old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops are current",
+        "Use `docs/stale_dependabot_alert_evidence_examples.md` before treating old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, or local safety-scan output as current repository security-setting evidence",
+        "Stale Dependabot alert evidence is reviewed before public docs claim old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, or local safety-scan output are current",
         "Use `docs/stale_github_actions_badge_cache_examples.md` before treating old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, or private account UI crops as current workflow evidence",
         "Stale GitHub Actions badge cache evidence is reviewed before public docs claim old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, or private account UI crops are current",
         "Use `docs/stale_release_page_screenshot_examples.md` before treating old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops as current release evidence",
@@ -820,6 +824,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/stale_github_discussions_pin_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_repository_topics_evidence_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_branch_protection_screenshot_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/stale_dependabot_alert_evidence_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_github_actions_badge_cache_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_release_page_screenshot_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_social_preview_cache_examples.md": "docs/post_publish_warning_examples.md",
@@ -1107,6 +1112,8 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/post_publish_warning_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/stale_repository_topics_evidence_examples.md",
+        "docs/dependabot_secret_scanning_verification_examples.md",
+        "docs/stale_dependabot_alert_evidence_examples.md",
         "docs/branch_protection_verification_examples.md",
         "docs/stale_branch_protection_screenshot_examples.md",
         "docs/github_release_page_troubleshooting_examples.md",
@@ -1118,6 +1125,7 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/command_output_troubleshooting_map.md",
         "Expected Evidence Split",
         "Description And Topics Screenshots",
+        "Security Settings Screenshots",
         "Branch Protection Screenshots",
         "Social Preview Screenshots",
         "Release Page Screenshots",
@@ -1134,6 +1142,10 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "Do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them",
         "Use `docs/stale_repository_topics_evidence_examples.md` before treating old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops as current repository-topic evidence",
         "Stale repository-topic evidence is compared with `docs/stale_repository_topics_evidence_examples.md`",
+        "Use `docs/dependabot_secret_scanning_verification_examples.md` before claiming Dependabot or secret-scanning setup is current",
+        "Use `docs/stale_dependabot_alert_evidence_examples.md` before treating old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, or local safety-scan output as current repository security-setting evidence",
+        "Security settings screenshots are compared with `docs/dependabot_secret_scanning_verification_examples.md`",
+        "Stale Dependabot alert evidence is compared with `docs/stale_dependabot_alert_evidence_examples.md`",
         "Use `docs/stale_branch_protection_screenshot_examples.md` before treating old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops as current branch-protection evidence",
         "Stale branch-protection screenshots are compared with `docs/stale_branch_protection_screenshot_examples.md`",
         "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
@@ -1152,6 +1164,7 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/post_publish_checklist.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/post_publish_warning_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_repository_topics_evidence_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/stale_dependabot_alert_evidence_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_branch_protection_screenshot_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/social_preview_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_social_preview_cache_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
@@ -1853,6 +1866,7 @@ def check_dependabot_secret_scanning_verification_examples() -> list[str]:
         "Dependabot And Secret-Scanning Verification Examples",
         ".github/dependabot.yml",
         "docs/supply_chain_security.md",
+        "docs/stale_dependabot_alert_evidence_examples.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/github_repository_settings.md",
@@ -1871,6 +1885,8 @@ def check_dependabot_secret_scanning_verification_examples() -> list[str]:
         "python -B scripts/dev.py github-maintenance",
         "checked-in policy files, GitHub account-level security settings, generated alerts, and local safety scans prove different things",
         "Do not claim Dependabot or secret-scanning setup is complete until public/account-level evidence confirms it",
+        "Use `docs/stale_dependabot_alert_evidence_examples.md` before treating old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, or local safety-scan output as current repository security-setting evidence",
+        "`docs/stale_dependabot_alert_evidence_examples.md` is used before stale alert evidence becomes a public repository security-setting claim",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -1880,10 +1896,63 @@ def check_dependabot_secret_scanning_verification_examples() -> list[str]:
         "README.md": "docs/dependabot_secret_scanning_verification_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/supply_chain_security.md": "docs/dependabot_secret_scanning_verification_examples.md",
+        "docs/stale_dependabot_alert_evidence_examples.md": "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/github_repository_settings.md": "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/post_publish_checklist.md": "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/post_publish_warning_examples.md": "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/published_repository_status.md": "docs/dependabot_secret_scanning_verification_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_stale_dependabot_alert_evidence_examples() -> list[str]:
+    failures: list[str] = []
+    if not STALE_DEPENDABOT_ALERT_EVIDENCE_EXAMPLES.exists():
+        return ["missing docs/stale_dependabot_alert_evidence_examples.md"]
+
+    text = STALE_DEPENDABOT_ALERT_EVIDENCE_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Stale Dependabot Alert Evidence Examples",
+        "docs/dependabot_secret_scanning_verification_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/post_publish_checklist.md",
+        "Expected Evidence Split",
+        "Old Security Alert Screenshots",
+        "Wrong Dependency Scopes",
+        "Dismissed Alert Rows",
+        "Private Security-Tab Crops",
+        "Local Safety-Scan Output",
+        "Review Checklist",
+        "checked-in Dependabot config, account-level security settings, current security-alert rows, private security-tab screenshots, local safety-scan output, and source docs prove different things",
+        "Do not claim Dependabot or secret-scanning alert evidence is current until GitHub readiness or authenticated evidence confirms it",
+        "old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, and local safety-scan output",
+        "Security-tab screenshots are review aids",
+        "they do not replace GitHub readiness output, authenticated maintenance evidence, current alert rows, or source-policy checks",
+        "Private security screenshots, account menus, notifications, private repository lists, local paths, browser profile details, alert IDs, and tokens are not committed",
+        "python -B scripts/dev.py dependency-surface",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py github-maintenance",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/stale_dependabot_alert_evidence_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/stale_dependabot_alert_evidence_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/stale_dependabot_alert_evidence_examples.md",
+        "docs/supply_chain_security.md": "docs/stale_dependabot_alert_evidence_examples.md",
+        "docs/post_publish_checklist.md": "docs/stale_dependabot_alert_evidence_examples.md",
+        "docs/dependabot_secret_scanning_verification_examples.md": "docs/stale_dependabot_alert_evidence_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md": "docs/stale_dependabot_alert_evidence_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/stale_dependabot_alert_evidence_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -2854,6 +2923,7 @@ def main() -> int:
     failures.extend(check_github_actions_badge_verification_examples())
     failures.extend(check_stale_github_actions_badge_cache_examples())
     failures.extend(check_dependabot_secret_scanning_verification_examples())
+    failures.extend(check_stale_dependabot_alert_evidence_examples())
     failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_github_release_attachment_screenshot_checklist())
     failures.extend(check_release_asset_upload_dry_run_examples())

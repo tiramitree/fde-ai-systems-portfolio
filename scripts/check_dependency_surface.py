@@ -11,6 +11,7 @@ DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 SUPPLY_CHAIN_DOC = ROOT / "docs" / "supply_chain_security.md"
 GITHUB_SETTINGS_DOC = ROOT / "docs" / "github_repository_settings.md"
 DEPENDABOT_SECRET_SCANNING_DOC = ROOT / "docs" / "dependabot_secret_scanning_verification_examples.md"
+STALE_DEPENDABOT_ALERT_EVIDENCE_DOC = ROOT / "docs" / "stale_dependabot_alert_evidence_examples.md"
 
 FORBIDDEN_DEPENDENCY_FILES = {
     "package.json",
@@ -162,6 +163,7 @@ def check_policy_docs() -> list[str]:
         ("docs/supply_chain_security.md", SUPPLY_CHAIN_DOC),
         ("docs/github_repository_settings.md", GITHUB_SETTINGS_DOC),
         ("docs/dependabot_secret_scanning_verification_examples.md", DEPENDABOT_SECRET_SCANNING_DOC),
+        ("docs/stale_dependabot_alert_evidence_examples.md", STALE_DEPENDABOT_ALERT_EVIDENCE_DOC),
     ]
     for rel_path, path in expected_files:
         if not path.exists():
@@ -173,12 +175,17 @@ def check_policy_docs() -> list[str]:
     supply_chain = SUPPLY_CHAIN_DOC.read_text(encoding="utf-8")
     github_settings = GITHUB_SETTINGS_DOC.read_text(encoding="utf-8")
     verification = DEPENDABOT_SECRET_SCANNING_DOC.read_text(encoding="utf-8")
+    stale_evidence = STALE_DEPENDABOT_ALERT_EVIDENCE_DOC.read_text(encoding="utf-8")
     expectations = [
         ("docs/supply_chain_security.md", supply_chain, "docs/dependabot_secret_scanning_verification_examples.md"),
+        ("docs/supply_chain_security.md", supply_chain, "docs/stale_dependabot_alert_evidence_examples.md"),
         ("docs/github_repository_settings.md", github_settings, "docs/dependabot_secret_scanning_verification_examples.md"),
         ("docs/dependabot_secret_scanning_verification_examples.md", verification, ".github/dependabot.yml"),
+        ("docs/dependabot_secret_scanning_verification_examples.md", verification, "docs/stale_dependabot_alert_evidence_examples.md"),
         ("docs/dependabot_secret_scanning_verification_examples.md", verification, "python -B scripts/dev.py dependency-surface"),
         ("docs/dependabot_secret_scanning_verification_examples.md", verification, "Do not claim Dependabot or secret-scanning setup is complete until public/account-level evidence confirms it"),
+        ("docs/stale_dependabot_alert_evidence_examples.md", stale_evidence, "python -B scripts/dev.py dependency-surface"),
+        ("docs/stale_dependabot_alert_evidence_examples.md", stale_evidence, "Do not claim Dependabot or secret-scanning alert evidence is current until GitHub readiness or authenticated evidence confirms it"),
     ]
     for rel_path, text, phrase in expectations:
         if phrase not in text:
