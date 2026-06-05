@@ -114,6 +114,7 @@ def main() -> int:
         "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
         "docs/github_api_rate_limit_troubleshooting_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
+        "docs/stale_repository_topics_evidence_examples.md",
         "docs/github_repository_settings_screenshot_checklist.md",
         "docs/public_roadmap_issue_comment_examples.md",
         "docs/github_discussions_launch_checklist.md",

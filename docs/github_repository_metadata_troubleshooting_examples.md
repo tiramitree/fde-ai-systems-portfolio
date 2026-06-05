@@ -1,6 +1,6 @@
 # GitHub Repository Metadata Troubleshooting Examples
 
-Use this page when `github-readiness` reports repository metadata warnings, or when public launch docs mention repository description, topics, repository URL state, or Discussions setup. Read it with `docs/github_repository_settings.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_discussions_launch_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when `github-readiness` reports repository metadata warnings, or when public launch docs mention repository description, topics, repository URL state, or Discussions setup. Read it with `docs/github_repository_settings.md`, `docs/published_repository_status.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/stale_repository_topics_evidence_examples.md`, `docs/github_discussions_launch_checklist.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local launch docs and GitHub account-level repository metadata prove different things. Do not claim metadata is current until GitHub readiness or authenticated maintenance confirms it.
 
@@ -71,6 +71,8 @@ python -B scripts/dev.py github-maintenance
 ```
 
 Apply the full topic set from `docs/github_repository_settings.md`. If GitHub rejects a topic, keep the warning visible and update the expected set only when the repository positioning has intentionally changed.
+
+Use `docs/stale_repository_topics_evidence_examples.md` before treating old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops as current repository-topic evidence.
 
 ## Wrong Repository URL
 
@@ -147,6 +149,7 @@ Dry-run output is planning evidence, not remote metadata evidence. Apply account
 ## Review Checklist
 
 - `docs/github_repository_settings.md` remains the source of truth for expected description and topics.
+- `docs/stale_repository_topics_evidence_examples.md` is used before stale topic evidence becomes a public metadata claim.
 - `python -B scripts/dev.py github-readiness` has no hard failures in non-strict mode.
 - `[WARN] repository description set` and `[WARN] repository topics set` remain follow-up until the remote state confirms them.
 - `python -B scripts/dev.py github-maintenance` is treated as dry-run planning unless explicitly applied by an authenticated maintainer.

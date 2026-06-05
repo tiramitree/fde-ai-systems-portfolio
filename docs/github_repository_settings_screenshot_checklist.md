@@ -1,6 +1,6 @@
 # GitHub Repository Settings Screenshot Checklist
 
-Use this page when collecting or reviewing screenshots for GitHub repository setup. Read it with `docs/github_repository_settings.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/branch_protection_verification_examples.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/profile_pin_verification_examples.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/social_preview_verification_examples.md`, `docs/stale_social_preview_cache_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when collecting or reviewing screenshots for GitHub repository setup. Read it with `docs/github_repository_settings.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/stale_repository_topics_evidence_examples.md`, `docs/branch_protection_verification_examples.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/profile_pin_verification_examples.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/social_preview_verification_examples.md`, `docs/stale_social_preview_cache_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local docs, authenticated settings screenshots, and public repository evidence prove different things. Do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them.
 
@@ -52,7 +52,7 @@ python -B scripts/dev.py github-readiness
 python -B scripts/dev.py github-maintenance
 ```
 
-Use `docs/github_repository_metadata_troubleshooting_examples.md` when description, topics, or repository URL state is missing or stale.
+Use `docs/github_repository_metadata_troubleshooting_examples.md` when description, topics, or repository URL state is missing or stale. Use `docs/stale_repository_topics_evidence_examples.md` before treating old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops as current repository-topic evidence.
 
 ## Branch Protection Screenshots
 
@@ -170,6 +170,7 @@ Use `docs/profile_pin_verification_examples.md` before claiming profile-pin setu
 - `docs/github_repository_settings.md` remains the source of truth for expected repository settings.
 - `python -B scripts/dev.py github-readiness` has no hard failures when the GitHub API is reachable.
 - Description/topics screenshots are compared with `docs/github_repository_metadata_troubleshooting_examples.md`.
+- Stale repository-topic evidence is compared with `docs/stale_repository_topics_evidence_examples.md`.
 - Branch protection screenshots are compared with `docs/branch_protection_verification_examples.md`.
 - Social preview screenshots are compared with `docs/social_preview_verification_examples.md`.
 - Stale social-preview cache evidence is compared with `docs/stale_social_preview_cache_examples.md`.

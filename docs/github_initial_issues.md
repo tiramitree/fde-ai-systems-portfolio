@@ -122,6 +122,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact stale release-page screenshot examples
 - Add compact stale profile-pin evidence examples
 - Add compact stale social-preview cache examples
+- Add compact stale repository topics evidence examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -246,7 +247,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact stale repository topics evidence examples
+Add compact stale branch-protection screenshot examples
 ```
 
 Labels:
@@ -258,13 +259,13 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact stale repository topics evidence examples that explain how to handle old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, and private account UI crops without turning stale metadata into current repository-topic evidence.
+Add compact stale branch-protection screenshot examples that explain how to handle old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, and private account UI crops without turning stale settings screenshots into current branch-protection evidence.
 
 Acceptance criteria:
 
-- Add docs/stale_repository_topics_evidence_examples.md with examples for old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, and private account UI crops.
-- Reference docs/github_repository_metadata_troubleshooting_examples.md, docs/github_repository_settings_screenshot_checklist.md, docs/post_publish_warning_examples.md, and docs/post_publish_checklist.md.
-- Keep local docs, authenticated settings, public repository metadata, cached cards, account UI screenshots, and source docs separate; do not claim repository topics are current until GitHub readiness or authenticated evidence confirms them.
+- Add docs/stale_branch_protection_screenshot_examples.md with examples for old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, and private account UI crops.
+- Reference docs/branch_protection_verification_examples.md, docs/github_repository_settings_screenshot_checklist.md, docs/post_publish_warning_examples.md, and docs/post_publish_checklist.md.
+- Keep local branch-protection payloads, authenticated settings, public/API branch-protection evidence, organization policy screenshots, account UI screenshots, and source docs separate; do not claim branch protection is current until GitHub readiness or authenticated evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py github-readiness remains the public/account-level follow-up command.
 - python -B scripts/dev.py launch-assets still passes.

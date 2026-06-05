@@ -36,6 +36,7 @@ The post-publish check must prove:
 - the stale GitHub Discussions pin examples are published: `docs/stale_github_discussions_pin_examples.md`.
 - the Dependabot and secret-scanning verification examples are published: `docs/dependabot_secret_scanning_verification_examples.md`.
 - the GitHub repository metadata troubleshooting examples are published.
+- the stale repository topics evidence examples are published: `docs/stale_repository_topics_evidence_examples.md`.
 - the public maintainer status update examples are published: `docs/public_maintainer_status_update_examples.md`.
 - the observability integrity script and documentation are published.
 - the threat model script and documentation are published.
@@ -74,7 +75,7 @@ After the automated check passes:
 2. Confirm screenshots render.
 3. Confirm the `quality-gate` workflow completes successfully.
 4. Confirm the README quality badge points to the real GitHub Actions workflow using `docs/github_actions_badge_verification_examples.md`.
-5. Apply repository description, topics, and available security settings from `docs/github_repository_settings.md`, then compare warning rows with `docs/github_repository_metadata_troubleshooting_examples.md`, screenshot handling with `docs/github_repository_settings_screenshot_checklist.md`, and Dependabot/secret-scanning evidence with `docs/dependabot_secret_scanning_verification_examples.md` before claiming repository settings are current.
+5. Apply repository description, topics, and available security settings from `docs/github_repository_settings.md`, then compare warning rows with `docs/github_repository_metadata_troubleshooting_examples.md`, stale topic evidence with `docs/stale_repository_topics_evidence_examples.md`, screenshot handling with `docs/github_repository_settings_screenshot_checklist.md`, and Dependabot/secret-scanning evidence with `docs/dependabot_secret_scanning_verification_examples.md` before claiming repository settings are current.
 6. Enable branch protection on `main` using `docs/github_branch_protection.json`.
 7. Compare branch protection state with `docs/branch_protection_verification_examples.md` before claiming the remote policy is active.
 8. Add repository social preview using `docs/assets/github-preview.png`, then compare the result with `docs/social_preview_verification_examples.md` and stale social-preview cache evidence with `docs/stale_social_preview_cache_examples.md` before claiming social preview setup.

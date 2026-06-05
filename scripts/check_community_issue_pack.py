@@ -44,6 +44,7 @@ GITHUB_AUTHENTICATED_MAINTENANCE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "git
 GITHUB_PUBLIC_PR_API_FALLBACK_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_public_pr_api_fallback_troubleshooting_examples.md"
 GITHUB_API_RATE_LIMIT_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_api_rate_limit_troubleshooting_examples.md"
 GITHUB_REPOSITORY_METADATA_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_repository_metadata_troubleshooting_examples.md"
+STALE_REPOSITORY_TOPICS_EVIDENCE_EXAMPLES = ROOT / "docs" / "stale_repository_topics_evidence_examples.md"
 GITHUB_REPOSITORY_SETTINGS_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_repository_settings_screenshot_checklist.md"
 LAUNCH_FEEDBACK_COLLECTION_EXAMPLES = ROOT / "docs" / "launch_feedback_collection_examples.md"
 STALE_LAUNCH_FEEDBACK_CLAIM_EXAMPLES = ROOT / "docs" / "stale_launch_feedback_claim_examples.md"
@@ -692,6 +693,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
         "docs/github_api_rate_limit_troubleshooting_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
+        "docs/stale_repository_topics_evidence_examples.md",
         "docs/github_repository_settings_screenshot_checklist.md",
         "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/launch_feedback_collection_examples.md",
@@ -728,6 +730,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "Use `docs/stale_github_discussions_pin_examples.md` before treating global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references as current public evidence",
         "Stale launch-feedback claims are reviewed before public docs mention old stars, forks, public comments, private feedback summaries, analytics screenshots, or launch-post reposts",
         "Stale GitHub Discussions pins are reviewed before public docs claim global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references are current",
+        "Use `docs/stale_repository_topics_evidence_examples.md` before treating old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops as current repository-topic evidence",
+        "Stale repository-topic evidence is reviewed before public docs claim old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops are current",
         "Use `docs/stale_release_page_screenshot_examples.md` before treating old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops as current release evidence",
         "Stale release-page screenshots are reviewed before public docs claim old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops are current",
         "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
@@ -751,6 +755,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/issue_template_stale_evidence_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_launch_feedback_claim_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_github_discussions_pin_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/stale_repository_topics_evidence_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_release_page_screenshot_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_social_preview_cache_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_profile_pin_evidence_examples.md": "docs/post_publish_warning_examples.md",
@@ -934,6 +939,7 @@ def check_github_repository_metadata_troubleshooting_examples() -> list[str]:
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
+        "docs/stale_repository_topics_evidence_examples.md",
         "docs/github_discussions_launch_checklist.md",
         "docs/command_output_troubleshooting_map.md",
         "Expected Evidence Split",
@@ -952,6 +958,8 @@ def check_github_repository_metadata_troubleshooting_examples() -> list[str]:
         "python -B scripts/dev.py quality",
         "local launch docs and GitHub account-level repository metadata prove different things",
         "Do not claim metadata is current until GitHub readiness or authenticated maintenance confirms it",
+        "Use `docs/stale_repository_topics_evidence_examples.md` before treating old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops as current repository-topic evidence",
+        "`docs/stale_repository_topics_evidence_examples.md` is used before stale topic evidence becomes a public metadata claim",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -963,6 +971,57 @@ def check_github_repository_metadata_troubleshooting_examples() -> list[str]:
         "docs/github_repository_settings.md": "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/post_publish_checklist.md": "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/post_publish_warning_examples.md": "docs/github_repository_metadata_troubleshooting_examples.md",
+        "docs/stale_repository_topics_evidence_examples.md": "docs/github_repository_metadata_troubleshooting_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_stale_repository_topics_evidence_examples() -> list[str]:
+    failures: list[str] = []
+    if not STALE_REPOSITORY_TOPICS_EVIDENCE_EXAMPLES.exists():
+        return ["missing docs/stale_repository_topics_evidence_examples.md"]
+
+    text = STALE_REPOSITORY_TOPICS_EVIDENCE_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Stale Repository Topics Evidence Examples",
+        "docs/github_repository_metadata_troubleshooting_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/post_publish_checklist.md",
+        "Expected Evidence Split",
+        "Old Topic Screenshots",
+        "Wrong Topic Slugs",
+        "Unauthenticated API Warning Rows",
+        "Cached Repository Cards",
+        "Private Account UI Crops",
+        "Review Checklist",
+        "local docs, authenticated settings, public repository metadata, cached cards, account UI screenshots, and source docs prove different things",
+        "Do not claim repository topics are current until GitHub readiness or authenticated evidence confirms them",
+        "old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, and private account UI crops",
+        "Repository-topic screenshots are review aids",
+        "they do not replace the GitHub repository settings page, public repository metadata, or readiness warning rows",
+        "Private account screenshots, account menus, notifications, private repository lists, local paths, browser profile details, and tokens are not committed",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py github-maintenance",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/stale_repository_topics_evidence_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/stale_repository_topics_evidence_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/stale_repository_topics_evidence_examples.md",
+        "docs/post_publish_checklist.md": "docs/stale_repository_topics_evidence_examples.md",
+        "docs/github_repository_metadata_troubleshooting_examples.md": "docs/stale_repository_topics_evidence_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md": "docs/stale_repository_topics_evidence_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/stale_repository_topics_evidence_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -982,6 +1041,7 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/github_repository_metadata_troubleshooting_examples.md",
+        "docs/stale_repository_topics_evidence_examples.md",
         "docs/branch_protection_verification_examples.md",
         "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md",
@@ -1006,6 +1066,8 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "python -B scripts/dev.py github-maintenance",
         "local docs, authenticated settings screenshots, and public repository evidence prove different things",
         "Do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them",
+        "Use `docs/stale_repository_topics_evidence_examples.md` before treating old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops as current repository-topic evidence",
+        "Stale repository-topic evidence is compared with `docs/stale_repository_topics_evidence_examples.md`",
         "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
         "Stale social-preview cache evidence is compared with `docs/stale_social_preview_cache_examples.md`",
         "Use `docs/stale_profile_pin_evidence_examples.md` before treating old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, or private account UI crops as current profile-pin evidence",
@@ -1021,6 +1083,7 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/github_repository_settings.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/post_publish_checklist.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/post_publish_warning_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/stale_repository_topics_evidence_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/social_preview_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_social_preview_cache_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/profile_pin_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
@@ -2648,6 +2711,7 @@ def main() -> int:
     failures.extend(check_github_public_pr_api_fallback_troubleshooting_examples())
     failures.extend(check_github_api_rate_limit_troubleshooting_examples())
     failures.extend(check_github_repository_metadata_troubleshooting_examples())
+    failures.extend(check_stale_repository_topics_evidence_examples())
     failures.extend(check_github_repository_settings_screenshot_checklist())
     failures.extend(check_launch_feedback_collection_examples())
     failures.extend(check_stale_launch_feedback_claim_examples())
