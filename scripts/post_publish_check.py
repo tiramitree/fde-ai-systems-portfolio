@@ -123,6 +123,7 @@ def main() -> int:
         "docs/github_repository_settings.md",
         "docs/social_preview_verification_examples.md",
         "docs/profile_pin_verification_examples.md",
+        "docs/stale_profile_pin_evidence_examples.md",
         "docs/post_publish_warning_examples.md",
         "docs/github_actions_warning_examples.md",
         "docs/github_actions_badge_verification_examples.md",

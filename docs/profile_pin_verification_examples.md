@@ -1,6 +1,6 @@
 # GitHub Profile Pin Verification Examples
 
-Use this page when checking whether the repository is pinned on the GitHub profile. Read it with `docs/github_repository_settings.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/social_preview_verification_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when checking whether the repository is pinned on the GitHub profile. Read it with `docs/github_repository_settings.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/social_preview_verification_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: repository readiness, social preview setup, and profile pin setup prove different things. Do not claim the profile pin is configured until account-profile evidence confirms it.
 
@@ -138,10 +138,13 @@ python -B scripts/post_publish_check.py
 
 Use public or redacted account-profile evidence. Do not add private account screenshots, local browser profile paths, tokens, or personal account details to the repository.
 
+Use `docs/stale_profile_pin_evidence_examples.md` before treating old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, or private account UI crops as current profile-pin evidence.
+
 ## Review Checklist
 
 - `docs/github_repository_settings.md` still names the intended repository and profile-pin timing.
 - `docs/github_repository_settings_screenshot_checklist.md` is used before retaining or sharing profile screenshots.
+- `docs/stale_profile_pin_evidence_examples.md` is used before stale profile-pin evidence becomes a public claim.
 - `docs/social_preview_verification_examples.md` is used only for social preview evidence.
 - `python -B scripts/dev.py github-readiness` has no hard failures when the GitHub API is reachable.
 - `python -B scripts/dev.py launch-assets` passes after release-facing wording changes.

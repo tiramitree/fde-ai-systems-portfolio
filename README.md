@@ -643,6 +643,7 @@ repository/
 - [Stale GitHub Discussions Pin Examples](docs/stale_github_discussions_pin_examples.md)
 - [GitHub Repository Settings](docs/github_repository_settings.md)
 - [GitHub Repository Settings Screenshot Checklist](docs/github_repository_settings_screenshot_checklist.md)
+- [Stale Profile-Pin Evidence Examples](docs/stale_profile_pin_evidence_examples.md)
 - [GitHub Label Troubleshooting Examples](docs/github_label_troubleshooting_examples.md)
 - [Branch Protection Verification Examples](docs/branch_protection_verification_examples.md)
 - [GitHub Release Page Troubleshooting Examples](docs/github_release_page_troubleshooting_examples.md)
