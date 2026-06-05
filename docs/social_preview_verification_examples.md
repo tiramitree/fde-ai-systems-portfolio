@@ -1,6 +1,6 @@
 # Social Preview Verification Examples
 
-Use this page when checking the repository social preview after a push. Read it with `docs/github_repository_settings.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/profile_pin_verification_examples.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when checking the repository social preview after a push. Read it with `docs/github_repository_settings.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/stale_social_preview_cache_examples.md`, `docs/profile_pin_verification_examples.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local image asset existence and GitHub account-level social preview setup prove different things. Do not claim social preview setup until the GitHub UI or account-level evidence confirms it.
 
@@ -112,6 +112,8 @@ python -B scripts/dev.py launch-assets
 
 Record the GitHub UI state separately from third-party cache behavior. Only claim the GitHub repository setting after the GitHub page itself shows the expected preview.
 
+Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence.
+
 ## Profile-Pin Confusion
 
 Symptom:
@@ -140,6 +142,7 @@ Use `docs/stale_profile_pin_evidence_examples.md` before treating a polished rep
 - `docs/assets/github-preview.png` exists and passes `python -B scripts/dev.py assets`.
 - `docs/github_repository_settings.md` still names `docs/assets/github-preview.png` as the intended upload.
 - `docs/github_repository_settings_screenshot_checklist.md` is used before retaining or sharing social preview screenshots.
+- `docs/stale_social_preview_cache_examples.md` is used before stale social-preview cache evidence becomes a public claim.
 - `docs/stale_profile_pin_evidence_examples.md` is used before social-preview evidence is reused as profile-pin evidence.
 - `python -B scripts/dev.py launch-assets` passes after any launch-doc wording change.
 - `python -B scripts/dev.py quality` passes before merging release-facing wording changes.

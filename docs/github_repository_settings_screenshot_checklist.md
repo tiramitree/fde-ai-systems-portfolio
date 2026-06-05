@@ -1,6 +1,6 @@
 # GitHub Repository Settings Screenshot Checklist
 
-Use this page when collecting or reviewing screenshots for GitHub repository setup. Read it with `docs/github_repository_settings.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/branch_protection_verification_examples.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/profile_pin_verification_examples.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/social_preview_verification_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when collecting or reviewing screenshots for GitHub repository setup. Read it with `docs/github_repository_settings.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_repository_metadata_troubleshooting_examples.md`, `docs/branch_protection_verification_examples.md`, `docs/github_release_page_troubleshooting_examples.md`, `docs/github_release_attachment_screenshot_checklist.md`, `docs/profile_pin_verification_examples.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/social_preview_verification_examples.md`, `docs/stale_social_preview_cache_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local docs, authenticated settings screenshots, and public repository evidence prove different things. Do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them.
 
@@ -104,7 +104,7 @@ python -B scripts/dev.py assets
 python -B scripts/dev.py github-readiness
 ```
 
-Use `docs/social_preview_verification_examples.md` when the preview is missing, stale, wrong, cached, or confused with profile-pin evidence.
+Use `docs/social_preview_verification_examples.md` when the preview is missing, stale, wrong, cached, or confused with profile-pin evidence. Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence.
 
 ## Release Page Screenshots
 
@@ -172,6 +172,7 @@ Use `docs/profile_pin_verification_examples.md` before claiming profile-pin setu
 - Description/topics screenshots are compared with `docs/github_repository_metadata_troubleshooting_examples.md`.
 - Branch protection screenshots are compared with `docs/branch_protection_verification_examples.md`.
 - Social preview screenshots are compared with `docs/social_preview_verification_examples.md`.
+- Stale social-preview cache evidence is compared with `docs/stale_social_preview_cache_examples.md`.
 - Release page screenshots are compared with `docs/github_release_page_troubleshooting_examples.md`, `docs/github_latest_release_troubleshooting_examples.md`, `docs/release_attachment_verification_examples.md`, and `docs/github_release_attachment_screenshot_checklist.md`.
 - Profile pin screenshots are compared with `docs/profile_pin_verification_examples.md`.
 - Stale profile-pin evidence is compared with `docs/stale_profile_pin_evidence_examples.md`.

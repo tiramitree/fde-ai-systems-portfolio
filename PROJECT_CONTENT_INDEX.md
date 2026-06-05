@@ -274,6 +274,7 @@ Release and growth:
 - `docs/github_repository_metadata_troubleshooting_examples.md`: repository metadata troubleshooting examples for missing descriptions, missing topics, wrong repository URLs, stale public status, and unauthenticated maintenance output.
 - `docs/branch_protection_verification_examples.md`: branch-protection verification examples for missing protection, stale payloads, API warning rows, manual account settings, and post-publish mismatch.
 - `docs/social_preview_verification_examples.md`: social preview verification examples for missing previews, stale images, wrong uploads, cache delay, and profile-pin confusion.
+- `docs/stale_social_preview_cache_examples.md`: stale social-preview cache examples for old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, and private account UI crops.
 - `docs/profile_pin_verification_examples.md`: profile pin verification examples for missing profile pin, wrong pinned repository, stale profile cache, social-preview confusion, and account visibility.
 - `docs/stale_profile_pin_evidence_examples.md`: stale profile-pin evidence examples for old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, and private account UI crops.
 - `docs/github_release_commands.md`: publication commands.

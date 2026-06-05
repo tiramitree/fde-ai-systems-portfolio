@@ -1,6 +1,6 @@
 # Stale Profile-Pin Evidence Examples
 
-Use this page when GitHub profile-pin screenshots, profile cache state, wrong pinned repositories, social-preview cards, or private account UI crops may no longer prove the current profile pin. Read it with `docs/profile_pin_verification_examples.md`, `docs/social_preview_verification_examples.md`, `docs/github_repository_settings_screenshot_checklist.md`, and `docs/post_publish_warning_examples.md`.
+Use this page when GitHub profile-pin screenshots, profile cache state, wrong pinned repositories, social-preview cards, or private account UI crops may no longer prove the current profile pin. Read it with `docs/profile_pin_verification_examples.md`, `docs/social_preview_verification_examples.md`, `docs/stale_social_preview_cache_examples.md`, `docs/github_repository_settings_screenshot_checklist.md`, and `docs/post_publish_warning_examples.md`.
 
 The core rule: repository metadata, social preview, profile pin setup, account UI screenshots, and source docs prove different things. Do not claim a profile pin is current until visible profile evidence confirms it.
 
@@ -125,6 +125,8 @@ python -B scripts/dev.py github-readiness
 
 Use `docs/social_preview_verification_examples.md` for the social preview and `docs/profile_pin_verification_examples.md` for the profile pin. The card image and the pinned profile slot are different account-level surfaces.
 
+Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as profile-pin evidence.
+
 ## Private Account UI Crops
 
 Use this when profile-pin evidence includes signed-in GitHub UI, account menus, notifications, private repository lists, browser profile details, or local machine details.
@@ -154,6 +156,7 @@ Prefer public profile URLs, readiness output, or a neutral maintainer note kept 
 
 - `docs/profile_pin_verification_examples.md` remains the source for profile-pin evidence boundaries.
 - `docs/social_preview_verification_examples.md` remains the source for social-preview evidence boundaries.
+- `docs/stale_social_preview_cache_examples.md` remains the source before stale social-preview cache evidence becomes profile-pin evidence.
 - `docs/github_repository_settings_screenshot_checklist.md` remains the source for screenshot handling.
 - `docs/post_publish_warning_examples.md` remains the source when local docs and remote public evidence disagree.
 - Repository metadata, social preview, profile pin setup, account UI screenshots, and source docs stay separate.
