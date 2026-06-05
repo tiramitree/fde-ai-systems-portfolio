@@ -648,6 +648,7 @@ repository/
 - [Stale Profile-Pin Evidence Examples](docs/stale_profile_pin_evidence_examples.md)
 - [GitHub Label Troubleshooting Examples](docs/github_label_troubleshooting_examples.md)
 - [Branch Protection Verification Examples](docs/branch_protection_verification_examples.md)
+- [Stale Branch-Protection Screenshot Examples](docs/stale_branch_protection_screenshot_examples.md)
 - [GitHub Release Page Troubleshooting Examples](docs/github_release_page_troubleshooting_examples.md)
 - [Community Backlog](docs/community_backlog.md)
 - [Public Release Audit](docs/public_release_audit.md)

@@ -37,6 +37,7 @@ ISSUE_TRIAGE_SLA_WORDING_EXAMPLES = ROOT / "docs" / "issue_triage_sla_wording_ex
 DISCUSSION_TO_ISSUE_CONVERSION_EXAMPLES = ROOT / "docs" / "discussion_to_issue_conversion_examples.md"
 EVAL_CSV_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "eval_csv_troubleshooting_examples.md"
 BRANCH_PROTECTION_VERIFICATION_EXAMPLES = ROOT / "docs" / "branch_protection_verification_examples.md"
+STALE_BRANCH_PROTECTION_SCREENSHOT_EXAMPLES = ROOT / "docs" / "stale_branch_protection_screenshot_examples.md"
 POST_PUBLISH_WARNING_EXAMPLES = ROOT / "docs" / "post_publish_warning_examples.md"
 PUBLIC_MAINTAINER_STATUS_UPDATE_EXAMPLES = ROOT / "docs" / "public_maintainer_status_update_examples.md"
 DEPENDABOT_SECRET_SCANNING_VERIFICATION_EXAMPLES = ROOT / "docs" / "dependabot_secret_scanning_verification_examples.md"
@@ -639,6 +640,7 @@ def check_branch_protection_verification_examples() -> list[str]:
         "Branch Protection Verification Examples",
         "docs/github_repository_settings.md",
         "docs/github_branch_protection.json",
+        "docs/stale_branch_protection_screenshot_examples.md",
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "Expected Protection Shape",
@@ -657,6 +659,8 @@ def check_branch_protection_verification_examples() -> list[str]:
         "account-level evidence",
         "remote evidence confirms",
         "not proof that GitHub has applied that policy",
+        "Use `docs/stale_branch_protection_screenshot_examples.md` before treating old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops as current branch-protection evidence",
+        "`docs/stale_branch_protection_screenshot_examples.md` is used before stale branch-protection screenshots become a public claim",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -666,6 +670,58 @@ def check_branch_protection_verification_examples() -> list[str]:
         "README.md": "docs/branch_protection_verification_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/branch_protection_verification_examples.md",
         "docs/post_publish_checklist.md": "docs/branch_protection_verification_examples.md",
+        "docs/stale_branch_protection_screenshot_examples.md": "docs/branch_protection_verification_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_stale_branch_protection_screenshot_examples() -> list[str]:
+    failures: list[str] = []
+    if not STALE_BRANCH_PROTECTION_SCREENSHOT_EXAMPLES.exists():
+        return ["missing docs/stale_branch_protection_screenshot_examples.md"]
+
+    text = STALE_BRANCH_PROTECTION_SCREENSHOT_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Stale Branch-Protection Screenshot Examples",
+        "docs/branch_protection_verification_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/post_publish_checklist.md",
+        "Expected Evidence Split",
+        "Old Branch-Rule Screenshots",
+        "Wrong Branch Names",
+        "API Warning Rows",
+        "Inherited Organization Policy Screenshots",
+        "Private Account UI Crops",
+        "Review Checklist",
+        "local branch-protection payloads, authenticated settings, public/API branch-protection evidence, organization policy screenshots, account UI screenshots, and source docs prove different things",
+        "Do not claim branch protection is current until GitHub readiness or authenticated evidence confirms it",
+        "old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, and private account UI crops",
+        "Branch-protection screenshots are review aids",
+        "they do not replace GitHub readiness output, authenticated maintenance evidence, or current branch-rule state",
+        "Private account screenshots, account menus, notifications, private repository lists, local paths, browser profile details, and tokens are not committed",
+        "python -B scripts/dev.py governance",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py github-maintenance",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/stale_branch_protection_screenshot_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/stale_branch_protection_screenshot_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/stale_branch_protection_screenshot_examples.md",
+        "docs/post_publish_checklist.md": "docs/stale_branch_protection_screenshot_examples.md",
+        "docs/branch_protection_verification_examples.md": "docs/stale_branch_protection_screenshot_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md": "docs/stale_branch_protection_screenshot_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/stale_branch_protection_screenshot_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -695,6 +751,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/stale_repository_topics_evidence_examples.md",
         "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/stale_branch_protection_screenshot_examples.md",
         "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/launch_feedback_collection_examples.md",
         "docs/stale_launch_feedback_claim_examples.md",
@@ -732,6 +789,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "Stale GitHub Discussions pins are reviewed before public docs claim global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references are current",
         "Use `docs/stale_repository_topics_evidence_examples.md` before treating old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops as current repository-topic evidence",
         "Stale repository-topic evidence is reviewed before public docs claim old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops are current",
+        "Use `docs/stale_branch_protection_screenshot_examples.md` before treating old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops as current branch-protection evidence",
+        "Stale branch-protection screenshots are reviewed before public docs claim old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops are current",
         "Use `docs/stale_release_page_screenshot_examples.md` before treating old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops as current release evidence",
         "Stale release-page screenshots are reviewed before public docs claim old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops are current",
         "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
@@ -756,6 +815,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/stale_launch_feedback_claim_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_github_discussions_pin_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_repository_topics_evidence_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/stale_branch_protection_screenshot_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_release_page_screenshot_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_social_preview_cache_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_profile_pin_evidence_examples.md": "docs/post_publish_warning_examples.md",
@@ -1043,6 +1103,7 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/github_repository_metadata_troubleshooting_examples.md",
         "docs/stale_repository_topics_evidence_examples.md",
         "docs/branch_protection_verification_examples.md",
+        "docs/stale_branch_protection_screenshot_examples.md",
         "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md",
         "docs/profile_pin_verification_examples.md",
@@ -1068,6 +1129,8 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "Do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them",
         "Use `docs/stale_repository_topics_evidence_examples.md` before treating old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops as current repository-topic evidence",
         "Stale repository-topic evidence is compared with `docs/stale_repository_topics_evidence_examples.md`",
+        "Use `docs/stale_branch_protection_screenshot_examples.md` before treating old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops as current branch-protection evidence",
+        "Stale branch-protection screenshots are compared with `docs/stale_branch_protection_screenshot_examples.md`",
         "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
         "Stale social-preview cache evidence is compared with `docs/stale_social_preview_cache_examples.md`",
         "Use `docs/stale_profile_pin_evidence_examples.md` before treating old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, or private account UI crops as current profile-pin evidence",
@@ -1084,6 +1147,7 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/post_publish_checklist.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/post_publish_warning_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_repository_topics_evidence_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/stale_branch_protection_screenshot_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/social_preview_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_social_preview_cache_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/profile_pin_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
@@ -2706,6 +2770,7 @@ def main() -> int:
     failures.extend(check_discussion_to_issue_conversion_examples())
     failures.extend(check_eval_csv_troubleshooting_examples())
     failures.extend(check_branch_protection_verification_examples())
+    failures.extend(check_stale_branch_protection_screenshot_examples())
     failures.extend(check_post_publish_warning_examples())
     failures.extend(check_github_authenticated_maintenance_troubleshooting_examples())
     failures.extend(check_github_public_pr_api_fallback_troubleshooting_examples())

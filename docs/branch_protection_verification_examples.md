@@ -1,6 +1,6 @@
 # Branch Protection Verification Examples
 
-Use this page when checking whether `main` branch protection is actually active on GitHub. Read it with `docs/github_repository_settings.md`, `docs/github_branch_protection.json`, `docs/published_repository_status.md`, and `docs/post_publish_checklist.md`.
+Use this page when checking whether `main` branch protection is actually active on GitHub. Read it with `docs/github_repository_settings.md`, `docs/github_branch_protection.json`, `docs/stale_branch_protection_screenshot_examples.md`, `docs/published_repository_status.md`, and `docs/post_publish_checklist.md`.
 
 The core rule: `docs/github_branch_protection.json` is the desired policy payload. It is not proof that GitHub has applied that policy. Keep branch-protection wording manual until `python -B scripts/dev.py github-readiness` or account-level evidence confirms the remote state.
 
@@ -47,7 +47,7 @@ Symptom:
 
 Wrong fix:
 
-- Edit README wording to say branch protection is enabled.
+- Edit README wording to claim the remote policy is already active.
 - Treat `docs/github_branch_protection.json` as remote proof.
 - Remove the warning from readiness output.
 
@@ -66,6 +66,8 @@ python -B scripts/maintain_github_state.py --apply --skip-release
 ```
 
 Only claim protection after GitHub readiness or direct account evidence confirms it.
+
+Use `docs/stale_branch_protection_screenshot_examples.md` before treating old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops as current branch-protection evidence.
 
 ## Stale Payloads
 
@@ -162,6 +164,7 @@ Before push, local-only checks prove the source tree is ready. After push, remot
 ## Review Checklist
 
 - `python -B scripts/dev.py governance` passes for the tracked policy payload.
+- `docs/stale_branch_protection_screenshot_examples.md` is used before stale branch-protection screenshots become a public claim.
 - `python -B scripts/dev.py github-readiness` has no hard failures in non-strict mode.
 - Branch-protection claims stay manual until remote evidence confirms them.
 - `docs/github_branch_protection.json` stays aligned with `docs/github_repository_settings.md`.
