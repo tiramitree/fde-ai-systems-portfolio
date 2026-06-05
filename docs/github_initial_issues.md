@@ -119,6 +119,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact stale launch-feedback claim examples
 - Add compact release asset checksum mismatch examples
 - Add compact stale GitHub Discussions pin examples
+- Add compact stale release-page screenshot examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -243,7 +244,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact stale release-page screenshot examples
+Add compact stale profile-pin evidence examples
 ```
 
 Labels:
@@ -255,14 +256,15 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact stale release-page screenshot examples that explain how to handle old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, and private account UI crops without turning screenshots into current release evidence.
+Add compact stale profile-pin evidence examples that explain how to handle old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, and private account UI crops without turning screenshots into current profile-pin evidence.
 
 Acceptance criteria:
 
-- Add docs/stale_release_page_screenshot_examples.md with examples for old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, and private account UI crops.
-- Reference docs/github_release_page_troubleshooting_examples.md, docs/github_latest_release_troubleshooting_examples.md, docs/github_release_attachment_screenshot_checklist.md, and docs/post_publish_warning_examples.md.
-- Keep release-page existence, latest-release selection, attachment state, screenshot evidence, and private account UI separate; do not claim a release page is current until public evidence confirms it.
+- Add docs/stale_profile_pin_evidence_examples.md with examples for old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, and private account UI crops.
+- Reference docs/profile_pin_verification_examples.md, docs/social_preview_verification_examples.md, docs/github_repository_settings_screenshot_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep repository metadata, social preview, profile pin setup, account UI screenshots, and source docs separate; do not claim a profile pin is current until visible profile evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
+- python -B scripts/dev.py github-readiness remains the public/account-level follow-up command.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

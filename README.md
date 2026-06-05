@@ -666,6 +666,7 @@ repository/
 - [Release Note Changelog Drift Examples](docs/release_note_changelog_drift_examples.md)
 - [GitHub Release Attachment Screenshot Checklist](docs/github_release_attachment_screenshot_checklist.md)
 - [GitHub Release Page Troubleshooting Examples](docs/github_release_page_troubleshooting_examples.md)
+- [Stale Release-Page Screenshot Examples](docs/stale_release_page_screenshot_examples.md)
 - [Star Growth Plan](docs/star_growth_plan.md)
 - [Launch Copy Pack](docs/launch_copy_pack.md)
 - [Launch Feedback Collection Examples](docs/launch_feedback_collection_examples.md)
