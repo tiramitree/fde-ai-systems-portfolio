@@ -120,6 +120,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact release asset checksum mismatch examples
 - Add compact stale GitHub Discussions pin examples
 - Add compact stale release-page screenshot examples
+- Add compact stale profile-pin evidence examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -244,7 +245,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact stale profile-pin evidence examples
+Add compact stale social-preview cache examples
 ```
 
 Labels:
@@ -256,15 +257,16 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact stale profile-pin evidence examples that explain how to handle old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, and private account UI crops without turning screenshots into current profile-pin evidence.
+Add compact stale social-preview cache examples that explain how to handle old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, and private account UI crops without turning preview cards into current social-preview evidence.
 
 Acceptance criteria:
 
-- Add docs/stale_profile_pin_evidence_examples.md with examples for old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, and private account UI crops.
-- Reference docs/profile_pin_verification_examples.md, docs/social_preview_verification_examples.md, docs/github_repository_settings_screenshot_checklist.md, and docs/post_publish_warning_examples.md.
-- Keep repository metadata, social preview, profile pin setup, account UI screenshots, and source docs separate; do not claim a profile pin is current until visible profile evidence confirms it.
+- Add docs/stale_social_preview_cache_examples.md with examples for old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, and private account UI crops.
+- Reference docs/social_preview_verification_examples.md, docs/profile_pin_verification_examples.md, docs/github_repository_settings_screenshot_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep local preview assets, uploaded social preview, cached cards, profile pin setup, account UI screenshots, and source docs separate; do not claim social preview setup is current until visible GitHub evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py github-readiness remains the public/account-level follow-up command.
+- python -B scripts/dev.py assets still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
