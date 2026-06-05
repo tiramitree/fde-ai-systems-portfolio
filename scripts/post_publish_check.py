@@ -129,6 +129,7 @@ def main() -> int:
         "docs/github_label_troubleshooting_examples.md",
         "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/stale_release_page_screenshot_examples.md",
         "docs/github_labels.json",
         "docs/github_release_notes_v0.1.0.md",
         "docs/launch_copy_pack.md",

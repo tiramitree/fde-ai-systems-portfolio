@@ -284,6 +284,7 @@ Release and growth:
 - `docs/release_note_changelog_drift_examples.md`: release note and changelog drift examples for checked-in notes, changelog summaries, GitHub release-page text, and post-publish evidence mismatch.
 - `docs/github_release_attachment_screenshot_checklist.md`: release attachment screenshot checklist for public evidence, stale screenshots, wrong tags, and latest-release attachment review.
 - `docs/github_release_page_troubleshooting_examples.md`: GitHub release page troubleshooting examples for missing page, wrong tag, stale notes, missing replay attachments, and latest-release mismatch.
+- `docs/stale_release_page_screenshot_examples.md`: stale release-page screenshot examples for old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, and private account UI crops.
 - `docs/github_latest_release_troubleshooting_examples.md`: latest-release troubleshooting examples for missing latest release, wrong latest tag, draft or prerelease confusion, stale release page, and artifact drift.
 - `docs/maintainer_review_policy.md`: policy for accepting useful reviews and ignoring unsafe or low-signal external activity.
 - `docs/pr_review_runbook.md`: concrete PR review command sequence and merge bar.

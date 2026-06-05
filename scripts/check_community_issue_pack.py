@@ -57,6 +57,7 @@ GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troublesho
 GITHUB_RELEASE_PAGE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_release_page_troubleshooting_examples.md"
 GITHUB_LATEST_RELEASE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_latest_release_troubleshooting_examples.md"
 GITHUB_RELEASE_ATTACHMENT_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_release_attachment_screenshot_checklist.md"
+STALE_RELEASE_PAGE_SCREENSHOT_EXAMPLES = ROOT / "docs" / "stale_release_page_screenshot_examples.md"
 RELEASE_ASSET_UPLOAD_DRY_RUN_EXAMPLES = ROOT / "docs" / "release_asset_upload_dry_run_examples.md"
 RELEASE_ASSET_CHECKSUM_MISMATCH_EXAMPLES = ROOT / "docs" / "release_asset_checksum_mismatch_examples.md"
 RELEASE_NOTE_REFRESH_CHECKLIST = ROOT / "docs" / "release_note_refresh_checklist.md"
@@ -684,6 +685,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/github_release_commands.md",
         "docs/release_asset_checksum_mismatch_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md",
+        "docs/stale_release_page_screenshot_examples.md",
         "docs/github_authenticated_maintenance_troubleshooting_examples.md",
         "docs/github_public_pr_api_fallback_troubleshooting_examples.md",
         "docs/github_api_rate_limit_troubleshooting_examples.md",
@@ -722,6 +724,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "Use `docs/stale_github_discussions_pin_examples.md` before treating global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references as current public evidence",
         "Stale launch-feedback claims are reviewed before public docs mention old stars, forks, public comments, private feedback summaries, analytics screenshots, or launch-post reposts",
         "Stale GitHub Discussions pins are reviewed before public docs claim global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references are current",
+        "Use `docs/stale_release_page_screenshot_examples.md` before treating old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops as current release evidence",
+        "Stale release-page screenshots are reviewed before public docs claim old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops are current",
         "Use `docs/release_asset_checksum_mismatch_examples.md` before treating local hashes, changed generated artifact hashes, screenshot-visible attachments, or public release attachments as current release evidence",
         "Release asset checksum mismatches are reviewed before public docs claim release attachments, screenshots, or hashes are current",
         "Issue templates ask for current reproducible evidence and do not request stale output, private screenshots, local machine details, generated artifacts as source, or account-level material",
@@ -739,6 +743,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/issue_template_stale_evidence_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_launch_feedback_claim_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_github_discussions_pin_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/stale_release_page_screenshot_examples.md": "docs/post_publish_warning_examples.md",
         "docs/release_asset_checksum_mismatch_examples.md": "docs/post_publish_warning_examples.md",
     }
     for rel_path, phrase in cross_references.items():
@@ -1612,6 +1617,7 @@ def check_github_release_attachment_screenshot_checklist() -> list[str]:
         "docs/release_asset_checksum_mismatch_examples.md",
         "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/stale_release_page_screenshot_examples.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -1634,6 +1640,8 @@ def check_github_release_attachment_screenshot_checklist() -> list[str]:
         "generated local artifacts, release-page screenshots, and current public release evidence prove different things",
         "Do not commit private account screenshots, generated `out/` files, or release-attachment claims without matching public evidence",
         "Use `docs/release_asset_checksum_mismatch_examples.md` before treating screenshot-visible attachments, filenames, local hashes, or changed generated artifact hashes as current release evidence",
+        "Use `docs/stale_release_page_screenshot_examples.md` before treating old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops as current release evidence",
+        "`docs/stale_release_page_screenshot_examples.md` remains the source for stale release-page screenshot evidence",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -1647,6 +1655,7 @@ def check_github_release_attachment_screenshot_checklist() -> list[str]:
         "docs/release_asset_checksum_mismatch_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/github_release_page_troubleshooting_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/github_latest_release_troubleshooting_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
+        "docs/stale_release_page_screenshot_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/github_repository_settings_screenshot_checklist.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/post_publish_checklist.md": "docs/github_release_attachment_screenshot_checklist.md",
         "docs/post_publish_warning_examples.md": "docs/github_release_attachment_screenshot_checklist.md",
@@ -1880,6 +1889,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
     required_phrases = [
         "GitHub Release Page Troubleshooting Examples",
         "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/stale_release_page_screenshot_examples.md",
         "docs/github_release_commands.md",
         "docs/github_release_notes_v0.1.0.md",
         "docs/release_note_refresh_checklist.md",
@@ -1908,7 +1918,9 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "Do not claim the release page is current until the tag, release notes, and current replay attachments are visible on GitHub",
         "docs/release_note_refresh_checklist.md",
         "Use `docs/release_note_changelog_drift_examples.md` before treating changelog-style summaries as release-page evidence",
+        "Use `docs/stale_release_page_screenshot_examples.md` before treating old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops as current release evidence",
         "before treating an upload plan as applied release state",
+        "Stale release-page screenshots are reviewed with `docs/stale_release_page_screenshot_examples.md`",
         "Release attachment screenshots are compared with `docs/github_release_attachment_screenshot_checklist.md`",
         "out/demo_replay_artifact.md",
         "out/demo_replay_artifact.json",
@@ -1925,6 +1937,7 @@ def check_github_release_page_troubleshooting_examples() -> list[str]:
         "docs/release_note_refresh_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/release_note_changelog_drift_examples.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
+        "docs/stale_release_page_screenshot_examples.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/post_publish_checklist.md": "docs/github_release_page_troubleshooting_examples.md",
         "docs/github_latest_release_troubleshooting_examples.md": "docs/github_release_page_troubleshooting_examples.md",
     }
@@ -1943,6 +1956,7 @@ def check_github_latest_release_troubleshooting_examples() -> list[str]:
     required_phrases = [
         "GitHub Latest Release Troubleshooting Examples",
         "docs/github_release_page_troubleshooting_examples.md",
+        "docs/stale_release_page_screenshot_examples.md",
         "docs/github_release_commands.md",
         "docs/release_note_refresh_checklist.md",
         "docs/release_note_changelog_drift_examples.md",
@@ -1969,6 +1983,8 @@ def check_github_latest_release_troubleshooting_examples() -> list[str]:
         "Do not claim the latest release is current until GitHub readiness or direct release-page evidence confirms it",
         "docs/release_note_refresh_checklist.md",
         "Use `docs/release_note_changelog_drift_examples.md` before treating changelog freshness as latest-release evidence",
+        "Use `docs/stale_release_page_screenshot_examples.md` before treating stale latest-release screenshots, wrong-tag screenshots, or private account UI crops as current latest-release evidence",
+        "Stale latest-release screenshots are reviewed with `docs/stale_release_page_screenshot_examples.md`",
         "Latest-release attachment screenshots are compared with `docs/github_release_attachment_screenshot_checklist.md`",
     ]
     for phrase in required_phrases:
@@ -1979,11 +1995,63 @@ def check_github_latest_release_troubleshooting_examples() -> list[str]:
         "README.md": "docs/github_latest_release_troubleshooting_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/github_release_page_troubleshooting_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/stale_release_page_screenshot_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/release_note_refresh_checklist.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/release_note_changelog_drift_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/github_release_attachment_screenshot_checklist.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/post_publish_checklist.md": "docs/github_latest_release_troubleshooting_examples.md",
         "docs/post_publish_warning_examples.md": "docs/github_latest_release_troubleshooting_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_stale_release_page_screenshot_examples() -> list[str]:
+    failures: list[str] = []
+    if not STALE_RELEASE_PAGE_SCREENSHOT_EXAMPLES.exists():
+        return ["missing docs/stale_release_page_screenshot_examples.md"]
+
+    text = STALE_RELEASE_PAGE_SCREENSHOT_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Stale Release-Page Screenshot Examples",
+        "docs/github_release_page_troubleshooting_examples.md",
+        "docs/github_latest_release_troubleshooting_examples.md",
+        "docs/github_release_attachment_screenshot_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "Expected Evidence Split",
+        "Old Release-Page Screenshots",
+        "Stale Latest-Release Screenshots",
+        "Missing Attachment Screenshots",
+        "Wrong-Tag Screenshots",
+        "Private Account UI Crops",
+        "Review Checklist",
+        "release-page existence, latest-release selection, attachment state, screenshot evidence, and private account UI prove different things",
+        "Do not claim a release page is current until public evidence confirms it",
+        "old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, and private account UI crops",
+        "Screenshots are review aids",
+        "they do not replace the public release page, current attachment state, release notes, or generated replay artifacts",
+        "Private account screenshots, account menus, notifications, private repository lists, local paths, browser profile details, and tokens are not committed",
+        "python -B scripts/dev.py replay-artifact",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+        "python -B scripts/dev.py github-readiness",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/stale_release_page_screenshot_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/stale_release_page_screenshot_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/stale_release_page_screenshot_examples.md",
+        "docs/post_publish_checklist.md": "docs/stale_release_page_screenshot_examples.md",
+        "docs/github_release_page_troubleshooting_examples.md": "docs/stale_release_page_screenshot_examples.md",
+        "docs/github_latest_release_troubleshooting_examples.md": "docs/stale_release_page_screenshot_examples.md",
+        "docs/github_release_attachment_screenshot_checklist.md": "docs/stale_release_page_screenshot_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/stale_release_page_screenshot_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -2458,6 +2526,7 @@ def main() -> int:
     failures.extend(check_release_note_changelog_drift_examples())
     failures.extend(check_github_release_page_troubleshooting_examples())
     failures.extend(check_github_latest_release_troubleshooting_examples())
+    failures.extend(check_stale_release_page_screenshot_examples())
     failures.extend(check_docs_only_pr_review_examples())
     failures.extend(check_docs_only_review_comment_examples())
     failures.extend(check_readme_navigation_audit())
