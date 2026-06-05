@@ -237,6 +237,7 @@ Design Review Docs:
 - `docs/readme_navigation_audit.md`: README navigation audit for release, contribution, review, optional environment, and technical evidence links.
 - `docs/workflow_security.md`: GitHub Actions and external PR workflow security posture.
 - `docs/github_actions_badge_verification_examples.md`: GitHub Actions badge verification examples for missing badges, stale badges, wrong workflow badges, skipped workflow badges, and fork-PR confusion.
+- `docs/stale_github_actions_badge_cache_examples.md`: stale GitHub Actions badge cache examples for old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
 - `docs/dependabot_secret_scanning_verification_examples.md`: Dependabot and secret-scanning verification examples for source policy, account-level settings, generated alerts, and local safety scans.
 - `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, copyable scenario-draft controls, local draft diffs, no-build local UI posture, and review framing.
@@ -302,6 +303,7 @@ Release and growth:
 - `docs/dependabot_secret_scanning_verification_examples.md`: Dependabot and secret-scanning verification examples for missing config, stale alerts, setting confusion, false-positive alerts, and local safety scan boundaries.
 - `docs/github_actions_warning_examples.md`: GitHub Actions warning examples for pending quality-gate, missing workflow runs, stale badges, skipped workflows, and fork PR permission limits.
 - `docs/github_actions_badge_verification_examples.md`: GitHub Actions badge verification examples for README badge URL, current remote workflow evidence, stale badge rendering, skipped workflows, and fork PR confusion.
+- `docs/stale_github_actions_badge_cache_examples.md`: stale GitHub Actions badge cache examples for old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops.
 - `docs/launch_assets_hygiene.md`: launch copy, star-growth, issue-pack, and anti-hype release gate.
 - `docs/community_backlog.md`: first public issue backlog and contribution guardrails.
 - `docs/github_initial_issues.md`: completed launch issues and current community issue pack with labels, acceptance criteria, and guardrails.
