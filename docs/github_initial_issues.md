@@ -123,6 +123,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact stale profile-pin evidence examples
 - Add compact stale social-preview cache examples
 - Add compact stale repository topics evidence examples
+- Add compact stale branch-protection screenshot examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -247,7 +248,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact stale branch-protection screenshot examples
+Add compact stale GitHub Actions badge cache examples
 ```
 
 Labels:
@@ -259,15 +260,16 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact stale branch-protection screenshot examples that explain how to handle old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, and private account UI crops without turning stale settings screenshots into current branch-protection evidence.
+Add compact stale GitHub Actions badge cache examples that explain how to handle old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops without turning stale badge evidence into current workflow evidence.
 
 Acceptance criteria:
 
-- Add docs/stale_branch_protection_screenshot_examples.md with examples for old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, and private account UI crops.
-- Reference docs/branch_protection_verification_examples.md, docs/github_repository_settings_screenshot_checklist.md, docs/post_publish_warning_examples.md, and docs/post_publish_checklist.md.
-- Keep local branch-protection payloads, authenticated settings, public/API branch-protection evidence, organization policy screenshots, account UI screenshots, and source docs separate; do not claim branch protection is current until GitHub readiness or authenticated evidence confirms it.
+- Add docs/stale_github_actions_badge_cache_examples.md with examples for old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops.
+- Reference docs/github_actions_badge_verification_examples.md, docs/github_actions_warning_examples.md, docs/post_publish_warning_examples.md, and docs/post_publish_checklist.md.
+- Keep local quality output, remote workflow runs, README badge URLs, cached badge images, fork PR context, account UI screenshots, and source docs separate; do not claim the workflow badge is current until the current remote quality-gate run and badge evidence confirm it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py github-readiness remains the public/account-level follow-up command.
+- python -B scripts/dev.py workflow-security still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
