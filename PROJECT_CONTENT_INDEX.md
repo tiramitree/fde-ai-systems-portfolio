@@ -240,6 +240,7 @@ Design Review Docs:
 - `docs/stale_github_actions_badge_cache_examples.md`: stale GitHub Actions badge cache examples for old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops.
 - `docs/supply_chain_security.md`: dependency posture, supply-chain gate, and dependency-addition policy.
 - `docs/dependabot_secret_scanning_verification_examples.md`: Dependabot and secret-scanning verification examples for source policy, account-level settings, generated alerts, and local safety scans.
+- `docs/stale_dependabot_alert_evidence_examples.md`: stale Dependabot alert evidence examples for old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, and local safety-scan output.
 - `docs/frontend_integrity.md`: frontend wiring, trace-copy, keyboard trace-link, copyable scenario-draft controls, local draft diffs, no-build local UI posture, and review framing.
 - `docs/fresh_clone_experience.md`: public clone verification, isolated-port smoke proof, and review framing.
 - `docs/runtime_ui_contracts.md`: running UI route contracts, local security headers, and static-serving boundary notes.
@@ -301,6 +302,7 @@ Release and growth:
 - `docs/github_discussions_launch_checklist.md`: GitHub Discussions launch checklist for categories, pinned starter topics, moderation rules, channel routing, and launch-feedback evidence boundaries.
 - `docs/stale_github_discussions_pin_examples.md`: stale GitHub Discussions pin examples for global pins, category pins, starter topics, wrong-category links, and old launch-feedback discussion references.
 - `docs/dependabot_secret_scanning_verification_examples.md`: Dependabot and secret-scanning verification examples for missing config, stale alerts, setting confusion, false-positive alerts, and local safety scan boundaries.
+- `docs/stale_dependabot_alert_evidence_examples.md`: stale Dependabot alert evidence examples for old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, and local safety-scan output.
 - `docs/github_actions_warning_examples.md`: GitHub Actions warning examples for pending quality-gate, missing workflow runs, stale badges, skipped workflows, and fork PR permission limits.
 - `docs/github_actions_badge_verification_examples.md`: GitHub Actions badge verification examples for README badge URL, current remote workflow evidence, stale badge rendering, skipped workflows, and fork PR confusion.
 - `docs/stale_github_actions_badge_cache_examples.md`: stale GitHub Actions badge cache examples for old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops.

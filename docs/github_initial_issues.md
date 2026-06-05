@@ -125,6 +125,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact stale repository topics evidence examples
 - Add compact stale branch-protection screenshot examples
 - Add compact stale GitHub Actions badge cache examples
+- Add compact stale Dependabot alert evidence examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -249,7 +250,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact stale Dependabot alert evidence examples
+Add compact stale GitHub release asset evidence examples
 ```
 
 Labels:
@@ -261,16 +262,16 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact stale Dependabot alert evidence examples that explain how to handle old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, and local safety-scan output without turning stale alert evidence into current repository security-setting evidence.
+Add compact stale GitHub release asset evidence examples that explain how to handle old release attachment screenshots, wrong release tags, stale asset names, local `out/` files, and private release-edit UI crops without turning stale asset evidence into current public release evidence.
 
 Acceptance criteria:
 
-- Add docs/stale_dependabot_alert_evidence_examples.md with examples for old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, and local safety-scan output.
-- Reference docs/dependabot_secret_scanning_verification_examples.md, docs/github_repository_settings_screenshot_checklist.md, docs/post_publish_warning_examples.md, and docs/post_publish_checklist.md.
-- Keep checked-in Dependabot config, account-level security settings, current security-alert rows, private security-tab screenshots, local safety-scan output, and source docs separate; do not claim Dependabot or secret-scanning alert evidence is current until GitHub readiness or authenticated evidence confirms it.
+- Add docs/stale_github_release_asset_evidence_examples.md with examples for old release attachment screenshots, wrong release tags, stale asset names, local `out/` files, and private release-edit UI crops.
+- Reference docs/release_attachment_verification_examples.md, docs/release_asset_upload_dry_run_examples.md, docs/release_asset_checksum_mismatch_examples.md, docs/post_publish_warning_examples.md, and docs/post_publish_checklist.md.
+- Keep public release attachments, checked-in release notes, generated local `out/` files, release-page screenshots, private release-edit UI crops, and source docs separate; do not claim release asset evidence is current until post-publish or GitHub readiness evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py github-readiness remains the public/account-level follow-up command.
-- python -B scripts/dev.py dependency-surface still passes.
+- python -B scripts/dev.py replay-artifact still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

@@ -1,6 +1,6 @@
 # Dependabot And Secret-Scanning Verification Examples
 
-Use this page when reviewing dependency monitoring, GitHub security settings, or secret-alert evidence. Read it with `.github/dependabot.yml`, `docs/supply_chain_security.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_repository_settings.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when reviewing dependency monitoring, GitHub security settings, or secret-alert evidence. Read it with `.github/dependabot.yml`, `docs/supply_chain_security.md`, `docs/stale_dependabot_alert_evidence_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/github_repository_settings.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: checked-in policy files, GitHub account-level security settings, generated alerts, and local safety scans prove different things. Do not claim Dependabot or secret-scanning setup is complete until public/account-level evidence confirms it.
 
@@ -74,6 +74,8 @@ python -B scripts/dev.py github-maintenance
 ```
 
 Use `docs/development_issue_solutions.md` for guarded Dependabot runtime-baseline PR handling. Keep alert state separate from local policy evidence.
+
+Use `docs/stale_dependabot_alert_evidence_examples.md` before treating old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, or local safety-scan output as current repository security-setting evidence.
 
 ## Secret-Scanning Setting Confusion
 
@@ -153,4 +155,5 @@ Local safety proves the tracked source does not contain known public-safety haza
 - `docs/github_repository_settings.md` remains the source for account-level security setup expectations.
 - Secret scanning, push protection, Dependabot alerts, and Dependabot security updates remain manual/account-level claims until verified.
 - Private alert screenshots, real secrets, account security pages, and generated alert IDs are not committed.
+- `docs/stale_dependabot_alert_evidence_examples.md` is used before stale alert evidence becomes a public repository security-setting claim.
 - `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py safety`, and `python -B scripts/dev.py quality` pass after changing dependency or secret-scanning wording.

@@ -120,6 +120,7 @@ def main() -> int:
         "docs/github_discussions_launch_checklist.md",
         "docs/stale_github_discussions_pin_examples.md",
         "docs/dependabot_secret_scanning_verification_examples.md",
+        "docs/stale_dependabot_alert_evidence_examples.md",
         "docs/branch_protection_verification_examples.md",
         "docs/stale_branch_protection_screenshot_examples.md",
         "docs/github_repository_settings.md",
