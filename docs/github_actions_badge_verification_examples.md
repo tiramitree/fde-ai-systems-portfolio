@@ -1,6 +1,6 @@
 # GitHub Actions Badge Verification Examples
 
-Use this page when checking the README quality badge, GitHub Actions page, or `github-readiness` output. Read it with `.github/workflows/ci.yml`, `docs/github_actions_warning_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/workflow_security.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when checking the README quality badge, GitHub Actions page, or `github-readiness` output. Read it with `.github/workflows/ci.yml`, `docs/github_actions_warning_examples.md`, `docs/stale_github_actions_badge_cache_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, `docs/workflow_security.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: local quality output, remote workflow status, skipped workflows, and README badge rendering prove different things. Do not claim a green workflow badge until the current remote `quality-gate` run is public and current.
 
@@ -85,6 +85,8 @@ python -B scripts/dev.py github-readiness
 
 Use `github-readiness` for exact remote commit evidence. Treat badge rendering as presentation only until the badge, Actions page, and readiness output agree.
 
+Use `docs/stale_github_actions_badge_cache_examples.md` before treating old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, or private account UI crops as current workflow evidence.
+
 ## Wrong Workflow Badge
 
 Symptom:
@@ -166,3 +168,4 @@ The default-branch badge is not PR review evidence. Public PRs remain untrusted 
 - `python -B scripts/dev.py github-readiness` is used for current remote workflow evidence after push.
 - `python -B scripts/dev.py quality` remains local prerequisite evidence, not remote badge evidence.
 - Public docs do not claim a green workflow badge until the current remote `quality-gate` run is public and current.
+- `docs/stale_github_actions_badge_cache_examples.md` is used before stale badge cache evidence becomes a public workflow claim.

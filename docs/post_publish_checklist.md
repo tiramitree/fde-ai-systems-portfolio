@@ -62,6 +62,7 @@ The post-publish check must prove:
 - the post-publish warning examples are published.
 - the GitHub Actions warning examples are published.
 - the GitHub Actions badge verification examples are published: `docs/github_actions_badge_verification_examples.md`.
+- the stale GitHub Actions badge cache examples are published: `docs/stale_github_actions_badge_cache_examples.md`.
 - the container release hygiene script and documentation are published.
 - the visual asset manifest script, documentation, manifest, and desktop/mobile screenshot assets are published.
 - the launch asset hygiene script and documentation are published.
@@ -84,7 +85,7 @@ After the automated check passes:
 10. Pin the repository on the GitHub profile, then compare the visible account-profile state with `docs/profile_pin_verification_examples.md` and stale profile-pin evidence with `docs/stale_profile_pin_evidence_examples.md` before claiming profile pin setup.
 11. Run `python -B scripts/dev.py fresh-clone` after the push is visible. Use `python -B scripts/dev.py fresh-clone-local` before pushing when validating local-only commits.
 12. Compare warning rows with `docs/post_publish_warning_examples.md` before claiming published evidence.
-13. Compare Actions warnings with `docs/github_actions_warning_examples.md` and README badge evidence with `docs/github_actions_badge_verification_examples.md` before claiming the remote workflow is green.
+13. Compare Actions warnings with `docs/github_actions_warning_examples.md`, README badge evidence with `docs/github_actions_badge_verification_examples.md`, and stale badge cache evidence with `docs/stale_github_actions_badge_cache_examples.md` before claiming the remote workflow is green.
 14. Run `python -B scripts/dev.py replay-artifact` before attaching release evidence.
 15. Compare release notes with `docs/release_note_refresh_checklist.md` before claiming checked-in notes, GitHub release-page text, replay artifacts, or post-publish evidence are current.
 16. Compare release notes, changelog summaries, release page text, and remote evidence with `docs/release_note_changelog_drift_examples.md` before claiming changelog freshness.

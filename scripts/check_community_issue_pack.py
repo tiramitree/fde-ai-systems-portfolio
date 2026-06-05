@@ -57,6 +57,7 @@ PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_ex
 STALE_PROFILE_PIN_EVIDENCE_EXAMPLES = ROOT / "docs" / "stale_profile_pin_evidence_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
 GITHUB_ACTIONS_BADGE_VERIFICATION_EXAMPLES = ROOT / "docs" / "github_actions_badge_verification_examples.md"
+STALE_GITHUB_ACTIONS_BADGE_CACHE_EXAMPLES = ROOT / "docs" / "stale_github_actions_badge_cache_examples.md"
 GITHUB_LABEL_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_label_troubleshooting_examples.md"
 GITHUB_RELEASE_PAGE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_release_page_troubleshooting_examples.md"
 GITHUB_LATEST_RELEASE_TROUBLESHOOTING_EXAMPLES = ROOT / "docs" / "github_latest_release_troubleshooting_examples.md"
@@ -762,6 +763,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/stale_profile_pin_evidence_examples.md",
         "docs/command_output_troubleshooting_map.md",
         "docs/github_actions_badge_verification_examples.md",
+        "docs/stale_github_actions_badge_cache_examples.md",
         "Expected Evidence Split",
         "Remote File Lag",
         "Raw README Failures",
@@ -791,6 +793,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "Stale repository-topic evidence is reviewed before public docs claim old topic screenshots, wrong topic slugs, unauthenticated API warning rows, cached repository cards, or private account UI crops are current",
         "Use `docs/stale_branch_protection_screenshot_examples.md` before treating old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops as current branch-protection evidence",
         "Stale branch-protection screenshots are reviewed before public docs claim old branch-rule screenshots, wrong branch names, API warning rows, inherited organization policy screenshots, or private account UI crops are current",
+        "Use `docs/stale_github_actions_badge_cache_examples.md` before treating old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, or private account UI crops as current workflow evidence",
+        "Stale GitHub Actions badge cache evidence is reviewed before public docs claim old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, or private account UI crops are current",
         "Use `docs/stale_release_page_screenshot_examples.md` before treating old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops as current release evidence",
         "Stale release-page screenshots are reviewed before public docs claim old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops are current",
         "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
@@ -816,6 +820,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/stale_github_discussions_pin_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_repository_topics_evidence_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_branch_protection_screenshot_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/stale_github_actions_badge_cache_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_release_page_screenshot_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_social_preview_cache_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_profile_pin_evidence_examples.md": "docs/post_publish_warning_examples.md",
@@ -1687,6 +1692,7 @@ def check_github_actions_warning_examples() -> list[str]:
         ".github/workflows/ci.yml",
         "docs/workflow_security.md",
         "docs/github_actions_badge_verification_examples.md",
+        "docs/stale_github_actions_badge_cache_examples.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/github_api_rate_limit_troubleshooting_examples.md",
@@ -1708,6 +1714,8 @@ def check_github_actions_warning_examples() -> list[str]:
         "local quality evidence and remote GitHub Actions evidence prove different things",
         "Do not claim a green workflow until the current remote `quality-gate` run passes",
         "README badge URL and link are reviewed with `docs/github_actions_badge_verification_examples.md`",
+        "Use `docs/stale_github_actions_badge_cache_examples.md` before treating old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, or private account UI crops as current workflow evidence",
+        "Stale badge cache evidence is reviewed with `docs/stale_github_actions_badge_cache_examples.md`",
         "permissions remain `contents: read`",
         "persist-credentials: false",
         "does not reference `secrets.*`",
@@ -1721,6 +1729,7 @@ def check_github_actions_warning_examples() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/github_actions_warning_examples.md",
         "docs/workflow_security.md": "docs/github_actions_warning_examples.md",
         "docs/github_actions_badge_verification_examples.md": "docs/github_actions_warning_examples.md",
+        "docs/stale_github_actions_badge_cache_examples.md": "docs/github_actions_warning_examples.md",
         "docs/post_publish_checklist.md": "docs/github_actions_warning_examples.md",
         "docs/post_publish_warning_examples.md": "docs/github_actions_warning_examples.md",
     }
@@ -1740,6 +1749,7 @@ def check_github_actions_badge_verification_examples() -> list[str]:
         "GitHub Actions Badge Verification Examples",
         ".github/workflows/ci.yml",
         "docs/github_actions_warning_examples.md",
+        "docs/stale_github_actions_badge_cache_examples.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/workflow_security.md",
@@ -1760,6 +1770,8 @@ def check_github_actions_badge_verification_examples() -> list[str]:
         "https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml",
         "local quality output, remote workflow status, skipped workflows, and README badge rendering prove different things",
         "Do not claim a green workflow badge until the current remote `quality-gate` run is public and current",
+        "Use `docs/stale_github_actions_badge_cache_examples.md` before treating old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, or private account UI crops as current workflow evidence",
+        "`docs/stale_github_actions_badge_cache_examples.md` is used before stale badge cache evidence becomes a public workflow claim",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -1770,9 +1782,60 @@ def check_github_actions_badge_verification_examples() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/github_actions_badge_verification_examples.md",
         "docs/workflow_security.md": "docs/github_actions_badge_verification_examples.md",
         "docs/github_actions_warning_examples.md": "docs/github_actions_badge_verification_examples.md",
+        "docs/stale_github_actions_badge_cache_examples.md": "docs/github_actions_badge_verification_examples.md",
         "docs/post_publish_checklist.md": "docs/github_actions_badge_verification_examples.md",
         "docs/post_publish_warning_examples.md": "docs/github_actions_badge_verification_examples.md",
         "docs/published_repository_status.md": "docs/github_actions_badge_verification_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_stale_github_actions_badge_cache_examples() -> list[str]:
+    failures: list[str] = []
+    if not STALE_GITHUB_ACTIONS_BADGE_CACHE_EXAMPLES.exists():
+        return ["missing docs/stale_github_actions_badge_cache_examples.md"]
+
+    text = STALE_GITHUB_ACTIONS_BADGE_CACHE_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Stale GitHub Actions Badge Cache Examples",
+        "docs/github_actions_badge_verification_examples.md",
+        "docs/github_actions_warning_examples.md",
+        "docs/post_publish_warning_examples.md",
+        "docs/post_publish_checklist.md",
+        "Expected Evidence Split",
+        "Old Badge Images",
+        "Wrong Workflow Badge URLs",
+        "Skipped Workflow Badges",
+        "Fork-PR Badge Confusion",
+        "Private Account UI Crops",
+        "Review Checklist",
+        "local quality output, remote workflow runs, README badge URLs, cached badge images, fork PR context, account UI screenshots, and source docs prove different things",
+        "Do not claim the workflow badge is current until the current remote `quality-gate` run and badge evidence confirm it",
+        "old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops",
+        "Badge screenshots are review aids",
+        "they do not replace GitHub readiness output, the current Actions page, or the current remote `quality-gate` run",
+        "Private account screenshots, account menus, notifications, private repository lists, local paths, browser profile details, and tokens are not committed",
+        "python -B scripts/dev.py workflow-security",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/stale_github_actions_badge_cache_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/stale_github_actions_badge_cache_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/stale_github_actions_badge_cache_examples.md",
+        "docs/post_publish_checklist.md": "docs/stale_github_actions_badge_cache_examples.md",
+        "docs/github_actions_badge_verification_examples.md": "docs/stale_github_actions_badge_cache_examples.md",
+        "docs/github_actions_warning_examples.md": "docs/stale_github_actions_badge_cache_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/stale_github_actions_badge_cache_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -2789,6 +2852,7 @@ def main() -> int:
     failures.extend(check_stale_profile_pin_evidence_examples())
     failures.extend(check_github_actions_warning_examples())
     failures.extend(check_github_actions_badge_verification_examples())
+    failures.extend(check_stale_github_actions_badge_cache_examples())
     failures.extend(check_dependabot_secret_scanning_verification_examples())
     failures.extend(check_github_label_troubleshooting_examples())
     failures.extend(check_github_release_attachment_screenshot_checklist())

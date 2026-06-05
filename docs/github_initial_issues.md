@@ -124,6 +124,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact stale social-preview cache examples
 - Add compact stale repository topics evidence examples
 - Add compact stale branch-protection screenshot examples
+- Add compact stale GitHub Actions badge cache examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -248,7 +249,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact stale GitHub Actions badge cache examples
+Add compact stale Dependabot alert evidence examples
 ```
 
 Labels:
@@ -260,16 +261,16 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact stale GitHub Actions badge cache examples that explain how to handle old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops without turning stale badge evidence into current workflow evidence.
+Add compact stale Dependabot alert evidence examples that explain how to handle old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, and local safety-scan output without turning stale alert evidence into current repository security-setting evidence.
 
 Acceptance criteria:
 
-- Add docs/stale_github_actions_badge_cache_examples.md with examples for old badge images, wrong workflow badge URLs, skipped workflow badges, fork-PR badge confusion, and private account UI crops.
-- Reference docs/github_actions_badge_verification_examples.md, docs/github_actions_warning_examples.md, docs/post_publish_warning_examples.md, and docs/post_publish_checklist.md.
-- Keep local quality output, remote workflow runs, README badge URLs, cached badge images, fork PR context, account UI screenshots, and source docs separate; do not claim the workflow badge is current until the current remote quality-gate run and badge evidence confirm it.
+- Add docs/stale_dependabot_alert_evidence_examples.md with examples for old security alert screenshots, wrong dependency scopes, dismissed alert rows, private security-tab crops, and local safety-scan output.
+- Reference docs/dependabot_secret_scanning_verification_examples.md, docs/github_repository_settings_screenshot_checklist.md, docs/post_publish_warning_examples.md, and docs/post_publish_checklist.md.
+- Keep checked-in Dependabot config, account-level security settings, current security-alert rows, private security-tab screenshots, local safety-scan output, and source docs separate; do not claim Dependabot or secret-scanning alert evidence is current until GitHub readiness or authenticated evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
 - python -B scripts/dev.py github-readiness remains the public/account-level follow-up command.
-- python -B scripts/dev.py workflow-security still passes.
+- python -B scripts/dev.py dependency-surface still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.
