@@ -50,6 +50,7 @@ STALE_LAUNCH_FEEDBACK_CLAIM_EXAMPLES = ROOT / "docs" / "stale_launch_feedback_cl
 GITHUB_DISCUSSIONS_LAUNCH_CHECKLIST = ROOT / "docs" / "github_discussions_launch_checklist.md"
 STALE_GITHUB_DISCUSSIONS_PIN_EXAMPLES = ROOT / "docs" / "stale_github_discussions_pin_examples.md"
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
+STALE_SOCIAL_PREVIEW_CACHE_EXAMPLES = ROOT / "docs" / "stale_social_preview_cache_examples.md"
 PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_examples.md"
 STALE_PROFILE_PIN_EVIDENCE_EXAMPLES = ROOT / "docs" / "stale_profile_pin_evidence_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
@@ -697,6 +698,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/stale_launch_feedback_claim_examples.md",
         "docs/stale_github_discussions_pin_examples.md",
         "docs/social_preview_verification_examples.md",
+        "docs/stale_social_preview_cache_examples.md",
         "docs/profile_pin_verification_examples.md",
         "docs/stale_profile_pin_evidence_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -728,6 +730,8 @@ def check_post_publish_warning_examples() -> list[str]:
         "Stale GitHub Discussions pins are reviewed before public docs claim global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references are current",
         "Use `docs/stale_release_page_screenshot_examples.md` before treating old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops as current release evidence",
         "Stale release-page screenshots are reviewed before public docs claim old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, or private account UI crops are current",
+        "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
+        "Stale social-preview cache evidence is reviewed before public docs claim old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops are current",
         "Use `docs/stale_profile_pin_evidence_examples.md` before treating old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, or private account UI crops as current profile-pin evidence",
         "Stale profile-pin evidence is reviewed before public docs claim old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, or private account UI crops are current",
         "Use `docs/release_asset_checksum_mismatch_examples.md` before treating local hashes, changed generated artifact hashes, screenshot-visible attachments, or public release attachments as current release evidence",
@@ -748,6 +752,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/stale_launch_feedback_claim_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_github_discussions_pin_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_release_page_screenshot_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/stale_social_preview_cache_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_profile_pin_evidence_examples.md": "docs/post_publish_warning_examples.md",
         "docs/release_asset_checksum_mismatch_examples.md": "docs/post_publish_warning_examples.md",
     }
@@ -983,6 +988,7 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/profile_pin_verification_examples.md",
         "docs/stale_profile_pin_evidence_examples.md",
         "docs/social_preview_verification_examples.md",
+        "docs/stale_social_preview_cache_examples.md",
         "docs/command_output_troubleshooting_map.md",
         "Expected Evidence Split",
         "Description And Topics Screenshots",
@@ -1000,6 +1006,8 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "python -B scripts/dev.py github-maintenance",
         "local docs, authenticated settings screenshots, and public repository evidence prove different things",
         "Do not commit private account screenshots or claim settings are current until public/account-level evidence confirms them",
+        "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
+        "Stale social-preview cache evidence is compared with `docs/stale_social_preview_cache_examples.md`",
         "Use `docs/stale_profile_pin_evidence_examples.md` before treating old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, or private account UI crops as current profile-pin evidence",
         "Stale profile-pin evidence is compared with `docs/stale_profile_pin_evidence_examples.md`",
     ]
@@ -1014,6 +1022,7 @@ def check_github_repository_settings_screenshot_checklist() -> list[str]:
         "docs/post_publish_checklist.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/post_publish_warning_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/social_preview_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/stale_social_preview_cache_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/profile_pin_verification_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_profile_pin_evidence_examples.md": "docs/github_repository_settings_screenshot_checklist.md",
     }
@@ -1331,6 +1340,7 @@ def check_social_preview_verification_examples() -> list[str]:
         "docs/github_repository_settings.md",
         "docs/github_repository_settings_screenshot_checklist.md",
         "docs/assets/github-preview.png",
+        "docs/stale_social_preview_cache_examples.md",
         "docs/profile_pin_verification_examples.md",
         "docs/stale_profile_pin_evidence_examples.md",
         "docs/post_publish_checklist.md",
@@ -1351,6 +1361,8 @@ def check_social_preview_verification_examples() -> list[str]:
         "python -B scripts/dev.py quality",
         "local image asset existence and GitHub account-level social preview setup prove different things",
         "Do not claim social preview setup until the GitHub UI or account-level evidence confirms it",
+        "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as current social-preview evidence",
+        "`docs/stale_social_preview_cache_examples.md` is used before stale social-preview cache evidence becomes a public claim",
         "Use `docs/stale_profile_pin_evidence_examples.md` before treating a polished repository card, old profile screenshot, or stale profile cache as profile-pin evidence",
         "`docs/stale_profile_pin_evidence_examples.md` is used before social-preview evidence is reused as profile-pin evidence",
     ]
@@ -1364,8 +1376,62 @@ def check_social_preview_verification_examples() -> list[str]:
         "docs/github_repository_settings.md": "docs/social_preview_verification_examples.md",
         "docs/post_publish_checklist.md": "docs/social_preview_verification_examples.md",
         "docs/post_publish_warning_examples.md": "docs/social_preview_verification_examples.md",
+        "docs/stale_social_preview_cache_examples.md": "docs/social_preview_verification_examples.md",
         "docs/profile_pin_verification_examples.md": "docs/social_preview_verification_examples.md",
         "docs/stale_profile_pin_evidence_examples.md": "docs/social_preview_verification_examples.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_stale_social_preview_cache_examples() -> list[str]:
+    failures: list[str] = []
+    if not STALE_SOCIAL_PREVIEW_CACHE_EXAMPLES.exists():
+        return ["missing docs/stale_social_preview_cache_examples.md"]
+
+    text = STALE_SOCIAL_PREVIEW_CACHE_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Stale Social-Preview Cache Examples",
+        "docs/social_preview_verification_examples.md",
+        "docs/profile_pin_verification_examples.md",
+        "docs/stale_profile_pin_evidence_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md",
+        "docs/post_publish_warning_examples.md",
+        "Expected Evidence Split",
+        "Old Social-Preview Images",
+        "Wrong Uploaded Images",
+        "Cache Delays",
+        "Profile-Pin Confusion",
+        "Private Account UI Crops",
+        "Review Checklist",
+        "local preview assets, uploaded social preview, cached cards, profile pin setup, account UI screenshots, and source docs prove different things",
+        "Do not claim social preview setup is current until visible GitHub evidence confirms it",
+        "old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, and private account UI crops",
+        "Social-preview screenshots are review aids",
+        "they do not replace the GitHub repository settings page, the public repository card, or readiness warning rows",
+        "Private account screenshots, account menus, notifications, private repository lists, local paths, browser profile details, and tokens are not committed",
+        "python -B scripts/dev.py assets",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/post_publish_check.py",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/stale_social_preview_cache_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/stale_social_preview_cache_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/stale_social_preview_cache_examples.md",
+        "docs/post_publish_checklist.md": "docs/stale_social_preview_cache_examples.md",
+        "docs/social_preview_verification_examples.md": "docs/stale_social_preview_cache_examples.md",
+        "docs/profile_pin_verification_examples.md": "docs/stale_social_preview_cache_examples.md",
+        "docs/stale_profile_pin_evidence_examples.md": "docs/stale_social_preview_cache_examples.md",
+        "docs/github_repository_settings_screenshot_checklist.md": "docs/stale_social_preview_cache_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/stale_social_preview_cache_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -1385,6 +1451,7 @@ def check_profile_pin_verification_examples() -> list[str]:
         "docs/github_repository_settings_screenshot_checklist.md",
         "docs/stale_profile_pin_evidence_examples.md",
         "docs/social_preview_verification_examples.md",
+        "docs/stale_social_preview_cache_examples.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -1404,7 +1471,9 @@ def check_profile_pin_verification_examples() -> list[str]:
         "repository readiness, social preview setup, and profile pin setup prove different things",
         "Do not claim the profile pin is configured until account-profile evidence confirms it",
         "Use `docs/stale_profile_pin_evidence_examples.md` before treating old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, or private account UI crops as current profile-pin evidence",
+        "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as profile-pin evidence",
         "`docs/stale_profile_pin_evidence_examples.md` is used before stale profile-pin evidence becomes a public claim",
+        "`docs/stale_social_preview_cache_examples.md` is used before stale preview-card evidence becomes profile-pin evidence",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -1415,6 +1484,7 @@ def check_profile_pin_verification_examples() -> list[str]:
         "PROJECT_CONTENT_INDEX.md": "docs/profile_pin_verification_examples.md",
         "docs/github_repository_settings.md": "docs/profile_pin_verification_examples.md",
         "docs/social_preview_verification_examples.md": "docs/profile_pin_verification_examples.md",
+        "docs/stale_social_preview_cache_examples.md": "docs/profile_pin_verification_examples.md",
         "docs/post_publish_checklist.md": "docs/profile_pin_verification_examples.md",
         "docs/post_publish_warning_examples.md": "docs/profile_pin_verification_examples.md",
         "docs/stale_profile_pin_evidence_examples.md": "docs/profile_pin_verification_examples.md",
@@ -1435,6 +1505,7 @@ def check_stale_profile_pin_evidence_examples() -> list[str]:
         "Stale Profile-Pin Evidence Examples",
         "docs/profile_pin_verification_examples.md",
         "docs/social_preview_verification_examples.md",
+        "docs/stale_social_preview_cache_examples.md",
         "docs/github_repository_settings_screenshot_checklist.md",
         "docs/post_publish_warning_examples.md",
         "Expected Evidence Split",
@@ -1449,6 +1520,8 @@ def check_stale_profile_pin_evidence_examples() -> list[str]:
         "old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, and private account UI crops",
         "Profile screenshots are review aids",
         "they do not replace the public profile page, account-level setup, or readiness warning rows",
+        "Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as profile-pin evidence",
+        "`docs/stale_social_preview_cache_examples.md` remains the source before stale social-preview cache evidence becomes profile-pin evidence",
         "Private account screenshots, account menus, notifications, private repository lists, local paths, browser profile details, and tokens are not committed",
         "python -B scripts/dev.py github-readiness",
         "python -B scripts/post_publish_check.py",
@@ -1466,6 +1539,7 @@ def check_stale_profile_pin_evidence_examples() -> list[str]:
         "docs/post_publish_checklist.md": "docs/stale_profile_pin_evidence_examples.md",
         "docs/profile_pin_verification_examples.md": "docs/stale_profile_pin_evidence_examples.md",
         "docs/social_preview_verification_examples.md": "docs/stale_profile_pin_evidence_examples.md",
+        "docs/stale_social_preview_cache_examples.md": "docs/stale_profile_pin_evidence_examples.md",
         "docs/github_repository_settings_screenshot_checklist.md": "docs/stale_profile_pin_evidence_examples.md",
         "docs/post_publish_warning_examples.md": "docs/stale_profile_pin_evidence_examples.md",
     }
@@ -2581,6 +2655,7 @@ def main() -> int:
     failures.extend(check_github_discussions_launch_checklist())
     failures.extend(check_stale_github_discussions_pin_examples())
     failures.extend(check_social_preview_verification_examples())
+    failures.extend(check_stale_social_preview_cache_examples())
     failures.extend(check_profile_pin_verification_examples())
     failures.extend(check_stale_profile_pin_evidence_examples())
     failures.extend(check_github_actions_warning_examples())

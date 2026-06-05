@@ -5,10 +5,10 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Good First Issues
 
 1. Add a narrated demo video using the walkthrough GIF as the storyboard.
-2. Add compact stale social-preview cache examples.
-3. Add compact stale repository topics evidence examples.
-4. Add compact stale branch-protection screenshot examples.
-5. Add compact stale GitHub Actions badge cache examples.
+2. Add compact stale repository topics evidence examples.
+3. Add compact stale branch-protection screenshot examples.
+4. Add compact stale GitHub Actions badge cache examples.
+5. Add compact stale Dependabot alert evidence examples.
 
 ## Intermediate Issues
 
@@ -56,6 +56,7 @@ Contributions should preserve these invariants:
 - Add compact stale GitHub Discussions pin examples.
 - Add compact stale release-page screenshot examples.
 - Add compact stale profile-pin evidence examples.
+- Add compact stale social-preview cache examples.
 - Add browser-local light/dark theme controls to all demo UIs.
 - Add high-contrast screenshot checks for future visual asset refreshes.
 - Add mobile viewport screenshots to the visual asset manifest.

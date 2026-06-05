@@ -1,6 +1,6 @@
 # GitHub Profile Pin Verification Examples
 
-Use this page when checking whether the repository is pinned on the GitHub profile. Read it with `docs/github_repository_settings.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/social_preview_verification_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
+Use this page when checking whether the repository is pinned on the GitHub profile. Read it with `docs/github_repository_settings.md`, `docs/github_repository_settings_screenshot_checklist.md`, `docs/stale_profile_pin_evidence_examples.md`, `docs/social_preview_verification_examples.md`, `docs/stale_social_preview_cache_examples.md`, `docs/post_publish_checklist.md`, `docs/post_publish_warning_examples.md`, and `docs/command_output_troubleshooting_map.md`.
 
 The core rule: repository readiness, social preview setup, and profile pin setup prove different things. Do not claim the profile pin is configured until account-profile evidence confirms it.
 
@@ -140,12 +140,15 @@ Use public or redacted account-profile evidence. Do not add private account scre
 
 Use `docs/stale_profile_pin_evidence_examples.md` before treating old profile screenshots, wrong pinned repositories, stale profile caches, social-preview confusion, or private account UI crops as current profile-pin evidence.
 
+Use `docs/stale_social_preview_cache_examples.md` before treating old social-preview images, wrong uploaded images, cache delays, profile-pin confusion, or private account UI crops as profile-pin evidence.
+
 ## Review Checklist
 
 - `docs/github_repository_settings.md` still names the intended repository and profile-pin timing.
 - `docs/github_repository_settings_screenshot_checklist.md` is used before retaining or sharing profile screenshots.
 - `docs/stale_profile_pin_evidence_examples.md` is used before stale profile-pin evidence becomes a public claim.
 - `docs/social_preview_verification_examples.md` is used only for social preview evidence.
+- `docs/stale_social_preview_cache_examples.md` is used before stale preview-card evidence becomes profile-pin evidence.
 - `python -B scripts/dev.py github-readiness` has no hard failures when the GitHub API is reachable.
 - `python -B scripts/dev.py launch-assets` passes after release-facing wording changes.
 - `python -B scripts/dev.py safety` passes before committing public docs.
