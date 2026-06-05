@@ -52,7 +52,7 @@ Create issues for:
 - add PostgreSQL storage adapter prototype
 - add per-case eval regression reports
 - add red-team eval pack
-- add compact stale GitHub Discussions pin examples
+- add compact stale release-page screenshot examples
 - run and publish Docker verification from `python -B scripts/dev.py docker-runtime`
 
 These give contributors clear entry points and connect public issues to real engineering work.

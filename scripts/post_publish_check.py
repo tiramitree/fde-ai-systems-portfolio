@@ -117,6 +117,7 @@ def main() -> int:
         "docs/github_repository_settings_screenshot_checklist.md",
         "docs/public_roadmap_issue_comment_examples.md",
         "docs/github_discussions_launch_checklist.md",
+        "docs/stale_github_discussions_pin_examples.md",
         "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/branch_protection_verification_examples.md",
         "docs/github_repository_settings.md",

@@ -48,6 +48,7 @@ GITHUB_REPOSITORY_SETTINGS_SCREENSHOT_CHECKLIST = ROOT / "docs" / "github_reposi
 LAUNCH_FEEDBACK_COLLECTION_EXAMPLES = ROOT / "docs" / "launch_feedback_collection_examples.md"
 STALE_LAUNCH_FEEDBACK_CLAIM_EXAMPLES = ROOT / "docs" / "stale_launch_feedback_claim_examples.md"
 GITHUB_DISCUSSIONS_LAUNCH_CHECKLIST = ROOT / "docs" / "github_discussions_launch_checklist.md"
+STALE_GITHUB_DISCUSSIONS_PIN_EXAMPLES = ROOT / "docs" / "stale_github_discussions_pin_examples.md"
 SOCIAL_PREVIEW_VERIFICATION_EXAMPLES = ROOT / "docs" / "social_preview_verification_examples.md"
 PROFILE_PIN_VERIFICATION_EXAMPLES = ROOT / "docs" / "profile_pin_verification_examples.md"
 GITHUB_ACTIONS_WARNING_EXAMPLES = ROOT / "docs" / "github_actions_warning_examples.md"
@@ -531,6 +532,7 @@ def check_discussion_to_issue_conversion_examples() -> list[str]:
     required_phrases = [
         "Discussion To Issue Conversion Examples",
         "docs/github_discussions_launch_checklist.md",
+        "docs/stale_github_discussions_pin_examples.md",
         "docs/public_roadmap_issue_comment_examples.md",
         "docs/issue_triage_sla_wording_examples.md",
         "docs/roadmap_duplicate_issue_handling_examples.md",
@@ -547,7 +549,9 @@ def check_discussion_to_issue_conversion_examples() -> list[str]:
         "one affected file, command, route, or workflow",
         "support SLAs, production support, delivery dates, private-account access, or guaranteed roadmap acceptance",
         "Use `docs/roadmap_duplicate_issue_handling_examples.md` before opening a new issue that may duplicate or overlap existing roadmap scope",
+        "Use `docs/stale_github_discussions_pin_examples.md` before treating a pinned or linked discussion as current issue scope",
         "Duplicate or overlapping discussion-to-issue paths are reviewed with `docs/roadmap_duplicate_issue_handling_examples.md`",
+        "Pinned or linked discussions are reviewed with `docs/stale_github_discussions_pin_examples.md` before they are treated as current issue scope",
         "python -B scripts/dev.py community-issues",
         "python -B scripts/dev.py pr-policy",
         "python -B scripts/dev.py launch-assets",
@@ -562,6 +566,7 @@ def check_discussion_to_issue_conversion_examples() -> list[str]:
         "README.md": "docs/discussion_to_issue_conversion_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/discussion_to_issue_conversion_examples.md",
         "docs/github_discussions_launch_checklist.md": "docs/discussion_to_issue_conversion_examples.md",
+        "docs/stale_github_discussions_pin_examples.md": "docs/discussion_to_issue_conversion_examples.md",
         "docs/public_roadmap_issue_comment_examples.md": "docs/discussion_to_issue_conversion_examples.md",
         "docs/issue_triage_sla_wording_examples.md": "docs/discussion_to_issue_conversion_examples.md",
         "docs/roadmap_duplicate_issue_handling_examples.md": "docs/discussion_to_issue_conversion_examples.md",
@@ -687,6 +692,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/dependabot_secret_scanning_verification_examples.md",
         "docs/launch_feedback_collection_examples.md",
         "docs/stale_launch_feedback_claim_examples.md",
+        "docs/stale_github_discussions_pin_examples.md",
         "docs/social_preview_verification_examples.md",
         "docs/profile_pin_verification_examples.md",
         "docs/command_output_troubleshooting_map.md",
@@ -713,7 +719,9 @@ def check_post_publish_warning_examples() -> list[str]:
         "Use `docs/public_maintainer_status_update_examples.md` before summarizing warnings or manual rows in a public maintainer update",
         "Use `docs/issue_template_stale_evidence_examples.md` before editing issue templates or seeded issue bodies that ask contributors for command output",
         "Use `docs/stale_launch_feedback_claim_examples.md` before treating stale feedback counts, stale comments, private feedback summaries, analytics screenshots, or launch-post reposts as current public evidence",
+        "Use `docs/stale_github_discussions_pin_examples.md` before treating global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references as current public evidence",
         "Stale launch-feedback claims are reviewed before public docs mention old stars, forks, public comments, private feedback summaries, analytics screenshots, or launch-post reposts",
+        "Stale GitHub Discussions pins are reviewed before public docs claim global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references are current",
         "Use `docs/release_asset_checksum_mismatch_examples.md` before treating local hashes, changed generated artifact hashes, screenshot-visible attachments, or public release attachments as current release evidence",
         "Release asset checksum mismatches are reviewed before public docs claim release attachments, screenshots, or hashes are current",
         "Issue templates ask for current reproducible evidence and do not request stale output, private screenshots, local machine details, generated artifacts as source, or account-level material",
@@ -730,6 +738,7 @@ def check_post_publish_warning_examples() -> list[str]:
         "docs/public_maintainer_status_update_examples.md": "docs/post_publish_warning_examples.md",
         "docs/issue_template_stale_evidence_examples.md": "docs/post_publish_warning_examples.md",
         "docs/stale_launch_feedback_claim_examples.md": "docs/post_publish_warning_examples.md",
+        "docs/stale_github_discussions_pin_examples.md": "docs/post_publish_warning_examples.md",
         "docs/release_asset_checksum_mismatch_examples.md": "docs/post_publish_warning_examples.md",
     }
     for rel_path, phrase in cross_references.items():
@@ -1011,6 +1020,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "docs/launch_copy_pack.md",
         "docs/star_growth_plan.md",
         "docs/stale_launch_feedback_claim_examples.md",
+        "docs/stale_github_discussions_pin_examples.md",
         "docs/published_repository_status.md",
         "docs/post_publish_checklist.md",
         "docs/post_publish_warning_examples.md",
@@ -1039,6 +1049,8 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "Use `docs/public_maintainer_status_update_examples.md` before turning launch feedback or repository progress into a public maintainer update",
         "Use `docs/stale_launch_feedback_claim_examples.md` before treating stale feedback counts, stale comments, private feedback summaries, analytics screenshots, or launch-post reposts as public evidence",
         "`docs/stale_launch_feedback_claim_examples.md` keeps stale launch-feedback claims separate from current public evidence",
+        "Use `docs/stale_github_discussions_pin_examples.md` before treating pinned discussion topics or old launch-feedback discussion references as current feedback evidence",
+        "`docs/stale_github_discussions_pin_examples.md` keeps stale pinned discussion topics separate from current launch feedback and issue scope",
         "keeps maintainer updates separate from launch feedback, private messages, analytics, and roadmap promises",
         "docs/issue_triage_sla_wording_examples.md",
         "Use `docs/discussion_to_issue_conversion_examples.md` before turning a discussion into a scoped issue",
@@ -1052,6 +1064,7 @@ def check_launch_feedback_collection_examples() -> list[str]:
         "README.md": "docs/launch_feedback_collection_examples.md",
         "PROJECT_CONTENT_INDEX.md": "docs/launch_feedback_collection_examples.md",
         "docs/stale_launch_feedback_claim_examples.md": "docs/launch_feedback_collection_examples.md",
+        "docs/stale_github_discussions_pin_examples.md": "docs/launch_feedback_collection_examples.md",
         "docs/launch_copy_pack.md": "docs/launch_feedback_collection_examples.md",
         "docs/star_growth_plan.md": "docs/launch_feedback_collection_examples.md",
         "docs/published_repository_status.md": "docs/launch_feedback_collection_examples.md",
@@ -1188,6 +1201,7 @@ def check_github_discussions_launch_checklist() -> list[str]:
         "docs/community_backlog.md",
         "docs/github_initial_issues.md",
         "docs/launch_feedback_collection_examples.md",
+        "docs/stale_github_discussions_pin_examples.md",
         "docs/issue_triage_sla_wording_examples.md",
         "docs/discussion_to_issue_conversion_examples.md",
         "docs/maintainer_review_policy.md",
@@ -1215,8 +1229,10 @@ def check_github_discussions_launch_checklist() -> list[str]:
         "python -B scripts/dev.py quality",
         "private messages, account analytics, personal account details, secrets, customer data, or private screenshots",
         "Use `docs/issue_triage_sla_wording_examples.md` before converting discussion replies into public issue response expectations",
+        "Use `docs/stale_github_discussions_pin_examples.md` before claiming global pins, category pins, starter topics, wrong-category links, or old launch-feedback discussion references are current",
         "Use `docs/discussion_to_issue_conversion_examples.md` before turning a discussion into a scoped issue",
         "Discussion volume, untriaged ideas, private feedback, and accepted issue scope stay separate",
+        "Stale global pins, category pins, starter topics, wrong-category links, and old launch-feedback discussion references are reviewed with `docs/stale_github_discussions_pin_examples.md`",
     ]
     for phrase in required_phrases:
         if phrase not in text:
@@ -1226,11 +1242,63 @@ def check_github_discussions_launch_checklist() -> list[str]:
         "README.md": "docs/github_discussions_launch_checklist.md",
         "PROJECT_CONTENT_INDEX.md": "docs/github_discussions_launch_checklist.md",
         "docs/launch_feedback_collection_examples.md": "docs/github_discussions_launch_checklist.md",
+        "docs/stale_github_discussions_pin_examples.md": "docs/github_discussions_launch_checklist.md",
         "docs/issue_triage_sla_wording_examples.md": "docs/github_discussions_launch_checklist.md",
         "docs/discussion_to_issue_conversion_examples.md": "docs/github_discussions_launch_checklist.md",
         "docs/maintainer_review_policy.md": "github_discussions_launch_checklist.md",
         "docs/post_publish_checklist.md": "docs/github_discussions_launch_checklist.md",
         "docs/published_repository_status.md": "docs/github_discussions_launch_checklist.md",
+    }
+    for rel_path, phrase in cross_references.items():
+        if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
+            failures.append(f"{rel_path}: missing {phrase!r}")
+    return failures
+
+
+def check_stale_github_discussions_pin_examples() -> list[str]:
+    failures: list[str] = []
+    if not STALE_GITHUB_DISCUSSIONS_PIN_EXAMPLES.exists():
+        return ["missing docs/stale_github_discussions_pin_examples.md"]
+
+    text = STALE_GITHUB_DISCUSSIONS_PIN_EXAMPLES.read_text(encoding="utf-8")
+    required_phrases = [
+        "Stale GitHub Discussions Pin Examples",
+        "docs/github_discussions_launch_checklist.md",
+        "docs/discussion_to_issue_conversion_examples.md",
+        "docs/launch_feedback_collection_examples.md",
+        "docs/post_publish_warning_examples.md",
+        "Expected Evidence Split",
+        "Stale Global Pins",
+        "Stale Category Pins",
+        "Outdated Starter Topics",
+        "Wrong-Category Links",
+        "Old Launch-Feedback Discussion References",
+        "Review Checklist",
+        "GitHub Discussions setup, pinned topics, issue scope, launch feedback, private feedback, and roadmap acceptance prove different things",
+        "Do not claim Discussions are current until visible public evidence confirms the pins",
+        "global pins, category pins, starter topics, wrong-category links, and old launch-feedback discussion references",
+        "Local docs can define intended categories, starter topics, routing, and moderation boundaries",
+        "They do not prove that the public Discussions page is enabled, pinned, unpinned, or refreshed",
+        "Private messages, account analytics, personal account details, secrets, customer data, private screenshots, and local machine details are not committed",
+        "python -B scripts/dev.py community-issues",
+        "python -B scripts/dev.py launch-assets",
+        "python -B scripts/dev.py safety",
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py github-readiness",
+        "python -B scripts/post_publish_check.py",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            failures.append(f"docs/stale_github_discussions_pin_examples.md: missing {phrase!r}")
+
+    cross_references = {
+        "README.md": "docs/stale_github_discussions_pin_examples.md",
+        "PROJECT_CONTENT_INDEX.md": "docs/stale_github_discussions_pin_examples.md",
+        "docs/post_publish_checklist.md": "docs/stale_github_discussions_pin_examples.md",
+        "docs/github_discussions_launch_checklist.md": "docs/stale_github_discussions_pin_examples.md",
+        "docs/discussion_to_issue_conversion_examples.md": "docs/stale_github_discussions_pin_examples.md",
+        "docs/launch_feedback_collection_examples.md": "docs/stale_github_discussions_pin_examples.md",
+        "docs/post_publish_warning_examples.md": "docs/stale_github_discussions_pin_examples.md",
     }
     for rel_path, phrase in cross_references.items():
         if phrase not in (ROOT / rel_path).read_text(encoding="utf-8"):
@@ -2376,6 +2444,7 @@ def main() -> int:
     failures.extend(check_stale_launch_feedback_claim_examples())
     failures.extend(check_public_maintainer_status_update_examples())
     failures.extend(check_github_discussions_launch_checklist())
+    failures.extend(check_stale_github_discussions_pin_examples())
     failures.extend(check_social_preview_verification_examples())
     failures.extend(check_profile_pin_verification_examples())
     failures.extend(check_github_actions_warning_examples())
