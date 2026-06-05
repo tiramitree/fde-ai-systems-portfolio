@@ -118,6 +118,7 @@ The first public issue wave was created after the initial release and is now com
 - Add compact issue template stale-evidence examples
 - Add compact stale launch-feedback claim examples
 - Add compact release asset checksum mismatch examples
+- Add compact stale GitHub Discussions pin examples
 
 Keep this record so future maintainers understand why those capabilities already exist in the repository.
 
@@ -242,7 +243,7 @@ Acceptance criteria:
 Title:
 
 ```text
-Add compact stale GitHub Discussions pin examples
+Add compact stale release-page screenshot examples
 ```
 
 Labels:
@@ -254,15 +255,14 @@ documentation, good first issue
 Body:
 
 ```text
-Add compact stale GitHub Discussions pin examples that explain how to handle old pinned topics, stale starter posts, wrong category pins, and discussion links that no longer reflect the current repository state.
+Add compact stale release-page screenshot examples that explain how to handle old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, and private account UI crops without turning screenshots into current release evidence.
 
 Acceptance criteria:
 
-- Add docs/stale_github_discussions_pin_examples.md with examples for stale global pins, stale category pins, outdated starter topics, wrong-category links, and old launch-feedback discussion references.
-- Reference docs/github_discussions_launch_checklist.md, docs/discussion_to_issue_conversion_examples.md, docs/launch_feedback_collection_examples.md, and docs/post_publish_warning_examples.md.
-- Keep GitHub Discussions setup, pinned topics, issue scope, launch feedback, private feedback, and roadmap acceptance separate; do not claim Discussions are current until visible public evidence confirms the pins.
+- Add docs/stale_release_page_screenshot_examples.md with examples for old release-page screenshots, stale latest-release screenshots, missing attachment screenshots, wrong-tag screenshots, and private account UI crops.
+- Reference docs/github_release_page_troubleshooting_examples.md, docs/github_latest_release_troubleshooting_examples.md, docs/github_release_attachment_screenshot_checklist.md, and docs/post_publish_warning_examples.md.
+- Keep release-page existence, latest-release selection, attachment state, screenshot evidence, and private account UI separate; do not claim a release page is current until public evidence confirms it.
 - Link the examples from README.md and PROJECT_CONTENT_INDEX.md.
-- python -B scripts/dev.py community-issues still passes.
 - python -B scripts/dev.py launch-assets still passes.
 - python -B scripts/dev.py safety still passes.
 - python -B scripts/dev.py quality still passes.

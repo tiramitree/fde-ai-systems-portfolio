@@ -33,6 +33,7 @@ The post-publish check must prove:
 - the issue triage SLA wording examples are published: `docs/issue_triage_sla_wording_examples.md`.
 - the discussion-to-issue conversion examples are published: `docs/discussion_to_issue_conversion_examples.md`.
 - the GitHub Discussions launch checklist is published: `docs/github_discussions_launch_checklist.md`.
+- the stale GitHub Discussions pin examples are published: `docs/stale_github_discussions_pin_examples.md`.
 - the Dependabot and secret-scanning verification examples are published: `docs/dependabot_secret_scanning_verification_examples.md`.
 - the GitHub repository metadata troubleshooting examples are published.
 - the public maintainer status update examples are published: `docs/public_maintainer_status_update_examples.md`.
@@ -94,11 +95,12 @@ After the automated check passes:
 26. Run `python -B scripts/dev.py github-community` to dry-run label sync and optional community issue creation before changing public issue state.
 27. Compare label warnings with `docs/github_label_troubleshooting_examples.md` before applying label sync or creating public roadmap issues.
 28. Compare GitHub Discussions setup, categories, pinned starter topics, moderation rules, and launch-feedback boundaries with `docs/github_discussions_launch_checklist.md` before claiming Discussions are launch-ready.
-29. Compare discussion-to-issue conversions with `docs/discussion_to_issue_conversion_examples.md` before turning Q&A, ideas, private feedback, or low-signal discussions into public issue scope.
-30. Compare duplicate or overlapping roadmap issues with `docs/roadmap_duplicate_issue_handling_examples.md` before closing, merging, splitting, or redirecting public issue scope.
-31. Compare issue templates and seeded issue bodies with `docs/issue_template_stale_evidence_examples.md` before asking contributors for command output, screenshots, generated artifacts, account-level evidence, or roadmap evidence.
-32. Compare public maintainer updates with `docs/public_maintainer_status_update_examples.md` before summarizing local progress, pushed code, remote warnings, manual account setup, launch feedback, or roadmap scope.
-33. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
+29. Compare stale global pins, category pins, starter topics, wrong-category links, and old launch-feedback discussion references with `docs/stale_github_discussions_pin_examples.md` before claiming Discussions pins are current.
+30. Compare discussion-to-issue conversions with `docs/discussion_to_issue_conversion_examples.md` before turning Q&A, ideas, private feedback, or low-signal discussions into public issue scope.
+31. Compare duplicate or overlapping roadmap issues with `docs/roadmap_duplicate_issue_handling_examples.md` before closing, merging, splitting, or redirecting public issue scope.
+32. Compare issue templates and seeded issue bodies with `docs/issue_template_stale_evidence_examples.md` before asking contributors for command output, screenshots, generated artifacts, account-level evidence, or roadmap evidence.
+33. Compare public maintainer updates with `docs/public_maintainer_status_update_examples.md` before summarizing local progress, pushed code, remote warnings, manual account setup, launch feedback, or roadmap scope.
+34. Compare authenticated maintenance output with `docs/github_authenticated_maintenance_troubleshooting_examples.md` before claiming account-level maintenance has been applied.
 
 ## Optional Backlog Seeding
 

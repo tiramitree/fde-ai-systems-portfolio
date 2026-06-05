@@ -293,6 +293,7 @@ Release and growth:
 - `docs/post_publish_warning_examples.md`: post-publish warning examples for remote file lag, raw README failures, GitHub Actions pending state, readiness warning rows, and manual account settings.
 - `docs/public_maintainer_status_update_examples.md`: public maintainer status update examples for local-only progress, pushed-but-pending checks, remote warning/manual items, roadmap updates without dates, and blocked optional environments.
 - `docs/github_discussions_launch_checklist.md`: GitHub Discussions launch checklist for categories, pinned starter topics, moderation rules, channel routing, and launch-feedback evidence boundaries.
+- `docs/stale_github_discussions_pin_examples.md`: stale GitHub Discussions pin examples for global pins, category pins, starter topics, wrong-category links, and old launch-feedback discussion references.
 - `docs/dependabot_secret_scanning_verification_examples.md`: Dependabot and secret-scanning verification examples for missing config, stale alerts, setting confusion, false-positive alerts, and local safety scan boundaries.
 - `docs/github_actions_warning_examples.md`: GitHub Actions warning examples for pending quality-gate, missing workflow runs, stale badges, skipped workflows, and fork PR permission limits.
 - `docs/github_actions_badge_verification_examples.md`: GitHub Actions badge verification examples for README badge URL, current remote workflow evidence, stale badge rendering, skipped workflows, and fork PR confusion.

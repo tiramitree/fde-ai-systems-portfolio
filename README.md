@@ -640,6 +640,7 @@ repository/
 - [Public Maintainer Status Update Examples](docs/public_maintainer_status_update_examples.md)
 - [Post-Publish Warning Examples](docs/post_publish_warning_examples.md)
 - [GitHub Discussions Launch Checklist](docs/github_discussions_launch_checklist.md)
+- [Stale GitHub Discussions Pin Examples](docs/stale_github_discussions_pin_examples.md)
 - [GitHub Repository Settings](docs/github_repository_settings.md)
 - [GitHub Repository Settings Screenshot Checklist](docs/github_repository_settings_screenshot_checklist.md)
 - [GitHub Label Troubleshooting Examples](docs/github_label_troubleshooting_examples.md)
