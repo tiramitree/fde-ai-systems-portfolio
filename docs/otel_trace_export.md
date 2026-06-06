@@ -10,7 +10,7 @@ resourceSpans
   -> span attributes and events
 ```
 
-The exporter is deterministic and local-first. It does not require an OpenTelemetry collector, network access, or an API key. For optional collector handoff notes, see `docs/opentelemetry_collector_handoff_troubleshooting.md`.
+The exporter is deterministic and local-first. It does not require an OpenTelemetry collector, network access, or an API key for the default path. When a collector is available, the same script can optionally POST OTLP/HTTP JSON to a traces endpoint without adding runtime dependencies. For collector handoff notes, see `docs/opentelemetry_collector_handoff_troubleshooting.md`.
 
 ## Command
 
@@ -28,6 +28,21 @@ otel_traces.json
 ```
 
 That file is generated output and ignored by git.
+
+Validate the optional collector handoff path without a real collector:
+
+```bash
+python -B scripts/dev.py otel-collector-handoff
+```
+
+Send the generated payload to a local OTLP HTTP collector:
+
+```bash
+python -B scripts/dev.py replay
+python -B scripts/export_traces_otel.py --send-otlp-http --otlp-http-endpoint http://127.0.0.1:4318
+```
+
+The exporter appends `/v1/traces` to `--otlp-http-endpoint`, matching the OTLP/HTTP traces path. If `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` or `--otlp-http-traces-endpoint` is provided, that signal-specific endpoint is used as-is. This handoff intentionally uses OTLP/HTTP JSON; if `OTEL_EXPORTER_OTLP_PROTOCOL` is set, use `http/json`.
 
 ## Mapping
 
@@ -50,7 +65,7 @@ Important attributes:
 Important events:
 
 - `retrieval.completed`
-- `evidence.cited`
+- `evidence.cited`, including citation source-span line metadata when present
 - `security.event`
 
 Project 2 traces become `ops_agent.process_message` spans.
@@ -110,10 +125,11 @@ Important events:
 
 ## Production Path
 
-In production, this local exporter would become one of two paths:
+In production, this local exporter would become one of three paths:
 
 1. Native OpenTelemetry SDK instrumentation around API handlers, retrieval, model calls, tool calls, approval writes, release decisions, eval gates, and audit writes.
 2. A batch bridge that converts persisted trace records into OTLP JSON and sends them to an OpenTelemetry Collector.
+3. A backend-specific exporter adapter for hosted observability platforms when they require authentication, tenancy headers, or vendor-specific ingest URLs.
 
 The production design should preserve the same invariants:
 
@@ -128,3 +144,4 @@ The production design should preserve the same invariants:
 
 - OpenTelemetry Protocol File Exporter: https://opentelemetry.io/docs/specs/otel/protocol/file-exporter/
 - OpenTelemetry Protocol Exporter: https://opentelemetry.io/docs/specs/otel/protocol/exporter/
+- OTLP Specification: https://opentelemetry.io/docs/specs/otlp/

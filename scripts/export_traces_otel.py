@@ -3,16 +3,22 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.error import HTTPError, URLError
+from urllib.parse import parse_qsl, quote, unquote, urlencode, urlsplit, urlunsplit
+from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "otel_traces.json"
 INSTRUMENTATION_SCOPE = "fde-ai-systems-portfolio.local-trace-exporter"
 INSTRUMENTATION_VERSION = "0.1.0"
+DEFAULT_OTLP_HTTP_ENDPOINT = "http://localhost:4318"
+DEFAULT_OTLP_HTTP_TIMEOUT_SECONDS = 10.0
 
 PROJECTS = [
     {
@@ -84,6 +90,90 @@ def event(time_nano: int, name: str, attributes: dict[str, Any] | None = None) -
     }
 
 
+def parse_otlp_headers(value: str) -> dict[str, str]:
+    if not value.strip():
+        return {}
+    headers: dict[str, str] = {}
+    for raw_pair in value.split(","):
+        pair = raw_pair.strip()
+        if not pair:
+            continue
+        if "=" not in pair:
+            raise ValueError("OTLP headers must use key=value pairs separated by commas.")
+        key, raw_value = pair.split("=", 1)
+        key = unquote(key.strip())
+        if not key:
+            raise ValueError("OTLP header keys cannot be empty.")
+        headers[key] = unquote(raw_value.strip())
+    return headers
+
+
+def endpoint_with_traces_path(base_endpoint: str) -> str:
+    parsed = urlsplit(base_endpoint)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise ValueError("OTLP HTTP endpoint must be an http:// or https:// URL with a host.")
+
+    base_path = parsed.path or "/"
+    if not base_path.endswith("/"):
+        base_path += "/"
+    path = base_path + "v1/traces"
+    query = urlencode(parse_qsl(parsed.query, keep_blank_values=True), doseq=True, quote_via=quote)
+    return urlunsplit((parsed.scheme, parsed.netloc, path, query, ""))
+
+
+def resolve_otlp_traces_url(base_endpoint: str | None, traces_endpoint: str | None) -> str:
+    if traces_endpoint:
+        parsed = urlsplit(traces_endpoint)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError("OTLP traces endpoint must be an http:// or https:// URL with a host.")
+        return traces_endpoint
+    return endpoint_with_traces_path(base_endpoint or DEFAULT_OTLP_HTTP_ENDPOINT)
+
+
+def ensure_http_json_protocol() -> None:
+    protocol = (
+        os.environ.get("OTEL_EXPORTER_OTLP_TRACES_PROTOCOL")
+        or os.environ.get("OTEL_EXPORTER_OTLP_PROTOCOL")
+        or "http/json"
+    )
+    if protocol != "http/json":
+        raise ValueError(
+            "This dependency-free handoff sends OTLP/HTTP JSON. "
+            "Set OTEL_EXPORTER_OTLP_PROTOCOL=http/json or omit the protocol variable."
+        )
+
+
+def merged_otlp_headers(cli_headers: list[str]) -> dict[str, str]:
+    merged: dict[str, str] = {}
+    for env_name in ("OTEL_EXPORTER_OTLP_HEADERS", "OTEL_EXPORTER_OTLP_TRACES_HEADERS"):
+        merged.update(parse_otlp_headers(os.environ.get(env_name, "")))
+    for header in cli_headers:
+        merged.update(parse_otlp_headers(header))
+    return merged
+
+
+def send_otlp_http_json(payload: dict, url: str, headers: dict[str, str], timeout: float) -> tuple[int, str]:
+    request_headers = {
+        "Content-Type": "application/json",
+        "User-Agent": f"{INSTRUMENTATION_SCOPE}/{INSTRUMENTATION_VERSION}",
+        **headers,
+    }
+    request = Request(
+        url,
+        data=json.dumps(payload, separators=(",", ":")).encode("utf-8"),
+        headers=request_headers,
+        method="POST",
+    )
+    try:
+        with urlopen(request, timeout=timeout) as response:
+            return response.status, response.read().decode("utf-8", errors="replace")
+    except HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"OTLP HTTP export failed with status {exc.code}: {body}") from exc
+    except URLError as exc:
+        raise RuntimeError(f"OTLP HTTP export failed: {exc}") from exc
+
+
 def load_state(path: Path) -> dict:
     if not path.exists():
         return {"traces": []}
@@ -152,6 +242,7 @@ def copilot_span(project: str, trace: dict) -> dict:
         )
     ]
     for citation in output.get("citations", []):
+        source_span = citation.get("source_span", {})
         events.append(
             event(
                 start,
@@ -161,6 +252,9 @@ def copilot_span(project: str, trace: dict) -> dict:
                     "chunk_id": citation.get("chunk_id", ""),
                     "title": citation.get("title", ""),
                     "score": citation.get("score", 0),
+                    "source_span.text_unit": source_span.get("text_unit", ""),
+                    "source_span.start_line": source_span.get("start_line", 0),
+                    "source_span.end_line": source_span.get("end_line", 0),
                 },
             )
         )
@@ -383,6 +477,33 @@ def main() -> int:
         description="Export local demo trace records to an OTLP/JSON-compatible resourceSpans payload.",
     )
     parser.add_argument("output", nargs="?", default=str(DEFAULT_OUTPUT))
+    parser.add_argument(
+        "--send-otlp-http",
+        action="store_true",
+        help="Also POST the OTLP/JSON payload to an optional OTLP HTTP collector endpoint.",
+    )
+    parser.add_argument(
+        "--otlp-http-endpoint",
+        default=os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT"),
+        help="Base OTLP HTTP endpoint; /v1/traces is appended. Defaults to OTEL_EXPORTER_OTLP_ENDPOINT or http://localhost:4318.",
+    )
+    parser.add_argument(
+        "--otlp-http-traces-endpoint",
+        default=os.environ.get("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT"),
+        help="Signal-specific traces endpoint used as-is. Defaults to OTEL_EXPORTER_OTLP_TRACES_ENDPOINT.",
+    )
+    parser.add_argument(
+        "--otlp-http-header",
+        action="append",
+        default=[],
+        help="Additional OTLP header in key=value form. May be repeated. Values are not printed.",
+    )
+    parser.add_argument(
+        "--otlp-http-timeout",
+        type=float,
+        default=DEFAULT_OTLP_HTTP_TIMEOUT_SECONDS,
+        help="OTLP HTTP request timeout in seconds.",
+    )
     args = parser.parse_args()
 
     resource_spans, total, counts = collect_resource_spans()
@@ -401,6 +522,17 @@ def main() -> int:
             file=sys.stderr,
         )
         return 1
+    if args.send_otlp_http:
+        try:
+            ensure_http_json_protocol()
+            url = resolve_otlp_traces_url(args.otlp_http_endpoint, args.otlp_http_traces_endpoint)
+            headers = merged_otlp_headers(args.otlp_http_header)
+            status, response_body = send_otlp_http_json(payload, url, headers, args.otlp_http_timeout)
+        except (RuntimeError, ValueError) as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
+        suffix = f"; response bytes={len(response_body.encode('utf-8'))}"
+        print(f"Sent {total} span(s) to OTLP HTTP traces endpoint {url} with status {status}{suffix}")
     return 0
 
 

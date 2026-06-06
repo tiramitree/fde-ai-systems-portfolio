@@ -8,7 +8,7 @@ python -B scripts/dev.py observability
 
 This gate starts the demo systems on isolated ports, resets local demo state, runs the critical technical review flows, and then checks the evidence surfaces that a reviewer would inspect after the fact.
 
-Use `docs/trace_timeline_examples.md` for copyable local timelines that connect each canonical request to its response `trace_id`, persisted trace record, audit event, approval queue entry, or release decision. Use `docs/opentelemetry_collector_handoff_troubleshooting.md` when local OTLP/JSON evidence needs an optional collector handoff without changing the default local proof path.
+Use `docs/trace_timeline_examples.md` for copyable local timelines that connect each canonical request to its response `trace_id`, persisted trace record, audit event, approval queue entry, or release decision. Use `docs/opentelemetry_collector_handoff_troubleshooting.md` when local OTLP/JSON evidence needs an optional collector handoff without changing the default local proof path. Run `python -B scripts/dev.py otel-collector-handoff` to verify the OTLP/HTTP JSON POST path against a local collector stub.
 
 ## What It Proves
 
@@ -51,6 +51,7 @@ If a technical reviewer asks "How would you debug an unsafe answer or unintended
 The local JSON store is intentionally simple. In production, the same evidence contract maps to:
 
 - OpenTelemetry spans for request, retrieval, model, tool, and release-triage steps
+- an OTLP/HTTP collector or hosted trace backend receiving the same persisted evidence in batches
 - append-only audit/event tables
 - approval workflow tables with idempotency keys
 - release decision tables linked to eval run IDs and incident IDs

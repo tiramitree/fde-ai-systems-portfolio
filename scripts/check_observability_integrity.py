@@ -176,6 +176,24 @@ def trace_timeline_doc_checks() -> list[Check]:
                 rel_path,
             )
         )
+    docs_to_markers = {
+        "README.md": ["python -B scripts/dev.py otel-collector-handoff"],
+        "PROJECT_CONTENT_INDEX.md": ["scripts/check_otel_collector_handoff.py"],
+        "docs/observability_integrity.md": ["python -B scripts/dev.py otel-collector-handoff"],
+        "docs/otel_trace_export.md": [
+            "--send-otlp-http",
+            "OTEL_EXPORTER_OTLP_PROTOCOL",
+            "python -B scripts/dev.py otel-collector-handoff",
+        ],
+        "docs/opentelemetry_collector_handoff_troubleshooting.md": [
+            "scripts/check_otel_collector_handoff.py",
+            "OTEL_EXPORTER_OTLP_PROTOCOL=http/json",
+        ],
+    }
+    for rel_path, markers in docs_to_markers.items():
+        text = (ROOT / rel_path).read_text(encoding="utf-8")
+        for marker in markers:
+            checks.append(require_text(text, marker, rel_path))
     return checks
 
 

@@ -131,7 +131,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, postgres-compose, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-collector-handoff, otel-traces, postgres-compose, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -172,7 +172,8 @@ Local Git state:
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
 - `scripts/run_all_evals.py`: runs all project eval suites.
 - `scripts/export_eval_csv.py`: exports repository eval summary rows to `eval_summaries.csv`.
-- `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload.
+- `scripts/check_otel_collector_handoff.py`: verifies optional OTLP/HTTP JSON collector handoff behavior with a local in-process collector stub.
+- `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload and can optionally POST OTLP/HTTP JSON to a configured traces endpoint.
 - `scripts/replay_demo.py`: starts clean reset demo services, runs the release validation path, and prints trace/approval evidence.
 - `scripts/export_demo_replay_artifact.py`: writes release-attachable Markdown and JSON replay evidence under ignored `out/`.
 - `scripts/smoke_test_demo_flows.py`: exercises the critical demo paths end to end.
@@ -224,7 +225,7 @@ Design Review Docs:
 - `infra/postgres/init/003_project1_runtime_grants.sql`: local compose grants for Project 1 runtime access while preserving RLS.
 - `scripts/check_postgres_migrations.py`: static migration guard for pgvector, tenant/role RLS, approval visibility, eval isolation, and unsafe migration markers.
 - `scripts/check_project1_postgres_runtime.py`: runtime guard for `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, docs, and optional live checks.
-- `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
+- `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping, optional OTLP/HTTP JSON handoff command, and production collector path.
 - `docs/opentelemetry_collector_handoff_troubleshooting.md`: optional collector handoff troubleshooting, endpoint boundaries, failure modes, rollback, and claim wording.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/openai_live_mode_troubleshooting.md`: optional OpenAI live-mode setup, safe failure modes, rollback, and review guardrails.

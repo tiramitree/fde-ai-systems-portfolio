@@ -96,6 +96,7 @@ Project 1 runtime switch:
 - `PostgresKnowledgeRepository.list_retrieval_candidates` adds `postgres_hybrid_sql_v1`, a SQL-backed keyword/vector candidate selection path that applies tenant and role filters before `websearch_to_tsquery` and pgvector nearest-neighbor retrieval.
 - `local-evidence-reranker-v1` provides a deterministic reranker boundary with feature-level rerank scores so production rerankers can be added without changing the permission or citation invariants.
 - Project 1 chunk metadata now carries normalized-text `source_span` values through JSON seed state, admin ingestion, citation output, traces, and the optional PostgreSQL adapter.
+- `scripts/export_traces_otel.py --send-otlp-http` adds an optional OTLP/HTTP JSON collector handoff path, while `scripts/check_otel_collector_handoff.py` verifies the POST behavior with a local collector stub so hosted observability remains opt-in.
 
 Next steps:
 
@@ -105,7 +106,8 @@ Next steps:
 4. Replace the deterministic local hashing embedding with a production embedding model.
 5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, rerank quality, citation span accuracy, and stale-source handling.
 6. Replace the deterministic reranker with a production reranker provider behind the existing boundary.
-7. Add PostgreSQL row-level security tests against a running database.
+7. Send OTLP traces to a real collector or hosted backend in a documented target environment, preserving the local collector-stub check as the default CI proof.
+8. Add PostgreSQL row-level security tests against a running database.
 8. Add eval cases from real failure logs.
 
 ## Project 2 Upgrade Path

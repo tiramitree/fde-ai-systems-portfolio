@@ -13,7 +13,7 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 ## Intermediate Issues
 
 1. Add production reranking and retrieval-quality metrics for the existing keyword/vector candidate path.
-2. Add live OTLP HTTP export to an OpenTelemetry Collector.
+2. Validate OTLP HTTP export against a real OpenTelemetry Collector or hosted observability backend in a documented target environment.
 3. Add per-case eval reports with failure diffs.
 4. Add Docker Compose runtime screenshots after testing on a Docker-enabled machine.
 
@@ -37,6 +37,8 @@ Contributions should preserve these invariants:
 - Eval gates must keep unsafe leak, unsafe direct side-effect, and unsafe release approval failures at zero.
 
 ## Recently Completed
+
+- Added optional OTLP/HTTP JSON collector handoff in `scripts/export_traces_otel.py`, plus `python -B scripts/dev.py otel-collector-handoff` to verify endpoint construction, JSON POST behavior, content type, user agent, and safe header handling against a local collector stub.
 
 - Add keyboard-friendly trace navigation for recent trace lists.
 - Add copyable scenario-draft import/export snippets for local demos.
