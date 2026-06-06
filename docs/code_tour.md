@@ -52,7 +52,7 @@ Key files:
 - `secure-enterprise-knowledge-copilot/src/copilot/reranking.py`: deterministic evidence reranker boundary after first-stage retrieval. It records feature-level rerank evidence today and gives a clean replacement point for a production reranker later.
 - `secure-enterprise-knowledge-copilot/src/copilot/security.py`: prompt-injection detection and evidence sanitization.
 - `secure-enterprise-knowledge-copilot/src/copilot/answering.py`: answer, citation, confidence, missing-evidence, and abstention behavior.
-- `secure-enterprise-knowledge-copilot/src/copilot/chunking.py`: shared deterministic text chunking used by JSON seeding and admin ingestion after parser normalization.
+- `secure-enterprise-knowledge-copilot/src/copilot/chunking.py`: shared deterministic text chunking used by JSON seeding and admin ingestion after parser normalization; `chunk_text_with_spans` records source spans over normalized text so citations and traces can point back to exact chunk ranges.
 - `secure-enterprise-knowledge-copilot/src/copilot/model_gateway.py`: optional OpenAI structured-output path with local fallback as the default.
 - `secure-enterprise-knowledge-copilot/src/copilot/storage.py`: local JSON state mechanics and seed/reset support; application modules should go through `repositories.py`.
 - `secure-enterprise-knowledge-copilot/src/copilot/evals.py`: retrieval, citation, abstention, and leak-prevention regression cases.

@@ -18,7 +18,7 @@ UUID_NAMESPACE = uuid.UUID("9f83868a-75f0-4c18-9c6d-4e0ea87f0a41")
 
 sys.path.insert(0, str(SRC_PATH))
 
-from copilot.chunking import chunk_text  # noqa: E402
+from copilot.chunking import SOURCE_SPAN_UNIT, chunk_text_with_spans  # noqa: E402
 from copilot.embeddings import embed_chunk  # noqa: E402
 
 
@@ -126,14 +126,16 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
             "  updated_at = excluded.updated_at;"
         )
         lines.append(f"delete from document_chunks where document_id = {sql_literal(doc_uuid)}::uuid;")
-        for index, chunk in enumerate(chunk_text(doc["body"])):
+        for index, chunk in enumerate(chunk_text_with_spans(doc["body"])):
             external_chunk_id = f"{doc['id']}::chunk-{index + 1}"
             chunk_uuid = stable_uuid("chunk", f"{doc_uuid}:{external_chunk_id}")
-            embedding = embed_chunk(doc["title"], chunk)
+            embedding = embed_chunk(doc["title"], chunk.text)
             metadata = {
                 "external_chunk_id": external_chunk_id,
                 "source_hash": doc_hash,
                 "updated_at": doc["updated_at"],
+                "source_span": chunk.source_span,
+                "chunk_source_span_unit": SOURCE_SPAN_UNIT,
                 **embedding.metadata(),
             }
             lines.append(
@@ -145,7 +147,7 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
                 f"{sql_literal(tenant_uuid)}::uuid, "
                 f"{sql_literal(doc_uuid)}::uuid, "
                 f"{index}, "
-                f"{sql_literal(chunk)}, "
+                f"{sql_literal(chunk.text)}, "
                 f"{vector_literal(embedding.vector)}, "
                 f"{jsonb_literal(metadata)}"
                 ");"

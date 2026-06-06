@@ -76,6 +76,8 @@ Retrieval contract:
 - `retrieval_profile.rerank_features` lists the deterministic rerank features used before answer assembly
 - `retrieval_profile.embedding_model` is `local-hashing-v1` and `retrieval_profile.embedding_dimensions` is `1536` for the local deterministic embedding boundary
 - `retrieval_profile.permission_filter` is `tenant_role_before_scoring`
+- `citations[].source_span` and `retrieved[].source_span` expose the cited chunk range over parser `normalized_text`
+- `source_span.text_unit` is `normalized_text`; `source_span.start_line`, `source_span.end_line`, `source_span.start_char`, and `source_span.end_char` are integer offsets into parser-normalized source text
 - `retrieved[].score_breakdown` exposes lexical, title, phrase, semantic, vector, matched-term, and semantic-family evidence for review
 - `retrieved[].rerank_score` and `retrieved[].rerank_breakdown` expose the staged reranker decision separately from first-stage retrieval scoring
 - `retrieved[].embedding_model` and `retrieved[].embedding_dimensions` expose embedding provenance, while raw embedding vectors are not returned
@@ -108,6 +110,8 @@ The route returns:
 - `ingestion.parser.normalized_characters`
 - `ingestion.parser.metadata`
 - `ingestion.parser.warnings`
+- `ingestion.chunk_source_span_unit`
+- `ingestion.chunk_source_span_count`
 - `ingestion.embedding.model`
 - `ingestion.embedding.dimensions`
 - `ingestion.embedding.chunk_embedding_count`
@@ -120,9 +124,10 @@ Ingestion contract:
 - duplicate document IDs require `replace`
 - the raw document body is never returned
 - ingestion normalizes supported source formats through parser versions such as `plain-text-v1`, `markdown-v1`, `csv-v1`, `html-v1`, and `json-v1`
+- ingestion records chunk source spans over parser `normalized_text`; `chunk_source_span_unit` is `normalized_text` and `chunk_source_span_count` matches `chunk_count`
 - ingestion creates local deterministic chunk embeddings with model `local-hashing-v1` and dimension `1536`; raw vectors are stored for retrieval/indexing but not returned by the public API
 - CSV parser metadata includes `row_count`, `column_count`, and `has_header`; parser warnings are surfaced as `parser_warnings`
-- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `parser_warnings`, embedding metadata, and role metadata
+- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `parser_warnings`, source span metadata, embedding metadata, and role metadata
 
 ### Scenario Snapshot Shape
 

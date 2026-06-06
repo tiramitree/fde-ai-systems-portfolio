@@ -43,7 +43,8 @@ python -B scripts\run_eval.py
 - Unknown questions abstain instead of fabricating.
 - Audit events are recorded.
 - Trace records include retrieved chunks, blocked count, output, confidence, and security events.
-- Admin ingestion normalizes plain text, Markdown, CSV, HTML, and JSON through a parser boundary before chunking.
+- Admin ingestion normalizes plain text, Markdown, CSV, HTML, and JSON through a parser boundary before span-aware chunking.
+- Citations and retrieved chunks expose normalized-text source spans for review and traceability.
 - Seed and admin-ingested chunks carry deterministic local embeddings with model `local-hashing-v1` and 1536 dimensions.
 - Retrieval exposes candidate strategy metadata: the default JSON path uses `local_full_scan`, while the optional PostgreSQL path uses SQL-backed `postgres_hybrid_sql_v1`.
 - Retrieval exposes deterministic rerank metadata with `local-evidence-reranker-v1`, `rerank_score`, and feature-level `rerank_breakdown`.
@@ -109,7 +110,7 @@ Convert the current MVP into an industrialized service layout without losing the
 1. Run the live PostgreSQL probe against a seeded Docker-enabled machine and record the evidence.
 2. Extend the current admin parser boundary into upload, connector sync, and background ingestion.
 3. Replace the deterministic embedding boundary with a production provider behind the same interface.
-4. Add retrieval metrics for SQL candidate recall, citation spans, stale sources, and reranker quality.
+4. Add retrieval metrics for SQL candidate recall, citation span accuracy, stale sources, and reranker quality.
 5. Add FastAPI-compatible service layer or migrate directly to FastAPI if dependencies are available.
 
 
