@@ -73,7 +73,7 @@ python -B scripts/check_github_readiness.py --strict
 | main branch protection enabled | WARN | not protected |
 | stars observed at generation | PASS | 6 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26945014975/job/79495695197 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26994015810/job/79659931856 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
@@ -93,9 +93,10 @@ python -B scripts/check_github_readiness.py --strict
 - Optional OpenAI live mode: not verified without a valid API key; `python -B scripts/dev.py openai-live` is available for API-key environments.
 - Star growth: cannot be claimed as achieved until real launch feedback accumulates.
 
-Repository description, topics, branch protection, and the first release can be applied after `gh auth login` with:
+Repository description, topics, branch protection, and the first release with current replay attachments can be applied after `gh auth login` with:
 
 ```bash
+python -B scripts/dev.py replay-artifact
 python -B scripts/maintain_github_state.py --apply
 ```
 

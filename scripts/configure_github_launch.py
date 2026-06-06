@@ -20,6 +20,10 @@ ROOT = Path(__file__).resolve().parents[1]
 RELEASE_NOTES = ROOT / "docs" / "github_release_notes_v0.1.0.md"
 BRANCH_PROTECTION = ROOT / "docs" / "github_branch_protection.json"
 RELEASE_TITLE = "FDE AI Systems Reference v0.1.0"
+RELEASE_ASSETS = [
+    ROOT / "out" / "demo_replay_artifact.md",
+    ROOT / "out" / "demo_replay_artifact.json",
+]
 
 
 @dataclass(frozen=True)
@@ -81,7 +85,15 @@ def get_repo() -> str:
     return repo
 
 
-def build_commands(gh: str, repo: str) -> list[LaunchCommand]:
+def relative_release_assets() -> list[str]:
+    return [asset.relative_to(ROOT).as_posix() for asset in RELEASE_ASSETS]
+
+
+def missing_release_assets() -> list[Path]:
+    return [asset for asset in RELEASE_ASSETS if not asset.exists()]
+
+
+def build_commands(gh: str, repo: str, include_release_assets: bool = True) -> list[LaunchCommand]:
     topics = sorted(EXPECTED_TOPICS)
     repo_edit = [
         gh,
@@ -130,12 +142,25 @@ def build_commands(gh: str, repo: str) -> list[LaunchCommand]:
         "--enable-secret-scanning",
         "--enable-secret-scanning-push-protection",
     ]
-    return [
+    release_asset_upload = [
+        gh,
+        "release",
+        "upload",
+        EXPECTED_RELEASE_TAG,
+        *relative_release_assets(),
+        "--repo",
+        repo,
+        "--clobber",
+    ]
+    commands = [
         LaunchCommand("repository metadata, topics, and merge policy", repo_edit),
         LaunchCommand("repository secret scanning and push protection", security_features, required=False),
         LaunchCommand("main branch protection", branch_protection),
         LaunchCommand("release", release),
     ]
+    if include_release_assets:
+        commands.append(LaunchCommand("release asset upload", release_asset_upload))
+    return commands
 
 
 def release_exists(gh: str, repo: str) -> bool:
@@ -162,6 +187,11 @@ def main() -> int:
         action="store_true",
         help="Configure repository metadata, topics, and branch protection without creating the release.",
     )
+    parser.add_argument(
+        "--skip-release-assets",
+        action="store_true",
+        help="Create or verify the release page without uploading generated replay artifacts.",
+    )
     args = parser.parse_args()
 
     gh = find_gh()
@@ -182,9 +212,9 @@ def main() -> int:
         return 1
 
     repo = get_repo()
-    commands = build_commands(gh, repo)
+    commands = build_commands(gh, repo, include_release_assets=not args.skip_release_assets)
     if args.skip_release:
-        commands = [command for command in commands if command.name != "release"]
+        commands = [command for command in commands if not command.name.startswith("release")]
 
     if not args.apply:
         print("Dry run. Review these commands, then run with --apply after `gh auth login`:")
@@ -192,6 +222,14 @@ def main() -> int:
             suffix = "" if item.required else " (best effort; may depend on account plan)"
             print(f"# {item.name}{suffix}")
             print(display_command(item.command))
+        if not args.skip_release and not args.skip_release_assets:
+            missing = missing_release_assets()
+            if missing:
+                print()
+                print("Release asset preflight:")
+                print("- Run `python -B scripts/dev.py replay-artifact` before applying so these files exist:")
+                for asset in missing:
+                    print(f"  - {asset.relative_to(ROOT).as_posix()}")
         print()
         print("Manual after --apply:")
         print("- Upload social preview from docs/assets/github-preview.png.")
@@ -203,6 +241,14 @@ def main() -> int:
     if auth_status.returncode != 0:
         print("GitHub CLI is not authenticated. Run `gh auth login`, then retry with --apply.")
         return auth_status.returncode
+
+    if not args.skip_release and not args.skip_release_assets:
+        missing = missing_release_assets()
+        if missing:
+            print("Release replay artifacts are missing. Run `python -B scripts/dev.py replay-artifact`, then retry.")
+            for asset in missing:
+                print(f"- {asset.relative_to(ROOT).as_posix()}")
+            return 1
 
     for item in commands:
         if item.name == "release" and release_exists(gh, repo):

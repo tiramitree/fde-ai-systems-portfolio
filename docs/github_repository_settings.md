@@ -162,8 +162,11 @@ python -B scripts/manage_community_issues.py --apply --create-issues
 Automated path after `gh auth login`:
 
 ```powershell
+python -B scripts/dev.py replay-artifact
 python -B scripts/maintain_github_state.py --apply
 ```
+
+The apply path creates or verifies the `v0.1.0` release page and uploads the current `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` attachments. It fails fast if those generated artifacts are missing.
 
 Manual release details if using the GitHub UI:
 
