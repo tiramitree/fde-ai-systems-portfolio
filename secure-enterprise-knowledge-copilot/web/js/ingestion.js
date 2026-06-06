@@ -42,12 +42,59 @@ function buildPayload(elements, userId) {
   };
 }
 
+function buildSampleSyncPayload(userId) {
+  return {
+    user_id: userId,
+    replace: true,
+    connector: {
+      name: "local-drive-demo",
+      cursor: "2026-06-06T00:00:00Z",
+      acl_source: "fixture-acl-v1",
+    },
+    documents: [
+      {
+        external_id: "drive-doc-source-sync-playbook-2026",
+        title: "Source Sync Playbook 2026",
+        body: (
+          "Source Sync Playbook 2026\n\n"
+          + "After each connector sync, administrators must review parser warnings, ACL source mappings, "
+          + "and trace-to-eval candidates before promoting new knowledge into the trusted answer path."
+        ),
+        classification: "internal",
+        allowed_roles: ["employee", "manager", "admin"],
+        source_mime: "text/markdown",
+        updated_at: "2026-06-06",
+      },
+      {
+        external_id: "drive-json-finance-retention-controls-2026",
+        title: "Finance Retention Control Notes 2026",
+        body: JSON.stringify({
+          policy: "Finance Retention Control Notes 2026",
+          owner: "Finance Operations",
+          summary:
+            "Confidential retention controls require manager review, audit linkage, and approval evidence before wider access.",
+          review: {
+            acl_source: "fixture-acl-v1",
+            cadence: "monthly",
+            escalation: "admin approval required",
+          },
+        }),
+        classification: "confidential",
+        allowed_roles: ["manager", "admin"],
+        source_mime: "application/json",
+        updated_at: "2026-06-06",
+      },
+    ],
+  };
+}
+
 export function installIngestionPanel({ api, elements, currentUser, onIngested }) {
   async function sync() {
     const user = currentUser();
     const isAdmin = user?.role === "admin";
     renderSummary(elements.summary, user);
     elements.button.disabled = !isAdmin;
+    elements.syncButton.disabled = !isAdmin;
     if (!isAdmin) {
       setStatus(elements.status, "Switch to Avery Admin before ingesting a source.");
     } else if (!elements.status.textContent || elements.status.textContent.includes("Switch to")) {
@@ -84,7 +131,35 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
   }
 
+  async function syncSampleSource() {
+    const user = currentUser();
+    if (!user) {
+      setStatus(elements.status, "No user selected.", "error");
+      return;
+    }
+    elements.button.disabled = true;
+    elements.syncButton.disabled = true;
+    setStatus(elements.status, "Syncing sample connector...");
+    try {
+      const data = await api("/api/sources/sync", {
+        method: "POST",
+        body: JSON.stringify(buildSampleSyncPayload(user.id)),
+      });
+      setStatus(
+        elements.status,
+        `Synced ${data.sync.document_count} source docs from ${data.sync.connector} (${data.sync.chunk_count} chunks).`,
+        "ok"
+      );
+      await onIngested(data);
+    } catch (error) {
+      setStatus(elements.status, error.message, "error");
+    } finally {
+      await sync();
+    }
+  }
+
   elements.button.addEventListener("click", submit);
+  elements.syncButton.addEventListener("click", syncSampleSource);
   sync();
   return { sync };
 }

@@ -8,7 +8,7 @@ The repository contains three runnable FDE-style AI reference systems:
 
 1. `secure-enterprise-knowledge-copilot`
    - Demonstrates permission-aware enterprise RAG.
-   - Core behaviors: admin-only ingestion, retrieval filtering, citations, abstention, prompt-injection detection, traces, audit logs, golden evals.
+   - Core behaviors: admin-only ingestion, connector-style source sync, retrieval filtering, citations, abstention, prompt-injection detection, traces, audit logs, golden evals.
    - Local URL: `http://127.0.0.1:8765`
 
 2. `regulated-customer-operations-agent`
@@ -218,6 +218,7 @@ Design Review Docs:
 - `docs/industrial_readiness_field_scan.md`: current external benchmark scan, industrial-readiness distance estimate, and prioritized upgrade plan.
 - `docs/industrial_grade_gap_assessment_2026_06_06.md`: web-refreshed industrial-grade gap assessment and concrete upgrade sequence for the eight major production-readiness gaps.
 - `docs/industrial_readiness_plan_cn_2026_06_06.md`: Chinese industrial-readiness judgment, external project baseline, current gap matrix, and FDE-oriented upgrade plan.
+- `docs/industrial_readiness_source_sync_gap_plan_2026_06_06.md`: source-sync-focused industrial readiness gap plan, external baseline scan, current maturity estimate, and prioritized upgrade sequence.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
 - `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
@@ -374,6 +375,7 @@ Important files:
 - `src/copilot/repositories.py`: application-facing storage adapter boundary over the local JSON provider.
 - `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate selection outside application modules.
 - `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts.
+- `src/copilot/ingestion.py`: admin-only document ingestion and connector-style source sync; validates tenant, classification, roles, duplicate policy, parser output, source hash, external IDs, ACL source metadata, sync cursor, chunk counts, and audit events before adding searchable content.
 - `src/copilot/source_parsing.py`: admin-ingestion parser boundary for plain text, Markdown, CSV, HTML, and JSON sources; returns normalized searchable text plus parser metadata and warnings before chunking.
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
 - `src/copilot/embeddings.py`: local deterministic chunk embedding boundary with 1536-dimensional vectors, metadata, and cosine scoring helpers for the pgvector/hybrid retrieval path.
@@ -399,6 +401,7 @@ Key demo claims:
 
 - Users only retrieve evidence they are authorized to see.
 - The model is never treated as the permission boundary.
+- Admin-only source intake includes local ingestion and a sample connector sync contract with audit evidence.
 - Unsupported or unsafe answers abstain instead of guessing.
 - Eval cases prove normal answers, denied access, injection handling, and unknown-question abstention.
 

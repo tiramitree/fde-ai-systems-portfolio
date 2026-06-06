@@ -8,6 +8,7 @@ This MVP is intentionally dependency-free so it can run on any local Python 3.12
 
 - Role-aware retrieval across internal enterprise documents.
 - Admin-only ingestion of local text, Markdown, CSV, HTML, or JSON content.
+- Admin-only connector-style batch source sync with external IDs, ACL source metadata, sync cursor, and audit evidence.
 - Citation-required answers.
 - Abstention when accessible evidence is missing.
 - Prompt-injection detection inside retrieved documents.
@@ -70,19 +71,21 @@ Browser UI
     -> evals.py: golden regression suite
 ```
 
-## Admin Ingestion Contract
+## Admin Ingestion And Source Sync Contract
 
-`POST /api/documents/ingest` is the first production-data-plane step. It keeps the local-first demo simple while proving the control boundary for future connectors:
+`POST /api/documents/ingest` and `POST /api/sources/sync` are the first production-data-plane steps. They keep the local-first demo simple while proving the control boundary for future connectors:
 
 - only admin users can ingest documents
 - admins can ingest only into their own tenant
 - confidential documents cannot include the `employee` role
 - duplicate document IDs require explicit `replace`
 - supported source types are text, Markdown, CSV, HTML, and JSON
+- source sync persists connector name, external document ID, ACL source, and sync cursor metadata
 - ingested document bodies are not returned by `/api/documents`
 - every ingestion writes a `document_ingested` audit event with `source_hash`, `source_mime`, roles, chunk count, and normalized-text source span coverage
+- every batch source sync writes a `source_sync_completed` audit event with connector, cursor, document count, chunk count, replacement count, and parser warnings
 
-The API contract gate verifies admin ingestion, non-admin refusal, retrieval with citation and source span from the ingested document, body hiding, and audit evidence.
+The API contract gate verifies admin ingestion, non-admin refusal, source sync refusal for non-admins, retrieval with citation and source span from ingested and synced documents, body hiding, and audit evidence.
 
 ## Deployment Positioning
 
@@ -102,7 +105,7 @@ Next iterations:
 1. Replace Python HTTP server with FastAPI.
 2. Replace JSON runtime state with PostgreSQL and pgvector.
 3. Replace local extractive answerer with OpenAI Responses API structured output.
-4. Extend the current admin ingestion contract into file upload, connector sync, and a background ingestion queue.
+4. Extend the current admin ingestion and source sync contracts into file upload, real external connectors, and a background ingestion queue.
 5. Add OpenTelemetry trace export.
 6. Add Docker Compose with app, database, and worker.
 7. Add screenshot/demo video and deployment runbook.

@@ -45,6 +45,7 @@ const ingestionPanel = installIngestionPanel({
     body: byId("ingestBody"),
     replace: byId("ingestReplace"),
     button: byId("ingestDocument"),
+    syncButton: byId("syncSampleSource"),
     status: byId("ingestionStatus"),
   },
 });

@@ -211,6 +211,7 @@ def project_checks(project: Project) -> list[Check]:
                     'id="ingestBody"',
                     'id="ingestReplace"',
                     'id="ingestDocument"',
+                    'id="syncSampleSource"',
                     'id="ingestionStatus"',
                 ],
             )
@@ -251,6 +252,7 @@ def project_checks(project: Project) -> list[Check]:
                         ".inlineCheck",
                         ".ingestionGrid",
                         ".ingestionWide",
+                        ".ingestionActions",
                         'input[type="text"]',
                     ],
             )
@@ -278,6 +280,7 @@ def project_checks(project: Project) -> list[Check]:
                 [
                     "installIngestionPanel",
                     "/api/documents/ingest",
+                    "/api/sources/sync",
                     "source_hash",
                     "admin required",
                     "onIngested",

@@ -38,6 +38,7 @@ PROJECTS = [
             "ingestBody",
             "ingestReplace",
             "ingestDocument",
+            "syncSampleSource",
             "ingestionStatus",
             "runEval",
             "evalOutput",
@@ -356,8 +357,10 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
         required_ingestion_markers = [
             "export function installIngestionPanel",
             "/api/documents/ingest",
+            "/api/sources/sync",
             "admin required",
             "source_hash",
+            "syncButton",
             "onIngested",
             "currentUser",
         ]
@@ -439,7 +442,7 @@ def check_project(project: FrontendProject) -> list[str]:
         if marker not in styles:
             failures.append(f"{project.name}: styles.css missing trace-copy style marker: {marker}")
     if project.name == "secure-enterprise-knowledge-copilot":
-        for marker in [".ingestionBody", ".inlineCheck", ".ingestionGrid", ".ingestionWide"]:
+        for marker in [".ingestionBody", ".inlineCheck", ".ingestionGrid", ".ingestionWide", ".ingestionActions"]:
             if marker not in styles:
                 failures.append(f"{project.name}: styles.css missing ingestion style marker: {marker}")
     return failures

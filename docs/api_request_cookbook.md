@@ -54,6 +54,18 @@ Ingest the same local policy as admin `avery`:
 curl.exe -s -X POST http://127.0.0.1:8765/api/documents/ingest -H "Content-Type: application/json" -d '{"user_id":"avery","replace":true,"document":{"title":"Travel Expense Policy 2026","body":"Travel Expense Policy 2026\n\nEmployees must submit travel expense receipts within five business days after each approved trip. Expense reports must include the trip purpose, manager approval, and original receipt evidence.","classification":"internal","allowed_roles":["employee","manager","admin"],"source_url":"ingested://acme/travel-expense-policy-2026","source_mime":"text/markdown","version":"2026.06","updated_at":"2026-06-06"}}' | python -m json.tool
 ```
 
+Sync two sample connector documents as admin `avery`. The response should include `sync.connector`, `source_connector`, `external_id`, `acl_source`, and `sync_cursor` metadata without returning document bodies:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8765/api/sources/sync -H "Content-Type: application/json" -d '{"user_id":"avery","replace":true,"connector":{"name":"local-drive-demo","cursor":"2026-06-06T00:00:00Z","acl_source":"fixture-acl-v1"},"documents":[{"id":"source-sync-playbook-2026","external_id":"drive-doc-source-sync-playbook-2026","title":"Source Sync Playbook 2026","body":"Source Sync Playbook 2026\n\nAfter each connector sync, administrators must review parser warnings, ACL source mappings, and trace-to-eval candidates before promoting new knowledge into the trusted answer path.","classification":"internal","allowed_roles":["employee","manager","admin"],"source_mime":"text/markdown","updated_at":"2026-06-06"},{"id":"finance-retention-control-notes-2026","external_id":"drive-json-finance-retention-controls-2026","title":"Finance Retention Control Notes 2026","body":"{\"policy\":\"Finance Retention Control Notes 2026\",\"owner\":\"Finance Operations\",\"summary\":\"Confidential retention controls require manager review, audit linkage, and approval evidence before wider access.\"}","classification":"confidential","allowed_roles":["manager","admin"],"source_mime":"application/json","updated_at":"2026-06-06"}]}' | python -m json.tool
+```
+
+Ask Alice about the synced source. The response should cite `source-sync-playbook-2026`:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"alice","question":"What must administrators review after each connector sync?"}' | python -m json.tool
+```
+
 Ask Alice about the ingested document. The response should cite the generated `ingested-...` document ID:
 
 ```powershell
@@ -73,6 +85,10 @@ Useful fields to inspect:
 - `ingestion.parser.name`
 - `ingestion.parser.normalized_characters`
 - `ingestion.parser.metadata`
+- `source_connector`
+- `external_id`
+- `acl_source`
+- `sync_cursor`
 
 ## Project 2: Governed Operations Agent
 

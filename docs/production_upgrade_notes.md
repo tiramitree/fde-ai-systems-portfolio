@@ -76,6 +76,8 @@ Current production-path artifacts:
 - `infra/postgres/seeds/001_project1_demo.sql`
 - `docker-compose.postgres.yml`
 - `secure-enterprise-knowledge-copilot/src/copilot/embeddings.py`
+- `secure-enterprise-knowledge-copilot/src/copilot/ingestion.py`
+- `secure-enterprise-knowledge-copilot/web/js/ingestion.js`
 - `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`
 - `python -B scripts/dev.py postgres-migrations`
 - `python -B scripts/dev.py postgres-compose`
@@ -98,19 +100,20 @@ Project 1 runtime switch:
 - Project 1 chunk metadata now carries normalized-text `source_span` values through JSON seed state, admin ingestion, citation output, traces, and the optional PostgreSQL adapter.
 - `scripts/export_traces_otel.py --send-otlp-http` adds an optional OTLP/HTTP JSON collector handoff path, while `scripts/check_otel_collector_handoff.py` verifies the POST behavior with a local collector stub so hosted observability remains opt-in.
 - `scripts/export_trace_eval_candidates.py` adds a local trace-to-eval candidate workflow so permission abstentions, prompt-injection refusals, approval gates, bypass refusals, release blocks, and monitor-only eval signals can be reviewed before promotion into checked-in golden evals. Candidate artifacts include owner roles, allowed dispositions, promotion targets, and regression schedules so review remains explicit.
+- `POST /api/sources/sync` adds an admin-only connector-style source sync contract. It persists connector name, external document ID, ACL source, and sync cursor metadata on documents and chunks, reuses parser/chunking/embedding boundaries, writes per-document `document_ingested` events, and writes a batch `source_sync_completed` audit event. The frontend includes a sample connector sync button so reviewers can exercise the data-plane contract without external accounts.
 
 Next steps:
 
 1. Run `python -B scripts/check_project1_postgres_runtime.py --live` on a Docker-enabled machine after starting `docker-compose.postgres.yml`; verify Alice finance denial, Morgan finance access, SQL hybrid candidate retrieval, and denied-evidence count behavior.
-2. Extend the current admin-only ingestion contract into file upload and connector sync.
-3. Add a background document parser pipeline.
+2. Extend the current admin-only ingestion and sample source sync contracts into file upload and real external connectors.
+3. Add a background document parser pipeline with retries, dead-letter records, and sync checkpoint recovery.
 4. Replace the deterministic local hashing embedding with a production embedding model.
 5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, rerank quality, citation span accuracy, and stale-source handling.
 6. Replace the deterministic reranker with a production reranker provider behind the existing boundary.
 7. Connect trace-to-eval candidate review metadata to a checked-in reviewed-dataset ledger and nightly regression scheduling automation.
 8. Send OTLP traces to a real collector or hosted backend in a documented target environment, preserving the local collector-stub check as the default CI proof.
 9. Add PostgreSQL row-level security tests against a running database.
-8. Add eval cases from real failure logs.
+10. Add eval cases from real failure logs.
 
 ## Project 2 Upgrade Path
 

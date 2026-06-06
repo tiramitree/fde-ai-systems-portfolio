@@ -3,7 +3,7 @@
 ## Assets
 
 - Confidential documents.
-- Ingested document sources and source hashes.
+- Ingested and synced document sources, source hashes, connector names, external IDs, ACL source metadata, and sync cursors.
 - User identity and role.
 - Retrieved evidence.
 - Model prompts and outputs.
@@ -15,23 +15,23 @@
 2. Retrieved document contains prompt injection and tells the model to leak data.
 3. The system fabricates an answer when no accessible evidence exists.
 4. Logs contain sensitive data without access controls.
-5. A non-admin user or poisoned source adds searchable content.
+5. A non-admin user, poisoned source, or mis-scoped connector sync adds searchable content.
 6. A retrieval or prompt change silently degrades quality.
 
 ## Current Controls
 
 - Tenant and role filter before retrieval scoring and answer assembly.
-- Admin-only ingestion with tenant, classification, role, duplicate, parser metadata, source hash, and chunk-count validation.
+- Admin-only ingestion and source sync with tenant, classification, role, duplicate, parser metadata, source hash, connector metadata, ACL source, sync cursor, and chunk-count validation.
 - Forbidden citation checks in evals.
 - Prompt injection pattern detection in retrieved content.
 - Abstention when no accessible evidence clears the threshold.
 - Trace IDs for debugging retrieval score breakdowns and answer behavior.
-- Audit events for ingestion parser warnings, query, citation, abstention, and security-event counts.
+- Audit events for ingestion parser warnings, source sync completion, query, citation, abstention, and security-event counts.
 
 ## Production Controls To Add
 
 - Real auth and signed session tokens.
-- Connector-backed ingestion with source permission sync, parser isolation, parser version pinning, and malware scanning.
+- Connector-backed ingestion with source permission sync, parser isolation, parser version pinning, checkpoint recovery, and malware scanning.
 - Row-level security in PostgreSQL.
 - PII redaction in logs.
 - Policy-as-code for tool and retrieval permissions.

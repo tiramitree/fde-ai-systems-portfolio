@@ -331,6 +331,103 @@ def project_1_contracts(base_url: str) -> list[Check]:
         )
     )
 
+    source_sync_payload = {
+        "user_id": "avery",
+        "replace": True,
+        "connector": {
+            "name": "local-drive-demo",
+            "cursor": "2026-06-06T00:00:00Z",
+            "acl_source": "fixture-acl-v1",
+        },
+        "documents": [
+            {
+                "id": "source-sync-playbook-2026",
+                "external_id": "drive-doc-source-sync-playbook-2026",
+                "title": "Source Sync Playbook 2026",
+                "body": (
+                    "Source Sync Playbook 2026\n\n"
+                    "After each connector sync, administrators must review parser warnings, ACL source mappings, "
+                    "and trace-to-eval candidates before promoting new knowledge into the trusted answer path."
+                ),
+                "classification": "internal",
+                "allowed_roles": ["employee", "manager", "admin"],
+                "source_mime": "text/markdown",
+                "updated_at": "2026-06-06",
+            },
+            {
+                "id": "finance-retention-control-notes-2026",
+                "external_id": "drive-json-finance-retention-controls-2026",
+                "title": "Finance Retention Control Notes 2026",
+                "body": json.dumps(
+                    {
+                        "policy": "Finance Retention Control Notes 2026",
+                        "owner": "Finance Operations",
+                        "summary": (
+                            "Confidential retention controls require manager review, audit linkage, "
+                            "and approval evidence before wider access."
+                        ),
+                    }
+                ),
+                "classification": "confidential",
+                "allowed_roles": ["manager", "admin"],
+                "source_mime": "application/json",
+                "updated_at": "2026-06-06",
+            },
+        ],
+    }
+    forbidden_sync_payload = {**source_sync_payload, "user_id": "alice"}
+    status, forbidden_sync = post_json(f"{base_url}/api/sources/sync", forbidden_sync_payload)
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_sync.get("error", ""),
+            "P1 source sync rejects non-admin users",
+            json.dumps(forbidden_sync),
+        )
+    )
+
+    status, source_sync = post_json(f"{base_url}/api/sources/sync", source_sync_payload)
+    sync_metadata = source_sync.get("sync", {})
+    synced_documents = source_sync.get("documents", [])
+    checks.append(
+        check(
+            status == 200
+            and sync_metadata.get("connector") == "local-drive-demo"
+            and sync_metadata.get("cursor") == "2026-06-06T00:00:00Z"
+            and sync_metadata.get("acl_source") == "fixture-acl-v1"
+            and sync_metadata.get("document_count") == 2
+            and sync_metadata.get("chunk_count", 0) >= 2
+            and len(synced_documents) == 2
+            and all("body" not in doc for doc in synced_documents)
+            and synced_documents[0].get("source_connector") == "local-drive-demo"
+            and synced_documents[0].get("external_id") == "drive-doc-source-sync-playbook-2026"
+            and synced_documents[0].get("acl_source") == "fixture-acl-v1"
+            and synced_documents[0].get("sync_cursor") == "2026-06-06T00:00:00Z",
+            "P1 source sync batch contract",
+            f"status={status}; connector={sync_metadata.get('connector')}; docs={sync_metadata.get('document_count')}; chunks={sync_metadata.get('chunk_count')}",
+        )
+    )
+
+    status, synced_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "alice",
+            "question": "What must administrators review after each connector sync?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and synced_answer.get("abstain_reason") is None
+            and any(
+                citation.get("doc_id") == "source-sync-playbook-2026"
+                and valid_source_span(citation.get("source_span"))
+                for citation in synced_answer.get("citations", [])
+            ),
+            "P1 synced source is retrievable with citation",
+            f"trace={synced_answer.get('trace_id')}; citations={len(synced_answer.get('citations', []))}",
+        )
+    )
+
     status, documents_after_ingest = get_json(f"{base_url}/api/documents?user_id=alice")
     checks.append(
         check(
@@ -373,6 +470,20 @@ def project_1_contracts(base_url: str) -> list[Check]:
             ),
             "P1 ingestion writes audit event",
             f"events={len(audit.get('events', []))}",
+        )
+    )
+    status, source_sync_audit = get_json(f"{base_url}/api/audit?limit=20")
+    checks.append(
+        check(
+            status == 200
+            and any(
+                event.get("action") == "source_sync_completed"
+                and event.get("details", {}).get("connector") == "local-drive-demo"
+                and event.get("details", {}).get("document_count") == 2
+                for event in source_sync_audit.get("events", [])
+            ),
+            "P1 source sync writes audit event",
+            f"events={len(source_sync_audit.get('events', []))}",
         )
     )
 

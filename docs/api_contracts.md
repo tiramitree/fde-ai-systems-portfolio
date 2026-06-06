@@ -36,6 +36,7 @@ Source:
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/query` | Permission-aware answer generation with citations or abstention. |
 | POST | `/api/documents/ingest` | Admin-only local ingestion of searchable text, Markdown, CSV, HTML, or JSON content into the permission-aware document store. |
+| POST | `/api/sources/sync` | Admin-only connector-style batch source sync with external IDs, sync cursor, ACL source metadata, parser normalization, chunking, and audit evidence. |
 | POST | `/api/eval/run` | Run the project eval suite. |
 
 ### Query Response Shape
@@ -97,6 +98,10 @@ The document object supports:
 - `source_mime`
 - `version`
 - `updated_at`
+- `source_connector`
+- `external_id`
+- `acl_source`
+- `sync_cursor`
 
 The route returns:
 
@@ -110,6 +115,10 @@ The route returns:
 - `ingestion.parser.normalized_characters`
 - `ingestion.parser.metadata`
 - `ingestion.parser.warnings`
+- `ingestion.source.connector`
+- `ingestion.source.external_id`
+- `ingestion.source.acl_source`
+- `ingestion.source.sync_cursor`
 - `ingestion.chunk_source_span_unit`
 - `ingestion.chunk_source_span_count`
 - `ingestion.embedding.model`
@@ -128,6 +137,47 @@ Ingestion contract:
 - ingestion creates local deterministic chunk embeddings with model `local-hashing-v1` and dimension `1536`; raw vectors are stored for retrieval/indexing but not returned by the public API
 - CSV parser metadata includes `row_count`, `column_count`, and `has_header`; parser warnings are surfaced as `parser_warnings`
 - ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `parser_warnings`, source span metadata, embedding metadata, and role metadata
+
+### Source Sync Response Shape
+
+`POST /api/sources/sync` accepts an admin `user_id`, a `connector` object, a non-empty `documents` list, and optional `replace`.
+
+The connector object supports:
+
+- `name`
+- `cursor`
+- `acl_source`
+
+Each synced document supports the same fields as local ingestion plus:
+
+- `id`
+- `external_id`
+- connector-derived `source_url` when one is not provided
+
+The route returns:
+
+- `sync.actor_user_id`
+- `sync.connector`
+- `sync.cursor`
+- `sync.acl_source`
+- `sync.document_count`
+- `sync.chunk_count`
+- `sync.replaced_count`
+- `sync.parser_warnings`
+- `documents`
+- `documents[].source_connector`
+- `documents[].external_id`
+- `documents[].acl_source`
+- `documents[].sync_cursor`
+
+Source sync contract:
+
+- only admin users can sync connector sources
+- synced documents are normalized through the same parser, chunking, embedding, permission, and body-hiding path as local ingestion
+- the API accepts at most ten documents per local sync request so demo state remains reviewable
+- connector `name`, external document ID, ACL source, and sync cursor are persisted on documents and chunks
+- sync writes `document_ingested` events for each document and a `source_sync_completed` audit event for the batch
+- this route is a connector contract and sample data-plane demonstration; real external connectors, background queues, retries, and malware scanning remain production upgrade work
 
 ### Scenario Snapshot Shape
 
