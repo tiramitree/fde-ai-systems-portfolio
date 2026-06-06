@@ -28,6 +28,20 @@ REQUIRED_CATEGORIES = {
     "p3_release_block_from_failed_eval",
     "p3_monitor_only_eval_signal",
 }
+REQUIRED_DISPOSITIONS = {
+    "promote_to_golden_eval",
+    "needs_fixture_edit",
+    "reject_noisy_or_duplicate_trace",
+}
+REQUIRED_REVIEW_KEYS = {
+    "owner_role",
+    "default_disposition",
+    "allowed_dispositions",
+    "promotion_target",
+    "regression_schedule",
+    "labels",
+    "promotion_requirements",
+}
 PRIVATE_MARKERS = [
     re.compile(r"[A-Za-z]:\\"),
     re.compile(r"\b" + "g" + r"ho_[A-Za-z0-9_]+\b"),
@@ -55,6 +69,7 @@ def has_private_marker(value: Any) -> bool:
 def valid_candidate(candidate: dict[str, Any]) -> bool:
     suggested = candidate.get("suggested_eval", {})
     evidence = candidate.get("evidence", {})
+    review = candidate.get("review", {})
     if candidate.get("review_status") != "needs_human_review":
         return False
     if not all(candidate.get(key) for key in ("id", "project", "category", "risk", "reason", "source_trace_id")):
@@ -62,6 +77,16 @@ def valid_candidate(candidate: dict[str, Any]) -> bool:
     if not suggested.get("id") or not suggested.get("expected"):
         return False
     if not isinstance(evidence, dict) or not evidence:
+        return False
+    if not isinstance(review, dict) or not REQUIRED_REVIEW_KEYS.issubset(set(review)):
+        return False
+    if review.get("default_disposition") != "undecided":
+        return False
+    if not REQUIRED_DISPOSITIONS.issubset(set(review.get("allowed_dispositions", []))):
+        return False
+    if not str(review.get("promotion_target", "")).endswith("data/eval_cases.json"):
+        return False
+    if not review.get("owner_role") or not review.get("promotion_requirements"):
         return False
     if has_private_marker(candidate):
         return False
@@ -99,6 +124,16 @@ def main() -> int:
             all("source_trace_id" in item and item["source_trace_id"] for item in candidates),
             "trace linkage",
             f"linked={sum(1 for item in candidates if item.get('source_trace_id'))}/{len(candidates)}",
+        ),
+        check(
+            all(item.get("review", {}).get("default_disposition") == "undecided" for item in candidates),
+            "review disposition defaults",
+            "undecided until human review",
+        ),
+        check(
+            all(str(item.get("review", {}).get("promotion_target", "")).endswith("data/eval_cases.json") for item in candidates),
+            "promotion targets",
+            "checked-in eval fixtures only",
         ),
     ]
 
