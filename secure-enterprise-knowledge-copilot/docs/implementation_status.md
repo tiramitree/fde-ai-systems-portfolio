@@ -44,6 +44,7 @@ python -B scripts\run_eval.py
 - Audit events are recorded.
 - Trace records include retrieved chunks, blocked count, output, confidence, and security events.
 - Admin ingestion normalizes plain text, Markdown, CSV, HTML, and JSON through a parser boundary before chunking.
+- Seed and admin-ingested chunks carry deterministic local embeddings with model `local-hashing-v1` and 1536 dimensions.
 - UI eval button runs the golden eval suite.
 - CLI eval suite passes.
 
@@ -64,7 +65,8 @@ The MVP uses:
 - JSON runtime state
 - Static HTML/CSS/JS frontend
 - BM25-like keyword retrieval with synonym expansion
-- Local hybrid retrieval profile with lexical, title, phrase, and semantic-family score breakdowns
+- Local hybrid retrieval profile with lexical, title, phrase, semantic-family, and vector score breakdowns
+- Local deterministic embedding boundary for chunk metadata and pgvector handoff
 - Tenant and role filtering before evidence assembly
 - Deterministic extractive answer assembly
 - Citation-required answer shape
@@ -83,7 +85,7 @@ Still missing before calling the full FDE objective complete:
 - FastAPI backend
 - Next.js or production frontend
 - PostgreSQL + pgvector
-- Real embedding model and reranker
+- Production embedding model and reranker
 - pgvector-backed hybrid retrieval and production reranking
 - File upload, PDF/DOCX/OCR support, and connector-backed document parser pipeline
 - Background ingestion worker

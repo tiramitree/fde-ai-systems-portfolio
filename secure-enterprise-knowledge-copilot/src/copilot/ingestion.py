@@ -5,6 +5,7 @@ import re
 from datetime import datetime, timezone
 
 from .chunking import chunk_text
+from .embeddings import EMBEDDING_DIMENSIONS, EMBEDDING_MODEL, embed_chunk
 from .repositories import KnowledgeRepository
 from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source_content
 
@@ -132,6 +133,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
 
     chunks = []
     for idx, text in enumerate(chunk_text(body)):
+        embedding = embed_chunk(title, text)
         chunks.append(
             {
                 "id": f"{doc_id}::chunk-{idx + 1}",
@@ -150,6 +152,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "parser_name": parsed_source.parser_name,
                 "parser_metadata": parsed_source.metadata,
                 "parser_warnings": list(parsed_source.warnings),
+                "embedding": embedding.vector,
+                **embedding.metadata(),
             }
         )
 
@@ -169,6 +173,9 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "parser_name": parsed_source.parser_name,
             "parser_warnings": list(parsed_source.warnings),
             "normalized_characters": parsed_source.normalized_characters,
+            "embedding_model": EMBEDDING_MODEL,
+            "embedding_dimensions": EMBEDDING_DIMENSIONS,
+            "chunk_embedding_count": len(chunks),
             "replaced_existing": replaced_existing,
         },
     )
@@ -186,6 +193,11 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "normalized_characters": parsed_source.normalized_characters,
                 "metadata": parsed_source.metadata,
                 "warnings": list(parsed_source.warnings),
+            },
+            "embedding": {
+                "model": EMBEDDING_MODEL,
+                "dimensions": EMBEDDING_DIMENSIONS,
+                "chunk_embedding_count": len(chunks),
             },
         },
     }

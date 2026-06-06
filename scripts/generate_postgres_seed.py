@@ -19,6 +19,7 @@ UUID_NAMESPACE = uuid.UUID("9f83868a-75f0-4c18-9c6d-4e0ea87f0a41")
 sys.path.insert(0, str(SRC_PATH))
 
 from copilot.chunking import chunk_text  # noqa: E402
+from copilot.embeddings import embed_chunk  # noqa: E402
 
 
 def stable_uuid(kind: str, value: str) -> str:
@@ -40,6 +41,11 @@ def text_array(values: list[str]) -> str:
 def jsonb_literal(payload: dict) -> str:
     text = json.dumps(payload, separators=(",", ":"), sort_keys=True)
     return f"{sql_literal(text)}::jsonb"
+
+
+def vector_literal(values: list[float]) -> str:
+    vector_text = "[" + ",".join(str(float(value)) for value in values) + "]"
+    return f"{sql_literal(vector_text)}::vector"
 
 
 def source_hash(body: str) -> str:
@@ -123,14 +129,16 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
         for index, chunk in enumerate(chunk_text(doc["body"])):
             external_chunk_id = f"{doc['id']}::chunk-{index + 1}"
             chunk_uuid = stable_uuid("chunk", f"{doc_uuid}:{external_chunk_id}")
+            embedding = embed_chunk(doc["title"], chunk)
             metadata = {
                 "external_chunk_id": external_chunk_id,
                 "source_hash": doc_hash,
                 "updated_at": doc["updated_at"],
+                **embedding.metadata(),
             }
             lines.append(
                 "insert into document_chunks (\n"
-                "  id, tenant_id, document_id, chunk_index, content, metadata\n"
+                "  id, tenant_id, document_id, chunk_index, content, embedding, metadata\n"
                 ")\n"
                 "values ("
                 f"{sql_literal(chunk_uuid)}::uuid, "
@@ -138,6 +146,7 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
                 f"{sql_literal(doc_uuid)}::uuid, "
                 f"{index}, "
                 f"{sql_literal(chunk)}, "
+                f"{vector_literal(embedding.vector)}, "
                 f"{jsonb_literal(metadata)}"
                 ");"
             )

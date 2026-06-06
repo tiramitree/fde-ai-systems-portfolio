@@ -34,6 +34,23 @@ def _coerce_json(value: Any) -> Any:
     return value
 
 
+def _vector_payload(value: Any) -> str | None:
+    if not value:
+        return None
+    return "[" + ",".join(str(float(item)) for item in value) + "]"
+
+
+def _parse_vector(value: Any) -> list[float]:
+    if not value:
+        return []
+    if isinstance(value, list):
+        return [float(item) for item in value]
+    text = str(value).strip().strip("[]")
+    if not text:
+        return []
+    return [float(part) for part in text.split(",") if part]
+
+
 def _uuid_or_none(value: str | None) -> str | None:
     if not value:
         return None
@@ -180,6 +197,7 @@ class PostgresKnowledgeRepository:
               d.source_hash,
               d.version,
               d.updated_at::text,
+              c.embedding::text,
               c.metadata
             from document_chunks c
             join documents d on d.id = c.document_id
@@ -266,13 +284,16 @@ class PostgresKnowledgeRepository:
                 "parser_name": chunk.get("parser_name"),
                 "parser_metadata": chunk.get("parser_metadata", {}),
                 "parser_warnings": chunk.get("parser_warnings", []),
+                "embedding_model": chunk.get("embedding_model"),
+                "embedding_dimensions": chunk.get("embedding_dimensions"),
+                "embedding_norm": chunk.get("embedding_norm"),
             }
             self._execute_write(
                 """
                 insert into document_chunks (
-                  id, tenant_id, document_id, chunk_index, content, metadata
+                  id, tenant_id, document_id, chunk_index, content, embedding, metadata
                 )
-                values (%s::uuid, %s::uuid, %s::uuid, %s, %s, %s::jsonb)
+                values (%s::uuid, %s::uuid, %s::uuid, %s, %s, %s::vector, %s::jsonb)
                 """,
                 (
                     chunk_uuid,
@@ -280,6 +301,7 @@ class PostgresKnowledgeRepository:
                     doc_uuid,
                     chunk["chunk_index"],
                     chunk["text"],
+                    _vector_payload(chunk.get("embedding")),
                     _json_payload(metadata),
                 ),
             )
@@ -494,7 +516,7 @@ class PostgresKnowledgeRepository:
         }
 
     def _row_to_chunk(self, row: Any) -> dict:
-        metadata = _coerce_json(row[14]) if len(row) > 14 else {}
+        metadata = _coerce_json(row[15]) if len(row) > 15 else {}
         return {
             "_chunk_uuid": row[0],
             "id": row[1],
@@ -510,9 +532,13 @@ class PostgresKnowledgeRepository:
             "source_hash": row[11],
             "version": row[12],
             "updated_at": row[13],
+            "embedding": _parse_vector(row[14]) if len(row) > 14 else [],
             "parser_name": metadata.get("parser_name") if isinstance(metadata, dict) else None,
             "parser_metadata": metadata.get("parser_metadata", {}) if isinstance(metadata, dict) else {},
             "parser_warnings": metadata.get("parser_warnings", []) if isinstance(metadata, dict) else [],
+            "embedding_model": metadata.get("embedding_model") if isinstance(metadata, dict) else None,
+            "embedding_dimensions": metadata.get("embedding_dimensions") if isinstance(metadata, dict) else None,
+            "embedding_norm": metadata.get("embedding_norm") if isinstance(metadata, dict) else None,
         }
 
     def _tenant_uuid(self, tenant_slug: str) -> str:

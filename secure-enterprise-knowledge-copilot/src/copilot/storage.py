@@ -5,6 +5,7 @@ import threading
 from pathlib import Path
 
 from .chunking import chunk_text
+from .embeddings import embed_chunk
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -78,6 +79,7 @@ def seed(store: JsonStore, seed_path: Path = SEED_PATH) -> None:
     for doc in payload["documents"]:
         documents.append(doc)
         for idx, text in enumerate(chunk_text(doc["body"])):
+            embedding = embed_chunk(doc["title"], text)
             chunks.append(
                 {
                     "id": f"{doc['id']}::chunk-{idx + 1}",
@@ -91,6 +93,8 @@ def seed(store: JsonStore, seed_path: Path = SEED_PATH) -> None:
                     "source_url": doc["source_url"],
                     "version": doc["version"],
                     "updated_at": doc["updated_at"],
+                    "embedding": embedding.vector,
+                    **embedding.metadata(),
                 }
             )
 

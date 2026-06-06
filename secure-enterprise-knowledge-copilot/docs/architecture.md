@@ -23,6 +23,7 @@ Python standard-library HTTP server
   |   +-- admin-only document intake
   |   +-- source_parsing.py parser normalization
   |   +-- parser metadata and warning audit
+  |   +-- embeddings.py chunk embedding boundary
   |   +-- classification and role validation
   |   +-- source hashing and audit event
   |
@@ -39,7 +40,7 @@ Python standard-library HTTP server
   |   +-- role filter
   |   +-- local hybrid scoring profile
   |   +-- BM25-like keyword score
-  |   +-- title, phrase, and semantic-family score components
+  |   +-- title, phrase, semantic-family, and vector score components
   |   +-- synonym expansion
   |
   +-- Answering
@@ -75,11 +76,11 @@ Next.js UI
 
 Permission filtering happens before evidence is assembled. The model should never receive chunks the user cannot access.
 
-Ingestion is an application boundary, not a frontend shortcut. Only admin users can add searchable documents, and each new document passes through a versioned parser boundary before chunking. Each ingest records source hash, chunk count, parser name, parser warnings, source MIME type, roles, and classification in the audit log.
+Ingestion is an application boundary, not a frontend shortcut. Only admin users can add searchable documents, and each new document passes through a versioned parser boundary before chunking and embedding. Each ingest records source hash, chunk count, parser name, parser warnings, source MIME type, embedding model, roles, and classification in the audit log.
 
 The application modules depend on `KnowledgeRepository` rather than direct JSON state. The current `JsonKnowledgeRepository` keeps the local demo zero-dependency. The optional `PostgresKnowledgeRepository` maps the same contract to tenant-scoped PostgreSQL tables, document/chunk writes, traces, audit events, and eval runs without making answering, retrieval, ingestion, or eval modules import SQL directly.
 
-Retrieval exposes a `local-hybrid-v1` profile with lexical, title, phrase, and semantic-family score breakdowns. This is not a real embedding backend yet; it is a deterministic local scoring boundary that makes retrieval quality auditable and creates a clean replacement point for pgvector, hybrid search, and reranking.
+Retrieval exposes a `local-hybrid-v1` profile with lexical, title, phrase, semantic-family, and vector score breakdowns. The vector path uses a deterministic local hashing embedding so seed data, admin ingestion, and the pgvector adapter share a concrete embedding boundary without requiring a paid model. In production, that boundary should be replaced by a real embedding model and reranker while preserving permission filtering before evidence assembly.
 
 Retrieved documents are treated as data, not instructions. Instruction-like text inside documents is detected and excluded from evidence.
 
