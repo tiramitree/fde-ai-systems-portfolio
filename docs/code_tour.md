@@ -25,6 +25,7 @@ secure-enterprise-knowledge-copilot/app.py
   -> src/copilot/api.py: CopilotApi
   -> src/copilot/repositories.py
   -> src/copilot/postgres_repositories.py
+  -> src/copilot/source_parsing.py
   -> src/copilot/retrieval.py
   -> src/copilot/security.py
   -> src/copilot/answering.py
@@ -40,12 +41,13 @@ Key files:
 - `secure-enterprise-knowledge-copilot/app.py`: stdlib HTTP server and static shell. It imports only `copilot.api` and `copilot.storage` from the backend package.
 - `secure-enterprise-knowledge-copilot/src/copilot/api.py`: `CopilotApi` maps browser/API requests to users, visible documents, query handling, traces, audit, scenario snapshots, and eval runs.
 - `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: `KnowledgeRepository`, `JsonKnowledgeRepository`, `PostgresRepositorySession`, and `connect_repository` define the application-facing storage adapter boundary used by API, retrieval, answering, ingestion, and eval logic; `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, and optional `COPILOT_POSTGRES_POOL` keep the production data-plane path opt-in.
+- `secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py`: parser boundary for admin-ingested plain text, Markdown, CSV, HTML, and JSON sources. It returns normalized searchable text plus parser metadata and warnings so ingestion can audit the data-plane step without mixing parser rules into authorization logic.
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py`: retrieval asks the repository for `count_potentially_blocked_chunks` so JSON can count denied local evidence directly while PostgreSQL can preserve RLS and use `project1_denied_relevant_chunk_count` without exposing unauthorized content.
 - `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`: optional production-path `PostgresKnowledgeRepository` contract over the PostgreSQL/pgvector schema. It keeps tenant context, document/chunk writes, traces, audit events, and eval runs behind the same repository shape without making PostgreSQL required for the local demo.
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py`: tenant, role, keyword, and synonym retrieval before answering.
 - `secure-enterprise-knowledge-copilot/src/copilot/security.py`: prompt-injection detection and evidence sanitization.
 - `secure-enterprise-knowledge-copilot/src/copilot/answering.py`: answer, citation, confidence, missing-evidence, and abstention behavior.
-- `secure-enterprise-knowledge-copilot/src/copilot/chunking.py`: shared deterministic text chunking used by JSON seeding and admin ingestion.
+- `secure-enterprise-knowledge-copilot/src/copilot/chunking.py`: shared deterministic text chunking used by JSON seeding and admin ingestion after parser normalization.
 - `secure-enterprise-knowledge-copilot/src/copilot/model_gateway.py`: optional OpenAI structured-output path with local fallback as the default.
 - `secure-enterprise-knowledge-copilot/src/copilot/storage.py`: local JSON state mechanics and seed/reset support; application modules should go through `repositories.py`.
 - `secure-enterprise-knowledge-copilot/src/copilot/evals.py`: retrieval, citation, abstention, and leak-prevention regression cases.

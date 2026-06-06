@@ -88,6 +88,10 @@ The route returns:
 - `ingestion.replace`
 - `ingestion.source_hash`
 - `ingestion.supported_mime_types`
+- `ingestion.parser.name`
+- `ingestion.parser.normalized_characters`
+- `ingestion.parser.metadata`
+- `ingestion.parser.warnings`
 
 Ingestion contract:
 
@@ -96,7 +100,9 @@ Ingestion contract:
 - confidential documents cannot include the `employee` role
 - duplicate document IDs require `replace`
 - the raw document body is never returned
-- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, and role metadata
+- ingestion normalizes supported source formats through parser versions such as `plain-text-v1`, `markdown-v1`, `csv-v1`, `html-v1`, and `json-v1`
+- CSV parser metadata includes `row_count`, `column_count`, and `has_header`; parser warnings are surfaced as `parser_warnings`
+- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `parser_warnings`, and role metadata
 
 ### Scenario Snapshot Shape
 

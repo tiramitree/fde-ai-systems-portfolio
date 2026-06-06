@@ -1,26 +1,17 @@
 from __future__ import annotations
 
 import hashlib
-import html
 import re
 from datetime import datetime, timezone
 
 from .chunking import chunk_text
 from .repositories import KnowledgeRepository
+from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source_content
 
 
 VALID_CLASSIFICATIONS = {"public", "internal", "confidential"}
 VALID_ROLES = {"employee", "manager", "admin"}
-SUPPORTED_MIME_TYPES = {
-    "text/plain",
-    "text/markdown",
-    "text/csv",
-    "text/html",
-    "application/json",
-}
 SLUG_RE = re.compile(r"[^a-z0-9]+")
-SCRIPT_STYLE_RE = re.compile(r"<(script|style)\b[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL)
-TAG_RE = re.compile(r"<[^>]+>")
 
 
 class IngestionError(Exception):
@@ -53,17 +44,6 @@ def _slug(text: str) -> str:
 def _document_id(tenant_id: str, title: str, source_url: str, source_hash: str) -> str:
     stable = hashlib.sha256(f"{tenant_id}\n{source_url}\n{source_hash}".encode("utf-8")).hexdigest()[:10]
     return f"ingested-{_slug(title)}-{stable}"
-
-
-def _extract_text(content: str, source_mime: str) -> str:
-    if source_mime == "text/html":
-        without_scripts = SCRIPT_STYLE_RE.sub(" ", content)
-        without_tags = TAG_RE.sub(" ", without_scripts)
-        return html.unescape(re.sub(r"[ \t]+", " ", without_tags)).strip()
-    if source_mime == "application/json":
-        # Keep JSON content searchable while avoiding a parser dependency or hidden schema assumption.
-        return re.sub(r"[{}[\]\",:]+", " ", content).strip()
-    return content
 
 
 def _validate_roles(value: object, classification: str) -> list[str]:
@@ -104,7 +84,12 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     if source_mime not in SUPPORTED_MIME_TYPES:
         raise IngestionError(415, f"Unsupported source_mime: {source_mime}")
 
-    body = _extract_text(raw_body, source_mime)
+    try:
+        parsed_source = parse_source_content(raw_body, source_mime)
+    except SourceParseError as exc:
+        raise IngestionError(400, str(exc)) from exc
+
+    body = parsed_source.text
     if len(body) < 20:
         raise IngestionError(400, "body must contain at least 20 searchable characters")
 
@@ -139,6 +124,9 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         "source_hash": source_hash,
         "version": version,
         "updated_at": updated_at,
+        "parser_name": parsed_source.parser_name,
+        "parser_metadata": parsed_source.metadata,
+        "parser_warnings": list(parsed_source.warnings),
         "body": body,
     }
 
@@ -159,6 +147,9 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "source_hash": source_hash,
                 "version": version,
                 "updated_at": updated_at,
+                "parser_name": parsed_source.parser_name,
+                "parser_metadata": parsed_source.metadata,
+                "parser_warnings": list(parsed_source.warnings),
             }
         )
 
@@ -175,6 +166,9 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "source_url": source_url,
             "source_mime": source_mime,
             "source_hash": source_hash,
+            "parser_name": parsed_source.parser_name,
+            "parser_warnings": list(parsed_source.warnings),
+            "normalized_characters": parsed_source.normalized_characters,
             "replaced_existing": replaced_existing,
         },
     )
@@ -187,5 +181,11 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "replace": replace,
             "source_hash": source_hash,
             "supported_mime_types": sorted(SUPPORTED_MIME_TYPES),
+            "parser": {
+                "name": parsed_source.parser_name,
+                "normalized_characters": parsed_source.normalized_characters,
+                "metadata": parsed_source.metadata,
+                "warnings": list(parsed_source.warnings),
+            },
         },
     }

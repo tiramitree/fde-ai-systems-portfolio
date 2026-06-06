@@ -68,6 +68,9 @@ Useful fields to inspect:
 - `permission_blocked_count`
 - `security_events`
 - `source_hash`
+- `ingestion.parser.name`
+- `ingestion.parser.normalized_characters`
+- `ingestion.parser.metadata`
 
 ## Project 2: Governed Operations Agent
 

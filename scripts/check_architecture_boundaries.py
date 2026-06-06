@@ -37,6 +37,9 @@ PROJECTS = [
                 {"KnowledgeRepository", "JsonKnowledgeRepository", "PostgresRepositorySession", "connect_repository"}
             ),
             "src/copilot/security.py": frozenset({"detect_prompt_injection", "sanitize_evidence"}),
+            "src/copilot/source_parsing.py": frozenset(
+                {"ParsedSource", "SourceParseError", "SUPPORTED_MIME_TYPES", "parse_source_content"}
+            ),
             "src/copilot/storage.py": frozenset({"JsonStore", "connect", "init_db"}),
             "src/copilot/time_utils.py": frozenset({"utc_now"}),
             "src/copilot/evals.py": frozenset({"run_evals"}),
@@ -275,6 +278,7 @@ def check_code_tour() -> list[str]:
         "secure-enterprise-knowledge-copilot/app.py",
         "src/copilot/api.py: CopilotApi",
         "src/copilot/repositories.py",
+        "src/copilot/source_parsing.py",
         "src/copilot/retrieval.py",
         "src/copilot/security.py",
         "src/copilot/answering.py",
