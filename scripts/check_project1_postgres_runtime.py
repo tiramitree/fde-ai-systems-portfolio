@@ -37,14 +37,15 @@ def check_static_contract() -> list[str]:
                 'os.getenv("COPILOT_POSTGRES_DSN"',
                 "def postgres_pool_enabled",
                 'os.getenv("COPILOT_POSTGRES_POOL", "0")',
-                "class PostgresRepositorySession",
-                "connect_psycopg",
-                'importlib.import_module("psycopg")',
-                'importlib.import_module("psycopg_pool")',
-                "class PooledPostgresConnection",
-                'if provider == "postgres"',
-                "PostgresKnowledgeRepository(self._connection, self.tenant_slug)",
-                "COPILOT_REPOSITORY=postgres requires COPILOT_POSTGRES_DSN",
+            "class PostgresRepositorySession",
+            "connect_psycopg",
+            'importlib.import_module("psycopg")',
+            'importlib.import_module("psycopg_pool")',
+            "class PooledPostgresConnection",
+            "count_potentially_blocked_chunks",
+            'if provider == "postgres"',
+            "PostgresKnowledgeRepository(self._connection, self.tenant_slug)",
+            "COPILOT_REPOSITORY=postgres requires COPILOT_POSTGRES_DSN",
             ],
         )
     )
@@ -57,6 +58,8 @@ def check_static_contract() -> list[str]:
                 "def close",
                 "select set_config('app.tenant_id'",
                 "select set_config('app.tenant_slug'",
+                "def count_potentially_blocked_chunks",
+                "select project1_denied_relevant_chunk_count",
             ],
         )
     )
@@ -95,6 +98,7 @@ def check_static_contract() -> list[str]:
 def check_live_runtime() -> list[str]:
     sys.path.insert(0, str(COPILOT_ROOT / "src"))
     from copilot.repositories import PostgresRepositorySession, postgres_dsn
+    from copilot.retrieval import tokenize
 
     failures: list[str] = []
     if not postgres_dsn():
@@ -102,18 +106,39 @@ def check_live_runtime() -> list[str]:
 
     try:
         with PostgresRepositorySession() as repo:
-            users = repo.list_users()
-            if not users:
-                failures.append("Postgres runtime returned no users; apply migration and seed first")
-            else:
-                user = repo.get_user(users[0]["id"])
-                if not user:
-                    failures.append("Postgres runtime could not reload the first listed user")
-                else:
-                    repo.list_visible_documents(user)
-                    repo.list_chunks(user["tenant_id"])
-                    repo.list_traces(limit=1)
-                    repo.list_audit_events(limit=1)
+            users = {user["id"]: user for user in repo.list_users()}
+            for required_user in ["alice", "morgan", "avery"]:
+                if required_user not in users:
+                    failures.append(f"Postgres runtime missing seeded user {required_user}")
+            alice = repo.get_user("alice")
+            morgan = repo.get_user("morgan")
+            if not alice or not morgan:
+                return failures or ["Postgres runtime could not load seeded Alice/Morgan users"]
+
+            alice_docs = {doc["id"] for doc in repo.list_visible_documents(alice)}
+            if "finance-retention-plan-2026" in alice_docs:
+                failures.append("RLS violation: Alice can see finance-retention-plan-2026 in visible documents")
+            if "hr-remote-work-2026" not in alice_docs:
+                failures.append("RLS setup error: Alice cannot see expected internal HR document")
+
+            alice_chunks = {chunk["doc_id"] for chunk in repo.list_chunks(alice["tenant_id"])}
+            if "finance-retention-plan-2026" in alice_chunks:
+                failures.append("RLS violation: Alice can read finance-retention-plan-2026 chunks")
+
+            finance_tokens = tokenize("What is the finance retention plan?")
+            alice_blocked = repo.count_potentially_blocked_chunks(alice, finance_tokens)
+            if alice_blocked < 1:
+                failures.append("Denied-evidence count failed: Alice finance query should report at least one blocked chunk")
+
+            morgan_docs = {doc["id"] for doc in repo.list_visible_documents(morgan)}
+            if "finance-retention-plan-2026" not in morgan_docs:
+                failures.append("RLS setup error: Morgan cannot see finance-retention-plan-2026")
+            morgan_blocked = repo.count_potentially_blocked_chunks(morgan, finance_tokens)
+            if morgan_blocked != 0:
+                failures.append("Denied-evidence count failed: Morgan finance query should not report blocked finance chunks")
+
+            repo.list_traces(limit=1)
+            repo.list_audit_events(limit=1)
     except Exception as exc:
         failures.append(f"live Postgres runtime check failed: {exc}")
     return failures
@@ -139,7 +164,7 @@ def main() -> int:
         return 1
 
     if args.live:
-        print("Project 1 PostgreSQL runtime check passed: live tenant, user, document, chunk, trace, and audit queries succeeded.")
+        print("Project 1 PostgreSQL runtime check passed: live tenant, RLS, denied-evidence count, trace, and audit queries succeeded.")
     else:
         print("Project 1 PostgreSQL runtime check passed: runtime provider switch, optional pool wiring, reset guard, and docs are aligned.")
     return 0

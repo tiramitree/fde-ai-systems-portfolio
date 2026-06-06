@@ -8,6 +8,7 @@ POSTGRES_COMPOSE = ROOT / "docker-compose.postgres.yml"
 ROLE_INIT = ROOT / "infra" / "postgres" / "init" / "000_project1_runtime_roles.sql"
 GRANTS_INIT = ROOT / "infra" / "postgres" / "init" / "003_project1_runtime_grants.sql"
 MIGRATION = ROOT / "infra" / "postgres" / "migrations" / "001_core.sql"
+DENIED_COUNT_MIGRATION = ROOT / "infra" / "postgres" / "migrations" / "002_project1_denied_evidence_count.sql"
 SEED = ROOT / "infra" / "postgres" / "seeds" / "001_project1_demo.sql"
 README = ROOT / "README.md"
 POSTGRES_DESIGN = ROOT / "docs" / "postgres_pgvector_adapter_design.md"
@@ -64,12 +65,15 @@ def check_compose(failures: list[str]) -> None:
             "target: /docker-entrypoint-initdb.d/000_project1_runtime_roles.sql",
             "project1_core_migration",
             "target: /docker-entrypoint-initdb.d/001_core.sql",
+            "project1_denied_evidence_count",
+            "target: /docker-entrypoint-initdb.d/002_project1_denied_evidence_count.sql",
             "project1_demo_seed",
-            "target: /docker-entrypoint-initdb.d/002_project1_demo_seed.sql",
+            "target: /docker-entrypoint-initdb.d/003_project1_demo_seed.sql",
             "project1_runtime_grants",
-            "target: /docker-entrypoint-initdb.d/003_project1_runtime_grants.sql",
+            "target: /docker-entrypoint-initdb.d/004_project1_runtime_grants.sql",
             "file: ./infra/postgres/init/000_project1_runtime_roles.sql",
             "file: ./infra/postgres/migrations/001_core.sql",
+            "file: ./infra/postgres/migrations/002_project1_denied_evidence_count.sql",
             "file: ./infra/postgres/seeds/001_project1_demo.sql",
             "file: ./infra/postgres/init/003_project1_runtime_grants.sql",
         ],
@@ -107,6 +111,7 @@ def check_role_files(failures: list[str]) -> None:
             "grant usage on schema public to fde_app",
             "grant select, insert, update, delete on all tables in schema public to fde_app",
             "grant usage, select on all sequences in schema public to fde_app",
+            "grant execute on function project1_denied_relevant_chunk_count(text[]) to fde_app",
         ],
         failures,
     )
@@ -116,6 +121,16 @@ def check_role_files(failures: list[str]) -> None:
 
 def check_supporting_artifacts(failures: list[str]) -> None:
     require_file(MIGRATION, failures)
+    require_contains(
+        DENIED_COUNT_MIGRATION,
+        [
+            "create or replace function project1_denied_relevant_chunk_count(query_terms text[])",
+            "security definer",
+            "returns integer",
+            "revoke all on function project1_denied_relevant_chunk_count(text[]) from public",
+        ],
+        failures,
+    )
     require_file(SEED, failures)
     doc_markers = [
         "docker-compose.postgres.yml",

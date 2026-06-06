@@ -212,9 +212,11 @@ Design Review Docs:
 - `docs/technical_review_playbook.md`: difficult system-design questions and answers.
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
 - `docs/industrialization_gap_plan.md`: gap analysis between this portfolio and production-grade industrial AI systems, with an upgrade plan.
+- `docs/industrial_readiness_field_scan.md`: current external benchmark scan, industrial-readiness distance estimate, and prioritized upgrade plan.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
 - `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
+- `infra/postgres/migrations/002_project1_denied_evidence_count.sql`: security-definer helper that returns only denied relevant evidence counts for Project 1 RLS audit semantics.
 - `infra/postgres/seeds/001_project1_demo.sql`: deterministic Project 1 demo seed SQL generated from `secure-enterprise-knowledge-copilot/data/seed_documents.json`.
 - `infra/postgres/init/000_project1_runtime_roles.sql`: local compose role initializer for the non-owner `fde_app` runtime role.
 - `infra/postgres/init/003_project1_runtime_grants.sql`: local compose grants for Project 1 runtime access while preserving RLS.
@@ -365,6 +367,7 @@ Important files:
 - `src/copilot/api.py`: application API layer for HTTP-facing use cases.
 - `src/copilot/repositories.py`: application-facing storage adapter boundary over the local JSON provider.
 - `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, document/chunk writes, traces, audit events, and eval runs outside application modules.
+- `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts.
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
 - `src/copilot/retrieval.py`: role-aware retrieval and evidence selection.
 - `src/copilot/security.py`: unsafe retrieved-content detection.

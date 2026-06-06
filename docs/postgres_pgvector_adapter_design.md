@@ -324,6 +324,7 @@ Use versioned migrations with a tool such as Alembic, Flyway, or Sqitch.
 This repository now includes the first reviewable production-path migration artifact:
 
 - `infra/postgres/migrations/001_core.sql`
+- `infra/postgres/migrations/002_project1_denied_evidence_count.sql`
 - `python -B scripts/dev.py postgres-migrations`
 - `infra/postgres/seeds/001_project1_demo.sql`
 - `docker-compose.postgres.yml`
@@ -331,7 +332,9 @@ This repository now includes the first reviewable production-path migration arti
 - `python -B scripts/dev.py postgres-runtime`
 - `python -B scripts/dev.py postgres-seed`
 
-The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, and the Project 1 adapter contract. The compose check verifies the optional digest-pinned pgvector service, init order, seed wiring, healthcheck, and local role separation. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. None of these checks makes PostgreSQL required for the default local demo.
+The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, the Project 1 adapter contract, and the `project1_denied_relevant_chunk_count` helper. The compose check verifies the optional digest-pinned pgvector service, init order, seed wiring, healthcheck, and local role separation. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. None of these checks makes PostgreSQL required for the default local demo.
+
+RLS hides unauthorized rows from the app role, which is correct for security but can remove useful audit evidence such as "this query had relevant denied evidence." `infra/postgres/migrations/002_project1_denied_evidence_count.sql` adds a security-definer function that returns only a count of denied but potentially relevant chunks for the current tenant and role. It does not return document IDs, titles, chunk text, or snippets. `PostgresKnowledgeRepository.count_potentially_blocked_chunks` calls this function so the application can preserve blocked-evidence audit semantics without weakening RLS.
 
 For local production-mode database testing on a Docker-enabled machine:
 
@@ -400,7 +403,7 @@ This keeps the technical review story inspectable: a reviewer can connect an ans
 1. Extend the existing `KnowledgeRepository` boundary while keeping local JSON adapters. Done for Project 1.
 2. Keep building the optional PostgreSQL adapter path behind the `COPILOT_REPOSITORY=postgres` switch. Done for the Project 1 documents, chunks, traces, audit, and eval repository session path.
 3. Add migrations and seed scripts. Done for the Project 1 demo seed path.
-4. Run `python -B scripts/check_project1_postgres_runtime.py --live` against the seeded `docker-compose.postgres.yml` database on port `55432`.
+4. Run `python -B scripts/check_project1_postgres_runtime.py --live` against the seeded `docker-compose.postgres.yml` database on port `55432`; the live probe checks Alice finance denial, Morgan finance access, and denied-evidence count behavior.
 5. Add pgvector embeddings and hybrid retrieval behind a feature flag.
 6. Port Project 2 cases, tool actions, approvals, traces, and audit state.
 7. Add RLS tests, unauthorized retrieval tests, and cross-tenant side-effect tests.

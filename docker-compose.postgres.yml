@@ -14,10 +14,12 @@ services:
         target: /docker-entrypoint-initdb.d/000_project1_runtime_roles.sql
       - source: project1_core_migration
         target: /docker-entrypoint-initdb.d/001_core.sql
+      - source: project1_denied_evidence_count
+        target: /docker-entrypoint-initdb.d/002_project1_denied_evidence_count.sql
       - source: project1_demo_seed
-        target: /docker-entrypoint-initdb.d/002_project1_demo_seed.sql
+        target: /docker-entrypoint-initdb.d/003_project1_demo_seed.sql
       - source: project1_runtime_grants
-        target: /docker-entrypoint-initdb.d/003_project1_runtime_grants.sql
+        target: /docker-entrypoint-initdb.d/004_project1_runtime_grants.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
@@ -29,6 +31,8 @@ configs:
     file: ./infra/postgres/init/000_project1_runtime_roles.sql
   project1_core_migration:
     file: ./infra/postgres/migrations/001_core.sql
+  project1_denied_evidence_count:
+    file: ./infra/postgres/migrations/002_project1_denied_evidence_count.sql
   project1_demo_seed:
     file: ./infra/postgres/seeds/001_project1_demo.sql
   project1_runtime_grants:
