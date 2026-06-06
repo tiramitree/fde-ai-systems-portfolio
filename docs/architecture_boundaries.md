@@ -19,7 +19,7 @@ Each project keeps four layers separate:
 | HTTP and static shell | project `app.py` | Owns local HTTP routing, static file serving, JSON parsing, and response headers. It delegates application behavior to the API class. |
 | API layer | `src/<package>/api.py` | Owns UI-facing use cases and response shapes. It is the backend boundary used by `app.py`. |
 | Domain layer | `answering.py`, `retrieval.py`, `security.py`, `source_parsing.py`, `agent.py`, `tools.py` | Owns permission checks, source parser normalization, evidence shaping, workflow decisions, deterministic tools, and approval gates. |
-| Repository and state support | `repositories.py`, `postgres_repositories.py`, `storage.py`, `evals.py`, seed data | Owns application-facing storage interfaces, local deterministic state adapters, production-path PostgreSQL adapter contracts, traces, audit logs, and regression evidence. |
+| Repository and state support | `repositories.py`, `postgres_repositories.py`, `storage.py`, `evals.py`, seed data | Owns application-facing storage interfaces, local deterministic state adapters, production-path PostgreSQL adapter contracts, retrieval candidates, traces, audit logs, and regression evidence. |
 
 The frontend stays in each project's `web/` directory and imports only local JavaScript modules from the same web boundary.
 

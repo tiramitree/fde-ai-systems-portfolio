@@ -70,6 +70,8 @@ Retrieval contract:
 
 - `retrieval_profile.name` is `local-hybrid-v1` in the local runtime
 - `retrieval_profile.score_components` lists `bm25_like`, `title`, `phrase`, `semantic_family`, and `vector`
+- `retrieval_profile.candidate_strategy` is `local_full_scan` for the default JSON runtime and `postgres_hybrid_sql_v1` for the PostgreSQL/pgvector runtime
+- `retrieval_profile.candidate_source_count` records how many retrieval candidates were returned by the storage/search layer before final scoring
 - `retrieval_profile.embedding_model` is `local-hashing-v1` and `retrieval_profile.embedding_dimensions` is `1536` for the local deterministic embedding boundary
 - `retrieval_profile.permission_filter` is `tenant_role_before_scoring`
 - `retrieved[].score_breakdown` exposes lexical, title, phrase, semantic, vector, matched-term, and semantic-family evidence for review

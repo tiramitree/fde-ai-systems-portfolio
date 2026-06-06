@@ -51,6 +51,8 @@ Project 1 now has the first local version of this boundary in `secure-enterprise
 
 Project 1 also now has a local deterministic embedding boundary in `secure-enterprise-knowledge-copilot/src/copilot/embeddings.py`. The `local-hashing-v1` model emits 1536-dimensional vectors so seed data, admin-ingested chunks, retrieval scoring, and the PostgreSQL adapter share one concrete vector contract. This is not the production embedding model; it is a dependency-free handoff point that can later be replaced by OpenAI, Voyage, bge-m3, or another approved embedding model without moving permission checks into prompts.
 
+The PostgreSQL adapter also exposes `list_retrieval_candidates`, a SQL-backed candidate selection boundary. In the JSON runtime, retrieval uses `candidate_strategy=local_full_scan`. In the PostgreSQL runtime, retrieval uses `candidate_strategy=postgres_hybrid_sql_v1`: SQL first applies tenant and role filters, then merges `websearch_to_tsquery` keyword candidates with pgvector nearest-neighbor candidates before Python applies the shared final scoring, prompt-injection checks, citations, traces, and audit behavior.
+
 The application layer receives a typed user context:
 
 ```text
@@ -168,26 +170,32 @@ with authorized_chunks as (
     and current_setting('app.role') = any(d.allowed_roles)
 ),
 keyword_hits as (
-  select id, ts_rank_cd(content_tsv, websearch_to_tsquery('english', :query)) as score
+  select id, ts_rank_cd(content_tsv, websearch_to_tsquery('english', :query)) as keyword_score, 0.0 as vector_score
   from authorized_chunks
   where content_tsv @@ websearch_to_tsquery('english', :query)
-  order by score desc
+  order by keyword_score desc
   limit 50
 ),
 vector_hits as (
-  select id, 1 - (embedding <=> :query_embedding) as score
+  select id, 0.0 as keyword_score, 1 - (embedding <=> :query_embedding) as vector_score
   from authorized_chunks
   where embedding is not null
   order by embedding <=> :query_embedding
   limit 50
+),
+merged_hits as (
+  select id, max(keyword_score) as keyword_score, max(vector_score) as vector_score
+  from (
+    select * from keyword_hits
+    union all
+    select * from vector_hits
+  ) hits
+  group by id
 )
-select *
-from (
-  select id, score, 'keyword' as source from keyword_hits
-  union all
-  select id, score, 'vector' as source from vector_hits
-) hits
-order by score desc
+select authorized_chunks.*, keyword_score, vector_score
+from authorized_chunks
+join merged_hits using (id)
+order by keyword_score * 0.65 + vector_score * 0.35 desc
 limit :top_k;
 ```
 
@@ -334,7 +342,7 @@ This repository now includes the first reviewable production-path migration arti
 - `python -B scripts/dev.py postgres-runtime`
 - `python -B scripts/dev.py postgres-seed`
 
-The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, the Project 1 adapter contract, and the `project1_denied_relevant_chunk_count` helper. The compose check verifies the optional digest-pinned pgvector service, init order, seed wiring, healthcheck, and local role separation. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. The seed SQL stores deterministic chunk vectors in `document_chunks.embedding` and embedding provenance in chunk metadata, keeping the pgvector schema, adapter, and local seed artifact aligned before a production embedding service is introduced. None of these checks makes PostgreSQL required for the default local demo.
+The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, SQL-backed hybrid candidate selection, eval-state isolation, approval visibility rules, idempotent tool-action keys, the Project 1 adapter contract, and the `project1_denied_relevant_chunk_count` helper. The compose check verifies the optional digest-pinned pgvector service, init order, seed wiring, healthcheck, and local role separation. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. The seed SQL stores deterministic chunk vectors in `document_chunks.embedding` and embedding provenance in chunk metadata, keeping the pgvector schema, adapter, and local seed artifact aligned before a production embedding service is introduced. None of these checks makes PostgreSQL required for the default local demo.
 
 RLS hides unauthorized rows from the app role, which is correct for security but can remove useful audit evidence such as "this query had relevant denied evidence." `infra/postgres/migrations/002_project1_denied_evidence_count.sql` adds a security-definer function that returns only a count of denied but potentially relevant chunks for the current tenant and role. It does not return document IDs, titles, chunk text, or snippets. `PostgresKnowledgeRepository.count_potentially_blocked_chunks` calls this function so the application can preserve blocked-evidence audit semantics without weakening RLS.
 
@@ -355,12 +363,13 @@ Migration phases:
 1. Review and run `001_core.sql` in a PostgreSQL/pgvector environment.
 2. Seed the Project 1 demo tenant, users, documents, and chunks with `infra/postgres/seeds/001_project1_demo.sql`.
 3. Replace `local-hashing-v1` with a production embedding provider behind the existing embedding boundary.
-4. Add SQL-backed hybrid BM25/vector retrieval and reranking behind a feature flag.
-5. Backfill cases, approvals, audit events, traces, and eval records for Projects 2 and 3 when those adapters are added.
-6. Dual-write local and PostgreSQL adapters in a staging environment.
-7. Compare read results and eval outcomes across both adapters.
-8. Cut reads to PostgreSQL behind a feature flag.
-9. Remove dual-write only after evals and replay checks are stable.
+4. Add SQL-backed keyword/vector candidate selection. Done for the Project 1 PostgreSQL path through `postgres_hybrid_sql_v1`.
+5. Add production reranking, larger retrieval metrics, and a production embedding provider behind the existing boundaries.
+6. Backfill cases, approvals, audit events, traces, and eval records for Projects 2 and 3 when those adapters are added.
+7. Dual-write local and PostgreSQL adapters in a staging environment.
+8. Compare read results and eval outcomes across both adapters.
+9. Cut reads to PostgreSQL behind a feature flag.
+10. Remove dual-write only after evals and replay checks are stable.
 
 Rollback rules:
 
@@ -407,12 +416,12 @@ This keeps the technical review story inspectable: a reviewer can connect an ans
 1. Extend the existing `KnowledgeRepository` boundary while keeping local JSON adapters. Done for Project 1.
 2. Keep building the optional PostgreSQL adapter path behind the `COPILOT_REPOSITORY=postgres` switch. Done for the Project 1 documents, chunks, traces, audit, and eval repository session path.
 3. Add migrations and seed scripts. Done for the Project 1 demo seed path.
-4. Run `python -B scripts/check_project1_postgres_runtime.py --live` against the seeded `docker-compose.postgres.yml` database on port `55432`; the live probe checks Alice finance denial, Morgan finance access, and denied-evidence count behavior.
+4. Run `python -B scripts/check_project1_postgres_runtime.py --live` against the seeded `docker-compose.postgres.yml` database on port `55432`; the live probe checks Alice finance denial, Morgan finance access, SQL hybrid candidate retrieval, and denied-evidence count behavior.
 5. Replace the local deterministic embedding provider with a production embedding provider behind the existing boundary.
-6. Add SQL-backed hybrid BM25/vector retrieval and reranking behind a feature flag.
+6. Add production reranking and larger retrieval metrics behind the existing candidate boundary.
 7. Port Project 2 cases, tool actions, approvals, traces, and audit state.
 8. Add RLS tests, unauthorized retrieval tests, and cross-tenant side-effect tests.
-9. Add Docker Compose PostgreSQL service for local production-mode testing.
+9. Record live Docker Compose PostgreSQL evidence on a Docker-enabled machine.
 10. Run `python -B scripts/dev.py verify`, `python -B scripts/dev.py replay`, and adapter-specific evals before promoting.
 
 ## Open Risks

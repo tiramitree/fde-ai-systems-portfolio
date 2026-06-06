@@ -406,6 +406,8 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and profile.get("embedding_model") == "local-hashing-v1"
             and profile.get("embedding_dimensions") == 1536
             and profile.get("permission_filter") == "tenant_role_before_scoring"
+            and profile.get("candidate_strategy") == "local_full_scan"
+            and isinstance(profile.get("candidate_source_count"), int)
             and isinstance(retrieved, list)
             and bool(retrieved)
             and isinstance(retrieved[0].get("score_breakdown"), dict)

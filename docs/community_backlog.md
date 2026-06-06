@@ -12,14 +12,14 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 
 ## Intermediate Issues
 
-1. Add a hybrid BM25 + vector retrieval path behind a feature flag.
+1. Add production reranking and retrieval-quality metrics for the existing keyword/vector candidate path.
 2. Add live OTLP HTTP export to an OpenTelemetry Collector.
 3. Add per-case eval reports with failure diffs.
 4. Add Docker Compose runtime screenshots after testing on a Docker-enabled machine.
 
 ## Advanced Issues
 
-1. Implement PostgreSQL and pgvector storage adapters from the design note.
+1. Extend the PostgreSQL and pgvector adapter into a live deployment-tested data plane.
 2. Add connector stubs for Google Drive, Slack, Jira, CRM, email, and calendar.
 3. Add model-backed eval grading while keeping deterministic safety assertions.
 4. Add a multi-tenant permission model with row-level policy examples.

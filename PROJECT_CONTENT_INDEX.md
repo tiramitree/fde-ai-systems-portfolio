@@ -367,13 +367,13 @@ Important files:
 - `app.py`: Python HTTP server and API routes.
 - `src/copilot/api.py`: application API layer for HTTP-facing use cases.
 - `src/copilot/repositories.py`: application-facing storage adapter boundary over the local JSON provider.
-- `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, document/chunk writes, traces, audit events, and eval runs outside application modules.
+- `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate selection outside application modules.
 - `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts.
 - `src/copilot/source_parsing.py`: admin-ingestion parser boundary for plain text, Markdown, CSV, HTML, and JSON sources; returns normalized searchable text plus parser metadata and warnings before chunking.
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
 - `src/copilot/embeddings.py`: local deterministic chunk embedding boundary with 1536-dimensional vectors, metadata, and cosine scoring helpers for the pgvector/hybrid retrieval path.
-- `src/copilot/retrieval.py`: role-aware retrieval and evidence selection.
-- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, and vector components for traceable pre-reranker quality evidence.
+- `src/copilot/retrieval.py`: role-aware candidate retrieval and evidence selection with shared final scoring across JSON and PostgreSQL providers.
+- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, vector, and candidate-strategy metadata for traceable pre-reranker quality evidence.
 - `src/copilot/security.py`: unsafe retrieved-content detection.
 - `src/copilot/answering.py`: answer shaping, citation behavior, abstention.
 - `src/copilot/storage.py`: thread-safe local JSON state implementation used through the repository adapter.

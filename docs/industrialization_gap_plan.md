@@ -151,7 +151,7 @@ Current state:
 
 - Small fictional seed data.
 - Deterministic retrieval logic.
-- No file upload, parser pipeline, embeddings, vector DB, reranker, connector sync, or incremental indexing.
+- No file upload, background parser pipeline, production embedding provider, live vector DB validation, reranker, connector sync, or incremental indexing.
 
 Industrial requirement:
 
@@ -198,7 +198,7 @@ Current state:
 - A first PostgreSQL/pgvector migration artifact now exists at `infra/postgres/migrations/001_core.sql` and is guarded by `python -B scripts/dev.py postgres-migrations`.
 - A deterministic Project 1 demo seed SQL artifact now exists at `infra/postgres/seeds/001_project1_demo.sql` and is guarded by `python -B scripts/dev.py postgres-seed`.
 - Project 1 application modules now depend on `KnowledgeRepository` in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py` instead of directly depending on JSON state internals.
-- Project 1 now also has an optional `PostgresKnowledgeRepository` adapter contract in `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`, covering tenant context, documents, chunks, traces, audit events, and eval runs without making PostgreSQL required for the local demo.
+- Project 1 now also has an optional `PostgresKnowledgeRepository` adapter contract in `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`, covering tenant context, documents, chunks, SQL-backed keyword/vector retrieval candidates, denied-evidence counts, traces, audit events, and eval runs without making PostgreSQL required for the local demo.
 
 Industrial requirement:
 

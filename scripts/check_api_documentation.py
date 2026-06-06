@@ -41,6 +41,8 @@ PROJECTS = {
             "retrieved",
             "retrieval_profile",
             "retrieval_profile.name",
+            "candidate_strategy",
+            "candidate_source_count",
             "embedding_model",
             "embedding_dimensions",
             "score_breakdown",

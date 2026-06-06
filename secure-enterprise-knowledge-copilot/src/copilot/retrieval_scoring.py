@@ -43,11 +43,19 @@ class RetrievalScore:
         }
 
 
-def retrieval_profile(visible_chunk_count: int, candidate_count: int, top_k: int) -> dict:
+def retrieval_profile(
+    visible_chunk_count: int,
+    candidate_count: int,
+    top_k: int,
+    candidate_strategy: str = "local_full_scan",
+    candidate_source_count: int | None = None,
+) -> dict:
     return {
         "name": "local-hybrid-v1",
         "score_components": list(SCORE_COMPONENTS),
         "permission_filter": "tenant_role_before_scoring",
+        "candidate_strategy": candidate_strategy,
+        "candidate_source_count": candidate_count if candidate_source_count is None else candidate_source_count,
         "embedding_model": EMBEDDING_MODEL,
         "embedding_dimensions": EMBEDDING_DIMENSIONS,
         "visible_chunk_count": visible_chunk_count,
