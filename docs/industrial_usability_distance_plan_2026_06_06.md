@@ -25,6 +25,48 @@ production-minded reference implementation
 | 低风险内部 pilot | 中等偏远 | 需要真实 auth、Postgres/pgvector、ingestion pipeline、观测后端、至少一个真实 connector。 |
 | 敏感企业数据生产上线 | 远 | 需要 SSO、租户隔离、源系统 ACL 同步、安全运营、备份恢复、在线 eval、incident runbook、云部署和 owner model。 |
 
+## 2026-06-06 全网再扫后的校准
+
+这次继续横向看了 Dify、RAGFlow、Langfuse、Phoenix、TensorZero、Harness Evals、OpenAI Agents/Evals、OpenTelemetry GenAI、OWASP LLM Top 10、NIST AI RMF 等公开工业参考后，判断没有改变，但优先级更清楚了：
+
+```text
+本项目已经明显超过普通 AI demo。
+它现在最像一个生产控制边界参考实现，而不是一个真实可上线产品。
+真正要往工业可用推进，不该继续加新 demo，而该把现有控制边界接到真实数据、真实身份、真实观测、真实 connector 和真实运行时。
+```
+
+外部项目反复证明一个事实：工业 AI 系统不是“模型 API + UI”，而是一个可运营系统。成熟项目通常同时覆盖模型网关、RAG 数据面、工具治理、trace/eval、prompt/dataset 管理、审批、人审、部署、监控、成本和安全治理。TensorZero 把 gateway、observability、evaluation、optimization、experimentation 放在一起；Phoenix 和 Langfuse 把 traces、datasets、experiments、prompt management 放在一起；RAGFlow 强调复杂文档解析、chunk 可解释、grounded citation、heterogeneous data source、multiple recall 和 reranking；Dify 把 workflow、RAG、agent、model management、observability 和 API 作为一个平台 surface。
+
+所以本项目的真实差距不是“功能少几个按钮”，而是这些工业平面的缺口：
+
+| 工业平面 | 当前状态 | 到生产还缺什么 |
+| --- | --- | --- |
+| 数据面 | Project 1 有 seed data、admin ingestion、source span、local embedding boundary、SQL candidate、reranker boundary。 | 文件/connector ingestion、parser worker、OCR/table、incremental sync、生产 embedding/reranker、live pgvector/search 验证、大 corpus eval。 |
+| 身份权限面 | 应用层有 permission-before-generation，用户/角色仍是 demo fixture。 | SSO、tenant/user/group、source ACL sync、Postgres RLS live tests、permission drift detection。 |
+| 运行时 | local JSON 是默认，Postgres 路径是 opt-in/部分验证。 | connection pool、migrations live proof、queue、retry、transactional outbox、crash recovery、backup/restore。 |
+| Agent 工具面 | Project 2 有 approval gate 和 side-effect blocking。 | 真实 tool registry、scoped credentials、dry-run preview、approval owner/expiry/escalation、idempotent execution、connector outage handling。 |
+| 观测面 | 本地 trace/audit 和 OTLP JSON handoff 已经有形状。 | OpenTelemetry SDK spans、Phoenix/Langfuse/OpenAI traces、dashboard、sampling、cost/latency/token/error metrics、PII redaction before export。 |
+| EvalOps | golden eval 和本地 trace-to-eval candidate workflow 正在补齐。 | human labeling、review disposition、dataset versioning、nightly regression、trace grading、model/prompt/retrieval comparison。 |
+| 安全治理 | threat model、安全扫描、workflow security、public safety 已经强于普通作品集。 | OWASP LLM Top 10 控制矩阵、NIST AI RMF 映射、secret manager、retention/deletion、red-team cases、incident runbooks。 |
+| 部署运维 | local-first、Docker/compose checks、CI hygiene。 | production-like compose stack、cloud IaC、API gateway、auth middleware、managed DB/search、worker fleet、alerts、rollbacks、load tests。 |
+| Operator UX | 三个 demo UI 分散展示。 | 一个统一控制台：sources、sync health、permissions、traces、evals、approvals、incidents、release gates。 |
+
+如果用“工业真实可用”来打分，当前大概是：
+
+| 维度 | 当前成熟度 |
+| --- | --- |
+| FDE 作品集 / 技术展示 | 85%-90% |
+| 架构 review / take-home 可信度 | 70%-80% |
+| 可控 synthetic pilot | 45%-55% |
+| 低风险真实内部 pilot | 30%-40% |
+| 敏感企业生产上线 | 15%-25% |
+
+这里的关键不是贬低项目，而是保护叙事。技术评审时应该说：
+
+```text
+I built the production invariants first: permission before generation, grounded citations, abstention, approval gates, audit, traces, evals, and release blocking. I would not claim this is production software yet. The next industrial step is to replace local fixtures with real ingestion, identity, Postgres/pgvector, external observability, trace-to-eval operations, and governed connectors while preserving those invariants.
+```
+
 ## 外部工业项目给出的基线
 
 | 参考 | 工业信号 | 对本项目的含义 |

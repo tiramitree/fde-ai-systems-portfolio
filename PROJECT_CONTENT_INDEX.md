@@ -131,7 +131,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-collector-handoff, otel-traces, postgres-compose, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-collector-handoff, otel-traces, postgres-compose, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, trace-to-eval, trace-to-eval-check, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -172,6 +172,8 @@ Local Git state:
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
 - `scripts/run_all_evals.py`: runs all project eval suites.
 - `scripts/export_eval_csv.py`: exports repository eval summary rows to `eval_summaries.csv`.
+- `scripts/check_trace_to_eval.py`: verifies trace-to-eval candidate coverage, safety, and suggested expected-contract shapes.
+- `scripts/export_trace_eval_candidates.py`: converts local trace, audit, approval, and release evidence into review-only eval-candidate artifacts under ignored `out/`.
 - `scripts/check_otel_collector_handoff.py`: verifies optional OTLP/HTTP JSON collector handoff behavior with a local in-process collector stub.
 - `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload and can optionally POST OTLP/HTTP JSON to a configured traces endpoint.
 - `scripts/replay_demo.py`: starts clean reset demo services, runs the release validation path, and prints trace/approval evidence.
@@ -241,6 +243,7 @@ Design Review Docs:
 - `docs/readme_navigation_audit.md`: README-to-docs navigation audit for release-facing pointers, supporting docs, owner gates, and drift risks.
 - `docs/readme_navigation_drift_examples.md`: examples for fixing stale README links, unsupported claims, missing source docs, and manual-evidence drift.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.
+- `docs/trace_to_eval_workflow.md`: review-first workflow for converting local trace evidence into eval candidates without mutating checked-in golden fixtures.
 - `docs/eval_gate_troubleshooting_examples.md`: local troubleshooting map for unsafe retrieval, direct side-effect, and release-blocking eval failures.
 - `docs/eval_csv_troubleshooting_examples.md`: examples for missing eval CSV output, stale eval state, changed case ids, unsafe failure counts, and generated artifact handling.
 - `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.
