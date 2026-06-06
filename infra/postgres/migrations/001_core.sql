@@ -33,6 +33,7 @@ create table if not exists documents (
   sensitivity text not null check (sensitivity in ('public', 'internal', 'confidential')),
   allowed_roles text[] not null default '{}',
   allowed_departments text[] not null default '{}',
+  metadata jsonb not null default '{}'::jsonb,
   version text not null,
   updated_at timestamptz not null default now(),
   created_at timestamptz not null default now(),

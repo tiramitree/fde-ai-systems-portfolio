@@ -69,9 +69,11 @@ Security contract:
 Retrieval contract:
 
 - `retrieval_profile.name` is `local-hybrid-v1` in the local runtime
-- `retrieval_profile.score_components` lists `bm25_like`, `title`, `phrase`, and `semantic_family`
+- `retrieval_profile.score_components` lists `bm25_like`, `title`, `phrase`, `semantic_family`, and `vector`
+- `retrieval_profile.embedding_model` is `local-hashing-v1` and `retrieval_profile.embedding_dimensions` is `1536` for the local deterministic embedding boundary
 - `retrieval_profile.permission_filter` is `tenant_role_before_scoring`
-- `retrieved[].score_breakdown` exposes lexical, title, phrase, semantic, matched-term, and semantic-family evidence for review
+- `retrieved[].score_breakdown` exposes lexical, title, phrase, semantic, vector, matched-term, and semantic-family evidence for review
+- `retrieved[].embedding_model` and `retrieved[].embedding_dimensions` expose embedding provenance, while raw embedding vectors are not returned
 - evals can assert expected retrieved document IDs before answer generation changes are trusted
 
 ### Document Ingestion Response Shape
@@ -101,6 +103,9 @@ The route returns:
 - `ingestion.parser.normalized_characters`
 - `ingestion.parser.metadata`
 - `ingestion.parser.warnings`
+- `ingestion.embedding.model`
+- `ingestion.embedding.dimensions`
+- `ingestion.embedding.chunk_embedding_count`
 
 Ingestion contract:
 
@@ -110,8 +115,9 @@ Ingestion contract:
 - duplicate document IDs require `replace`
 - the raw document body is never returned
 - ingestion normalizes supported source formats through parser versions such as `plain-text-v1`, `markdown-v1`, `csv-v1`, `html-v1`, and `json-v1`
+- ingestion creates local deterministic chunk embeddings with model `local-hashing-v1` and dimension `1536`; raw vectors are stored for retrieval/indexing but not returned by the public API
 - CSV parser metadata includes `row_count`, `column_count`, and `has_header`; parser warnings are surfaced as `parser_warnings`
-- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `parser_warnings`, and role metadata
+- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `parser_warnings`, embedding metadata, and role metadata
 
 ### Scenario Snapshot Shape
 

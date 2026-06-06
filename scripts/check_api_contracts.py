@@ -270,6 +270,17 @@ def project_1_contracts(base_url: str) -> list[Check]:
             f"parser={parser.get('name')}; chars={parser.get('normalized_characters')}",
         )
     )
+    embedding = ingestion.get("ingestion", {}).get("embedding", {})
+    checks.append(
+        check(
+            isinstance(embedding, dict)
+            and embedding.get("model") == "local-hashing-v1"
+            and embedding.get("dimensions") == 1536
+            and embedding.get("chunk_embedding_count") == ingestion.get("chunk_count"),
+            "P1 ingestion embedding metadata contract",
+            f"model={embedding.get('model')}; dimensions={embedding.get('dimensions')}; chunks={embedding.get('chunk_embedding_count')}",
+        )
+    )
 
     csv_ingest_payload = {
         "user_id": "avery",
@@ -391,11 +402,18 @@ def project_1_contracts(base_url: str) -> list[Check]:
             isinstance(profile, dict)
             and profile.get("name") == "local-hybrid-v1"
             and "bm25_like" in profile.get("score_components", [])
+            and "vector" in profile.get("score_components", [])
+            and profile.get("embedding_model") == "local-hashing-v1"
+            and profile.get("embedding_dimensions") == 1536
             and profile.get("permission_filter") == "tenant_role_before_scoring"
             and isinstance(retrieved, list)
             and bool(retrieved)
             and isinstance(retrieved[0].get("score_breakdown"), dict)
-            and "semantic" in retrieved[0]["score_breakdown"],
+            and "semantic" in retrieved[0]["score_breakdown"]
+            and "vector" in retrieved[0]["score_breakdown"]
+            and retrieved[0].get("embedding_model") == "local-hashing-v1"
+            and retrieved[0].get("embedding_dimensions") == 1536
+            and "embedding" not in retrieved[0],
             "P1 retrieval profile and score-breakdown contract",
             f"profile={profile.get('name')}; top_doc={retrieved[0].get('doc_id') if retrieved else None}",
         )

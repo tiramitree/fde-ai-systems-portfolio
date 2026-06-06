@@ -31,6 +31,9 @@ PROJECTS = [
             "src/copilot/api.py": frozenset({"ApiError", "CopilotApi"}),
             "src/copilot/answering.py": frozenset({"generate_answer"}),
             "src/copilot/chunking.py": frozenset({"chunk_text"}),
+            "src/copilot/embeddings.py": frozenset(
+                {"TextEmbedding", "EMBEDDING_MODEL", "EMBEDDING_DIMENSIONS", "embed_text", "embed_chunk", "cosine_similarity"}
+            ),
             "src/copilot/postgres_repositories.py": frozenset({"PostgresKnowledgeRepository", "SqlConnection"}),
             "src/copilot/retrieval.py": frozenset({"retrieve", "tokenize"}),
             "src/copilot/retrieval_scoring.py": frozenset(
@@ -171,7 +174,11 @@ def check_backend_import_boundaries(project: ProjectBoundary) -> list[str]:
             if path.name != "api.py" and module == f"{project.package}.api":
                 failures.append(f"{project.name}: {rel_path} imports API layer")
         if path.name == "storage.py":
-            allowed_storage_imports = {f"{project.package}.chunking", f"{project.package}.time_utils"}
+            allowed_storage_imports = {
+                f"{project.package}.chunking",
+                f"{project.package}.embeddings",
+                f"{project.package}.time_utils",
+            }
             for module in modules:
                 if (
                     module.startswith(f"{project.package}.")
@@ -282,6 +289,7 @@ def check_code_tour() -> list[str]:
         "src/copilot/api.py: CopilotApi",
         "src/copilot/repositories.py",
         "src/copilot/source_parsing.py",
+        "src/copilot/embeddings.py",
         "src/copilot/retrieval.py",
         "src/copilot/retrieval_scoring.py",
         "src/copilot/security.py",

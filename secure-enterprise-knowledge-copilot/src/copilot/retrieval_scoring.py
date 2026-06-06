@@ -4,8 +4,9 @@ import math
 from collections import Counter
 from dataclasses import dataclass
 
+from .embeddings import EMBEDDING_DIMENSIONS, EMBEDDING_MODEL, cosine_similarity
 
-SCORE_COMPONENTS = ("bm25_like", "title", "phrase", "semantic_family")
+SCORE_COMPONENTS = ("bm25_like", "title", "phrase", "semantic_family", "vector")
 
 SEMANTIC_FAMILIES = {
     "remote_work": {"remote", "telework", "home", "work", "wfh", "office", "capacity"},
@@ -24,6 +25,7 @@ class RetrievalScore:
     title: float
     phrase: float
     semantic: float
+    vector: float
     length_norm: float
     matched_terms: tuple[str, ...]
     semantic_matches: tuple[str, ...]
@@ -34,6 +36,7 @@ class RetrievalScore:
             "title": round(self.title, 4),
             "phrase": round(self.phrase, 4),
             "semantic": round(self.semantic, 4),
+            "vector": round(self.vector, 4),
             "length_norm": round(self.length_norm, 4),
             "matched_terms": list(self.matched_terms),
             "semantic_matches": list(self.semantic_matches),
@@ -45,6 +48,8 @@ def retrieval_profile(visible_chunk_count: int, candidate_count: int, top_k: int
         "name": "local-hybrid-v1",
         "score_components": list(SCORE_COMPONENTS),
         "permission_filter": "tenant_role_before_scoring",
+        "embedding_model": EMBEDDING_MODEL,
+        "embedding_dimensions": EMBEDDING_DIMENSIONS,
         "visible_chunk_count": visible_chunk_count,
         "candidate_count": candidate_count,
         "top_k": top_k,
@@ -71,6 +76,8 @@ def score_chunk(
     chunk_tokens: list[str],
     doc_freq: Counter[str],
     n_docs: int,
+    query_embedding: list[float] | None = None,
+    chunk_embedding: list[float] | None = None,
 ) -> RetrievalScore:
     query_counter = Counter(query_tokens)
     counts = Counter(chunk_tokens)
@@ -90,13 +97,15 @@ def score_chunk(
     phrase = 0.5 if question.lower() in chunk_text.lower() else 0.0
     semantic_matches = _semantic_matches(query_tokens, chunk_tokens)
     semantic = 0.25 * len(semantic_matches)
-    total = (lexical / length_norm) + title + phrase + semantic
+    vector = 0.45 * max(0.0, cosine_similarity(query_embedding, chunk_embedding))
+    total = (lexical / length_norm) + title + phrase + semantic + vector
     return RetrievalScore(
         total=total,
         lexical=lexical,
         title=title,
         phrase=phrase,
         semantic=semantic,
+        vector=vector,
         length_norm=length_norm,
         matched_terms=tuple(sorted(set(matched_terms))),
         semantic_matches=tuple(semantic_matches),

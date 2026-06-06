@@ -213,6 +213,7 @@ Design Review Docs:
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
 - `docs/industrialization_gap_plan.md`: gap analysis between this portfolio and production-grade industrial AI systems, with an upgrade plan.
 - `docs/industrial_readiness_field_scan.md`: current external benchmark scan, industrial-readiness distance estimate, and prioritized upgrade plan.
+- `docs/industrial_grade_gap_assessment_2026_06_06.md`: web-refreshed industrial-grade gap assessment and concrete upgrade sequence for the eight major production-readiness gaps.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
 - `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
@@ -370,8 +371,9 @@ Important files:
 - `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts.
 - `src/copilot/source_parsing.py`: admin-ingestion parser boundary for plain text, Markdown, CSV, HTML, and JSON sources; returns normalized searchable text plus parser metadata and warnings before chunking.
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
+- `src/copilot/embeddings.py`: local deterministic chunk embedding boundary with 1536-dimensional vectors, metadata, and cosine scoring helpers for the pgvector/hybrid retrieval path.
 - `src/copilot/retrieval.py`: role-aware retrieval and evidence selection.
-- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, and semantic-family components for traceable pre-reranker quality evidence.
+- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, and vector components for traceable pre-reranker quality evidence.
 - `src/copilot/security.py`: unsafe retrieved-content detection.
 - `src/copilot/answering.py`: answer shaping, citation behavior, abstention.
 - `src/copilot/storage.py`: thread-safe local JSON state implementation used through the repository adapter.
