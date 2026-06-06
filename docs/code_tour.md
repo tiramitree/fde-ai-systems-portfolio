@@ -11,7 +11,7 @@ Use this page with `docs/architecture_boundaries.md` for the boundary contract a
 | HTTP and static shell | project `app.py` | Local HTTP routing, static files, JSON parsing, security headers, generic JSON errors, reset-state startup. | Domain decisions, permission policy, side effects, eval assertions, frontend rendering. |
 | API layer | `src/<package>/api.py` | UI-facing use cases, route dispatch, response shape assembly, `ApiError` status mapping. | Low-level storage mutation details, frontend DOM behavior, direct sibling-project imports. |
 | Domain/service logic | `answering.py`, `retrieval.py`, `security.py`, `agent.py`, `tools.py`, `triage.py`, optional `model_gateway.py` | Permission filtering, evidence shaping, deterministic workflow decisions, tool governance, release-blocking logic, optional model calls behind local fallback. | Raw HTTP parsing, static files, generated artifacts. |
-| Repository and state support | `repositories.py`, `storage.py`, `evals.py`, `data/*.json`, project `scripts/run_eval.py` | Application-facing repository interfaces, local JSON adapter details, fictional seed data, traces, audit logs, approvals, eval runs, regression assertions. | Browser layout, prompts as authorization boundaries, or direct external persistence calls from domain modules. |
+| Repository and state support | `repositories.py`, `postgres_repositories.py`, `storage.py`, `evals.py`, `data/*.json`, project `scripts/run_eval.py` | Application-facing repository interfaces, local JSON adapter details, production-path PostgreSQL adapter contract, fictional seed data, traces, audit logs, approvals, eval runs, regression assertions. | Browser layout, prompts as authorization boundaries, or direct external persistence calls from domain modules. |
 | Frontend boundary | project `web/index.html`, `web/styles.css`, `web/js/*.js` | Local ES-module UI, HTTP client calls, rendering, trace links, clipboard actions, scenario draft editing, theme state. | Backend policy, authorization, side-effect execution. |
 
 The same shape appears in all three projects so a contributor can learn one flow and apply it across the portfolio.
@@ -24,6 +24,7 @@ Primary path:
 secure-enterprise-knowledge-copilot/app.py
   -> src/copilot/api.py: CopilotApi
   -> src/copilot/repositories.py
+  -> src/copilot/postgres_repositories.py
   -> src/copilot/retrieval.py
   -> src/copilot/security.py
   -> src/copilot/answering.py
@@ -39,6 +40,7 @@ Key files:
 - `secure-enterprise-knowledge-copilot/app.py`: stdlib HTTP server and static shell. It imports only `copilot.api` and `copilot.storage` from the backend package.
 - `secure-enterprise-knowledge-copilot/src/copilot/api.py`: `CopilotApi` maps browser/API requests to users, visible documents, query handling, traces, audit, scenario snapshots, and eval runs.
 - `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: `KnowledgeRepository`, `JsonKnowledgeRepository`, and `connect_repository` define the application-facing storage adapter boundary used by API, retrieval, answering, ingestion, and eval logic.
+- `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`: optional production-path `PostgresKnowledgeRepository` contract over the PostgreSQL/pgvector schema. It keeps tenant context, document/chunk writes, traces, audit events, and eval runs behind the same repository shape without making PostgreSQL required for the local demo.
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py`: tenant, role, keyword, and synonym retrieval before answering.
 - `secure-enterprise-knowledge-copilot/src/copilot/security.py`: prompt-injection detection and evidence sanitization.
 - `secure-enterprise-knowledge-copilot/src/copilot/answering.py`: answer, citation, confidence, missing-evidence, and abstention behavior.

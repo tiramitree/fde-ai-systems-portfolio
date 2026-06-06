@@ -179,6 +179,7 @@ Current state:
 - No production DB adapter, queues, recovery, or long-running workflow engine.
 - A first PostgreSQL/pgvector migration artifact now exists at `infra/postgres/migrations/001_core.sql` and is guarded by `python -B scripts/dev.py postgres-migrations`.
 - Project 1 application modules now depend on `KnowledgeRepository` in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py` instead of directly depending on JSON state internals.
+- Project 1 now also has an optional `PostgresKnowledgeRepository` adapter contract in `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`, covering tenant context, documents, chunks, traces, audit events, and eval runs without making PostgreSQL required for the local demo.
 
 Industrial requirement:
 
@@ -193,7 +194,7 @@ Industrial requirement:
 Upgrade:
 
 ```text
-Replace local stores with repository interfaces backed by PostgreSQL; add migrations, outbox, worker queue, and crash-recovery tests.
+Wire the existing repository interface and PostgreSQL adapter contract to a real connection pool; add seed/backfill scripts, outbox, worker queue, and crash-recovery tests.
 ```
 
 ### 4. Model Runtime And Prompt/Policy Versioning

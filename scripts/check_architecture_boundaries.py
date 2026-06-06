@@ -31,6 +31,7 @@ PROJECTS = [
             "src/copilot/api.py": frozenset({"ApiError", "CopilotApi"}),
             "src/copilot/answering.py": frozenset({"generate_answer"}),
             "src/copilot/chunking.py": frozenset({"chunk_text"}),
+            "src/copilot/postgres_repositories.py": frozenset({"PostgresKnowledgeRepository", "SqlConnection"}),
             "src/copilot/retrieval.py": frozenset({"retrieve", "tokenize"}),
             "src/copilot/repositories.py": frozenset(
                 {"KnowledgeRepository", "JsonKnowledgeRepository", "connect_repository"}

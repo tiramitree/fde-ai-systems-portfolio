@@ -351,6 +351,7 @@ Important files:
 - `app.py`: Python HTTP server and API routes.
 - `src/copilot/api.py`: application API layer for HTTP-facing use cases.
 - `src/copilot/repositories.py`: application-facing storage adapter boundary over the local JSON provider.
+- `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, document/chunk writes, traces, audit events, and eval runs outside application modules.
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
 - `src/copilot/retrieval.py`: role-aware retrieval and evidence selection.
 - `src/copilot/security.py`: unsafe retrieved-content detection.
