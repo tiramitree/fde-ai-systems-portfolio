@@ -105,6 +105,33 @@ def _principal_count(roles: object, groups: object) -> int:
     return role_count + group_count
 
 
+def _require_admin(repository: KnowledgeRepository, payload: dict, action: str) -> str:
+    actor_id = _string(payload.get("user_id"), "user_id", max_length=80)
+    actor = repository.get_user(actor_id)
+    if not actor:
+        raise IngestionError(404, f"Unknown user_id: {actor_id}")
+    if actor["role"] != "admin":
+        raise IngestionError(403, f"Only admin users can {action}.")
+    return actor_id
+
+
+def _bundle_dir(bundle: str) -> Path:
+    bundle_dir = (BUNDLE_ROOT / bundle).resolve()
+    if not bundle_dir.is_relative_to(BUNDLE_ROOT.resolve()):
+        raise IngestionError(400, "bundle contains unsupported characters")
+    return bundle_dir
+
+
+def _available_bundles() -> list[str]:
+    if not BUNDLE_ROOT.exists():
+        return []
+    return sorted(
+        child.name
+        for child in BUNDLE_ROOT.iterdir()
+        if child.is_dir() and BUNDLE_NAME_RE.fullmatch(child.name) and (child / "manifest.json").is_file()
+    )
+
+
 def _source_payload(actor_id: str, bundle: str, manifest: dict, bundle_dir: Path, cursor: str, prune_missing: bool) -> dict:
     manifest_bundle = str(manifest.get("bundle") or bundle).strip()
     if manifest_bundle != bundle:
@@ -172,18 +199,86 @@ def _source_payload(actor_id: str, bundle: str, manifest: dict, bundle_dir: Path
     }
 
 
-def sync_source_bundle(repository: KnowledgeRepository, payload: dict) -> dict:
-    actor_id = _string(payload.get("user_id"), "user_id", max_length=80)
-    actor = repository.get_user(actor_id)
-    if not actor:
-        raise IngestionError(404, f"Unknown user_id: {actor_id}")
-    if actor["role"] != "admin":
-        raise IngestionError(403, "Only admin users can sync source bundles.")
+def _bundle_preview(actor_id: str, bundle: str, cursor_override: str | None = None, prune_override: object = None) -> dict:
+    bundle = _bundle_name(bundle)
+    bundle_dir = _bundle_dir(bundle)
+    manifest_path = bundle_dir / "manifest.json"
+    manifest = _read_json(manifest_path)
+    cursor = str(cursor_override or manifest.get("cursor") or utc_now()).strip()
+    prune_missing = bool(prune_override if prune_override is not None else manifest.get("prune_missing", False))
+    source_payload = _source_payload(actor_id, bundle, manifest, bundle_dir, cursor, prune_missing)
+    payload_documents = {doc["external_id"]: doc for doc in source_payload["documents"]}
+    previews: list[dict] = []
 
+    for item in manifest.get("documents", []):
+        relative_path, document_path = _safe_document_path(bundle_dir, item.get("path"))
+        external_id = str(item.get("external_id") or f"source-bundle:{bundle}:{relative_path}").strip()
+        document = payload_documents[external_id]
+        roles = document.get("allowed_roles")
+        groups = document.get("allowed_groups", [])
+        previews.append(
+            {
+                "id": document.get("id"),
+                "external_id": external_id,
+                "title": document.get("title"),
+                "path": relative_path,
+                "classification": document.get("classification"),
+                "source_mime": document.get("source_mime"),
+                "source_url": document.get("source_url"),
+                "updated_at": document.get("updated_at"),
+                "version": document.get("version"),
+                "file_size_bytes": document_path.stat().st_size,
+                "body_sha256": hashlib.sha256(str(document.get("body", "")).encode("utf-8")).hexdigest(),
+                "allowed_roles": roles,
+                "allowed_groups": groups,
+                "permission_id": source_payload["connector"]["acl_snapshot"]["documents"][external_id]["permission_id"],
+                "principal_count": _principal_count(roles, groups),
+            }
+        )
+
+    return {
+        "bundle": bundle,
+        "connector": source_payload["connector"]["name"],
+        "cursor": cursor,
+        "document_count": len(source_payload["documents"]),
+        "prune_missing": prune_missing,
+        "manifest": "manifest.json",
+        "manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        "source_payload_sha256": _stable_hash(source_payload),
+        "acl_source": source_payload["connector"]["acl_source"],
+        "acl_snapshot_version": source_payload["connector"]["acl_snapshot"]["version"],
+        "documents": previews,
+    }
+
+
+def list_source_bundle_catalog(repository: KnowledgeRepository, payload: dict) -> dict:
+    actor_id = _require_admin(repository, payload, "preview source bundles")
+    bundle_filter = str(payload.get("bundle") or "").strip()
+    bundles = [_bundle_name(bundle_filter)] if bundle_filter else _available_bundles()
+    previews = [
+        _bundle_preview(
+            actor_id,
+            bundle,
+            cursor_override=str(payload.get("cursor") or "").strip() or None,
+            prune_override=payload.get("prune_missing") if "prune_missing" in payload else None,
+        )
+        for bundle in bundles
+    ]
+    return {
+        "catalog": {
+            "catalog_version": "source_bundle_catalog_v1",
+            "root": "data/source_bundles",
+            "bundle_count": len(previews),
+            "raw_bodies_returned": False,
+            "bundles": previews,
+        }
+    }
+
+
+def sync_source_bundle(repository: KnowledgeRepository, payload: dict) -> dict:
+    actor_id = _require_admin(repository, payload, "sync source bundles")
     bundle = _bundle_name(payload.get("bundle"))
-    bundle_dir = (BUNDLE_ROOT / bundle).resolve()
-    if not bundle_dir.is_relative_to(BUNDLE_ROOT.resolve()):
-        raise IngestionError(400, "bundle contains unsupported characters")
+    bundle_dir = _bundle_dir(bundle)
     manifest_path = bundle_dir / "manifest.json"
     manifest = _read_json(manifest_path)
     cursor = str(payload.get("cursor") or manifest.get("cursor") or utc_now()).strip()

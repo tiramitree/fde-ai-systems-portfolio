@@ -16,7 +16,7 @@ from .github_connector import sync_github_repository
 from .ingestion import IngestionError, ingest_document, sync_source_batch
 from .ingestion_jobs import list_ingestion_jobs, submit_ingestion_job
 from .repositories import connect_repository
-from .source_bundle_connector import sync_source_bundle
+from .source_bundle_connector import list_source_bundle_catalog, sync_source_bundle
 
 
 class ApiError(Exception):
@@ -61,6 +61,19 @@ class CopilotApi:
                         user_id=self._resolve_user_id(repo, headers, self._first_or_none(query, "user_id"), "avery"),
                         limit=self._int(query, "limit", 100),
                     )
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
+            if path == "/api/connectors/source-bundle/catalog":
+                try:
+                    payload = {
+                        "user_id": self._resolve_user_id(repo, headers, self._first_or_none(query, "user_id"), "avery"),
+                        "bundle": self._first_or_none(query, "bundle") or "",
+                        "cursor": self._first_or_none(query, "cursor") or "",
+                    }
+                    prune_missing = self._first_or_none(query, "prune_missing")
+                    if prune_missing is not None:
+                        payload["prune_missing"] = prune_missing.lower() in {"1", "true", "yes"}
+                    return list_source_bundle_catalog(repo, payload)
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc
             if path == "/api/eval/latest":
