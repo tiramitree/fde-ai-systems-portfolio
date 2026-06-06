@@ -80,6 +80,10 @@ def run_evals(repo: KnowledgeRepository, cases_path: Path = EVAL_CASES_PATH, per
         min_blocked_count = retrieval_expected.get("min_permission_blocked_count")
         if min_blocked_count is not None and output["permission_blocked_count"] < min_blocked_count:
             failures.append(f"permission_blocked_count_below:{min_blocked_count}")
+        min_stale_filtered_count = retrieval_expected.get("min_stale_filtered_count")
+        stale_filtered_count = int(output.get("retrieval_profile", {}).get("stale_filtered_count", 0) or 0)
+        if min_stale_filtered_count is not None and stale_filtered_count < min_stale_filtered_count:
+            failures.append(f"stale_filtered_count_below:{min_stale_filtered_count}")
 
         results.append(
             {
@@ -117,6 +121,12 @@ def run_evals(repo: KnowledgeRepository, cases_path: Path = EVAL_CASES_PATH, per
             for failure in item["failures"]
         )
     )
+    stale_source_cases = sum(
+        1 for case in cases if case["expected"].get("retrieval", {}).get("min_stale_filtered_count") is not None
+    )
+    stale_source_failures = sum(
+        1 for item in results for failure in item["failures"] if failure.startswith("stale_filtered_count_below")
+    )
     metrics = {
         "total_cases": total,
         "passed_cases": passed,
@@ -131,6 +141,11 @@ def run_evals(repo: KnowledgeRepository, cases_path: Path = EVAL_CASES_PATH, per
         "citation_span_failures": citation_span_failures,
         "citation_span_coverage": round((citation_cases - citation_span_failures) / citation_cases, 3)
         if citation_cases
+        else 0,
+        "stale_source_cases": stale_source_cases,
+        "stale_source_filter_failures": stale_source_failures,
+        "stale_source_filter_coverage": round((stale_source_cases - stale_source_failures) / stale_source_cases, 3)
+        if stale_source_cases
         else 0,
         "average_latency_ms": round(sum(item["latency_ms"] for item in results) / total, 2) if total else 0,
     }

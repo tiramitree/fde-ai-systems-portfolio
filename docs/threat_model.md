@@ -42,7 +42,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 
 | Boundary | Trusted Component | Untrusted Input | Rule |
 | --- | --- | --- | --- |
-| Retrieval | `identity.py` plus `retrieval.py` tenant/role/source-group filter | user question and document corpus | Filter before evidence assembly. |
+| Retrieval | `identity.py`, `source_lifecycle.py`, plus `retrieval.py` tenant/role/source-group and source-lifecycle filters | user question and document corpus | Filter before evidence assembly. |
 | Ingestion | `ingestion.py` admin gate, `github_connector.py` issue/PR adapter, `ingestion_jobs.py` job ledger, plus `source_parsing.py` parser normalization | admin-supplied source text, connector batch payloads, GitHub issue/PR records, optional connector ACL snapshots, ingestion job payloads, HTML, CSV, Markdown, or JSON | Validate actor, tenant, classification, roles, duplicate policy, parser metadata, source hash, connector name, GitHub owner/repo, external ID, source URL, ACL source, ACL snapshot permission records, source permission ID, permission drift, idempotency key, retry parent, sync cursor, and explicit full-snapshot prune intent before changing searchable chunks. |
 | Answering | `answering.py` and `security.py` | user text and retrieved text | Cite accessible evidence or abstain. |
 | Agent tools | `tools.py` and `agent.py` | user request and model/router output | Side effects require deterministic approval. |

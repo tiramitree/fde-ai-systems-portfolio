@@ -105,6 +105,8 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
             "source_acl_version": doc.get("source_acl_version", ""),
             "source_acl_permission_id": doc.get("source_acl_permission_id", ""),
             "source_acl_principal_count": doc.get("source_acl_principal_count", 0),
+            "source_lifecycle_state": doc.get("source_lifecycle_state", "active"),
+            "superseded_by": doc.get("superseded_by", ""),
         }
         lines.append(
             "insert into documents (\n"
@@ -148,6 +150,8 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
                 "source_acl_version": doc.get("source_acl_version", ""),
                 "source_acl_permission_id": doc.get("source_acl_permission_id", ""),
                 "source_acl_principal_count": doc.get("source_acl_principal_count", 0),
+                "source_lifecycle_state": doc.get("source_lifecycle_state", "active"),
+                "superseded_by": doc.get("superseded_by", ""),
                 "source_hash": doc_hash,
                 "updated_at": doc["updated_at"],
                 "source_span": chunk.source_span,

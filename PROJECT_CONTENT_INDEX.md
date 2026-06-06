@@ -96,7 +96,7 @@ python -B scripts/dev.py verify
 Result:
 
 - all services healthy
-- Project 1 eval: 13/13 passed, unsafe leaks 0
+- Project 1 eval: 14/14 passed, unsafe leaks 0
 - Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 - Project 3 eval: 6/6 passed, unsafe release approval failures 0
 - smoke tests: 13/13 passed
@@ -222,6 +222,7 @@ Design Review Docs:
 - `docs/current_industrial_readiness_assessment_2026_06_06.md`: latest external scan decision record, current distance estimate, gap matrix, and next engineering sequence.
 - `docs/industrial_benchmark_gap_plan_2026_06_07.md`: current external benchmark scan, industrial-readiness distance estimate, eight-gap matrix, and concrete upgrade sequence toward a production-shaped Enterprise AI Control Plane.
 - `secure-enterprise-knowledge-copilot/src/copilot/source_files.py`: Project 1 UTF-8 file-like ingestion decoder for base64 JSON payloads, safe filenames, MIME inference, size limits, and file metadata before parser/chunk/embed indexing.
+- `secure-enterprise-knowledge-copilot/src/copilot/source_lifecycle.py`: Project 1 source lifecycle policy helpers for active-only retrieval and stale source filtering.
 - `secure-enterprise-knowledge-copilot/src/copilot/identity.py`: Project 1 identity helper for tenant, role, group, and source-principal access checks before retrieval evidence reaches the model.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
@@ -387,8 +388,8 @@ Important files:
 - `src/copilot/source_parsing.py`: admin-ingestion parser boundary for plain text, Markdown, CSV, HTML, and JSON sources; returns normalized searchable text plus parser metadata and warnings before chunking.
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
 - `src/copilot/embeddings.py`: local deterministic chunk embedding boundary with 1536-dimensional vectors, metadata, and cosine scoring helpers for the pgvector/hybrid retrieval path.
-- `src/copilot/retrieval.py`: identity-aware candidate retrieval and evidence selection with shared final scoring across JSON and PostgreSQL providers.
-- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, vector, and candidate-strategy metadata for traceable first-stage retrieval evidence.
+- `src/copilot/retrieval.py`: identity-aware candidate retrieval and evidence selection with source lifecycle filtering and shared final scoring across JSON and PostgreSQL providers.
+- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, vector, candidate-strategy, and stale-filter metadata for traceable first-stage retrieval evidence.
 - `src/copilot/reranking.py`: deterministic local evidence reranker boundary with feature-level rerank metadata.
 - `src/copilot/security.py`: unsafe retrieved-content detection.
 - `src/copilot/answering.py`: answer shaping, citation behavior, abstention.

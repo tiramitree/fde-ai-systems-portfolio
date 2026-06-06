@@ -126,7 +126,7 @@ Production-minded reference implementation, not production software.
 | Area | Current repository evidence |
 | --- | --- |
 | Security invariant | The model is not treated as a security boundary; app code enforces permissions, source-group ACL checks, and side-effect gates. |
-| RAG behavior | Project 1 supports permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, connector source sync, job status, and opt-in source prune. |
+| RAG behavior | Project 1 supports permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, connector source sync, source lifecycle filtering, job status, and opt-in source prune. |
 | Connector operations | Project 1 now includes a GitHub read connector contract, ingestion job ledger, idempotency, retry parent, dead-letter records, connector status, and prune semantics. |
 | Agent governance | Project 2 blocks direct side effects and requires supervisor approval for sensitive operations. |
 | Reliability workflow | Project 3 links failed eval evidence to release blocking and incident triage. |
@@ -139,7 +139,7 @@ Production-minded reference implementation, not production software.
 | --- | --- | --- |
 | 1. Data ingestion and parsing | Seed data, admin ingestion, source sync, GitHub read connector, job ledger, status, and opt-in prune. | Upload/pull connectors for real docs, parser worker, OCR/table/PDF/DOCX/CSV handling, source versions, source hashes, incremental sync, live prune/delete verification, and backfill recovery. |
 | 2. Identity and permissions | Fictional users/roles, group IDs, source ACL principals, source ACL snapshot contracts, permission-drift evidence, and group-aware PostgreSQL RLS migration artifacts. | SSO-compatible auth, tenant context, real users, real groups, RBAC/ABAC, source ACL sync, Postgres RLS live tests, and permission drift alerts. |
-| 3. Retrieval and citation quality | Deterministic lexical/vector scoring, local embedding boundary, SQL candidate path, reranker boundary, chunk-level citations, sentence-level evidence spans, and citation span coverage metrics. | Production embedding/reranker provider, hybrid retrieval, metadata filters, query routing, recall@k, MRR/nDCG, context precision/recall, broader citation faithfulness, stale/conflict evals. |
+| 3. Retrieval and citation quality | Deterministic lexical/vector scoring, local embedding boundary, SQL candidate path, reranker boundary, chunk-level citations, sentence-level evidence spans, citation span coverage metrics, and active-only source lifecycle filtering with a stale-source eval. | Production embedding/reranker provider, hybrid retrieval, metadata filters, query routing, recall@k, MRR/nDCG, context precision/recall, broader citation faithfulness, larger stale/conflict evals. |
 | 4. Runtime durability | Local JSON default; partial Postgres path; local ingestion job ledger with retry/dead-letter semantics. | Connection pool, migrations, durable queue, transactional outbox, scheduled retry, crash recovery, backup/restore, and load/failure tests. |
 | 5. Governed tool execution | Local deterministic tools and approval queue. | Real tool registry, scoped credentials, dry-run previews, approval owner/expiry/escalation, idempotent execution, compensation behavior, and connector outage handling. |
 | 6. Observability and EvalOps | Local trace/audit and OTLP-like JSON export; deterministic golden evals. | OTel SDK spans, Phoenix/Langfuse/OpenAI trace backend, cost/latency/token/error metrics, trace-to-eval promotion, human labels, nightly regression, and failure clustering. |
@@ -185,12 +185,12 @@ Work items:
 - add file upload or local folder connector
 - define parser output contract
 - support at least Markdown/TXT/CSV/HTML first, then DOCX/PDF
-- store source URI, title, section, page/span, content hash, version, tenant, ACL
+- store source URI, title, section, page/span, content hash, version, tenant, ACL, and source lifecycle metadata
 - run embedding/indexing as a job with retry/dead-letter behavior
 - use Postgres/pgvector live path for at least one verified local flow
 - add hybrid lexical/vector retrieval and reranker provider boundary
 - verify chunk and sentence-level citation spans
-- add evals for recall, context precision, abstention, permission leak, stale source, and conflicting source cases
+- add evals for recall, context precision, abstention, permission leak, source lifecycle filtering, and conflicting source cases
 
 Acceptance evidence:
 
@@ -198,6 +198,7 @@ Acceptance evidence:
 - unauthorized users cannot retrieve or cite restricted chunks
 - deleted or missing source documents disappear from retrieval
 - citations point to parser-normalized chunk spans and answer-support sentence spans
+- superseded sources remain auditable but are filtered from current retrieval and citation
 - quality gate includes retrieval/citation/stale-source metrics
 
 ### 2. Make identity and permissions production-shaped

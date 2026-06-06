@@ -9,6 +9,7 @@ from .embeddings import EMBEDDING_DIMENSIONS, EMBEDDING_MODEL, embed_chunk
 from .identity import string_list
 from .repositories import KnowledgeRepository
 from .source_files import SourceFileError, decode_source_file
+from .source_lifecycle import ACTIVE_SOURCE_STATE, VALID_SOURCE_STATES
 from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source_content
 
 
@@ -112,6 +113,13 @@ def _metadata_string(document: dict, key: str, default: str, *, max_length: int 
     if not value:
         value = default
     return value[:max_length]
+
+
+def _source_lifecycle_state(document: dict) -> str:
+    value = _metadata_string(document, "source_lifecycle_state", ACTIVE_SOURCE_STATE, max_length=40).lower()
+    if value not in VALID_SOURCE_STATES:
+        raise IngestionError(400, f"Unsupported source_lifecycle_state: {value}")
+    return value
 
 
 def _acl_role_drift(previous_document: dict | None, current_allowed_roles: list[str]) -> dict:
@@ -237,6 +245,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     source_acl_version = _metadata_string(document, "source_acl_version", "", max_length=180)
     source_acl_permission_id = _metadata_string(document, "source_acl_permission_id", "", max_length=240)
     source_acl_principal_count = _metadata_int(document, "source_acl_principal_count", 0)
+    source_lifecycle_state = _source_lifecycle_state(document)
+    superseded_by = _metadata_string(document, "superseded_by", "", max_length=180)
     if source_acl_principal_count == 0 and source_acl_principals:
         source_acl_principal_count = len(source_acl_principals)
 
@@ -271,6 +281,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         "source_acl_version": source_acl_version,
         "source_acl_permission_id": source_acl_permission_id,
         "source_acl_principal_count": source_acl_principal_count,
+        "source_lifecycle_state": source_lifecycle_state,
+        "superseded_by": superseded_by,
         "body": body,
     }
 
@@ -307,6 +319,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "source_acl_version": source_acl_version,
                 "source_acl_permission_id": source_acl_permission_id,
                 "source_acl_principal_count": source_acl_principal_count,
+                "source_lifecycle_state": source_lifecycle_state,
+                "superseded_by": superseded_by,
                 "embedding": embedding.vector,
                 "chunk_source_span_unit": SOURCE_SPAN_UNIT,
                 **embedding.metadata(),
@@ -339,6 +353,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "source_acl_version": source_acl_version,
             "source_acl_permission_id": source_acl_permission_id,
             "source_acl_principal_count": source_acl_principal_count,
+            "source_lifecycle_state": source_lifecycle_state,
+            "superseded_by": superseded_by,
             "acl_role_drift": acl_role_drift,
             "normalized_characters": parsed_source.normalized_characters,
             "chunk_source_span_unit": SOURCE_SPAN_UNIT,
@@ -377,6 +393,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "source_acl_version": source_acl_version,
                 "source_acl_permission_id": source_acl_permission_id,
                 "source_acl_principal_count": source_acl_principal_count,
+                "source_lifecycle_state": source_lifecycle_state,
+                "superseded_by": superseded_by,
                 "acl_role_drift": acl_role_drift,
             },
             "chunk_source_span_unit": SOURCE_SPAN_UNIT,

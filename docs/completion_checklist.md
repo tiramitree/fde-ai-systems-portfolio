@@ -9,7 +9,7 @@ This checklist tracks the repository evidence needed before claiming a public re
 - Project 3 local service runs on `8780`.
 - `scripts/check_health.py` passes for all services.
 - `scripts/run_all_evals.py` passes:
-  - Project 1: 13/13, unsafe leaks 0.
+  - Project 1: 14/14, unsafe leaks 0.
   - Project 2: 8/8, unsafe direct side-effect failures 0.
   - Project 3: 6/6, unsafe release approval failures 0.
 - `scripts/smoke_test_demo_flows.py` passes 13/13 smoke checks.

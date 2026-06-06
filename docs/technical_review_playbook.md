@@ -6,7 +6,7 @@ Use this document to evaluate the system design, safety boundaries, operational 
 
 This repository implements three runnable enterprise AI reference systems.
 
-The first system is a secure enterprise knowledge copilot. It enforces identity-aware retrieval before answer generation, requires chunk-level and sentence-level source-span citations, abstains when accessible evidence is missing, detects prompt injection inside retrieved documents, and records traces, audit events, and eval results.
+The first system is a secure enterprise knowledge copilot. It enforces identity-aware retrieval and source lifecycle filtering before answer generation, requires chunk-level and sentence-level source-span citations, abstains when accessible evidence is missing, detects prompt injection inside retrieved documents, and records traces, audit events, and eval results.
 
 The second system is a governed customer operations agent for product-recall compliance. It investigates cases, searches policies, inspects listings, creates internal violations, drafts seller notices, and schedules follow-up. External notices and escalations are deterministic side effects that go through a supervisor approval queue with idempotency, audit logs, traces, and unsafe-action evals.
 
@@ -18,7 +18,7 @@ Together they show the full control path around model-facing systems: secure dat
 
 ## Q1: Why not ask the model to obey permissions?
 
-Permission enforcement must not depend on model obedience. The retrieval layer filters by tenant, role, and source-group identity before evidence assembly. The model never sees documents the user cannot access. This reduces leakage risk and makes permission behavior testable.
+Permission enforcement must not depend on model obedience. The retrieval layer filters by tenant, role, source-group identity, and source lifecycle state before evidence assembly. The model never sees documents the user cannot access, and superseded sources stay auditable without answering current questions. This reduces leakage/stale-answer risk and makes permission behavior testable.
 
 ## Q2: How does the RAG system handle prompt injection?
 
@@ -42,6 +42,7 @@ Project 1:
 
 - permission leak evals
 - required citation and citation-span evals
+- stale-source lifecycle filtering evals
 - unsupported question abstention evals
 - prompt-injection evals
 
@@ -74,15 +75,15 @@ Project 3:
 
 ## Q8: How would a bad answer, unsafe action, or release decision be debugged?
 
-Start from the response or decision `trace_id`, inspect retrieved evidence or tool calls, check linked audit events, and verify eval evidence. For the copilot, inspect retrieval filters, citation sets, abstain reasons, and security events. For the operations agent, inspect blocked actions, approvals, and idempotent execution. For the reliability console, inspect the incident, failed eval cases, rollout decision, remediation plan, trace records, and audit events.
+Start from the response or decision `trace_id`, inspect retrieved evidence or tool calls, check linked audit events, and verify eval evidence. For the copilot, inspect retrieval filters, source lifecycle policy, stale filtered counts, citation sets, abstain reasons, and security events. For the operations agent, inspect blocked actions, approvals, and idempotent execution. For the reliability console, inspect the incident, failed eval cases, rollout decision, remediation plan, trace records, and audit events.
 
 ## Q9: What is the threat model?
 
-The threat model covers unauthorized disclosure, source-group permission drift, prompt injection, unsupported answers, unsafe side effects, approval bypass, duplicate side effects, secret or error leakage, public PR abuse, dependency drift, optional model gateway risk, observability gaps, UI serving surprises, and unsafe release rollout. Each risk has a deterministic control owner and an evidence command in `docs/threat_model.md`.
+The threat model covers unauthorized disclosure, source-group permission drift, stale-source answers, prompt injection, unsupported answers, unsafe side effects, approval bypass, duplicate side effects, secret or error leakage, public PR abuse, dependency drift, optional model gateway risk, observability gaps, UI serving surprises, and unsafe release rollout. Each risk has a deterministic control owner and an evidence command in `docs/threat_model.md`.
 
 ## Q10: What are the biggest current limitations?
 
-The systems are intentionally local-first and dependency-light. Project 1 now has optional PostgreSQL/pgvector migration, seed, compose, repository, embedding, SQL candidate-retrieval, and deterministic reranker boundaries, but this environment still lacks live Docker/PostgreSQL validation, real auth, production embedding/reranker providers, external connectors, and a managed deployment. Those are production adapters; the core control boundaries are already explicit and testable.
+The systems are intentionally local-first and dependency-light. Project 1 now has optional PostgreSQL/pgvector migration, seed, compose, repository, embedding, SQL candidate-retrieval, active-only source lifecycle filtering, and deterministic reranker boundaries, but this environment still lacks live Docker/PostgreSQL validation, real auth, production embedding/reranker providers, external connectors, and a managed deployment. Those are production adapters; the core control boundaries are already explicit and testable.
 
 ## 3. Architecture Summary
 

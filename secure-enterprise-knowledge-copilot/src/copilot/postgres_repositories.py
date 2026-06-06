@@ -488,6 +488,8 @@ class PostgresKnowledgeRepository:
                         "source_acl_version": document.get("source_acl_version", ""),
                         "source_acl_permission_id": document.get("source_acl_permission_id", ""),
                         "source_acl_principal_count": document.get("source_acl_principal_count", 0),
+                        "source_lifecycle_state": document.get("source_lifecycle_state", "active"),
+                        "superseded_by": document.get("superseded_by", ""),
                     }
                 ),
             ),
@@ -512,6 +514,8 @@ class PostgresKnowledgeRepository:
                 "source_acl_version": chunk.get("source_acl_version", ""),
                 "source_acl_permission_id": chunk.get("source_acl_permission_id", ""),
                 "source_acl_principal_count": chunk.get("source_acl_principal_count", 0),
+                "source_lifecycle_state": chunk.get("source_lifecycle_state", "active"),
+                "superseded_by": chunk.get("superseded_by", ""),
                 "source_span": chunk.get("source_span", {}),
                 "chunk_source_span_unit": chunk.get("chunk_source_span_unit"),
                 "embedding_model": chunk.get("embedding_model"),
@@ -887,6 +891,8 @@ class PostgresKnowledgeRepository:
             "source_acl_version": metadata.get("source_acl_version", "") if isinstance(metadata, dict) else "",
             "source_acl_permission_id": metadata.get("source_acl_permission_id", "") if isinstance(metadata, dict) else "",
             "source_acl_principal_count": metadata.get("source_acl_principal_count", 0) if isinstance(metadata, dict) else 0,
+            "source_lifecycle_state": metadata.get("source_lifecycle_state", "active") if isinstance(metadata, dict) else "active",
+            "superseded_by": metadata.get("superseded_by", "") if isinstance(metadata, dict) else "",
         }
 
     def _row_to_chunk(self, row: Any) -> dict:
@@ -921,6 +927,8 @@ class PostgresKnowledgeRepository:
             "source_acl_version": metadata.get("source_acl_version", "") if isinstance(metadata, dict) else "",
             "source_acl_permission_id": metadata.get("source_acl_permission_id", "") if isinstance(metadata, dict) else "",
             "source_acl_principal_count": metadata.get("source_acl_principal_count", 0) if isinstance(metadata, dict) else 0,
+            "source_lifecycle_state": metadata.get("source_lifecycle_state", "active") if isinstance(metadata, dict) else "active",
+            "superseded_by": metadata.get("superseded_by", "") if isinstance(metadata, dict) else "",
             "source_span": metadata.get("source_span", {}) if isinstance(metadata, dict) else {},
             "chunk_source_span_unit": metadata.get("chunk_source_span_unit") if isinstance(metadata, dict) else None,
             "embedding_model": metadata.get("embedding_model") if isinstance(metadata, dict) else None,

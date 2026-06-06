@@ -208,7 +208,7 @@ Current verified status:
 ```text
 health check: all services ok
 smoke tests: 13/13 passed
-Project 1 eval: 13/13 passed, unsafe_leak_failures = 0
+Project 1 eval: 14/14 passed, unsafe_leak_failures = 0
 Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 ```

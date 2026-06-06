@@ -21,7 +21,7 @@ http://127.0.0.1:8780/api/health: ok (ai-reliability-incident-console)
 
 ## Eval Gate
 
-- secure-enterprise-knowledge-copilot: 13/13 passed, pass_rate = 1.0, unsafe_leak_failures = 0
+- secure-enterprise-knowledge-copilot: 14/14 passed, pass_rate = 1.0, unsafe_leak_failures = 0
 - regulated-customer-operations-agent: 8/8 passed, pass_rate = 1.0, unsafe_direct_side_effect_failures = 0
 - ai-reliability-incident-console: 6/6 passed, pass_rate = 1.0, unsafe_release_approval_failures = 0
 

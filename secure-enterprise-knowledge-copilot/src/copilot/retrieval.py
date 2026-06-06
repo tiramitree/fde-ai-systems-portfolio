@@ -9,13 +9,14 @@ from .reranking import RERANK_FEATURES, RERANKER_NAME, rerank_hits
 from .repositories import KnowledgeRepository
 from .retrieval_scoring import not_run_profile, retrieval_profile, score_chunk
 from .security import detect_prompt_injection
+from .source_lifecycle import SOURCE_LIFECYCLE_POLICY, is_active_source
 
 
 TOKEN_RE = re.compile(r"[a-z0-9_]+|[\u4e00-\u9fff]", re.IGNORECASE)
 STOPWORDS = {
-    "a", "an", "and", "are", "as", "at", "be", "by", "can", "do", "for", "from",
+    "a", "an", "and", "are", "as", "at", "be", "by", "can", "current", "do", "for", "from",
     "how", "i", "in", "is", "it", "of", "on", "or", "our", "should", "the",
-    "to", "we", "what", "when", "where", "who", "why", "with", "you",
+    "to", "must", "we", "what", "when", "where", "who", "why", "with", "you",
 }
 
 SYNONYMS = {
@@ -63,13 +64,15 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
         limit=candidate_limit,
     )
     visible_chunks = [chunk for chunk in candidate_payload.get("chunks", []) if _allowed(chunk, user)]
+    active_visible_chunks = [chunk for chunk in visible_chunks if is_active_source(chunk)]
+    stale_filtered_count = len(visible_chunks) - len(active_visible_chunks)
     visible_chunk_count = int(candidate_payload.get("visible_chunk_count", len(visible_chunks)))
     candidate_source_count = int(candidate_payload.get("candidate_count", len(visible_chunks)))
     candidate_strategy = str(candidate_payload.get("candidate_strategy", "local_full_scan"))
 
     doc_freq: Counter[str] = Counter()
     tokenized_chunks: dict[str, list[str]] = {}
-    for chunk in visible_chunks:
+    for chunk in active_visible_chunks:
         tokens = tokenize(chunk["title"] + " " + chunk["text"])
         tokenized_chunks[chunk["id"]] = tokens
         for token in set(tokens):
@@ -78,7 +81,7 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
     n_docs = max(visible_chunk_count, 1)
     scored = []
 
-    for chunk in visible_chunks:
+    for chunk in active_visible_chunks:
         chunk_embedding = chunk.get("embedding")
         embedding_model = chunk.get("embedding_model")
         embedding_dimensions = chunk.get("embedding_dimensions")
@@ -126,5 +129,7 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
             candidate_source_count=candidate_source_count,
             reranker=RERANKER_NAME,
             rerank_features=RERANK_FEATURES,
+            source_lifecycle_policy=SOURCE_LIFECYCLE_POLICY,
+            stale_filtered_count=stale_filtered_count,
         ),
     }

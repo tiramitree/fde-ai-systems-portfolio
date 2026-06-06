@@ -44,6 +44,7 @@ Project 1 still performs:
 - admin-only ingestion before document chunks are added to searchable state
 - tenant and role filtering before generation
 - unsafe retrieved-content removal before generation
+- source lifecycle filtering before retrieval scoring so superseded, deprecated, or deleted sources stay auditable but cannot answer current questions
 - citation and abstention decisions in application logic
 - normalized-text source spans attached to retrieved chunks, cited chunks, and sentence-level answer evidence
 
@@ -79,6 +80,7 @@ Current production-path artifacts:
 - `secure-enterprise-knowledge-copilot/src/copilot/embeddings.py`
 - `secure-enterprise-knowledge-copilot/src/copilot/ingestion.py`
 - `secure-enterprise-knowledge-copilot/src/copilot/source_files.py`
+- `secure-enterprise-knowledge-copilot/src/copilot/source_lifecycle.py`
 - `secure-enterprise-knowledge-copilot/web/js/ingestion.js`
 - `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`
 - `python -B scripts/dev.py postgres-migrations`
@@ -100,10 +102,11 @@ Project 1 runtime switch:
 - `PostgresKnowledgeRepository.list_retrieval_candidates` adds `postgres_hybrid_sql_v1`, a SQL-backed keyword/vector candidate selection path that applies tenant, role, and source-group filters before `websearch_to_tsquery` and pgvector nearest-neighbor retrieval.
 - `local-evidence-reranker-v1` provides a deterministic reranker boundary with feature-level rerank scores so production rerankers can be added without changing the permission or citation invariants.
 - Project 1 chunk metadata now carries normalized-text `source_span` values through JSON seed state, admin ingestion, citation output, traces, and the optional PostgreSQL adapter.
+- Project 1 documents and chunks now carry `source_lifecycle_state` and `superseded_by` metadata. Retrieval uses the `active_sources_only` lifecycle policy, records `stale_filtered_count`, and keeps superseded/deprecated/deleted sources out of scoring and answer assembly while retaining them for audit history.
 - `scripts/export_traces_otel.py --send-otlp-http` adds an optional OTLP/HTTP JSON collector handoff path, while `scripts/check_otel_collector_handoff.py` verifies the POST behavior with a local collector stub so hosted observability remains opt-in.
 - `scripts/export_trace_eval_candidates.py` adds a local trace-to-eval candidate workflow so permission abstentions, prompt-injection refusals, approval gates, bypass refusals, release blocks, and monitor-only eval signals can be reviewed before promotion into checked-in golden evals. Candidate artifacts include owner roles, allowed dispositions, promotion targets, and regression schedules so review remains explicit.
 - `POST /api/documents/ingest` now accepts either direct text/Markdown/CSV/HTML/JSON body content or a UTF-8 file-like JSON payload with `document.file.filename` and `document.file.content_base64`. The file boundary records safe `source_file` metadata, rejects path-like filenames and unsupported MIME types, infers supported MIME types from filenames when needed, and routes decoded content through the same parser, chunking, embedding, citation, audit, and retrieval path.
-- `POST /api/sources/sync` adds an admin-only connector-style source sync contract. It persists connector name, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, allowed source groups, source ACL principals, and sync cursor metadata on documents and chunks. It reuses parser/chunking/embedding boundaries, fails closed when a provided ACL snapshot lacks a document permission record, supports opt-in `prune_missing` for full-snapshot removal of stale connector documents, writes per-document `document_ingested` events, and writes a batch `source_sync_completed` audit event with `acl_drift_count`, `pruned_count`, and affected document IDs. The frontend includes a sample connector sync button so reviewers can exercise the data-plane contract without external accounts.
+- `POST /api/sources/sync` adds an admin-only connector-style source sync contract. It persists connector name, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, allowed source groups, source ACL principals, sync cursor metadata, and source lifecycle metadata on documents and chunks. It reuses parser/chunking/embedding boundaries, fails closed when a provided ACL snapshot lacks a document permission record, supports opt-in `prune_missing` for full-snapshot removal of stale connector documents, writes per-document `document_ingested` events, and writes a batch `source_sync_completed` audit event with `acl_drift_count`, `pruned_count`, and affected document IDs. The frontend includes a sample connector sync button so reviewers can exercise the data-plane contract without external accounts.
 - `POST /api/ingestion/jobs` and `GET /api/ingestion/jobs` add a local ingestion worker contract. The local demo still executes inline, but it records job lifecycle state, `idempotency_key` replay, sanitized input summaries with `body_sha256`, `dead_lettered` validation failures, retry parent links, `ingestion_job_completed`, and `ingestion_job_dead_lettered` audit evidence.
 - `POST /api/connectors/github/sync` adds the first read connector boundary. Fixture mode keeps CI deterministic while live mode can call the GitHub REST issues and pull requests APIs with an optional scoped `GITHUB_CONNECTOR_TOKEN`. Issue and PR records are normalized into source sync ingestion jobs with GitHub source URLs, external IDs, connector ACL snapshots, idempotency replay, citation-ready chunks, and `github_connector_synced` audit evidence without returning or auditing raw issue bodies.
 - `GET /api/connectors/status` adds an admin-only operator status boundary derived from ingestion jobs. It reports connector health, latest cursor, document/chunk counts, ACL drift, prune counts, prior dead letters, and recovered status without exposing raw source bodies.
@@ -114,7 +117,7 @@ Next steps:
 2. Extend the current admin-only text/file-like ingestion, ACL-snapshot source sync, source-group permission checks, and GitHub read connector contracts into multipart uploads, broader external connectors, source user/group membership sync, connector checkpoint recovery, and live deletion/prune verification against external source APIs.
 3. Move the local inline ingestion job contract behind a real background parser pipeline with external worker processes, durable queue storage, retry scheduling, and sync checkpoint recovery.
 4. Replace the deterministic local hashing embedding with a production embedding model.
-5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, rerank quality, broader citation span accuracy, and stale-source handling.
+5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, rerank quality, broader citation span accuracy, larger stale/conflict fixtures, and source lifecycle drift over time.
 6. Replace the deterministic reranker with a production reranker provider behind the existing boundary.
 7. Connect trace-to-eval candidate review metadata to a checked-in reviewed-dataset ledger and nightly regression scheduling automation.
 8. Send OTLP traces to a real collector or hosted backend in a documented target environment, preserving the local collector-stub check as the default CI proof.
