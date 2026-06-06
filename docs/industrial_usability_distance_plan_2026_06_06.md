@@ -42,7 +42,7 @@ production-minded reference implementation
 | 工业平面 | 当前状态 | 到生产还缺什么 |
 | --- | --- | --- |
 | 数据面 | Project 1 有 seed data、admin ingestion、source span、local embedding boundary、SQL candidate、reranker boundary。 | 文件/connector ingestion、parser worker、OCR/table、incremental sync、生产 embedding/reranker、live pgvector/search 验证、大 corpus eval。 |
-| 身份权限面 | 应用层有 permission-before-generation，用户/角色仍是 demo fixture。 | SSO、tenant/user/group、source ACL sync、Postgres RLS live tests、permission drift detection。 |
+| 身份权限面 | 应用层有 permission-before-generation、demo 用户/角色、connector ACL snapshot、permission drift evidence。 | SSO、tenant/user/group、真实 source ACL sync、Postgres RLS live tests、permission drift detection。 |
 | 运行时 | local JSON 是默认，Postgres 路径是 opt-in/部分验证。 | connection pool、migrations live proof、queue、retry、transactional outbox、crash recovery、backup/restore。 |
 | Agent 工具面 | Project 2 有 approval gate 和 side-effect blocking。 | 真实 tool registry、scoped credentials、dry-run preview、approval owner/expiry/escalation、idempotent execution、connector outage handling。 |
 | 观测面 | 本地 trace/audit 和 OTLP JSON handoff 已经有形状。 | OpenTelemetry SDK spans、Phoenix/Langfuse/OpenAI traces、dashboard、sampling、cost/latency/token/error metrics、PII redaction before export。 |
@@ -101,7 +101,7 @@ I built the production invariants first: permission before generation, grounded 
 | --- | --- | --- |
 | 真实 ingestion | 主要是 seed data 和本地/admin ingestion。 | 文件上传、source connector、parser worker、OCR/table、incremental sync、backfill、失败恢复。 |
 | 检索质量 | 有 deterministic scoring、embedding boundary、SQL candidate、reranker boundary，但语料小。 | 生产 embedding/reranker、hybrid retrieval、recall@k、MRR/nDCG、citation faithfulness、stale-source eval。 |
-| 权限身份 | UI 选择 fictional users/roles。 | SSO、tenant、group、RBAC/ABAC、source ACL sync、RLS、permission drift detection。 |
+| 权限身份 | UI 选择 fictional users/roles，但 source sync 已能接受 ACL snapshot 并验证 permission drift。 | SSO、tenant、group、RBAC/ABAC、真实 source ACL sync、RLS、permission drift detection。 |
 | 持久运行时 | local JSON 默认，Postgres path 还在推进。 | connection pool、migration、queue、retry、idempotency、outbox、crash recovery。 |
 | Agent connector | 工具是本地 deterministic function。 | 真实 tool registry、scoped credential、dry-run preview、approval owner/expiry、idempotent execution。 |
 | 观测 | 本地 trace 和 OTLP-like export。 | OTel SDK、Phoenix/Langfuse/OpenAI traces、dashboard、cost/latency/error metrics、trace sampling。 |
@@ -138,7 +138,7 @@ Enterprise AI Control Plane
 ## 最优先补齐顺序
 
 1. Project 1 真实数据面：parser/chunk/source span/embed/pgvector/hybrid retrieval/reranker/citation/eval。
-2. 真实权限模型：tenant/user/group/source ACL/RLS/permission drift eval。
+2. 真实权限模型：tenant/user/group/source ACL/RLS/permission drift eval；当前先有本地 ACL snapshot 和 drift contract。
 3. 外部观测：OpenTelemetry SDK -> Phoenix/Langfuse/OpenAI traces。
 4. trace-to-eval：坏 trace 自动进入 eval dataset，支持 prompt/model/retrieval 比较。
 5. 一个 read connector：GitHub、Google Drive、Confluence、S3-style storage 选一个。

@@ -57,7 +57,51 @@ curl.exe -s -X POST http://127.0.0.1:8765/api/documents/ingest -H "Content-Type:
 Sync two sample connector documents as admin `avery`. The response should include `sync.connector`, `source_connector`, `external_id`, `acl_source`, and `sync_cursor` metadata without returning document bodies:
 
 ```powershell
-curl.exe -s -X POST http://127.0.0.1:8765/api/sources/sync -H "Content-Type: application/json" -d '{"user_id":"avery","replace":true,"connector":{"name":"local-drive-demo","cursor":"2026-06-06T00:00:00Z","acl_source":"fixture-acl-v1"},"documents":[{"id":"source-sync-playbook-2026","external_id":"drive-doc-source-sync-playbook-2026","title":"Source Sync Playbook 2026","body":"Source Sync Playbook 2026\n\nAfter each connector sync, administrators must review parser warnings, ACL source mappings, and trace-to-eval candidates before promoting new knowledge into the trusted answer path.","classification":"internal","allowed_roles":["employee","manager","admin"],"source_mime":"text/markdown","updated_at":"2026-06-06"},{"id":"finance-retention-control-notes-2026","external_id":"drive-json-finance-retention-controls-2026","title":"Finance Retention Control Notes 2026","body":"{\"policy\":\"Finance Retention Control Notes 2026\",\"owner\":\"Finance Operations\",\"summary\":\"Confidential retention controls require manager review, audit linkage, and approval evidence before wider access.\"}","classification":"confidential","allowed_roles":["manager","admin"],"source_mime":"application/json","updated_at":"2026-06-06"}]}' | python -m json.tool
+$payload = @{
+  user_id = "avery"
+  replace = $true
+  connector = @{
+    name = "local-drive-demo"
+    cursor = "2026-06-06T00:00:00Z"
+    acl_source = "fixture-acl-v1"
+    acl_snapshot = @{
+      version = "fixture-acl-v1"
+      documents = @{
+        "drive-doc-source-sync-playbook-2026" = @{
+          allowed_roles = @("employee", "manager", "admin")
+          permission_id = "drive-acl-source-sync-playbook-v1"
+          principal_count = 3
+        }
+        "drive-json-finance-retention-controls-2026" = @{
+          allowed_roles = @("manager", "admin")
+          permission_id = "drive-acl-finance-controls-v1"
+          principal_count = 2
+        }
+      }
+    }
+  }
+  documents = @(
+    @{
+      id = "source-sync-playbook-2026"
+      external_id = "drive-doc-source-sync-playbook-2026"
+      title = "Source Sync Playbook 2026"
+      body = "Source Sync Playbook 2026`n`nAfter each connector sync, administrators must review parser warnings, ACL source mappings, and trace-to-eval candidates before promoting new knowledge into the trusted answer path."
+      classification = "internal"
+      source_mime = "text/markdown"
+      updated_at = "2026-06-06"
+    },
+    @{
+      id = "finance-retention-control-notes-2026"
+      external_id = "drive-json-finance-retention-controls-2026"
+      title = "Finance Retention Control Notes 2026"
+      body = '{"policy":"Finance Retention Control Notes 2026","owner":"Finance Operations","summary":"Confidential retention controls require manager review, audit linkage, and approval evidence before wider access."}'
+      classification = "confidential"
+      source_mime = "application/json"
+      updated_at = "2026-06-06"
+    }
+  )
+} | ConvertTo-Json -Depth 8 -Compress
+curl.exe -s -X POST http://127.0.0.1:8765/api/sources/sync -H "Content-Type: application/json" -d $payload | python -m json.tool
 ```
 
 Ask Alice about the synced source. The response should cite `source-sync-playbook-2026`:

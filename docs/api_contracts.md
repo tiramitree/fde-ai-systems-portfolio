@@ -36,7 +36,7 @@ Source:
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/query` | Permission-aware answer generation with citations or abstention. |
 | POST | `/api/documents/ingest` | Admin-only local ingestion of searchable text, Markdown, CSV, HTML, or JSON content into the permission-aware document store. |
-| POST | `/api/sources/sync` | Admin-only connector-style batch source sync with external IDs, sync cursor, ACL source metadata, parser normalization, chunking, and audit evidence. |
+| POST | `/api/sources/sync` | Admin-only connector-style batch source sync with external IDs, sync cursor, optional source ACL snapshot, permission drift evidence, parser normalization, chunking, and audit evidence. |
 | POST | `/api/eval/run` | Run the project eval suite. |
 
 ### Query Response Shape
@@ -147,6 +147,8 @@ The connector object supports:
 - `name`
 - `cursor`
 - `acl_source`
+- optional `acl_snapshot.version`
+- optional `acl_snapshot.documents`
 
 Each synced document supports the same fields as local ingestion plus:
 
@@ -160,6 +162,9 @@ The route returns:
 - `sync.connector`
 - `sync.cursor`
 - `sync.acl_source`
+- `sync.acl_snapshot_version`
+- `sync.acl_drift_count`
+- `sync.acl_drift_doc_ids`
 - `sync.document_count`
 - `sync.chunk_count`
 - `sync.replaced_count`
@@ -169,14 +174,21 @@ The route returns:
 - `documents[].external_id`
 - `documents[].acl_source`
 - `documents[].sync_cursor`
+- `documents[].allowed_roles_source`
+- `documents[].source_acl_version`
+- `documents[].source_acl_permission_id`
+- `documents[].source_acl_principal_count`
 
 Source sync contract:
 
 - only admin users can sync connector sources
 - synced documents are normalized through the same parser, chunking, embedding, permission, and body-hiding path as local ingestion
 - the API accepts at most ten documents per local sync request so demo state remains reviewable
-- connector `name`, external document ID, ACL source, and sync cursor are persisted on documents and chunks
-- sync writes `document_ingested` events for each document and a `source_sync_completed` audit event for the batch
+- connector `name`, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, and sync cursor are persisted on documents and chunks
+- when `connector.acl_snapshot` is present, each synced document must have a matching ACL record; missing ACL records fail closed before searchable chunks are written
+- source ACL roles override document payload roles, while classification validation still prevents confidential documents from being widened to employee access
+- resyncs compare previous and current roles and return `acl_role_drift` plus batch `acl_drift_count` / `acl_drift_doc_ids`
+- sync writes `document_ingested` events for each document and a `source_sync_completed` audit event for the batch, including permission drift evidence
 - this route is a connector contract and sample data-plane demonstration; real external connectors, background queues, retries, and malware scanning remain production upgrade work
 
 ### Scenario Snapshot Shape

@@ -338,6 +338,26 @@ def project_1_contracts(base_url: str) -> list[Check]:
             "name": "local-drive-demo",
             "cursor": "2026-06-06T00:00:00Z",
             "acl_source": "fixture-acl-v1",
+            "acl_snapshot": {
+                "version": "fixture-acl-v1",
+                "documents": {
+                    "drive-doc-source-sync-playbook-2026": {
+                        "allowed_roles": ["employee", "manager", "admin"],
+                        "permission_id": "drive-acl-source-sync-playbook-v1",
+                        "principal_count": 3,
+                    },
+                    "drive-json-finance-retention-controls-2026": {
+                        "allowed_roles": ["manager", "admin"],
+                        "permission_id": "drive-acl-finance-controls-v1",
+                        "principal_count": 2,
+                    },
+                    "drive-doc-acl-drift-playbook-2026": {
+                        "allowed_roles": ["manager", "admin"],
+                        "permission_id": "drive-acl-drift-playbook-v1",
+                        "principal_count": 2,
+                    },
+                },
+            },
         },
         "documents": [
             {
@@ -373,6 +393,19 @@ def project_1_contracts(base_url: str) -> list[Check]:
                 "source_mime": "application/json",
                 "updated_at": "2026-06-06",
             },
+            {
+                "id": "acl-drift-playbook-2026",
+                "external_id": "drive-doc-acl-drift-playbook-2026",
+                "title": "ACL Drift Playbook 2026",
+                "body": (
+                    "ACL Drift Playbook 2026\n\n"
+                    "Delta rehearsal compares source ACL snapshots before updating searchable access. "
+                    "Administrators should confirm added roles, removed roles, and affected document IDs."
+                ),
+                "classification": "internal",
+                "source_mime": "text/markdown",
+                "updated_at": "2026-06-06",
+            },
         ],
     }
     forbidden_sync_payload = {**source_sync_payload, "user_id": "alice"}
@@ -394,9 +427,10 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and sync_metadata.get("connector") == "local-drive-demo"
             and sync_metadata.get("cursor") == "2026-06-06T00:00:00Z"
             and sync_metadata.get("acl_source") == "fixture-acl-v1"
-            and sync_metadata.get("document_count") == 2
-            and sync_metadata.get("chunk_count", 0) >= 2
-            and len(synced_documents) == 2
+            and sync_metadata.get("acl_snapshot_version") == "fixture-acl-v1"
+            and sync_metadata.get("document_count") == 3
+            and sync_metadata.get("chunk_count", 0) >= 3
+            and len(synced_documents) == 3
             and all("body" not in doc for doc in synced_documents)
             and synced_documents[0].get("source_connector") == "local-drive-demo"
             and synced_documents[0].get("external_id") == "drive-doc-source-sync-playbook-2026"
@@ -404,6 +438,19 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and synced_documents[0].get("sync_cursor") == "2026-06-06T00:00:00Z",
             "P1 source sync batch contract",
             f"status={status}; connector={sync_metadata.get('connector')}; docs={sync_metadata.get('document_count')}; chunks={sync_metadata.get('chunk_count')}",
+        )
+    )
+    drift_doc = next((doc for doc in synced_documents if doc.get("id") == "acl-drift-playbook-2026"), {})
+    checks.append(
+        check(
+            status == 200
+            and drift_doc.get("allowed_roles") == ["manager", "admin"]
+            and drift_doc.get("allowed_roles_source") == "connector_acl_snapshot"
+            and drift_doc.get("source_acl_version") == "fixture-acl-v1"
+            and drift_doc.get("source_acl_permission_id") == "drive-acl-drift-playbook-v1"
+            and drift_doc.get("source_acl_principal_count") == 2,
+            "P1 source sync applies connector ACL snapshot",
+            f"roles={drift_doc.get('allowed_roles')}; acl_version={drift_doc.get('source_acl_version')}",
         )
     )
 
@@ -425,6 +472,86 @@ def project_1_contracts(base_url: str) -> list[Check]:
             ),
             "P1 synced source is retrievable with citation",
             f"trace={synced_answer.get('trace_id')}; citations={len(synced_answer.get('citations', []))}",
+        )
+    )
+
+    status, alice_documents_before_drift = get_json(f"{base_url}/api/documents?user_id=alice")
+    checks.append(
+        check(
+            status == 200
+            and not any(
+                doc.get("id") == "acl-drift-playbook-2026"
+                for doc in alice_documents_before_drift.get("documents", [])
+            ),
+            "P1 source ACL snapshot hides unsynced role",
+            f"documents={len(alice_documents_before_drift.get('documents', []))}",
+        )
+    )
+
+    drift_sync_payload = {
+        "user_id": "avery",
+        "replace": True,
+        "connector": {
+            "name": "local-drive-demo",
+            "cursor": "2026-06-06T01:00:00Z",
+            "acl_source": "fixture-acl-v2",
+            "acl_snapshot": {
+                "version": "fixture-acl-v2",
+                "documents": {
+                    "drive-doc-acl-drift-playbook-2026": {
+                        "allowed_roles": ["employee", "manager", "admin"],
+                        "permission_id": "drive-acl-drift-playbook-v2",
+                        "principal_count": 3,
+                    },
+                },
+            },
+        },
+        "documents": [
+            {
+                "id": "acl-drift-playbook-2026",
+                "external_id": "drive-doc-acl-drift-playbook-2026",
+                "title": "ACL Drift Playbook 2026",
+                "body": (
+                    "ACL Drift Playbook 2026\n\n"
+                    "Delta rehearsal compares source ACL snapshots before updating searchable access. "
+                    "Administrators should confirm added roles, removed roles, and affected document IDs."
+                ),
+                "classification": "internal",
+                "source_mime": "text/markdown",
+                "updated_at": "2026-06-06",
+            },
+        ],
+    }
+    status, drift_sync = post_json(f"{base_url}/api/sources/sync", drift_sync_payload)
+    drift_sync_metadata = drift_sync.get("sync", {})
+    drift_document = drift_sync.get("documents", [{}])[0] if drift_sync.get("documents") else {}
+    checks.append(
+        check(
+            status == 200
+            and drift_sync_metadata.get("acl_snapshot_version") == "fixture-acl-v2"
+            and drift_sync_metadata.get("acl_drift_count") == 1
+            and drift_sync_metadata.get("acl_drift_doc_ids") == ["acl-drift-playbook-2026"]
+            and drift_document.get("allowed_roles") == ["employee", "manager", "admin"]
+            and drift_document.get("source_acl_permission_id") == "drive-acl-drift-playbook-v2",
+            "P1 source ACL drift is detected on resync",
+            f"drift={drift_sync_metadata.get('acl_drift_count')}; docs={drift_sync_metadata.get('acl_drift_doc_ids')}",
+        )
+    )
+
+    status, drift_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "alice",
+            "question": "What does delta rehearsal compare before updating searchable access?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and drift_answer.get("abstain_reason") is None
+            and any(citation.get("doc_id") == "acl-drift-playbook-2026" for citation in drift_answer.get("citations", [])),
+            "P1 source ACL drift changes retrieval visibility",
+            f"trace={drift_answer.get('trace_id')}; citations={len(drift_answer.get('citations', []))}",
         )
     )
 
@@ -459,7 +586,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
         )
     )
 
-    status, audit = get_json(f"{base_url}/api/audit?limit=10")
+    status, audit = get_json(f"{base_url}/api/audit?limit=50")
     checks.append(
         check(
             status == 200
@@ -479,10 +606,11 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and any(
                 event.get("action") == "source_sync_completed"
                 and event.get("details", {}).get("connector") == "local-drive-demo"
-                and event.get("details", {}).get("document_count") == 2
+                and event.get("details", {}).get("document_count") == 1
+                and event.get("details", {}).get("acl_drift_count") == 1
                 for event in source_sync_audit.get("events", [])
             ),
-            "P1 source sync writes audit event",
+            "P1 source sync writes ACL drift audit event",
             f"events={len(source_sync_audit.get('events', []))}",
         )
     )

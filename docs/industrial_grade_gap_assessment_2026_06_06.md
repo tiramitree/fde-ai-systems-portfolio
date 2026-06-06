@@ -76,7 +76,7 @@ Source links reviewed:
 | --- | --- | --- |
 | Real ingestion | Mostly fictional seed data plus local/admin ingestion. | Uploads, source connectors, parser jobs, OCR/table handling, incremental sync, backfills, source versions, and failed-job recovery. |
 | Retrieval quality | Deterministic lexical/vector scoring now has a local embedding boundary, optional PostgreSQL SQL keyword/vector candidate selection, and a local reranker boundary, but it is still small-corpus and not production-provider backed. | Production embedding provider, larger hybrid retrieval metrics, production reranker, query routing, metadata filters, recall@k, citation faithfulness, and stale-source tests. |
-| Source permissions | UI-selected fictional users and roles. | Enterprise SSO, tenant model, group membership, RBAC/ABAC, source ACL sync, RLS defense in depth, permission-drift detection. |
+| Source permissions | UI-selected fictional users and roles plus a connector ACL snapshot contract with permission-drift evidence. | Enterprise SSO, tenant model, group membership, RBAC/ABAC, real source ACL sync, RLS defense in depth, live permission-drift detection. |
 | Runtime durability | Local JSON remains the safe default; Postgres path is partial. | Connection pooling, migrations, transactional audit, queues, retries, idempotency, outbox, crash recovery. |
 | Agent workflow | Local deterministic tools and approval model. | Real tool registry, scoped credentials, preview diffs, approval ownership/expiry/escalation, idempotent execution, connector outage handling. |
 | Observability | Local trace IDs and OTLP-shaped export. | OpenTelemetry SDK, Phoenix/Langfuse/OpenAI traces, dashboards, production trace sampling, cost/latency/error metrics. |
@@ -157,7 +157,7 @@ Build a local enterprise-auth stub before full SSO:
 - role policy
 - department policy
 - RLS-backed tests
-- permission drift evals
+- permission drift evals. Current API contracts cover a local ACL snapshot drift case; the remaining gap is live user/group sync and RLS-backed proof.
 
 Success criteria:
 
