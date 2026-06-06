@@ -1256,6 +1256,60 @@ def project_1_contracts(base_url: str) -> list[Check]:
         "idempotency_key": "contract-source-bundle-sync-v1",
         "prune_missing": True,
     }
+    status, forbidden_bundle_catalog = get_json(
+        f"{base_url}/api/connectors/source-bundle/catalog?user_id=alice&bundle=operations-handbook"
+    )
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_bundle_catalog.get("error", ""),
+            "P1 source bundle catalog rejects non-admin users",
+            json.dumps(forbidden_bundle_catalog),
+        )
+    )
+    status, traversal_bundle_catalog = get_json(
+        f"{base_url}/api/connectors/source-bundle/catalog?user_id=avery&bundle=../seed_documents"
+    )
+    checks.append(
+        check(
+            status == 400 and "unsupported characters" in traversal_bundle_catalog.get("error", ""),
+            "P1 source bundle catalog rejects path traversal bundle names",
+            json.dumps(traversal_bundle_catalog),
+        )
+    )
+    status, source_bundle_catalog = get_json(
+        f"{base_url}/api/connectors/source-bundle/catalog?user_id=avery&bundle=operations-handbook"
+    )
+    catalog = source_bundle_catalog.get("catalog", {})
+    catalog_bundles = catalog.get("bundles", [])
+    catalog_bundle = catalog_bundles[0] if catalog_bundles else {}
+    catalog_documents = catalog_bundle.get("documents", [])
+    serialized_source_bundle_catalog = json.dumps(source_bundle_catalog)
+    checks.append(
+        check(
+            status == 200
+            and catalog.get("catalog_version") == "source_bundle_catalog_v1"
+            and catalog.get("bundle_count") == 1
+            and catalog.get("raw_bodies_returned") is False
+            and catalog_bundle.get("bundle") == "operations-handbook"
+            and catalog_bundle.get("connector") == "source-bundle"
+            and catalog_bundle.get("document_count") == 3
+            and isinstance(catalog_bundle.get("manifest_sha256"), str)
+            and len(catalog_bundle.get("manifest_sha256", "")) == 64
+            and len(catalog_documents) == 3
+            and all("body" not in item for item in catalog_documents)
+            and any(
+                item.get("id") == "source-bundle-operations-handbook-incident-escalation"
+                and item.get("source_mime") == "text/markdown"
+                and item.get("principal_count") == 3
+                and isinstance(item.get("body_sha256"), str)
+                and len(item.get("body_sha256", "")) == 64
+                for item in catalog_documents
+            )
+            and "Sev2 incidents from the source bundle" not in serialized_source_bundle_catalog,
+            "P1 source bundle catalog previews manifests without raw bodies",
+            f"bundles={len(catalog_bundles)}; docs={len(catalog_documents)}",
+        )
+    )
     status, forbidden_bundle = post_json(
         f"{base_url}/api/connectors/source-bundle/sync",
         {**source_bundle_payload, "user_id": "alice"},

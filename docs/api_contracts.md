@@ -34,6 +34,7 @@ Source:
 | GET | `/api/audit?limit=50` | Recent audit events. |
 | GET | `/api/ingestion/jobs?user_id=avery&limit=25` | Admin-only ingestion job ledger with sanitized input summaries, status, retry links, and dead-letter evidence. |
 | GET | `/api/connectors/status?user_id=avery&limit=100` | Admin-only connector lifecycle summary derived from ingestion jobs, including health, cursors, counts, and dead-letter state. |
+| GET | `/api/connectors/source-bundle/catalog?user_id=avery&bundle=operations-handbook` | Admin-only source bundle manifest preview with ACL summaries, hashes, and file metadata but no raw source bodies. |
 | GET | `/api/eval/latest` | Latest eval run record. |
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/auth/demo-token` | Local signed demo token issuer for exercising bearer-auth identity context without external SSO. |
@@ -349,6 +350,53 @@ GitHub connector contract:
 - successful connector runs write `github_connector_synced` audit events with owner, repo, mode, cursor, record count, job ID, job status, and replay state, but never raw issue or pull request bodies
 
 ### Source Bundle Connector Response Shape
+
+`GET /api/connectors/source-bundle/catalog` accepts:
+
+- admin `user_id`
+- optional `bundle`, currently an allowlisted checked-in synthetic bundle such as `operations-handbook`
+- optional `cursor`
+- optional `prune_missing`
+
+The route returns:
+
+- `catalog.catalog_version`, currently `source_bundle_catalog_v1`
+- `catalog.root`
+- `catalog.bundle_count`
+- `catalog.raw_bodies_returned`, which must be `false`
+- `catalog.bundles`
+- `catalog.bundles[].bundle`
+- `catalog.bundles[].connector`
+- `catalog.bundles[].cursor`
+- `catalog.bundles[].document_count`
+- `catalog.bundles[].prune_missing`
+- `catalog.bundles[].manifest`
+- `catalog.bundles[].manifest_sha256`
+- `catalog.bundles[].source_payload_sha256`
+- `catalog.bundles[].acl_source`
+- `catalog.bundles[].acl_snapshot_version`
+- `catalog.bundles[].documents`
+- `catalog.bundles[].documents[].id`
+- `catalog.bundles[].documents[].external_id`
+- `catalog.bundles[].documents[].title`
+- `catalog.bundles[].documents[].path`
+- `catalog.bundles[].documents[].classification`
+- `catalog.bundles[].documents[].source_mime`
+- `catalog.bundles[].documents[].source_url`
+- `catalog.bundles[].documents[].file_size_bytes`
+- `catalog.bundles[].documents[].body_sha256`
+- `catalog.bundles[].documents[].allowed_roles`
+- `catalog.bundles[].documents[].allowed_groups`
+- `catalog.bundles[].documents[].permission_id`
+- `catalog.bundles[].documents[].principal_count`
+
+Source bundle catalog contract:
+
+- only admin users can preview source bundles
+- bundle names are validated with the same strict slug pattern used by sync
+- manifests and referenced files are validated before returning a preview
+- the preview returns manifest, source payload, file, body, and ACL hashes/counts for operator review
+- raw source bodies are never returned in the catalog response
 
 `POST /api/connectors/source-bundle/sync` accepts:
 

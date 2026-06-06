@@ -119,6 +119,33 @@ function renderConnectorStatus(container, connectors) {
   );
 }
 
+function renderSourceBundleCatalog(container, catalog) {
+  if (!container) {
+    return;
+  }
+  const bundles = catalog?.bundles || [];
+  if (!bundles.length) {
+    container.replaceChildren(element("div", { className: "muted", textContent: "No source bundles available." }));
+    return;
+  }
+  container.replaceChildren(
+    ...bundles.slice(0, 3).map((bundle) => {
+      const hash = bundle.manifest_sha256 ? bundle.manifest_sha256.slice(0, 12) : "no manifest hash";
+      const acl = bundle.acl_snapshot_version || "no acl version";
+      const docPreview = (bundle.documents || [])
+        .slice(0, 3)
+        .map((doc) => `${doc.title} (${doc.classification})`)
+        .join("; ");
+      return element("div", { className: "item" }, [
+        element("div", { textContent: `${bundle.bundle}: ${bundle.document_count || 0} docs ready for preview` }),
+        element("small", {
+          textContent: `manifest ${hash}, acl ${acl}, raw bodies returned: ${catalog.raw_bodies_returned ? "yes" : "no"} | ${docPreview}`,
+        }),
+      ]);
+    })
+  );
+}
+
 async function buildPayload(elements, userId) {
   const allowedRoles = selectedOptions(elements.roles);
   const file = await filePayload(elements);
@@ -260,6 +287,26 @@ function buildGitHubConnectorPayload(userId) {
 }
 
 export function installIngestionPanel({ api, elements, currentUser, onIngested }) {
+  async function refreshSourceBundleCatalog(user) {
+    if (!elements.sourceBundleCatalog) {
+      return;
+    }
+    if (user?.role !== "admin") {
+      elements.sourceBundleCatalog.replaceChildren(
+        element("div", { className: "muted", textContent: "Source bundle preview is admin-only." })
+      );
+      return;
+    }
+    try {
+      const data = await api(
+        `/api/connectors/source-bundle/catalog?user_id=${encodeURIComponent(user.id)}&bundle=operations-handbook`
+      );
+      renderSourceBundleCatalog(elements.sourceBundleCatalog, data.catalog || {});
+    } catch (error) {
+      elements.sourceBundleCatalog.replaceChildren(element("div", { className: "muted", textContent: error.message }));
+    }
+  }
+
   async function refreshConnectorStatus(user) {
     if (!elements.connectorStatus) {
       return;
@@ -300,6 +347,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     renderSummary(elements.summary, user);
     elements.button.disabled = !isAdmin;
     elements.syncButton.disabled = !isAdmin;
+    elements.previewBundleButton.disabled = !isAdmin;
     elements.bundleButton.disabled = !isAdmin;
     elements.githubButton.disabled = !isAdmin;
     if (!isAdmin) {
@@ -307,6 +355,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     } else if (!elements.status.textContent || elements.status.textContent.includes("Switch to")) {
       setStatus(elements.status, "Ready to ingest a local source.", "ok");
     }
+    await refreshSourceBundleCatalog(user);
     await refreshConnectorStatus(user);
     await refreshJobs(user);
   }
@@ -348,6 +397,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
     elements.button.disabled = true;
     elements.syncButton.disabled = true;
+    elements.previewBundleButton.disabled = true;
     elements.bundleButton.disabled = true;
     elements.githubButton.disabled = true;
     setStatus(elements.status, "Queueing sample connector sync job...");
@@ -379,6 +429,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
     elements.button.disabled = true;
     elements.syncButton.disabled = true;
+    elements.previewBundleButton.disabled = true;
     elements.bundleButton.disabled = true;
     elements.githubButton.disabled = true;
     setStatus(elements.status, "Queueing GitHub connector sync...");
@@ -411,6 +462,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
     elements.button.disabled = true;
     elements.syncButton.disabled = true;
+    elements.previewBundleButton.disabled = true;
     elements.bundleButton.disabled = true;
     elements.githubButton.disabled = true;
     setStatus(elements.status, "Queueing source bundle sync...");
@@ -435,8 +487,39 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
   }
 
+  async function previewSourceBundle() {
+    const user = currentUser();
+    if (!user) {
+      setStatus(elements.status, "No user selected.", "error");
+      return;
+    }
+    elements.button.disabled = true;
+    elements.syncButton.disabled = true;
+    elements.previewBundleButton.disabled = true;
+    elements.bundleButton.disabled = true;
+    elements.githubButton.disabled = true;
+    setStatus(elements.status, "Previewing source bundle manifest...");
+    try {
+      const data = await api(
+        `/api/connectors/source-bundle/catalog?user_id=${encodeURIComponent(user.id)}&bundle=operations-handbook`
+      );
+      renderSourceBundleCatalog(elements.sourceBundleCatalog, data.catalog || {});
+      const bundle = data.catalog?.bundles?.[0] || {};
+      setStatus(
+        elements.status,
+        `Previewed ${bundle.bundle || "source bundle"}: ${bundle.document_count || 0} docs, manifest ${String(bundle.manifest_sha256 || "").slice(0, 12)}..., raw bodies returned: ${data.catalog?.raw_bodies_returned ? "yes" : "no"}.`,
+        "ok"
+      );
+    } catch (error) {
+      setStatus(elements.status, error.message, "error");
+    } finally {
+      await sync();
+    }
+  }
+
   elements.button.addEventListener("click", submit);
   elements.syncButton.addEventListener("click", syncSampleSource);
+  elements.previewBundleButton.addEventListener("click", previewSourceBundle);
   elements.bundleButton.addEventListener("click", syncSourceBundle);
   elements.githubButton.addEventListener("click", syncGitHubSource);
   sync();
