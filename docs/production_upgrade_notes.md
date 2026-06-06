@@ -74,11 +74,20 @@ Current production-path artifacts:
 - `infra/postgres/seeds/001_project1_demo.sql`
 - `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`
 - `python -B scripts/dev.py postgres-migrations`
+- `python -B scripts/dev.py postgres-runtime`
 - `python -B scripts/dev.py postgres-seed`
+
+Project 1 runtime switch:
+
+- `COPILOT_REPOSITORY=json` keeps the verified local JSON path.
+- `COPILOT_REPOSITORY=postgres` switches `connect_repository()` to `PostgresRepositorySession`.
+- `COPILOT_POSTGRES_DSN` points the optional runtime at a PostgreSQL/pgvector deployment that has applied `infra/postgres/migrations/001_core.sql` and `infra/postgres/seeds/001_project1_demo.sql`.
+- `COPILOT_POSTGRES_POOL=1` opts into a dynamically loaded `psycopg_pool` connection pool lease when the deployment environment provides that package.
+- `python -B scripts/dev.py postgres-runtime` verifies the offline runtime switch contract; `python -B scripts/check_project1_postgres_runtime.py --live` verifies a real seeded database when `COPILOT_POSTGRES_DSN` is available.
 
 Next steps:
 
-1. Wire the optional PostgreSQL repository contract to a real connection pool behind a feature flag.
+1. Add a Docker Compose PostgreSQL/pgvector service for local production-mode testing.
 2. Extend the current admin-only ingestion contract into file upload and connector sync.
 3. Add a background document parser pipeline.
 4. Add embedding model and vector retrieval.

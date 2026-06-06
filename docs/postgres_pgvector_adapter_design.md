@@ -47,7 +47,7 @@ Projects with persistent application state should use repository interfaces so l
 - `ApprovalRepository`
 - `ToolActionRepository`
 
-Project 1 now has the first local version of this boundary in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: application modules depend on `KnowledgeRepository` and `JsonKnowledgeRepository` while the local JSON mechanics stay in `storage.py`. It also has an optional production-path adapter contract in `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`: `PostgresKnowledgeRepository` maps the same application-facing methods to tenant-scoped PostgreSQL tables for users, documents, chunks, traces, audit events, and eval runs. The default demo still does not require PostgreSQL.
+Project 1 now has the first local version of this boundary in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: application modules depend on `KnowledgeRepository` and `JsonKnowledgeRepository` while the local JSON mechanics stay in `storage.py`. It also has an optional production-path adapter contract in `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`: `PostgresKnowledgeRepository` maps the same application-facing methods to tenant-scoped PostgreSQL tables for users, documents, chunks, traces, audit events, and eval runs. `COPILOT_REPOSITORY=postgres` switches `connect_repository()` to the Postgres session, `COPILOT_POSTGRES_DSN` supplies the deployment DSN, and `COPILOT_POSTGRES_POOL=1` opts into a dynamically loaded `psycopg_pool` lease when the deployment provides it. The default demo still uses `COPILOT_REPOSITORY=json` and does not require PostgreSQL.
 
 The application layer receives a typed user context:
 
@@ -326,9 +326,10 @@ This repository now includes the first reviewable production-path migration arti
 - `infra/postgres/migrations/001_core.sql`
 - `python -B scripts/dev.py postgres-migrations`
 - `infra/postgres/seeds/001_project1_demo.sql`
+- `python -B scripts/dev.py postgres-runtime`
 - `python -B scripts/dev.py postgres-seed`
 
-The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, and the Project 1 adapter contract. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. Neither check makes PostgreSQL required for the default local demo.
+The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, and the Project 1 adapter contract. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. None of these checks makes PostgreSQL required for the default local demo.
 
 Migration phases:
 
@@ -383,9 +384,9 @@ This keeps the technical review story inspectable: a reviewer can connect an ans
 ## Phased Implementation Plan
 
 1. Extend the existing `KnowledgeRepository` boundary while keeping local JSON adapters. Done for Project 1.
-2. Keep building the optional PostgreSQL adapter path behind a future `PORTFOLIO_STORAGE_PROVIDER=postgres` switch. The current adapter contract exists, but it is not wired as the default runtime.
+2. Keep building the optional PostgreSQL adapter path behind the `COPILOT_REPOSITORY=postgres` switch. Done for the Project 1 documents, chunks, traces, audit, and eval repository session path.
 3. Add migrations and seed scripts. Done for the Project 1 demo seed path.
-4. Wire Project 1 documents, chunks, traces, audit, and eval state to a real PostgreSQL connection pool.
+4. Add a Docker Compose PostgreSQL/pgvector service and run `python -B scripts/check_project1_postgres_runtime.py --live` against seeded data.
 5. Add pgvector embeddings and hybrid retrieval behind a feature flag.
 6. Port Project 2 cases, tool actions, approvals, traces, and audit state.
 7. Add RLS tests, unauthorized retrieval tests, and cross-tenant side-effect tests.

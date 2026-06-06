@@ -58,6 +58,7 @@ python -B scripts/dev.py observability
 python -B scripts/dev.py openai-live
 python -B scripts/dev.py otel-traces
 python -B scripts/dev.py postgres-migrations
+python -B scripts/dev.py postgres-runtime
 python -B scripts/dev.py postgres-seed
 python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
@@ -128,7 +129,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -151,6 +152,7 @@ Local Git state:
 - `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, scenario editor modules, content types, security headers, 404s, and traversal blocking.
 - `scripts/check_api_documentation.py`: verifies API source routes, public API contract documentation, README, index, and evidence matrix stay aligned.
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
+- `scripts/check_project1_postgres_runtime.py`: verifies the Project 1 runtime provider switch, optional PostgreSQL pool wiring, reset guard, docs, and optional live PostgreSQL/pgvector connectivity.
 - `scripts/generate_postgres_seed.py`: generates and checks deterministic Project 1 PostgreSQL seed SQL against `secure-enterprise-knowledge-copilot/data/seed_documents.json`.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies all service health endpoints.
@@ -211,6 +213,7 @@ Design Review Docs:
 - `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
 - `infra/postgres/seeds/001_project1_demo.sql`: deterministic Project 1 demo seed SQL generated from `secure-enterprise-knowledge-copilot/data/seed_documents.json`.
 - `scripts/check_postgres_migrations.py`: static migration guard for pgvector, tenant/role RLS, approval visibility, eval isolation, and unsafe migration markers.
+- `scripts/check_project1_postgres_runtime.py`: runtime guard for `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, docs, and optional live checks.
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
 - `docs/opentelemetry_collector_handoff_troubleshooting.md`: optional collector handoff troubleshooting, endpoint boundaries, failure modes, rollback, and claim wording.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
