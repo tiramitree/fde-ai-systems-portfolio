@@ -21,9 +21,11 @@ Python standard-library HTTP server
   |
   +-- Ingestion
   |   +-- admin-only document intake
+  |   +-- github_connector.py issue/PR read connector boundary
   |   +-- ingestion_jobs.py local worker ledger
   |   +-- source_parsing.py parser normalization
   |   +-- source sync ACL snapshot and drift evidence
+  |   +-- GitHub source URLs and connector audit evidence
   |   +-- idempotency replay and dead-letter evidence
   |   +-- parser metadata and warning audit
   |   +-- embeddings.py chunk embedding boundary
@@ -77,7 +79,7 @@ Next.js UI
 
 ## Key Design Decisions
 
-Permission filtering happens before evidence is assembled. The model should never receive chunks the user cannot access.
+Permission filtering happens before evidence is assembled. The model should never receive chunks the user cannot access. GitHub issue and pull request intake is normalized through the same source sync, ACL snapshot, ingestion job, citation, and audit path as local connector data so external-source content does not bypass the production invariants.
 
 Ingestion is an application boundary, not a frontend shortcut. Only admin users can add searchable documents, sync connector sources, or submit ingestion jobs. Each new document passes through a versioned parser boundary before chunking and embedding. Each ingest records source hash, chunk count, parser name, parser warnings, source MIME type, embedding model, roles, and classification in the audit log. The local ingestion job contract runs inline for the dependency-free demo, but records production-style job state: idempotency replay, sanitized input summaries, retry parent links, succeeded jobs, and dead-lettered validation failures.
 

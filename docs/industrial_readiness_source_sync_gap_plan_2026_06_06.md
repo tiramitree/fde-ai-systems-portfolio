@@ -25,7 +25,7 @@ My updated rough score:
 | Limited pilot | 35-45% |
 | True production | 18-28% |
 
-The new `/api/sources/sync` and ACL snapshot work improve the data-plane story, but they are still connector contracts and sample sync paths, not real external connectors backed by live identity providers.
+The new `/api/sources/sync`, ACL snapshot, ingestion job, and GitHub read connector work improve the data-plane story, but they are still deterministic local contracts unless live connector mode is run in an authenticated environment.
 
 ## External Baseline Scan
 
@@ -58,8 +58,11 @@ Source links:
 Project 1 now has a connector-style source sync slice:
 
 - `POST /api/sources/sync`
+- `POST /api/connectors/github/sync`
 - admin-only source sync refusal for non-admin users
+- admin-only GitHub issue/PR read connector refusal for non-admin users
 - connector metadata: `connector`, `cursor`, `acl_source`
+- GitHub metadata: `owner`, `repo`, `mode`, `record_count`, `source_payload_sha256`
 - document metadata: `source_connector`, `external_id`, `acl_source`, `allowed_roles_source`, `source_acl_version`, `source_acl_permission_id`, `source_acl_principal_count`, `sync_cursor`
 - optional connector ACL snapshot records that override payload roles and fail closed if a synced document lacks source permission data
 - permission drift evidence: `acl_role_drift`, `acl_drift_count`, and affected document IDs
@@ -67,14 +70,14 @@ Project 1 now has a connector-style source sync slice:
 - per-document `document_ingested` audit events
 - batch `source_sync_completed` audit event
 - frontend `Sync connector` sample button
-- runtime API contract checks proving source sync, source ACL snapshot enforcement, permission drift visibility changes, ingestion job idempotency, dead-letter handling, retry recovery, retrieval citation, and audit evidence
+- runtime API contract checks proving source sync, GitHub connector sync, source ACL snapshot enforcement, permission drift visibility changes, ingestion job idempotency, dead-letter handling, retry recovery, retrieval citation, and audit evidence
 - updated docs, threat model, evidence matrix, public README, screenshot manifest, and visual assets
 
 Verification snapshot:
 
 ```text
 python -B scripts/dev.py contracts
-API contract checks: 80/80 passed
+API contract checks: 86/86 passed
 
 python -B scripts/dev.py ui-contracts
 Runtime UI contract checks: 337/337 passed
@@ -89,6 +92,7 @@ Quality gate passed.
 | --- | --- | --- |
 | Real authentication | UI-selected users are not an enterprise identity boundary. | Add auth middleware, tenant context, and signed local demo tokens or an OIDC-ready adapter. |
 | Source ACL sync | Enterprise RAG depends on source-system permissions, not manually assigned roles. | Partially covered by connector ACL snapshots and permission drift tests. Next proof: sync user/group membership from a real read-only connector fixture and validate it against RLS-backed denial counts. |
+| Real external connector | GitHub issue/PR records can now flow through a connector boundary, but live execution is optional and not part of CI. | Partially covered by the GitHub read connector contract with deterministic fixture mode and a live REST adapter path. Next proof: authenticated live smoke, connector health, deletion/prune, and durable cursor checkpoint recovery. |
 | Durable ingestion | Real ingestion has retries, failures, large files, deletion, and backfills. | Partially covered by local ingestion jobs with idempotency replay, sanitized summaries, dead-letter state, retry parent links, and audit events. Next proof: external worker process, durable queue backend, cursor checkpoint recovery, deletion/prune, and scheduled retries. |
 | Document parsing depth | Real corpora include PDF/DOCX/tables/OCR and malformed content. | Add parser adapters, parser warnings, page/table metadata, and parser-quality evals. |
 | Live database validation | JSON state is not enough for pilot readiness. | Run and document live Postgres/pgvector checks with RLS, migrations, indexes, pool behavior, and rollback. |
@@ -102,7 +106,7 @@ Quality gate passed.
 
 1. Finish Project 1 data-plane hardening.
    - Real file upload endpoint.
-   - One read-only source connector.
+   - Harden the GitHub read connector with live smoke, source permissions, connector health, and deletion/prune behavior.
    - Incremental cursor and prune/delete behavior.
    - Parser job state and dead-letter records. Current local job contract covers idempotency, dead-letter, and retry parent evidence; remaining work is a real worker/queue/checkpoint backend.
    - Postgres/pgvector live verification.

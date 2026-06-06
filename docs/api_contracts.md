@@ -39,6 +39,7 @@ Source:
 | POST | `/api/documents/ingest` | Admin-only local ingestion of searchable text, Markdown, CSV, HTML, or JSON content into the permission-aware document store. |
 | POST | `/api/sources/sync` | Admin-only connector-style batch source sync with external IDs, sync cursor, optional source ACL snapshot, permission drift evidence, parser normalization, chunking, and audit evidence. |
 | POST | `/api/ingestion/jobs` | Admin-only local ingestion worker contract for source sync jobs with idempotency, inline execution, retry parent links, completion audit, and dead-letter audit. |
+| POST | `/api/connectors/github/sync` | Admin-only GitHub read connector that normalizes issue/PR records into source sync jobs with source URLs, permission snapshots, idempotency, citation-ready chunks, and audit evidence. |
 | POST | `/api/eval/run` | Run the project eval suite. |
 
 ### Query Response Shape
@@ -228,6 +229,41 @@ Ingestion job contract:
 - retry jobs must reference a previous `dead_lettered` job through `retry_of_job_id`; the retry supplies a fresh payload and idempotency key
 - successful jobs write `ingestion_job_completed` audit events
 - failed worker validation writes `ingestion_job_dead_lettered` audit events
+
+### GitHub Connector Response Shape
+
+`POST /api/connectors/github/sync` accepts:
+
+- admin `user_id`
+- `owner`
+- `repo`
+- `cursor`
+- `mode`: `fixture` for deterministic local review or `live` for the GitHub REST API adapter
+- optional `idempotency_key`
+- fixture `records` containing issue or pull request fields such as `kind`, `number`, `title`, `body`, `state`, `html_url`, `updated_at`, `labels`, `user.login`, and `allowed_roles`
+
+The route returns:
+
+- `github.owner`
+- `github.repo`
+- `github.mode`
+- `github.cursor`
+- `github.record_count`
+- `github.source_payload_sha256`
+- `github.api_reference`
+- `job`
+- `idempotency_replayed`
+- optional `result` when the ingestion job succeeds
+
+GitHub connector contract:
+
+- only admin users can sync GitHub repositories
+- fixture mode is used by CI so contract checks do not depend on network access or GitHub rate limits
+- live mode uses the GitHub REST issues and pull requests APIs and can use `GITHUB_CONNECTOR_TOKEN` or `GITHUB_TOKEN` for a scoped read token; token values are never returned, stored, or written to audit details
+- issue and pull request records become source sync documents with `source_connector` set to `github`, source URLs pointing to GitHub issue/PR pages, and external IDs like `github:owner/repo:issue:number`
+- `allowed_roles` are converted into a connector ACL snapshot so the normal fail-closed source ACL and permission filtering path still applies
+- the connector submits a source sync ingestion job, so GitHub content inherits `idempotency_key` replay, sanitized job input summaries, `body_sha256`, completion audit, dead-letter behavior, and citation-ready chunks
+- successful connector runs write `github_connector_synced` audit events with owner, repo, mode, cursor, record count, job ID, job status, and replay state, but never raw issue or pull request bodies
 
 ### Scenario Snapshot Shape
 

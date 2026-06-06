@@ -9,6 +9,7 @@ This MVP is intentionally dependency-free so it can run on any local Python 3.12
 - Role-aware retrieval across internal enterprise documents.
 - Admin-only ingestion of local text, Markdown, CSV, HTML, or JSON content.
 - Admin-only connector-style batch source sync with external IDs, source ACL snapshots, sync cursor, permission drift, and audit evidence.
+- Admin-only GitHub read connector that normalizes issue/PR records through the source sync and ingestion job boundaries.
 - Admin-only ingestion job ledger with idempotency, sanitized input summaries, retry parent links, and dead-letter evidence.
 - Citation-required answers.
 - Abstention when accessible evidence is missing.
@@ -74,7 +75,7 @@ Browser UI
 
 ## Admin Ingestion And Source Sync Contract
 
-`POST /api/documents/ingest`, `POST /api/sources/sync`, and `POST /api/ingestion/jobs` are the first production-data-plane steps. They keep the local-first demo simple while proving the control boundary for future connectors and workers:
+`POST /api/documents/ingest`, `POST /api/sources/sync`, `POST /api/connectors/github/sync`, and `POST /api/ingestion/jobs` are the first production-data-plane steps. They keep the local-first demo simple while proving the control boundary for future connectors and workers:
 
 - only admin users can ingest documents
 - admins can ingest only into their own tenant
@@ -82,6 +83,7 @@ Browser UI
 - duplicate document IDs require explicit `replace`
 - supported source types are text, Markdown, CSV, HTML, and JSON
 - source sync persists connector name, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, and sync cursor metadata
+- GitHub connector sync persists issue/PR source URLs, external IDs, connector ACL snapshots, and `github_connector_synced` audit evidence without returning raw GitHub bodies through job summaries
 - source ACL snapshots override document payload roles and fail closed when a synced document lacks a matching source permission record
 - ingested document bodies are not returned by `/api/documents`
 - every ingestion writes a `document_ingested` audit event with `source_hash`, `source_mime`, roles, chunk count, and normalized-text source span coverage
@@ -89,7 +91,7 @@ Browser UI
 - ingestion jobs require `idempotency_key`, record sanitized input summaries with `body_sha256` instead of raw bodies, and expose `succeeded` or `dead_lettered` status
 - failed worker validation writes `ingestion_job_dead_lettered`; successful jobs write `ingestion_job_completed`
 
-The API contract gate verifies admin ingestion, non-admin refusal, source sync refusal for non-admins, source ACL snapshot enforcement, permission drift visibility changes, job idempotency replay, dead-letter handling, retry recovery, retrieval with citation and source span from ingested and synced documents, body hiding, and audit evidence.
+The API contract gate verifies admin ingestion, non-admin refusal, source sync refusal for non-admins, GitHub connector refusal for non-admins, source ACL snapshot enforcement, permission drift visibility changes, job idempotency replay, dead-letter handling, retry recovery, retrieval with citation and source span from ingested, synced, and GitHub connector documents, body hiding, and audit evidence.
 
 ## Deployment Positioning
 
@@ -109,7 +111,7 @@ Next iterations:
 1. Replace Python HTTP server with FastAPI.
 2. Replace JSON runtime state with PostgreSQL and pgvector.
 3. Replace local extractive answerer with OpenAI Responses API structured output.
-4. Extend the current admin ingestion, ACL-snapshot source sync, and local ingestion job contracts into file upload, real external connectors, source user/group sync, and a background worker queue.
+4. Extend the current admin ingestion, ACL-snapshot source sync, GitHub read connector, and local ingestion job contracts into file upload, broader external connectors, source user/group sync, and a background worker queue.
 5. Add OpenTelemetry trace export.
 6. Add Docker Compose with app, database, and worker.
 7. Add screenshot/demo video and deployment runbook.
