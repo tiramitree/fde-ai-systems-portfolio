@@ -49,6 +49,65 @@ Reference signals:
 - Phoenix/Langfuse-style platforms turn traces, evals, prompt versions, datasets, and annotations into the operational loop.
 - OWASP and NIST frame the risk surface: prompt injection, insecure output handling, excessive agency, data leakage, and organizational risk management.
 
+## 2026-06 External Benchmark Snapshot
+
+This snapshot was added after reviewing public production references, open-source
+project surfaces, and current FDE / large-model application job descriptions on
+2026-06-06. Star counts are volatile and should be treated only as a rough signal
+of ecosystem weight, not quality by itself.
+
+| Reference | Public signal | What it shows industrial teams care about |
+| --- | --- | --- |
+| OpenAI Deployment Company | OpenAI describes FDEs as engineers embedded with business leaders, operators, and frontline teams to redesign workflows and turn gains into durable systems. | The role is not just API wiring. It is workflow redesign, integration, deployment, and sustained operational ownership. |
+| OpenAI production best practices | Production guidance emphasizes organization setup, latency, security, and robust architecture. | Production systems need operational controls around model calls, not just prompt quality. |
+| OpenAI eval guidance | Guidance recommends continuous evaluation, production data, domain-expert cases, context recall, context precision, and answer quality metrics. | Evals must become a lifecycle, not a one-time test file. |
+| OpenAI Agents tracing | Agents SDK tracing records generations, tool calls, handoffs, guardrails, and custom events for development and production monitoring. | Agent systems need traceable internal decisions and tool activity. |
+| Azure Search OpenAI Demo | A real cloud RAG sample uses Azure AI Search and Azure OpenAI, while warning that extra security work is needed before production use. | Even polished vendor samples are still not production without security, access control, monitoring, and landing-zone hardening. |
+| Dify | Publicly positions itself as a production-ready agentic workflow platform with workflows, RAG, integrations, model management, and observability. | Mature platforms bundle app building, RAG, tools, publishing, and observability in one operator surface. |
+| Langfuse / Phoenix | Both center tracing, evals, prompt versions, datasets, experiments, annotations, and production trace scoring. | The eval/observability loop is a first-class product area. |
+| Qdrant / Weaviate | Current docs emphasize hybrid search, staged retrieval, reranking, filters, and vector/keyword search combinations. | Industrial RAG is usually hybrid retrieval plus reranking and metadata filters, not vector-only search. |
+| ByteDance Doubao FDE JD | Requires full-stack coding, LLM APIs, evaluation/performance methods, RAG, Agent, Workflow, and multi-agent implementation. | China FDE roles expect end-to-end build ability plus customer-facing solution design. |
+| Alibaba Cloud model deployment JD | Emphasizes requirements discovery, architecture, data integration, RAG, Agent orchestration, model selection, usage monitoring, cost optimization, and best-practice output. | FDE success is judged by customer-perceived business value and repeatable methodology. |
+| Lenovo AI FDE JD | Mentions private deployment, vLLM optimization, performance testing, stability, CUDA/CANN/GPU/container setup, RAG, tools, and agent workflow delivery. | Some China FDE roles are closer to field deployment plus infra troubleshooting, not only app-layer AI engineering. |
+| SenseTime / enterprise agent JDs | Mention document parsing, retrieval algorithm optimization, Embedding/Reranker upgrades, Agentic RAG, automated eval sets, bad-case attribution, A/B tests, memory, and self-evolution. | Advanced industrial RAG work is about measurable quality iteration and failure analysis. |
+
+Current ecosystem examples checked with GitHub metadata on 2026-06-06:
+
+| Project | Stars checked | Main industrial lesson |
+| --- | ---: | --- |
+| `langgenius/dify` | 144099 | Unified workflow/RAG/agent/model-management surface matters. |
+| `run-llama/llama_index` | 49947 | Document agents, parsing/OCR, and data connectors are a major layer by themselves. |
+| `langchain-ai/langgraph` | 34018 | Durable, stateful, human-in-the-loop agent execution is a core production abstraction. |
+| `microsoft/graphrag` | 33494 | Graph-augmented retrieval is used when flat chunks are not enough for enterprise reasoning. |
+| `qdrant/qdrant` | 31848 | Search infrastructure and vector performance are their own production discipline. |
+| `langfuse/langfuse` | 28572 | LLM observability, evals, prompt management, and datasets form an operational platform. |
+| `deepset-ai/haystack` | 25466 | Modular pipelines with explicit retrieval/routing/generation control are production-oriented. |
+| `weaviate/weaviate` | 16281 | Cloud-native vector DB plus structured filtering is part of the production data plane. |
+| `Arize-ai/phoenix` | 10001 | OpenTelemetry-style tracing plus eval experiments are central to debugging AI apps. |
+| `Azure-Samples/azure-search-openai-demo` | 7679 | Cloud RAG samples need identity, monitoring, deployment infrastructure, and security hardening before real use. |
+
+Benchmark conclusion:
+
+```text
+Our repository is ahead of many portfolio projects on governance, eval gates,
+public hygiene, and safety invariants. It is behind industrial systems on the
+data plane, identity plane, runtime plane, observability backend, connector
+lifecycle, deployment environment, and operational ownership model.
+```
+
+Distance estimate:
+
+| Target | Approximate distance |
+| --- | --- |
+| FDE technical portfolio artifact | Very close. The repo already tells the right story and now has CI, docs, evals, governance, and repository boundaries. |
+| Serious technical take-home / architecture review | Close. Add one production data-plane slice and the story becomes substantially stronger. |
+| Controlled customer pilot with synthetic or low-risk data | Medium distance. Needs real auth, Postgres/pgvector runtime, parser/indexing pipeline, OTel backend, and one real connector. |
+| Real enterprise production over sensitive data | Far. Needs tenant isolation, SSO, source permission sync, security operations, cloud IaC, backup/restore, incident runbooks, online evals, and support model. |
+
+The next best decision is to avoid building more demos. The repository should
+turn Project 1 into the production spine, then make Projects 2 and 3 operate as
+the governed action layer and reliability layer around that spine.
+
 ## What This Repo Already Does Well
 
 The repo is unusually strong for a portfolio demo in these areas:
