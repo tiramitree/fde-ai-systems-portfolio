@@ -36,12 +36,26 @@ Source:
 | GET | `/api/connectors/status?user_id=avery&limit=100` | Admin-only connector lifecycle summary derived from ingestion jobs, including health, cursors, counts, and dead-letter state. |
 | GET | `/api/eval/latest` | Latest eval run record. |
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
+| POST | `/api/auth/demo-token` | Local signed demo token issuer for exercising bearer-auth identity context without external SSO. |
 | POST | `/api/query` | Permission-aware answer generation with citations or abstention. |
 | POST | `/api/documents/ingest` | Admin-only local ingestion of searchable text, Markdown, CSV, HTML, or JSON content into the permission-aware document store. |
 | POST | `/api/sources/sync` | Admin-only connector-style batch source sync with external IDs, sync cursor, optional source ACL snapshot, permission drift evidence, parser normalization, chunking, and audit evidence. |
 | POST | `/api/ingestion/jobs` | Admin-only local ingestion worker contract for source sync jobs with idempotency, inline execution, retry parent links, completion audit, and dead-letter audit. |
 | POST | `/api/connectors/github/sync` | Admin-only GitHub read connector that normalizes issue/PR records into source sync jobs with source URLs, permission snapshots, idempotency, citation-ready chunks, and audit evidence. |
 | POST | `/api/eval/run` | Run the project eval suite. |
+
+### Local Auth Contract
+
+The default browser demo can still pass `user_id` in the query string or JSON body so the local walkthrough stays simple. For production-shaped review, the API also supports a local signed bearer-token boundary:
+
+- `POST /api/auth/demo-token` accepts `{"user_id": "riley"}` and returns `token_type`, `expires_in`, `auth_policy`, `token`, and `auth_context`
+- `auth_policy` is `local_signed_demo_token_v1`
+- callers can send `Authorization: Bearer <token>` on Project 1 API requests
+- bearer-auth identity is resolved before route behavior, so `/api/documents` without `user_id` returns the token subject's visible documents
+- if a bearer token subject conflicts with a query/body `user_id`, the API returns `403` with `Request user_id does not match authenticated subject.`
+- the local token secret defaults to a public demo value and can be overridden with `COPILOT_DEMO_AUTH_SECRET`; it is not a production SSO replacement
+
+Runtime contracts verify local token issuance, bearer-auth group document visibility, bearer-auth retrieval for group-scoped evidence, and subject-mismatch rejection.
 
 ### Query Response Shape
 
