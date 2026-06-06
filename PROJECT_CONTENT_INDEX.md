@@ -57,6 +57,7 @@ python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
 python -B scripts/dev.py openai-live
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py postgres-compose
 python -B scripts/dev.py postgres-migrations
 python -B scripts/dev.py postgres-runtime
 python -B scripts/dev.py postgres-seed
@@ -118,6 +119,7 @@ Local Git state:
 - `CHANGELOG.md`: public release history and verification notes.
 - `.gitattributes`: keeps text files LF-normalized across platforms.
 - `docker-compose.yml`: Docker entrypoint for Docker-enabled machines.
+- `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack on port `55432` with migration/seed initialization, local role `fde_app`, and local-only demo password `fde_app_demo_password`; verify static alignment with `python -B scripts/dev.py postgres-compose` before using `COPILOT_POSTGRES_DSN`.
 - project-level `.dockerignore` files: keep runtime state, logs, caches, and local env files out of Docker build contexts.
 - `.env.example`: optional OpenAI mode environment template.
 - `LICENSE`: MIT license.
@@ -129,7 +131,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, postgres-compose, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -152,6 +154,7 @@ Local Git state:
 - `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, scenario editor modules, content types, security headers, 404s, and traversal blocking.
 - `scripts/check_api_documentation.py`: verifies API source routes, public API contract documentation, README, index, and evidence matrix stay aligned.
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
+- `scripts/check_postgres_compose.py`: verifies optional Project 1 PostgreSQL/pgvector compose image pinning, init order, role separation, seed wiring, healthcheck, docs, and local app role `fde_app`.
 - `scripts/check_project1_postgres_runtime.py`: verifies the Project 1 runtime provider switch, optional PostgreSQL pool wiring, reset guard, docs, and optional live PostgreSQL/pgvector connectivity.
 - `scripts/generate_postgres_seed.py`: generates and checks deterministic Project 1 PostgreSQL seed SQL against `secure-enterprise-knowledge-copilot/data/seed_documents.json`.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
@@ -210,8 +213,11 @@ Design Review Docs:
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
 - `docs/industrialization_gap_plan.md`: gap analysis between this portfolio and production-grade industrial AI systems, with an upgrade plan.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
+- `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
 - `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
 - `infra/postgres/seeds/001_project1_demo.sql`: deterministic Project 1 demo seed SQL generated from `secure-enterprise-knowledge-copilot/data/seed_documents.json`.
+- `infra/postgres/init/000_project1_runtime_roles.sql`: local compose role initializer for the non-owner `fde_app` runtime role.
+- `infra/postgres/init/003_project1_runtime_grants.sql`: local compose grants for Project 1 runtime access while preserving RLS.
 - `scripts/check_postgres_migrations.py`: static migration guard for pgvector, tenant/role RLS, approval visibility, eval isolation, and unsafe migration markers.
 - `scripts/check_project1_postgres_runtime.py`: runtime guard for `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, docs, and optional live checks.
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.

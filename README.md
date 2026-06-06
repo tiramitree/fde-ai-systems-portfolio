@@ -90,7 +90,7 @@ Command quick-reference:
 | Release evidence | `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py report`, `python -B scripts/dev.py readiness-report`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py` |
 | Visual assets | `python -B scripts/dev.py visual-assets`, `python -B scripts/dev.py visual-asset-diff`, `python -B scripts/dev.py refresh-visual-assets` |
 | GitHub maintenance | `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community` |
-| Optional environment checks | `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live`, `python -B scripts/dev.py postgres-runtime` |
+| Optional environment checks | `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live`, `python -B scripts/dev.py postgres-compose`, `python -B scripts/dev.py postgres-runtime` |
 
 Command decision tree:
 
@@ -133,6 +133,7 @@ python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
 python -B scripts/dev.py openai-live
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py postgres-compose
 python -B scripts/dev.py postgres-migrations
 python -B scripts/dev.py postgres-runtime
 python -B scripts/dev.py postgres-seed
@@ -254,7 +255,7 @@ Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_
 
 Storage adapter readiness:
 
-Use [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), the reviewed migration artifact at `infra/postgres/migrations/001_core.sql`, the deterministic Project 1 seed artifact at `infra/postgres/seeds/001_project1_demo.sql`, [Production Upgrade Notes](docs/production_upgrade_notes.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Evidence Matrix](#evidence-matrix) before adding persistent storage prototypes. Storage adapters must preserve permission checks before retrieval or side effects, eval-state isolation, trace/audit compatibility, seed SQL synchronization, runtime provider switching, optional Postgres pool configuration, and local JSON default behavior; run `python -B scripts/dev.py postgres-migrations`, `python -B scripts/dev.py postgres-runtime`, `python -B scripts/dev.py postgres-seed`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
+Use [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), the reviewed migration artifact at `infra/postgres/migrations/001_core.sql`, the deterministic Project 1 seed artifact at `infra/postgres/seeds/001_project1_demo.sql`, `docker-compose.postgres.yml`, [Production Upgrade Notes](docs/production_upgrade_notes.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Evidence Matrix](#evidence-matrix) before adding persistent storage prototypes. Storage adapters must preserve permission checks before retrieval or side effects, eval-state isolation, trace/audit compatibility, seed SQL synchronization, runtime provider switching, optional Postgres pool configuration, local role separation through `fde_app`, and local JSON default behavior; run `python -B scripts/dev.py postgres-migrations`, `python -B scripts/dev.py postgres-compose`, `python -B scripts/dev.py postgres-runtime`, `python -B scripts/dev.py postgres-seed`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
 
 Red-team eval readiness:
 
@@ -389,7 +390,7 @@ Production upgrade pointer:
 | Upgrade Path | Start With | Verification Boundary |
 | --- | --- | --- |
 | FastAPI service adapter | [Production Upgrade Notes](docs/production_upgrade_notes.md), [API Contracts](docs/api_contracts.md), and [Architecture Boundaries](docs/architecture_boundaries.md). | Keep the stdlib HTTP server as the default local path; run `python -B scripts/dev.py contracts`, `python -B scripts/dev.py api-docs`, and `python -B scripts/dev.py quality`. |
-| PostgreSQL and pgvector | [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), `infra/postgres/migrations/001_core.sql`, `infra/postgres/seeds/001_project1_demo.sql`, and `python -B scripts/dev.py postgres-runtime`. | Preserve permission checks before retrieval or side effects, keep eval state isolated, keep seed SQL synchronized with Project 1 seed data, keep `COPILOT_REPOSITORY=postgres` and `COPILOT_POSTGRES_DSN` opt-in, keep `COPILOT_POSTGRES_POOL` optional, and run `python -B scripts/dev.py postgres-migrations`, `python -B scripts/dev.py postgres-runtime`, `python -B scripts/dev.py postgres-seed`, `python -B scripts/dev.py scenario-data`, and `python -B scripts/dev.py quality`. |
+| PostgreSQL and pgvector | [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), `docker-compose.postgres.yml`, `infra/postgres/migrations/001_core.sql`, `infra/postgres/seeds/001_project1_demo.sql`, `python -B scripts/dev.py postgres-compose`, and `python -B scripts/dev.py postgres-runtime`. | Preserve permission checks before retrieval or side effects, keep eval state isolated, keep seed SQL synchronized with Project 1 seed data, keep `COPILOT_REPOSITORY=postgres` and `COPILOT_POSTGRES_DSN` opt-in, keep `COPILOT_POSTGRES_POOL` optional, keep local app role `fde_app` separate from the migrator role with the local-only demo password `fde_app_demo_password`, and run `python -B scripts/dev.py postgres-migrations`, `python -B scripts/dev.py postgres-compose`, `python -B scripts/dev.py postgres-runtime`, `python -B scripts/dev.py postgres-seed`, `python -B scripts/dev.py scenario-data`, and `python -B scripts/dev.py quality`. |
 | Connector stubs | [Production Upgrade Notes](docs/production_upgrade_notes.md) and project service packages. | Keep external side effects behind approval, idempotency, audit, and trace boundaries; run `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`. |
 | OpenTelemetry export | [OpenTelemetry Trace Export](docs/otel_trace_export.md) and [Observability Integrity](docs/observability_integrity.md). | Local traces export without a collector by default; run `python -B scripts/dev.py replay`, `python -B scripts/dev.py otel-traces`, and `python -B scripts/dev.py observability`. |
 | OpenAI runtime mode | [Model Runtime Configuration](docs/model_runtime_configuration.md), [Model Gateway Safety](docs/model_gateway_safety.md), and [OpenAI Live Mode Troubleshooting](docs/openai_live_mode_troubleshooting.md). | Local deterministic mode remains the verified default; run `python -B scripts/dev.py openai-live` only in an API-key environment before claiming live model evidence. |
@@ -570,6 +571,18 @@ Docker release hygiene is statically gated:
 ```powershell
 python -B scripts/dev.py container-release
 ```
+
+Optional Project 1 PostgreSQL/pgvector compose is kept in a separate file:
+
+```powershell
+python -B scripts/dev.py postgres-compose
+docker compose -f docker-compose.postgres.yml up -d
+$env:COPILOT_REPOSITORY="postgres"
+$env:COPILOT_POSTGRES_DSN="postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio"
+python -B scripts/check_project1_postgres_runtime.py --live
+```
+
+The `fde_app` / `fde_app_demo_password` values are public local-only demo credentials for `docker-compose.postgres.yml`. Use real secret management for any non-local deployment.
 
 On a Docker-enabled machine, run the runtime proof:
 
