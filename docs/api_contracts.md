@@ -54,6 +54,7 @@ Source:
 - `model_provider`
 - `openai_gateway_enabled`
 - `retrieved`
+- `retrieval_profile`
 - `permission_blocked_count`
 - `latency_ms`
 
@@ -64,6 +65,14 @@ Security contract:
 - unsupported or inaccessible questions abstain
 - inaccessible document bodies are not returned in `/api/documents`
 - document body is never returned
+
+Retrieval contract:
+
+- `retrieval_profile.name` is `local-hybrid-v1` in the local runtime
+- `retrieval_profile.score_components` lists `bm25_like`, `title`, `phrase`, and `semantic_family`
+- `retrieval_profile.permission_filter` is `tenant_role_before_scoring`
+- `retrieved[].score_breakdown` exposes lexical, title, phrase, semantic, matched-term, and semantic-family evidence for review
+- evals can assert expected retrieved document IDs before answer generation changes are trusted
 
 ### Document Ingestion Response Shape
 

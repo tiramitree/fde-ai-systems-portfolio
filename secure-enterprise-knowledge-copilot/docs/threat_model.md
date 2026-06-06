@@ -20,12 +20,12 @@
 
 ## Current Controls
 
-- Tenant and role filter before answer assembly.
+- Tenant and role filter before retrieval scoring and answer assembly.
 - Admin-only ingestion with tenant, classification, role, duplicate, parser metadata, source hash, and chunk-count validation.
 - Forbidden citation checks in evals.
 - Prompt injection pattern detection in retrieved content.
 - Abstention when no accessible evidence clears the threshold.
-- Trace IDs for debugging retrieval and answer behavior.
+- Trace IDs for debugging retrieval score breakdowns and answer behavior.
 - Audit events for ingestion parser warnings, query, citation, abstention, and security-event counts.
 
 ## Production Controls To Add

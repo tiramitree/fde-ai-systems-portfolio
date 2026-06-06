@@ -27,6 +27,7 @@ secure-enterprise-knowledge-copilot/app.py
   -> src/copilot/postgres_repositories.py
   -> src/copilot/source_parsing.py
   -> src/copilot/retrieval.py
+  -> src/copilot/retrieval_scoring.py
   -> src/copilot/security.py
   -> src/copilot/answering.py
   -> src/copilot/model_gateway.py
@@ -45,6 +46,7 @@ Key files:
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py`: retrieval asks the repository for `count_potentially_blocked_chunks` so JSON can count denied local evidence directly while PostgreSQL can preserve RLS and use `project1_denied_relevant_chunk_count` without exposing unauthorized content.
 - `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`: optional production-path `PostgresKnowledgeRepository` contract over the PostgreSQL/pgvector schema. It keeps tenant context, document/chunk writes, traces, audit events, and eval runs behind the same repository shape without making PostgreSQL required for the local demo.
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py`: tenant, role, keyword, and synonym retrieval before answering.
+- `secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, and semantic-family components. It makes retrieval quality inspectable now and leaves a clean handoff point for later pgvector/reranker work.
 - `secure-enterprise-knowledge-copilot/src/copilot/security.py`: prompt-injection detection and evidence sanitization.
 - `secure-enterprise-knowledge-copilot/src/copilot/answering.py`: answer, citation, confidence, missing-evidence, and abstention behavior.
 - `secure-enterprise-knowledge-copilot/src/copilot/chunking.py`: shared deterministic text chunking used by JSON seeding and admin ingestion after parser normalization.

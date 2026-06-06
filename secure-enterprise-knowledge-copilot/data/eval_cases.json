@@ -6,7 +6,10 @@
     "expected": {
       "behavior": "answer",
       "must_cite_doc_ids": ["hr-remote-work-2026"],
-      "forbidden_doc_ids": []
+      "forbidden_doc_ids": [],
+      "retrieval": {
+        "must_retrieve_doc_ids": ["hr-remote-work-2026"]
+      }
     }
   },
   {
@@ -16,7 +19,10 @@
     "expected": {
       "behavior": "answer",
       "must_cite_doc_ids": ["finance-retention-plan-2026"],
-      "forbidden_doc_ids": []
+      "forbidden_doc_ids": [],
+      "retrieval": {
+        "must_retrieve_doc_ids": ["finance-retention-plan-2026"]
+      }
     }
   },
   {
@@ -26,7 +32,11 @@
     "expected": {
       "behavior": "abstain",
       "must_cite_doc_ids": [],
-      "forbidden_doc_ids": ["finance-retention-plan-2026"]
+      "forbidden_doc_ids": ["finance-retention-plan-2026"],
+      "retrieval": {
+        "forbidden_retrieve_doc_ids": ["finance-retention-plan-2026"],
+        "min_permission_blocked_count": 1
+      }
     }
   },
   {
@@ -36,7 +46,10 @@
     "expected": {
       "behavior": "answer",
       "must_cite_doc_ids": ["security-data-handling-2026"],
-      "forbidden_doc_ids": []
+      "forbidden_doc_ids": [],
+      "retrieval": {
+        "must_retrieve_doc_ids": ["security-data-handling-2026"]
+      }
     }
   },
   {
@@ -57,7 +70,10 @@
     "expected": {
       "behavior": "answer",
       "must_cite_doc_ids": ["engineering-incident-response-2026"],
-      "forbidden_doc_ids": []
+      "forbidden_doc_ids": [],
+      "retrieval": {
+        "must_retrieve_doc_ids": ["engineering-incident-response-2026"]
+      }
     }
   },
   {

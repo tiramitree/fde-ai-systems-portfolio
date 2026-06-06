@@ -33,6 +33,9 @@ PROJECTS = [
             "src/copilot/chunking.py": frozenset({"chunk_text"}),
             "src/copilot/postgres_repositories.py": frozenset({"PostgresKnowledgeRepository", "SqlConnection"}),
             "src/copilot/retrieval.py": frozenset({"retrieve", "tokenize"}),
+            "src/copilot/retrieval_scoring.py": frozenset(
+                {"RetrievalScore", "SCORE_COMPONENTS", "SEMANTIC_FAMILIES", "score_chunk", "retrieval_profile"}
+            ),
             "src/copilot/repositories.py": frozenset(
                 {"KnowledgeRepository", "JsonKnowledgeRepository", "PostgresRepositorySession", "connect_repository"}
             ),
@@ -280,6 +283,7 @@ def check_code_tour() -> list[str]:
         "src/copilot/repositories.py",
         "src/copilot/source_parsing.py",
         "src/copilot/retrieval.py",
+        "src/copilot/retrieval_scoring.py",
         "src/copilot/security.py",
         "src/copilot/answering.py",
         "src/copilot/chunking.py",

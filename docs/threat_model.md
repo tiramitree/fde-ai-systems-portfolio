@@ -24,9 +24,9 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 
 | ID | Threat | Deterministic Control | Evidence |
 | --- | --- | --- | --- |
-| T01 | Unauthorized document disclosure | Project 1 filters by tenant and role before answer generation; inaccessible chunks are counted but not passed as answer evidence. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
+| T01 | Unauthorized document disclosure | Project 1 filters by tenant and role before retrieval scoring and answer generation; inaccessible chunks are counted but not passed as answer evidence. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
 | T02 | User or retrieved-content prompt injection | User messages are rejected before retrieval when they match injection patterns; retrieved unsafe lines are treated as data and removed from evidence. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
-| T03 | Unsupported or fabricated answers | The answer layer abstains when accessible evidence does not clear the threshold or citation requirements. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py claims` |
+| T03 | Unsupported or fabricated answers | The answer layer abstains when accessible evidence does not clear the threshold or citation requirements; retrieval evals assert expected source recall before answer text is trusted. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py claims` |
 | T04 | External side effect without approval | Project 2 blocks direct side-effect tools for investigator users and creates approval requests instead. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
 | T05 | Approval bypass or non-supervisor approval | Approval execution is supervisor-only; bypass instructions create refusal evidence instead of approvals. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py observability` |
 | T06 | Duplicate side-effect execution | Approval requests use idempotency keys and already-processed approvals return without sending duplicate notices. | `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |

@@ -7,6 +7,7 @@ import uuid
 from .model_gateway import generate_structured_answer, should_use_openai
 from .repositories import KnowledgeRepository
 from .retrieval import retrieve, tokenize
+from .retrieval_scoring import not_run_profile
 from .security import detect_prompt_injection, sanitize_evidence
 
 
@@ -59,6 +60,7 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
             "model_provider": "local",
             "openai_gateway_enabled": should_use_openai(),
             "retrieved": [],
+            "retrieval_profile": not_run_profile("user_prompt_injection_detected"),
             "permission_blocked_count": 0,
             "latency_ms": round((time.perf_counter() - start) * 1000, 2),
         }
@@ -71,6 +73,7 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
                     "retrieval": {
                         "query_tokens": tokenize(question),
                         "hits": [],
+                        "profile": result["retrieval_profile"],
                         "permission_blocked_count": 0,
                     },
                     "output": {
@@ -195,12 +198,14 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
                 "doc_id": hit["doc_id"],
                 "title": hit["title"],
                 "score": hit["score"],
+                "score_breakdown": hit["score_breakdown"],
                 "classification": hit["classification"],
                 "security_flags": hit["security_flags"],
                 "preview": hit["text"][:320],
             }
             for hit in hits
         ],
+        "retrieval_profile": retrieval["profile"],
         "permission_blocked_count": retrieval["blocked_count"],
         "latency_ms": round((time.perf_counter() - start) * 1000, 2),
     }
@@ -214,6 +219,7 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
                 "retrieval": {
                     "query_tokens": retrieval["query_tokens"],
                     "hits": result["retrieved"],
+                    "profile": retrieval["profile"],
                     "permission_blocked_count": retrieval["blocked_count"],
                 },
                 "output": {
