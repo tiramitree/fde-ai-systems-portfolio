@@ -342,6 +342,8 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     for marker in ["traceHash(trace.id)", "selectedTrace"]:
         if marker not in renderers_text:
             failures.append(f"{project.name}: renderers.js missing trace deep-link marker: {marker}")
+    if project.name == "secure-enterprise-knowledge-copilot" and "retrieval_profile: data.retrieval_profile" not in renderers_text:
+        failures.append(f"{project.name}: renderers.js missing retrieval profile trace detail")
     if "data-trace-id" not in renderers_text and "dataset: { traceId: trace.id }" not in renderers_text:
         failures.append(f"{project.name}: renderers.js missing trace id data marker")
 

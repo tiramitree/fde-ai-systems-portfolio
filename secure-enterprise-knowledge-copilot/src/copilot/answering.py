@@ -199,6 +199,8 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
                 "title": hit["title"],
                 "score": hit["score"],
                 "score_breakdown": hit["score_breakdown"],
+                "rerank_score": hit.get("rerank_score"),
+                "rerank_breakdown": hit.get("rerank_breakdown", {}),
                 "embedding_model": hit.get("embedding_model"),
                 "embedding_dimensions": hit.get("embedding_dimensions"),
                 "classification": hit["classification"],

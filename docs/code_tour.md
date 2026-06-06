@@ -29,6 +29,7 @@ secure-enterprise-knowledge-copilot/app.py
   -> src/copilot/embeddings.py
   -> src/copilot/retrieval.py
   -> src/copilot/retrieval_scoring.py
+  -> src/copilot/reranking.py
   -> src/copilot/security.py
   -> src/copilot/answering.py
   -> src/copilot/model_gateway.py
@@ -48,6 +49,7 @@ Key files:
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py`: asks the repository for retrieval candidates, applies shared scoring and security checks, and asks for `count_potentially_blocked_chunks` so JSON can count denied local evidence directly while PostgreSQL can preserve RLS and use `project1_denied_relevant_chunk_count` without exposing unauthorized content.
 - `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`: optional production-path `PostgresKnowledgeRepository` contract over the PostgreSQL/pgvector schema. It keeps tenant context, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate selection behind the same repository shape without making PostgreSQL required for the local demo.
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, and vector components. It makes retrieval quality inspectable now and leaves a clean handoff point for later production embedding and reranker work.
+- `secure-enterprise-knowledge-copilot/src/copilot/reranking.py`: deterministic evidence reranker boundary after first-stage retrieval. It records feature-level rerank evidence today and gives a clean replacement point for a production reranker later.
 - `secure-enterprise-knowledge-copilot/src/copilot/security.py`: prompt-injection detection and evidence sanitization.
 - `secure-enterprise-knowledge-copilot/src/copilot/answering.py`: answer, citation, confidence, missing-evidence, and abstention behavior.
 - `secure-enterprise-knowledge-copilot/src/copilot/chunking.py`: shared deterministic text chunking used by JSON seeding and admin ingestion after parser normalization.

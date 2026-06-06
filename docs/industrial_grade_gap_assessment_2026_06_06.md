@@ -75,7 +75,7 @@ Source links reviewed:
 | Gap | Current state | Industrial requirement |
 | --- | --- | --- |
 | Real ingestion | Mostly fictional seed data plus local/admin ingestion. | Uploads, source connectors, parser jobs, OCR/table handling, incremental sync, backfills, source versions, and failed-job recovery. |
-| Retrieval quality | Deterministic lexical/vector scoring now has a local embedding boundary and optional PostgreSQL SQL keyword/vector candidate selection, but it is still small-corpus and pre-reranker. | Production embedding provider, larger hybrid retrieval metrics, reranker, query routing, metadata filters, recall@k, citation faithfulness, and stale-source tests. |
+| Retrieval quality | Deterministic lexical/vector scoring now has a local embedding boundary, optional PostgreSQL SQL keyword/vector candidate selection, and a local reranker boundary, but it is still small-corpus and not production-provider backed. | Production embedding provider, larger hybrid retrieval metrics, production reranker, query routing, metadata filters, recall@k, citation faithfulness, and stale-source tests. |
 | Source permissions | UI-selected fictional users and roles. | Enterprise SSO, tenant model, group membership, RBAC/ABAC, source ACL sync, RLS defense in depth, permission-drift detection. |
 | Runtime durability | Local JSON remains the safe default; Postgres path is partial. | Connection pooling, migrations, transactional audit, queues, retries, idempotency, outbox, crash recovery. |
 | Agent workflow | Local deterministic tools and approval model. | Real tool registry, scoped credentials, preview diffs, approval ownership/expiry/escalation, idempotent execution, connector outage handling. |

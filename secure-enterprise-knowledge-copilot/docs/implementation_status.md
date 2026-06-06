@@ -46,6 +46,7 @@ python -B scripts\run_eval.py
 - Admin ingestion normalizes plain text, Markdown, CSV, HTML, and JSON through a parser boundary before chunking.
 - Seed and admin-ingested chunks carry deterministic local embeddings with model `local-hashing-v1` and 1536 dimensions.
 - Retrieval exposes candidate strategy metadata: the default JSON path uses `local_full_scan`, while the optional PostgreSQL path uses SQL-backed `postgres_hybrid_sql_v1`.
+- Retrieval exposes deterministic rerank metadata with `local-evidence-reranker-v1`, `rerank_score`, and feature-level `rerank_breakdown`.
 - UI eval button runs the golden eval suite.
 - CLI eval suite passes.
 
@@ -67,6 +68,7 @@ The MVP uses:
 - Static HTML/CSS/JS frontend
 - BM25-like keyword retrieval with synonym expansion
 - Local hybrid retrieval profile with lexical, title, phrase, semantic-family, and vector score breakdowns
+- Deterministic evidence reranker boundary with inspectable rerank features
 - Local deterministic embedding boundary for chunk metadata and pgvector handoff
 - Optional PostgreSQL/pgvector adapter contract with SQL keyword/vector candidate selection
 - Tenant and role filtering before evidence assembly
@@ -87,7 +89,7 @@ Still missing before calling the full FDE objective complete:
 - FastAPI backend
 - Next.js or production frontend
 - Live PostgreSQL/pgvector deployment validation beyond the optional adapter, migration, seed, and compose artifacts
-- Production embedding model and reranker
+- Production embedding model and reranker provider
 - Production SQL retrieval metrics and reranking
 - File upload, PDF/DOCX/OCR support, and connector-backed document parser pipeline
 - Background ingestion worker

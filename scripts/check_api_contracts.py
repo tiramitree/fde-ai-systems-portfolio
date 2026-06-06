@@ -408,11 +408,17 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and profile.get("permission_filter") == "tenant_role_before_scoring"
             and profile.get("candidate_strategy") == "local_full_scan"
             and isinstance(profile.get("candidate_source_count"), int)
+            and profile.get("reranker") == "local-evidence-reranker-v1"
+            and "query_overlap" in profile.get("rerank_features", [])
             and isinstance(retrieved, list)
             and bool(retrieved)
             and isinstance(retrieved[0].get("score_breakdown"), dict)
+            and isinstance(retrieved[0].get("rerank_breakdown"), dict)
+            and isinstance(retrieved[0].get("rerank_score"), (int, float))
             and "semantic" in retrieved[0]["score_breakdown"]
             and "vector" in retrieved[0]["score_breakdown"]
+            and "base_score" in retrieved[0]["rerank_breakdown"]
+            and "security_penalty" in retrieved[0]["rerank_breakdown"]
             and retrieved[0].get("embedding_model") == "local-hashing-v1"
             and retrieved[0].get("embedding_dimensions") == 1536
             and "embedding" not in retrieved[0],

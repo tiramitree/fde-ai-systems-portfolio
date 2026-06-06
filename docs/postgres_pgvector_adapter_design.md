@@ -53,6 +53,8 @@ Project 1 also now has a local deterministic embedding boundary in `secure-enter
 
 The PostgreSQL adapter also exposes `list_retrieval_candidates`, a SQL-backed candidate selection boundary. In the JSON runtime, retrieval uses `candidate_strategy=local_full_scan`. In the PostgreSQL runtime, retrieval uses `candidate_strategy=postgres_hybrid_sql_v1`: SQL first applies tenant and role filters, then merges `websearch_to_tsquery` keyword candidates with pgvector nearest-neighbor candidates before Python applies the shared final scoring, prompt-injection checks, citations, traces, and audit behavior.
 
+After candidate selection, `secure-enterprise-knowledge-copilot/src/copilot/reranking.py` applies `local-evidence-reranker-v1`. This deterministic boundary records query overlap, title overlap, source metadata, candidate keyword/vector scores, and security penalties. The current reranker is deliberately local and replaceable; a production reranker can be introduced later without moving tenant, role, or citation rules into SQL or prompts.
+
 The application layer receives a typed user context:
 
 ```text
@@ -364,12 +366,13 @@ Migration phases:
 2. Seed the Project 1 demo tenant, users, documents, and chunks with `infra/postgres/seeds/001_project1_demo.sql`.
 3. Replace `local-hashing-v1` with a production embedding provider behind the existing embedding boundary.
 4. Add SQL-backed keyword/vector candidate selection. Done for the Project 1 PostgreSQL path through `postgres_hybrid_sql_v1`.
-5. Add production reranking, larger retrieval metrics, and a production embedding provider behind the existing boundaries.
-6. Backfill cases, approvals, audit events, traces, and eval records for Projects 2 and 3 when those adapters are added.
-7. Dual-write local and PostgreSQL adapters in a staging environment.
-8. Compare read results and eval outcomes across both adapters.
-9. Cut reads to PostgreSQL behind a feature flag.
-10. Remove dual-write only after evals and replay checks are stable.
+5. Add a deterministic reranker boundary. Done for the shared retrieval path through `local-evidence-reranker-v1`.
+6. Add production reranking, larger retrieval metrics, and a production embedding provider behind the existing boundaries.
+7. Backfill cases, approvals, audit events, traces, and eval records for Projects 2 and 3 when those adapters are added.
+8. Dual-write local and PostgreSQL adapters in a staging environment.
+9. Compare read results and eval outcomes across both adapters.
+10. Cut reads to PostgreSQL behind a feature flag.
+11. Remove dual-write only after evals and replay checks are stable.
 
 Rollback rules:
 
@@ -418,7 +421,7 @@ This keeps the technical review story inspectable: a reviewer can connect an ans
 3. Add migrations and seed scripts. Done for the Project 1 demo seed path.
 4. Run `python -B scripts/check_project1_postgres_runtime.py --live` against the seeded `docker-compose.postgres.yml` database on port `55432`; the live probe checks Alice finance denial, Morgan finance access, SQL hybrid candidate retrieval, and denied-evidence count behavior.
 5. Replace the local deterministic embedding provider with a production embedding provider behind the existing boundary.
-6. Add production reranking and larger retrieval metrics behind the existing candidate boundary.
+6. Replace the deterministic reranker with a production reranker and add larger retrieval metrics behind the existing candidate boundary.
 7. Port Project 2 cases, tool actions, approvals, traces, and audit state.
 8. Add RLS tests, unauthorized retrieval tests, and cross-tenant side-effect tests.
 9. Record live Docker Compose PostgreSQL evidence on a Docker-enabled machine.

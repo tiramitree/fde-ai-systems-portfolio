@@ -63,7 +63,7 @@ The repo is stronger than a normal portfolio demo in these areas:
 | Area | Current gap | Industrial requirement |
 | --- | --- | --- |
 | Data ingestion | Fictional seed data and deterministic local ingestion. | Uploads, connector sync, document parsing, OCR/table handling, incremental indexing, source versioning, and backfills. |
-| Retrieval quality | Local deterministic embeddings, vector score reporting, and optional PostgreSQL keyword/vector candidate selection now exist, but the path is still pre-reranker and not live-validated against a large corpus. | Production embeddings, hybrid search metrics, pgvector/search backend validation, reranker, recall/precision evals, citation span checks, stale-source handling. |
+| Retrieval quality | Local deterministic embeddings, vector score reporting, optional PostgreSQL keyword/vector candidate selection, and a deterministic reranker boundary now exist, but the path is not live-validated against a large corpus or production reranker provider. | Production embeddings, hybrid search metrics, pgvector/search backend validation, production reranker, recall/precision evals, citation span checks, stale-source handling. |
 | Source permissions | UI-selected fictional users and roles. | Enterprise SSO, tenant isolation, source ACL sync, RBAC/ABAC, database RLS, permission-drift tests. |
 | Runtime durability | Local JSON path remains default; Postgres path is in progress. | Migrations, connection pooling, durable audit/traces, queues, retries, transactional outbox, crash recovery. |
 | Agent workflow | Deterministic local tools and approvals. | Real tool registry, scoped credentials, dry-run previews, approval ownership, expiry, idempotent execution, connector failure handling. |
