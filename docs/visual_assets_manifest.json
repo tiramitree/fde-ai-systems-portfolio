@@ -23,7 +23,7 @@
         1400,
         900
       ],
-      "sha256": "5b234a1448c43c17681ecd0925d3e68204d9aa562b63f860de9ecddf306aeecb",
+      "sha256": "dcb1119f454c9101099a0a59b6ead71fa839cc69caf647cbbdef4bc1f37f7af2",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
@@ -55,7 +55,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
-          "sha256": "693cc71e53834a1665dee709e9613cb1934015e6fb92bd495d395f89466e9999"
+          "sha256": "8f1e6d9fb379f3aa1aa7f650e0b465b2fe9c63fa435e1a1255e0934039e97886"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/scenarioEditor.js",
@@ -153,7 +153,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
-          "sha256": "693cc71e53834a1665dee709e9613cb1934015e6fb92bd495d395f89466e9999"
+          "sha256": "8f1e6d9fb379f3aa1aa7f650e0b465b2fe9c63fa435e1a1255e0934039e97886"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/scenarioEditor.js",

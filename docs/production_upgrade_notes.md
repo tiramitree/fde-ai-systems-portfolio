@@ -93,6 +93,7 @@ Project 1 runtime switch:
 - `project1_denied_relevant_chunk_count` preserves denied-evidence audit counts under RLS without exposing unauthorized document IDs, titles, or chunk bodies.
 - `local-hashing-v1` provides a deterministic 1536-dimensional embedding boundary for seed data and admin ingestion so pgvector storage and vector score reporting are now concrete, while a production embedding model remains a later replacement.
 - `PostgresKnowledgeRepository.list_retrieval_candidates` adds `postgres_hybrid_sql_v1`, a SQL-backed keyword/vector candidate selection path that applies tenant and role filters before `websearch_to_tsquery` and pgvector nearest-neighbor retrieval.
+- `local-evidence-reranker-v1` provides a deterministic reranker boundary with feature-level rerank scores so production rerankers can be added without changing the permission or citation invariants.
 
 Next steps:
 
@@ -100,8 +101,8 @@ Next steps:
 2. Extend the current admin-only ingestion contract into file upload and connector sync.
 3. Add a background document parser pipeline.
 4. Replace the deterministic local hashing embedding with a production embedding model.
-5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, citation span accuracy, and stale-source handling.
-6. Add reranker.
+5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, rerank quality, citation span accuracy, and stale-source handling.
+6. Replace the deterministic reranker with a production reranker provider behind the existing boundary.
 7. Add PostgreSQL row-level security tests against a running database.
 8. Add eval cases from real failure logs.
 

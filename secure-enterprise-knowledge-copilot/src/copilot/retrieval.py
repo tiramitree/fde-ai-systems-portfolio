@@ -4,6 +4,7 @@ import re
 from collections import Counter
 
 from .embeddings import embed_chunk, embed_text
+from .reranking import RERANK_FEATURES, RERANKER_NAME, rerank_hits
 from .repositories import KnowledgeRepository
 from .retrieval_scoring import not_run_profile, retrieval_profile, score_chunk
 from .security import detect_prompt_injection
@@ -109,11 +110,12 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
         scored.append(hit)
 
     scored.sort(key=lambda item: item["score"], reverse=True)
+    reranked = rerank_hits(scored, query_tokens)
 
     blocked_count = repo.count_potentially_blocked_chunks(user, query_tokens)
 
     return {
-        "hits": scored[:k],
+        "hits": reranked[:k],
         "blocked_count": blocked_count,
         "query_tokens": query_tokens,
         "profile": retrieval_profile(
@@ -122,5 +124,7 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
             top_k=k,
             candidate_strategy=candidate_strategy,
             candidate_source_count=candidate_source_count,
+            reranker=RERANKER_NAME,
+            rerank_features=RERANK_FEATURES,
         ),
     }

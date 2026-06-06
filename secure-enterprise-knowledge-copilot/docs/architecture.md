@@ -80,7 +80,7 @@ Ingestion is an application boundary, not a frontend shortcut. Only admin users 
 
 The application modules depend on `KnowledgeRepository` rather than direct JSON state. The current `JsonKnowledgeRepository` keeps the local demo zero-dependency. The optional `PostgresKnowledgeRepository` maps the same contract to tenant-scoped PostgreSQL tables, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate retrieval without making answering, retrieval, ingestion, or eval modules import SQL directly.
 
-Retrieval exposes a `local-hybrid-v1` profile with lexical, title, phrase, semantic-family, vector, candidate strategy, and candidate source counts. The vector path uses a deterministic local hashing embedding so seed data, admin ingestion, and the pgvector adapter share a concrete embedding boundary without requiring a paid model. In production, that boundary should be replaced by a real embedding model and reranker while preserving permission filtering before evidence assembly.
+Retrieval exposes a `local-hybrid-v1` profile with lexical, title, phrase, semantic-family, vector, candidate strategy, candidate source counts, and a deterministic `local-evidence-reranker-v1` stage. The vector path uses a deterministic local hashing embedding so seed data, admin ingestion, and the pgvector adapter share a concrete embedding boundary without requiring a paid model. In production, those embedding and reranker boundaries should be replaced by stronger providers while preserving permission filtering before evidence assembly.
 
 Retrieved documents are treated as data, not instructions. Instruction-like text inside documents is detected and excluded from evidence.
 

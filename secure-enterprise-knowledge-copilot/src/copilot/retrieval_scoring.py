@@ -49,6 +49,8 @@ def retrieval_profile(
     top_k: int,
     candidate_strategy: str = "local_full_scan",
     candidate_source_count: int | None = None,
+    reranker: str = "none",
+    rerank_features: tuple[str, ...] = (),
 ) -> dict:
     return {
         "name": "local-hybrid-v1",
@@ -56,6 +58,8 @@ def retrieval_profile(
         "permission_filter": "tenant_role_before_scoring",
         "candidate_strategy": candidate_strategy,
         "candidate_source_count": candidate_count if candidate_source_count is None else candidate_source_count,
+        "reranker": reranker,
+        "rerank_features": list(rerank_features),
         "embedding_model": EMBEDDING_MODEL,
         "embedding_dimensions": EMBEDDING_DIMENSIONS,
         "visible_chunk_count": visible_chunk_count,

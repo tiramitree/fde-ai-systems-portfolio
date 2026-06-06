@@ -82,7 +82,7 @@ The threat model covers unauthorized disclosure, prompt injection, unsupported a
 
 ## Q10: What are the biggest current limitations?
 
-The systems are intentionally local-first and dependency-light. They do not yet include real auth, PostgreSQL, dense embeddings, external connectors, or verified Docker runtime in this environment. Those are production adapters; the core control boundaries are already explicit and testable.
+The systems are intentionally local-first and dependency-light. Project 1 now has optional PostgreSQL/pgvector migration, seed, compose, repository, embedding, SQL candidate-retrieval, and deterministic reranker boundaries, but this environment still lacks live Docker/PostgreSQL validation, real auth, production embedding/reranker providers, external connectors, and a managed deployment. Those are production adapters; the core control boundaries are already explicit and testable.
 
 ## 3. Architecture Summary
 

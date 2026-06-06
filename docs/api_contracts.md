@@ -72,9 +72,12 @@ Retrieval contract:
 - `retrieval_profile.score_components` lists `bm25_like`, `title`, `phrase`, `semantic_family`, and `vector`
 - `retrieval_profile.candidate_strategy` is `local_full_scan` for the default JSON runtime and `postgres_hybrid_sql_v1` for the PostgreSQL/pgvector runtime
 - `retrieval_profile.candidate_source_count` records how many retrieval candidates were returned by the storage/search layer before final scoring
+- `retrieval_profile.reranker` is `local-evidence-reranker-v1` for the default deterministic reranker boundary
+- `retrieval_profile.rerank_features` lists the deterministic rerank features used before answer assembly
 - `retrieval_profile.embedding_model` is `local-hashing-v1` and `retrieval_profile.embedding_dimensions` is `1536` for the local deterministic embedding boundary
 - `retrieval_profile.permission_filter` is `tenant_role_before_scoring`
 - `retrieved[].score_breakdown` exposes lexical, title, phrase, semantic, vector, matched-term, and semantic-family evidence for review
+- `retrieved[].rerank_score` and `retrieved[].rerank_breakdown` expose the staged reranker decision separately from first-stage retrieval scoring
 - `retrieved[].embedding_model` and `retrieved[].embedding_dimensions` expose embedding provenance, while raw embedding vectors are not returned
 - evals can assert expected retrieved document IDs before answer generation changes are trusted
 

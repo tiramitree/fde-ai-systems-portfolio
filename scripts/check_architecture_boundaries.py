@@ -39,6 +39,7 @@ PROJECTS = [
             "src/copilot/retrieval_scoring.py": frozenset(
                 {"RetrievalScore", "SCORE_COMPONENTS", "SEMANTIC_FAMILIES", "score_chunk", "retrieval_profile"}
             ),
+            "src/copilot/reranking.py": frozenset({"RERANKER_NAME", "RERANK_FEATURES", "RerankDecision", "rerank_hits", "rerank_hit"}),
             "src/copilot/repositories.py": frozenset(
                 {"KnowledgeRepository", "JsonKnowledgeRepository", "PostgresRepositorySession", "connect_repository"}
             ),
@@ -292,6 +293,7 @@ def check_code_tour() -> list[str]:
         "src/copilot/embeddings.py",
         "src/copilot/retrieval.py",
         "src/copilot/retrieval_scoring.py",
+        "src/copilot/reranking.py",
         "src/copilot/security.py",
         "src/copilot/answering.py",
         "src/copilot/chunking.py",

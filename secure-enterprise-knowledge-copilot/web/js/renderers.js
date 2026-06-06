@@ -84,6 +84,7 @@ export function renderAnswer(data) {
     {
       trace_id: data.trace_id,
       permission_blocked_count: data.permission_blocked_count,
+      retrieval_profile: data.retrieval_profile,
       retrieved: data.retrieved,
       missing_evidence: data.missing_evidence,
       security_events: data.security_events,

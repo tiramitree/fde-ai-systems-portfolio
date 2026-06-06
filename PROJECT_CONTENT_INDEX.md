@@ -214,6 +214,7 @@ Design Review Docs:
 - `docs/industrialization_gap_plan.md`: gap analysis between this portfolio and production-grade industrial AI systems, with an upgrade plan.
 - `docs/industrial_readiness_field_scan.md`: current external benchmark scan, industrial-readiness distance estimate, and prioritized upgrade plan.
 - `docs/industrial_grade_gap_assessment_2026_06_06.md`: web-refreshed industrial-grade gap assessment and concrete upgrade sequence for the eight major production-readiness gaps.
+- `docs/industrial_readiness_plan_cn_2026_06_06.md`: Chinese industrial-readiness judgment, external project baseline, current gap matrix, and FDE-oriented upgrade plan.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
 - `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
@@ -373,7 +374,8 @@ Important files:
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
 - `src/copilot/embeddings.py`: local deterministic chunk embedding boundary with 1536-dimensional vectors, metadata, and cosine scoring helpers for the pgvector/hybrid retrieval path.
 - `src/copilot/retrieval.py`: role-aware candidate retrieval and evidence selection with shared final scoring across JSON and PostgreSQL providers.
-- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, vector, and candidate-strategy metadata for traceable pre-reranker quality evidence.
+- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, vector, and candidate-strategy metadata for traceable first-stage retrieval evidence.
+- `src/copilot/reranking.py`: deterministic local evidence reranker boundary with feature-level rerank metadata.
 - `src/copilot/security.py`: unsafe retrieved-content detection.
 - `src/copilot/answering.py`: answer shaping, citation behavior, abstention.
 - `src/copilot/storage.py`: thread-safe local JSON state implementation used through the repository adapter.
