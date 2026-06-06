@@ -33,6 +33,7 @@ Source:
 | GET | `/api/traces?limit=25` | Recent trace records. |
 | GET | `/api/audit?limit=50` | Recent audit events. |
 | GET | `/api/ingestion/jobs?user_id=avery&limit=25` | Admin-only ingestion job ledger with sanitized input summaries, status, retry links, and dead-letter evidence. |
+| GET | `/api/connectors/status?user_id=avery&limit=100` | Admin-only connector lifecycle summary derived from ingestion jobs, including health, cursors, counts, and dead-letter state. |
 | GET | `/api/eval/latest` | Latest eval run record. |
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/query` | Permission-aware answer generation with citations or abstention. |
@@ -229,6 +230,41 @@ Ingestion job contract:
 - retry jobs must reference a previous `dead_lettered` job through `retry_of_job_id`; the retry supplies a fresh payload and idempotency key
 - successful jobs write `ingestion_job_completed` audit events
 - failed worker validation writes `ingestion_job_dead_lettered` audit events
+
+### Connector Status Response Shape
+
+`GET /api/connectors/status` returns an admin-only operator summary derived from the ingestion job ledger:
+
+- `connectors`
+- `connector_count`
+- `job_window`
+- `status_source`, currently `ingestion_jobs`
+
+Each `connectors[]` item returns:
+
+- `connector`
+- `health`: `healthy`, `running`, `needs_attention`, `recovered`, or `unknown`
+- `latest_job_id`
+- `latest_job_status`
+- `latest_job_type`
+- `latest_cursor`
+- `latest_updated_at`
+- `document_count`
+- `chunk_count`
+- `acl_drift_count`
+- `success_count`
+- `dead_letter_count`
+- `job_count`
+- `last_error_status`
+- `last_error_retryable`
+
+Connector status contract:
+
+- only admin users can view connector status
+- the response summarizes source sync jobs without returning raw document, issue, or pull request bodies
+- `dead_letter_count` remains visible after a later successful retry, so recovered connectors still show prior failed work
+- `latest_cursor`, document/chunk counts, ACL drift count, and job status are surfaced for operator review before trusting new source data
+- the endpoint is a local operator contract; a production deployment would attach real connector registry records, queue state, schedule metadata, and alert links
 
 ### GitHub Connector Response Shape
 

@@ -48,6 +48,7 @@ const ingestionPanel = installIngestionPanel({
     syncButton: byId("syncSampleSource"),
     githubButton: byId("syncGitHubConnector"),
     status: byId("ingestionStatus"),
+    connectorStatus: byId("connectorStatus"),
     jobs: byId("ingestionJobs"),
   },
 });
