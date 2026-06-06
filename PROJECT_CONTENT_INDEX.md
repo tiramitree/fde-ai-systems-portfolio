@@ -151,7 +151,7 @@ Local Git state:
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
 - `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
 - `scripts/check_health.py`: verifies all service health endpoints.
-- `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, merge policy, best-effort security settings, branch protection, and first-release setup through `gh`.
+- `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, merge policy, best-effort security settings, branch protection, first-release setup, and replay artifact uploads through `gh`.
 - `scripts/maintain_github_state.py`: dry-runs or applies authenticated GitHub repository maintenance and guarded Dependabot runtime-bump PR closure.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
 - `scripts/check_repository_governance.py`: validates CODEOWNERS, branch-protection payload, and PR-template safeguards.
@@ -451,7 +451,7 @@ Important boundary:
 These are not local code blockers, but they should not be claimed as completed until verified:
 
 1. Add repository description, topics, branch protection, and social preview in GitHub settings.
-2. Create a GitHub release page for `v0.1.0`.
+2. Create a GitHub release page for `v0.1.0` and attach the current replay artifacts.
 3. Run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; the static container release hygiene gate is already included.
 4. Verify optional OpenAI mode with a valid API key by running `python -B scripts/dev.py openai-live`.
 5. Record an optional narrated demo video; the README GIF is already included.

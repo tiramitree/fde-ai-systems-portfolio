@@ -16,7 +16,6 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 2. Add live OTLP HTTP export to an OpenTelemetry Collector.
 3. Add per-case eval reports with failure diffs.
 4. Add Docker Compose runtime screenshots after testing on a Docker-enabled machine.
-5. Add release automation that uploads `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` after `python -B scripts/dev.py replay-artifact` passes.
 
 ## Advanced Issues
 
@@ -61,6 +60,7 @@ Contributions should preserve these invariants:
 - Add compact stale branch-protection screenshot examples.
 - Add compact stale GitHub Actions badge cache examples.
 - Add compact stale Dependabot alert evidence examples.
+- Add release automation that uploads `out/demo_replay_artifact.md` and `out/demo_replay_artifact.json` after `python -B scripts/dev.py replay-artifact` passes.
 - Add browser-local light/dark theme controls to all demo UIs.
 - Add high-contrast screenshot checks for future visual asset refreshes.
 - Add mobile viewport screenshots to the visual asset manifest.

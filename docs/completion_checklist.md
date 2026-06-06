@@ -41,7 +41,7 @@ This checklist tracks the repository evidence needed before claiming a public re
 
 - Docker runtime was not verified because Docker is not installed in the current environment; `python -B scripts/dev.py docker-runtime` is the tracked runtime proof for Docker-enabled machines.
 - Optional OpenAI mode was not called because no API key was provided; `python -B scripts/dev.py openai-live` is the tracked live proof for API-key environments.
-- Repository description, topics, branch protection, social preview upload, release page creation, and profile pinning still require authenticated GitHub setup.
+- Repository description, topics, branch protection, social preview upload, release page creation with replay attachments, and profile pinning still require authenticated GitHub setup.
 - Star growth cannot be claimed until real launch feedback accumulates.
 
 ## Remaining Work Before Claiming Release Completion
@@ -49,7 +49,7 @@ This checklist tracks the repository evidence needed before claiming a public re
 1. Verify Docker Compose on a machine with Docker by running `python -B scripts/dev.py docker-runtime`.
 2. Optionally verify OpenAI Responses API mode with a valid key by running `python -B scripts/dev.py openai-live`.
 3. Do one final browser walkthrough of all projects from a clean reset.
-4. Apply repository description, topics, branch protection, and the GitHub release page after `gh auth login` by running `python -B scripts/maintain_github_state.py --apply`.
+4. Run `python -B scripts/dev.py replay-artifact`, then apply repository description, topics, branch protection, the GitHub release page, and current replay attachments after `gh auth login` by running `python -B scripts/maintain_github_state.py --apply`.
 5. Upload the social preview from `docs/assets/github-preview.png`.
 6. Pin the repository on the GitHub profile after GitHub readiness is clean.
 7. Re-run `python -B scripts/check_github_readiness.py --strict`.

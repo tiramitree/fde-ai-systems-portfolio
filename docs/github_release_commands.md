@@ -44,16 +44,17 @@ python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-maintenance
 ```
 
-4. After `gh auth login`, apply repository description, topics, merge policy, best-effort security settings, branch protection, and the `v0.1.0` release:
+4. Regenerate current replay evidence, then after `gh auth login`, apply repository description, topics, merge policy, best-effort security settings, branch protection, the `v0.1.0` release, and the current replay artifact attachments:
 
 ```powershell
+python -B scripts/dev.py replay-artifact
 python -B scripts/maintain_github_state.py --apply
 ```
 
-5. After `python -B scripts/dev.py replay-artifact` regenerates the current replay evidence and the release page exists, review `docs/release_asset_upload_dry_run_examples.md` before uploading release assets:
+5. If the release page already existed before the apply path, review `docs/release_asset_upload_dry_run_examples.md` before replacing release assets manually:
 
 ```powershell
-gh release upload v0.1.0 out/demo_replay_artifact.md out/demo_replay_artifact.json --repo tiramitree/fde-ai-systems-portfolio
+gh release upload v0.1.0 out/demo_replay_artifact.md out/demo_replay_artifact.json --repo tiramitree/fde-ai-systems-portfolio --clobber
 ```
 
 6. Upload `docs/assets/github-preview.png` as the social preview and pin the repo on your profile.

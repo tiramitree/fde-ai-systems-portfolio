@@ -204,7 +204,7 @@ def print_dry_run(gh: str, repo: str, args: argparse.Namespace) -> int:
             launch.append("--skip-release")
             launch_display.append("--skip-release")
         print()
-        print("# Repository metadata, topics, merge policy, branch protection, and release setup")
+        print("# Repository metadata, topics, merge policy, branch protection, release setup, and replay artifact upload")
         print(display_command(launch_display))
 
     print()
