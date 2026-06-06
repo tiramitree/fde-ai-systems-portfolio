@@ -6,12 +6,12 @@ Use this file before adding new code or touching GitHub settings. It records rec
 
 | Item | Status | Resolution |
 | --- | --- | --- |
-| GitHub CLI authentication | Open | `gh` is installed but not authenticated. Account-level actions such as repository metadata, branch protection, release creation, PR comments, and PR closure require `gh auth login` or another authenticated GitHub path. Use `python -B scripts/dev.py github-maintenance` for the dry-run plan. |
-| Repository metadata and topics | Open | Run `python -B scripts/maintain_github_state.py --apply` after GitHub CLI authentication, then rerun `python -B scripts/dev.py github-readiness`. |
-| Main branch protection | Open | Apply `docs/github_branch_protection.json` through `python -B scripts/maintain_github_state.py --apply` after GitHub CLI authentication. |
-| GitHub release page for `v0.1.0` | Open | Run `python -B scripts/dev.py replay-artifact`, then create the release page and upload current replay attachments with `python -B scripts/maintain_github_state.py --apply` after authentication. The tag already exists. |
+| GitHub CLI authentication | Complete | `gh` is authenticated as `tiramitree`. Do not paste or commit token values; use `gh auth status` to verify the keyring-backed session. |
+| Repository metadata and topics | Complete | `python -B scripts/maintain_github_state.py --apply` set the repository description and expected topics; `python -B scripts/dev.py github-readiness` reports these rows as passing. |
+| Main branch protection | Complete | `docs/github_branch_protection.json` was applied through `python -B scripts/maintain_github_state.py --apply`; `main` now requires the `quality-gate` status check, PR review, code-owner review, and conversation resolution. |
+| GitHub release page for `v0.1.0` | Complete | `python -B scripts/dev.py replay-artifact` regenerated the replay artifacts, then `python -B scripts/maintain_github_state.py --apply` created the `v0.1.0` release and uploaded `demo_replay_artifact.md` and `demo_replay_artifact.json`. |
 | Social preview and profile pin | Manual | Use `docs/assets/github-preview.png` for the social preview and pin the repository from GitHub account settings. |
-| GitHub labels and community issues | Open | Validate locally with `python -B scripts/dev.py community-issues`, dry-run with `python -B scripts/dev.py github-community`, and sync labels after authentication with `python -B scripts/manage_community_issues.py --apply`. Create roadmap issues only when open roadmap work should be visible. |
+| GitHub labels and community issues | Labels synced | Labels were synced with `python -B scripts/maintain_github_state.py --apply --sync-community`. Community issue creation remains intentionally skipped unless open roadmap work should be visible. |
 | PR #12 Python Docker baseline bump | Closed, not merged | The PR changed `ai-reliability-incident-console/Dockerfile` from the pinned Python 3.12 baseline to Python 3.14 and failed `python -B scripts/dev.py container-release`. Future matching runtime-baseline Dependabot PRs can be closed after authentication with `python -B scripts/maintain_github_state.py --apply --skip-launch --close-runtime-bump-prs` unless the repository intentionally performs a coordinated runtime baseline upgrade. |
 
 ## Recurring Local Issues

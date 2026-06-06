@@ -66,27 +66,23 @@ python -B scripts/check_github_readiness.py --strict
 | --- | --- | --- |
 | origin points to GitHub | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio.git |
 | GitHub repository metadata reachable | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio |
-| repository description set | WARN | missing |
-| repository topics set | WARN | missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling |
+| repository description set | PASS | Three runnable enterprise AI systems showing secure RAG, governed agents, AI release reliability, evals, traces, audit logs, and approval gates. |
+| repository topics set | PASS | ok |
 | license detected as MIT | PASS | mit |
 | default branch is main | PASS | main |
-| main branch protection enabled | WARN | not protected |
+| main branch protection state | PASS | protected |
 | stars observed at generation | PASS | 6 |
 | forks observed at generation | PASS | 1 |
-| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26994015810/job/79659931856 |
+| main GitHub Actions run passed at generation | PASS | https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/27048923720/job/79840487564 |
 | no open issues | PASS | 0 |
 | no open PRs awaiting review | PASS | 0 |
 | tag v0.1.0 exists | PASS | ok |
-| GitHub release page exists for v0.1.0 | WARN | missing |
+| GitHub release page exists for v0.1.0 | PASS | v0.1.0 |
 | social preview configured | MANUAL | GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md |
 | profile repository pin configured | MANUAL | Requires account profile settings |
 
 ## Remaining Blockers
 
-- repository description set: missing
-- repository topics set: missing: agentic-workflows, ai-agents, ai-safety, enterprise-ai, forward-deployed-engineering, human-in-the-loop, llm-evals, openai, python, rag, responses-api, tool-calling
-- main branch protection enabled: not protected
-- GitHub release page exists for v0.1.0: missing
 - social preview configured: GitHub does not expose a simple unauthenticated check; use docs/github_repository_settings.md
 - profile repository pin configured: Requires account profile settings
 - Docker Compose runtime: not verified on this machine because Docker is not installed; static container release hygiene is gated and `python -B scripts/dev.py docker-runtime` is available for Docker-enabled machines.
