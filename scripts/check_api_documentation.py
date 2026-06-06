@@ -24,6 +24,7 @@ PROJECTS = {
             "/api/scenario",
         },
         "post": {
+            "/api/auth/demo-token",
             "/api/query",
             "/api/documents/ingest",
             "/api/sources/sync",
@@ -133,6 +134,13 @@ PROJECTS = {
             "ingestion.source.file",
             "file_size_bytes",
             "file_content_encoding",
+            "Authorization: Bearer",
+            "local_signed_demo_token_v1",
+            "auth_policy",
+            "auth_context",
+            "token_type",
+            "expires_in",
+            "Request user_id does not match authenticated subject",
         },
     },
     "Regulated Customer Operations Agent": {

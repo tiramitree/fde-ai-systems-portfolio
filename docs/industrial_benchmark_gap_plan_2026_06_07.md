@@ -25,6 +25,7 @@ Production-ready enterprise AI platform.
 The repository already proves the right control boundaries:
 
 - permission filtering before generation, including source-group identity checks in Project 1
+- local signed bearer-token identity boundary for Project 1 review paths, including subject mismatch rejection
 - grounded citations and abstention
 - prompt-injection handling in retrieved context
 - admin ingestion and connector-style source sync
@@ -45,8 +46,8 @@ systems, real users, and real failures.
 | FDE portfolio / technical review artifact | Close | 85%-90% | Strong enough to discuss architecture, tradeoffs, security boundaries, evals, and public maintenance. |
 | Serious architecture review / take-home | Close to medium | 75%-82% | Credible, especially after ingestion jobs, connector status, and source prune semantics. Reviewers will still ask for live identity, source APIs, and durable workers. |
 | Controlled demo with synthetic data | Close | 65%-75% | Strong local demo and CI story. It can show many production invariants without exposing private data. |
-| Low-risk internal pilot | Medium to far | 35%-45% | Needs real auth, durable Postgres/pgvector, parser workers, live connectors, external observability, and operator runbooks. |
-| Sensitive enterprise production | Far | 20%-30% | Needs SSO, tenant isolation, source ACL sync, data retention/deletion, incident response, security ops, cloud deployment, backup/restore, load tests, and owner model. |
+| Low-risk internal pilot | Medium to far | 38%-48% | Needs real auth, durable Postgres/pgvector, parser workers, live connectors, external observability, and operator runbooks. The new local bearer-token path improves review credibility but is still not SSO. |
+| Sensitive enterprise production | Far | 22%-32% | Needs SSO, tenant isolation, source ACL sync, data retention/deletion, incident response, security ops, cloud deployment, backup/restore, load tests, and owner model. |
 
 ## 2026 Web Scan Calibration
 
@@ -105,17 +106,16 @@ Production-minded reference implementation, not production software.
 
 | Reference | Industrial signal | Implication for this repo |
 | --- | --- | --- |
-| OpenAI production best practices | Production systems need staging/production isolation, rate/spend limits, access control, monitoring, and scale planning. | Add explicit provider budget/rate-limit controls, environment isolation, and live-mode safety evidence before any production claim. |
-| OpenAI eval guidance | Evals should be task scoped, continuous, log-driven, and calibrated with human feedback; Q&A over docs should track context recall, precision, and answer satisfaction. | Expand current deterministic evals into retrieval metrics, trace-derived eval cases, human review disposition, and nightly regression. |
-| OpenAI trace grading | Graded traces help evaluate agent decisions, tool calls, and workflow behavior beyond black-box outputs. | Promote bad traces into eval candidates and grade retrieval/tool/approval decisions, not only final answer text. |
-| OpenAI Agents SDK tracing and HITL | Production agent runs trace generations, tools, handoffs, guardrails, and custom events; sensitive tools can pause, serialize state, and continue after approval. | Project 2 is directionally right, but needs persisted run state, idempotent execution, approval expiry/ownership, and real connectors. |
-| Microsoft Azure RAG design guide | Industrial RAG requires representative test media/queries, chunking strategy, metadata enrichment, embedding choice, index configuration, search strategy, and evaluation at every stage. | Project 1 needs a real parser/chunk/embed/index path with measured retrieval and citation quality. |
-| AWS Generative AI Application Builder and Well-Architected GenAI Lens | Enterprise GenAI stacks include management dashboards, RAG, agents, guardrails, observability, security, reliability, cost, and deployment architecture. | A unified operator console and deployment/runtime plan matter as much as the model-facing app. |
-| Dify | Production-oriented LLM app platforms bundle workflows, RAG pipelines, integrations, model management, and observability. | The repo should converge from three isolated demos into one "Enterprise AI Control Plane" story. |
-| RAGFlow | Mature RAG engines emphasize deep document understanding, explainable chunking, heterogeneous data sources, grounded citations, multiple recall, and reranking. | Add document parsing, source spans, table/PDF strategy, hybrid retrieval, reranker, and citation span verification. |
+| OpenAI Agents SDK tracing and guide | Production agent runs need traces for generations, tools, handoffs, guardrails, and custom events; the OpenAI agent guide also stresses layered guardrails, strict access control, tool risk tiers, and human intervention for high-risk actions. | Project 2 is directionally right, but needs persisted run state, idempotent execution, approval expiry/ownership, and real connectors. Safety must stay in application policy, not only SDK prompts. |
+| OpenAI eval guidance and trace grading | Q&A over docs should track context recall, context precision, answer quality, and continuous evals; trace grading evaluates agent decisions and tool behavior beyond final text. | Expand current deterministic evals into retrieval metrics, trace-derived eval cases, human review disposition, nightly regression, and model/prompt/retrieval-profile comparison. |
+| AWS AI Security Reference Architecture and CloudWatch GenAI observability | Industrial RAG is treated as a security-sensitive workload with data-source exfiltration and poisoning risks; observability tracks latency, usage, errors, token cost, knowledge bases, tools, guardrails, and agents. | Add defense-in-depth around source data, real credential boundaries, trace/metric export, token/cost dashboards, and alertable health checks. |
+| Alibaba Bailian and Tencent Cloud agent/RAG docs | Chinese enterprise platforms expose page/model permissions, business spaces, knowledge-base QPS/storage monitoring, model telemetry, and GraphRAG for complex enterprise, insurance, medical, and finance questions. | China-market FDE value depends on business-space permissions, private deployment, knowledge monitoring, complex knowledge graph/RAG cases, and customer-visible operations. |
+| Haystack and Haystack RAG app | Production-oriented open-source RAG frameworks emphasize modular pipelines, document stores, retrieval/routing/memory/generation control, Docker/OpenSearch deployments, and Kubernetes-ready examples, but example APIs may still be unauthenticated. | Keep the repo's stronger permission story, while adding production-shaped parser/index/retrieval services and deployable infrastructure. |
+| LlamaIndex | RAG is framed as loading, indexing, storing, querying, and evaluation; connectors, metadata, retrievers, routers, postprocessors, and response synthesizers are first-class concepts. | Project 1 should make every RAG stage explicit and measurable instead of hiding ingestion/retrieval behind fixtures. |
+| LangGraph | Durable checkpoints and interrupts are required for human-in-the-loop, run continuation, time-travel debugging, and fault-tolerant execution. Side effects before an interrupt must be idempotent. | Approval flows must survive process restarts and continue safely from persisted state. |
+| Langfuse | LLMOps platforms combine traces, sessions, latency views, prompt versioning, user feedback, LLM-as-judge, code evaluators, datasets, experiments, and manual annotation. | Local traces should export to a backend and drive eval datasets, not remain only local JSON evidence. |
+| RAGFlow | Mature RAG engines emphasize deep document understanding, explainable chunking, heterogeneous data sources, grounded citations, multiple recall, reranking, self-hosting, source sync, Docling/MinerU, multimodal document understanding, memory, MCP, and agentic workflow. | Add document parsing, source spans, table/PDF strategy, hybrid retrieval, reranker, and citation span verification. |
 | Onyx | Enterprise search/RAG centers on connectors, near-real-time indexing, document metadata, and source permission sync. | Strengthen GitHub read connector first, then add one or two high-signal enterprise sources with ACL snapshots and live deletion/prune proof. |
-| Langfuse and Phoenix | LLMOps platforms combine traces, metrics, datasets, experiments, prompt management, user feedback, and evals. | Local traces should export to a backend and drive eval datasets, not remain only local JSON evidence. |
-| LangGraph / durable agent runtimes | Long-running and human-in-the-loop agents require persistence, checkpoints, and restart-safe continuation. | Approval flows must survive process restarts and continue safely from persisted state. |
 | OpenTelemetry GenAI conventions | GenAI observability now has model, agent, event, metric, and provider-specific semantic conventions. | Replace ad hoc trace-only claims with OTel spans for API, retrieval, model, tool, approval, audit, and eval events. |
 | OWASP LLM Top 10 | Prompt injection, sensitive information disclosure, vector/embedding weakness, insecure plugins, and excessive agency are core LLM app risks. | Convert the current threat model into an OWASP-mapped control matrix with tests, owners, and runbooks. |
 | NIST AI RMF and GenAI Profile | Industrial AI governance requires risk framing, measurement, management, documentation, and accountability. | Add governance evidence: risk ownership, residual risk, data retention, incident process, and release accountability. |
@@ -125,7 +125,7 @@ Production-minded reference implementation, not production software.
 
 | Area | Current repository evidence |
 | --- | --- |
-| Security invariant | The model is not treated as a security boundary; app code enforces permissions, source-group ACL checks, and side-effect gates. |
+| Security invariant | The model is not treated as a security boundary; app code enforces permissions, source-group ACL checks, local bearer-token subject matching, and side-effect gates. |
 | RAG behavior | Project 1 supports permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, connector source sync, source lifecycle filtering, job status, and opt-in source prune. |
 | Connector operations | Project 1 now includes a GitHub read connector contract, ingestion job ledger, idempotency, retry parent, dead-letter records, connector status, and prune semantics. |
 | Agent governance | Project 2 blocks direct side effects and requires supervisor approval for sensitive operations. |
@@ -138,7 +138,7 @@ Production-minded reference implementation, not production software.
 | Gap | Current state | Industrial target |
 | --- | --- | --- |
 | 1. Data ingestion and parsing | Seed data, admin ingestion, source sync, GitHub read connector, job ledger, status, and opt-in prune. | Upload/pull connectors for real docs, parser worker, OCR/table/PDF/DOCX/CSV handling, source versions, source hashes, incremental sync, live prune/delete verification, and backfill recovery. |
-| 2. Identity and permissions | Fictional users/roles, group IDs, source ACL principals, source ACL snapshot contracts, permission-drift evidence, and group-aware PostgreSQL RLS migration artifacts. | SSO-compatible auth, tenant context, real users, real groups, RBAC/ABAC, source ACL sync, Postgres RLS live tests, and permission drift alerts. |
+| 2. Identity and permissions | Fictional users/roles, group IDs, source ACL principals, source ACL snapshot contracts, permission-drift evidence, group-aware PostgreSQL RLS migration artifacts, and a local signed demo bearer-token boundary with user mismatch rejection. | SSO-compatible auth, tenant context, real users, real groups, RBAC/ABAC, source ACL sync, Postgres RLS live tests, and permission drift alerts. |
 | 3. Retrieval and citation quality | Deterministic lexical/vector scoring, local embedding boundary, SQL candidate path, reranker boundary, chunk-level citations, sentence-level evidence spans, citation span coverage metrics, and active-only source lifecycle filtering with a stale-source eval. | Production embedding/reranker provider, hybrid retrieval, metadata filters, query routing, recall@k, MRR/nDCG, context precision/recall, broader citation faithfulness, larger stale/conflict evals. |
 | 4. Runtime durability | Local JSON default; partial Postgres path; local ingestion job ledger with retry/dead-letter semantics. | Connection pool, migrations, durable queue, transactional outbox, scheduled retry, crash recovery, backup/restore, and load/failure tests. |
 | 5. Governed tool execution | Local deterministic tools and approval queue. | Real tool registry, scoped credentials, dry-run previews, approval owner/expiry/escalation, idempotent execution, compensation behavior, and connector outage handling. |
@@ -211,7 +211,7 @@ same corpus, different authenticated users, different permitted evidence
 
 Work items:
 
-- add a local auth middleware stub with tenant/user/group context
+- keep the local signed demo token as a review boundary, then replace it with OIDC/SSO-compatible middleware
 - persist tenants, users, groups, group memberships, and source ACLs
 - test app-layer filters and Postgres RLS together
 - add permission drift detection for source ACL changes
@@ -220,8 +220,31 @@ Work items:
 Acceptance evidence:
 
 - two users asking the same query produce different evidence sets
+- bearer-token subject mismatch is rejected before retrieval or action behavior
 - denied evidence is counted in traces/audit without content leakage
 - RLS blocks direct unauthorized DB access in live checks
+
+## Practical Closure Plan
+
+The shortest route to an industrially credible portfolio is not to build every
+platform feature. It is to make one narrow path behave like production from end
+to end:
+
+```text
+authenticated user -> live source sync -> ACL snapshot -> parse/chunk/embed ->
+hybrid retrieval -> cited answer -> trace -> eval regression -> operator view
+```
+
+Priority order:
+
+| Priority | Build | Why it matters |
+| --- | --- | --- |
+| P0 | Keep current auth token boundary documented and tested, then finish the PR cleanly. | It closes the easiest reviewer objection: "is user_id just a spoofable field?" |
+| P1 | Add one real, production-shaped ingestion path with parser output contract and durable job state. | Industrial RAG starts at data quality, source freshness, and recoverable ingestion. |
+| P2 | Run one live Postgres/pgvector retrieval flow with RLS and denied-evidence counting. | This proves tenant/ACL logic is not only an in-memory fixture. |
+| P3 | Export traces to one external backend and convert one bad trace into a reviewed eval case. | This shows a real EvalOps loop, not just static tests. |
+| P4 | Add one governed write connector with dry-run, approval, idempotency, and audit. | This turns the agent from a local toy into a safe action system. |
+| P5 | Build a compact operator console for source health, traces, evals, approvals, and release gates. | Industrial users need to operate and debug the system without reading source files. |
 
 ### 3. Replace local-only job semantics with durable runtime
 

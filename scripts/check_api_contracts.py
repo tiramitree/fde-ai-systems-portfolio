@@ -27,12 +27,18 @@ class Check:
     detail: str
 
 
-def request_json(method: str, url: str, payload: dict | None = None) -> tuple[int, dict]:
+def request_json(
+    method: str,
+    url: str,
+    payload: dict | None = None,
+    headers: dict[str, str] | None = None,
+) -> tuple[int, dict]:
     data = json.dumps(payload or {}).encode("utf-8") if method == "POST" else None
+    request_headers = {"Content-Type": "application/json", **(headers or {})}
     request = urllib.request.Request(
         url,
         data=data,
-        headers={"Content-Type": "application/json"},
+        headers=request_headers,
         method=method,
     )
     try:
@@ -109,12 +115,12 @@ def start_service(service: dict) -> subprocess.Popen:
     )
 
 
-def get_json(url: str) -> tuple[int, dict]:
-    return request_json("GET", url)
+def get_json(url: str, headers: dict[str, str] | None = None) -> tuple[int, dict]:
+    return request_json("GET", url, headers=headers)
 
 
-def post_json(url: str, payload: dict) -> tuple[int, dict]:
-    return request_json("POST", url, payload)
+def post_json(url: str, payload: dict, headers: dict[str, str] | None = None) -> tuple[int, dict]:
+    return request_json("POST", url, payload, headers=headers)
 
 
 def has_keys(payload: dict, keys: set[str]) -> bool:
@@ -242,6 +248,54 @@ def project_1_contracts(base_url: str) -> list[Check]:
                 f"riley_groups={riley.get('group_ids')}; principals={riley.get('source_principals')}",
             )
         )
+
+    status, demo_token = post_json(f"{base_url}/api/auth/demo-token", {"user_id": "riley"})
+    riley_bearer = {"Authorization": f"Bearer {demo_token.get('token', '')}"}
+    checks.append(
+        check(
+            status == 200
+            and demo_token.get("token_type") == "Bearer"
+            and demo_token.get("auth_policy") == "local_signed_demo_token_v1"
+            and demo_token.get("auth_context", {}).get("user_id") == "riley"
+            and "engineering-oncall" in demo_token.get("auth_context", {}).get("group_ids", []),
+            "P1 local signed demo auth token contract",
+            f"status={status}; policy={demo_token.get('auth_policy')}; subject={demo_token.get('auth_context', {}).get('user_id')}",
+        )
+    )
+    status, token_documents = get_json(f"{base_url}/api/documents", headers=riley_bearer)
+    checks.append(
+        check(
+            status == 200
+            and any(doc.get("id") == "engineering-oncall-escalation-2026" for doc in token_documents.get("documents", [])),
+            "P1 bearer auth resolves document visibility",
+            f"status={status}; documents={len(token_documents.get('documents', []))}",
+        )
+    )
+    status, token_group_answer = post_json(
+        f"{base_url}/api/query",
+        {"question": "How quickly must Sev2 pages be acknowledged by the primary on-call engineer?"},
+        headers=riley_bearer,
+    )
+    checks.append(
+        check(
+            status == 200
+            and token_group_answer.get("abstain_reason") is None
+            and any(
+                citation.get("doc_id") == "engineering-oncall-escalation-2026"
+                for citation in token_group_answer.get("citations", [])
+            ),
+            "P1 bearer auth can query group-scoped evidence",
+            f"status={status}; trace={token_group_answer.get('trace_id')}; citations={len(token_group_answer.get('citations', []))}",
+        )
+    )
+    status, token_mismatch = get_json(f"{base_url}/api/documents?user_id=alice", headers=riley_bearer)
+    checks.append(
+        check(
+            status == 403 and "authenticated subject" in token_mismatch.get("error", ""),
+            "P1 bearer auth rejects user_id mismatch",
+            f"status={status}; error={token_mismatch.get('error')}",
+        )
+    )
 
     status, documents = get_json(f"{base_url}/api/documents?user_id=alice")
     checks.append(check(status == 200 and isinstance(documents.get("documents"), list), "P1 visible documents contract", f"documents={len(documents.get('documents', []))}"))

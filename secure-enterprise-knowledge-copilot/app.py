@@ -30,7 +30,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             parsed = urlparse(self.path)
             if parsed.path.startswith("/api/"):
-                self.send_json(API.get(parsed.path, API.parse_query(parsed.query)))
+                self.send_json(API.get(parsed.path, API.parse_query(parsed.query), self.headers))
             else:
                 self.serve_static(parsed.path)
         except ApiError as exc:
@@ -44,7 +44,7 @@ class Handler(BaseHTTPRequestHandler):
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length).decode("utf-8") if length else "{}"
             body = json.loads(raw or "{}")
-            self.send_json(API.post(parsed.path, body))
+            self.send_json(API.post(parsed.path, body, self.headers))
         except json.JSONDecodeError:
             self.send_json({"error": "Invalid JSON body"}, 400)
         except ApiError as exc:
