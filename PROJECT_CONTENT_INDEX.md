@@ -8,7 +8,7 @@ The repository contains three runnable FDE-style AI reference systems:
 
 1. `secure-enterprise-knowledge-copilot`
    - Demonstrates permission-aware enterprise RAG.
-   - Core behaviors: retrieval filtering, citations, abstention, prompt-injection detection, traces, audit logs, golden evals.
+   - Core behaviors: admin-only ingestion, retrieval filtering, citations, abstention, prompt-injection detection, traces, audit logs, golden evals.
    - Local URL: `http://127.0.0.1:8765`
 
 2. `regulated-customer-operations-agent`
@@ -203,6 +203,7 @@ Design Review Docs:
 - `docs/project_case_notes.md`: project impact notes and review framing.
 - `docs/technical_review_playbook.md`: difficult system-design questions and answers.
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
+- `docs/industrialization_gap_plan.md`: gap analysis between this portfolio and production-grade industrial AI systems, with an upgrade plan.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
 - `docs/opentelemetry_collector_handoff_troubleshooting.md`: optional collector handoff troubleshooting, endpoint boundaries, failure modes, rollback, and claim wording.

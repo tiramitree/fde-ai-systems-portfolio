@@ -23,6 +23,7 @@ PROJECTS = {
         },
         "post": {
             "/api/query",
+            "/api/documents/ingest",
             "/api/eval/run",
         },
         "fields": {
@@ -44,6 +45,9 @@ PROJECTS = {
             "write_policy",
             "record_count",
             "body is never returned",
+            "document_ingested",
+            "source_hash",
+            "chunk_count",
         },
     },
     "Regulated Customer Operations Agent": {

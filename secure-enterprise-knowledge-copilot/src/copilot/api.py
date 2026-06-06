@@ -4,6 +4,7 @@ from urllib.parse import parse_qs
 
 from .answering import generate_answer
 from .evals import latest_eval_run, run_evals
+from .ingestion import IngestionError, ingest_document
 from .storage import (
     connect,
     get_user,
@@ -53,6 +54,11 @@ class CopilotApi:
         with connect() as conn:
             if path == "/api/query":
                 return generate_answer(conn, body.get("user_id", ""), body.get("question", ""))
+            if path == "/api/documents/ingest":
+                try:
+                    return ingest_document(conn, body)
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
             if path == "/api/eval/run":
                 return run_evals(conn)
         raise ApiError(404, f"Unknown endpoint: {path}")

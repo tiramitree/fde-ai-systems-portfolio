@@ -35,6 +35,7 @@ Source:
 | GET | `/api/eval/latest` | Latest eval run record. |
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/query` | Permission-aware answer generation with citations or abstention. |
+| POST | `/api/documents/ingest` | Admin-only local ingestion of searchable text, Markdown, CSV, HTML, or JSON content into the permission-aware document store. |
 | POST | `/api/eval/run` | Run the project eval suite. |
 
 ### Query Response Shape
@@ -63,6 +64,39 @@ Security contract:
 - unsupported or inaccessible questions abstain
 - inaccessible document bodies are not returned in `/api/documents`
 - document body is never returned
+
+### Document Ingestion Response Shape
+
+`POST /api/documents/ingest` accepts an admin `user_id`, a `document` object, and optional `replace`.
+
+The document object supports:
+
+- `title`
+- `body` or `content`
+- `classification`
+- `allowed_roles`
+- `source_url`
+- `source_mime`
+- `version`
+- `updated_at`
+
+The route returns:
+
+- `document`
+- `chunk_count`
+- `ingestion.actor_user_id`
+- `ingestion.replace`
+- `ingestion.source_hash`
+- `ingestion.supported_mime_types`
+
+Ingestion contract:
+
+- only admin users can ingest documents
+- admins can ingest only into their own tenant
+- confidential documents cannot include the `employee` role
+- duplicate document IDs require `replace`
+- the raw document body is never returned
+- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, and role metadata
 
 ### Scenario Snapshot Shape
 

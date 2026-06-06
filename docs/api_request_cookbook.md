@@ -42,6 +42,24 @@ Ask Morgan the same question. Morgan should receive an answer with a citation to
 curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"morgan","question":"What is the finance retention plan?"}' | python -m json.tool
 ```
 
+Try ingesting a document as Alice. This should return `403` because ingestion is admin-only:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8765/api/documents/ingest -H "Content-Type: application/json" -d '{"user_id":"alice","document":{"title":"Travel Expense Policy 2026","body":"Employees must submit travel expense receipts within five business days after each approved trip.","classification":"internal","allowed_roles":["employee","manager","admin"],"source_url":"ingested://acme/travel-expense-policy-2026"}}' | python -m json.tool
+```
+
+Ingest the same local policy as admin `avery`:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8765/api/documents/ingest -H "Content-Type: application/json" -d '{"user_id":"avery","replace":true,"document":{"title":"Travel Expense Policy 2026","body":"Travel Expense Policy 2026\n\nEmployees must submit travel expense receipts within five business days after each approved trip. Expense reports must include the trip purpose, manager approval, and original receipt evidence.","classification":"internal","allowed_roles":["employee","manager","admin"],"source_url":"ingested://acme/travel-expense-policy-2026","source_mime":"text/markdown","version":"2026.06","updated_at":"2026-06-06"}}' | python -m json.tool
+```
+
+Ask Alice about the ingested document. The response should cite the generated `ingested-...` document ID:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"alice","question":"When must employees submit travel expense receipts?"}' | python -m json.tool
+```
+
 Useful fields to inspect:
 
 - `trace_id`
@@ -49,6 +67,7 @@ Useful fields to inspect:
 - `citations[].doc_id`
 - `permission_blocked_count`
 - `security_events`
+- `source_hash`
 
 ## Project 2: Governed Operations Agent
 

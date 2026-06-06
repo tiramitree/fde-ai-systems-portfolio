@@ -30,6 +30,15 @@ PROJECTS = [
             "userSelect",
             "userMeta",
             "documents",
+            "ingestionSummary",
+            "ingestTitle",
+            "ingestClassification",
+            "ingestRoles",
+            "ingestMime",
+            "ingestBody",
+            "ingestReplace",
+            "ingestDocument",
+            "ingestionStatus",
             "runEval",
             "evalOutput",
             "question",
@@ -336,6 +345,20 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     if "data-trace-id" not in renderers_text and "dataset: { traceId: trace.id }" not in renderers_text:
         failures.append(f"{project.name}: renderers.js missing trace id data marker")
 
+    if project.name == "secure-enterprise-knowledge-copilot":
+        ingestion_text = (js_dir / "ingestion.js").read_text(encoding="utf-8")
+        required_ingestion_markers = [
+            "export function installIngestionPanel",
+            "/api/documents/ingest",
+            "admin required",
+            "source_hash",
+            "onIngested",
+            "currentUser",
+        ]
+        for marker in required_ingestion_markers:
+            if marker not in ingestion_text and marker not in app_text:
+                failures.append(f"{project.name}: ingestion.js missing marker: {marker}")
+
     scenario_text = (js_dir / "scenarioEditor.js").read_text(encoding="utf-8")
     required_scenario_markers = [
         "export function installScenarioEditor",
@@ -409,6 +432,10 @@ def check_project(project: FrontendProject) -> list[str]:
     ]:
         if marker not in styles:
             failures.append(f"{project.name}: styles.css missing trace-copy style marker: {marker}")
+    if project.name == "secure-enterprise-knowledge-copilot":
+        for marker in [".ingestionBody", ".inlineCheck", ".ingestionGrid", ".ingestionWide"]:
+            if marker not in styles:
+                failures.append(f"{project.name}: styles.css missing ingestion style marker: {marker}")
     return failures
 
 

@@ -15,7 +15,7 @@ Most AI app demos stop at chat. Real enterprise deployments need permission boun
 
 | Project | What It Demonstrates | Local URL |
 | --- | --- | --- |
-| Secure Enterprise Knowledge Copilot | Permission-aware RAG, citations, abstention, prompt-injection handling, traces, audit logs, evals | `http://127.0.0.1:8765` |
+| Secure Enterprise Knowledge Copilot | Permission-aware RAG, admin-only document ingestion, citations, abstention, prompt-injection handling, traces, audit logs, evals | `http://127.0.0.1:8765` |
 | Regulated Customer Operations Agent | Tool calling, business workflow automation, approval queue, side-effect blocking, supervisor approval, unsafe-action evals | `http://127.0.0.1:8770` |
 | AI Reliability Incident Console | Canary release triage, eval regression evidence, rollout blocking, remediation plans, traces, audit logs | `http://127.0.0.1:8780` |
 
@@ -25,7 +25,7 @@ Read these with [Architecture Boundaries](docs/architecture_boundaries.md), [API
 
 | Project | Backend Boundary | Browser Boundary | Core Safety Controls | Fast Evidence |
 | --- | --- | --- | --- | --- |
-| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, and scenario drafts. | Permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py smoke` and inspect the Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |
+| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns ingestion, retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, and scenario drafts. | Admin-only ingestion, permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py contracts` and inspect the ingestion contract plus Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |
 | [Regulated Customer Operations Agent](regulated-customer-operations-agent/docs/architecture.md) | `regulated-customer-operations-agent/src/ops_agent` owns workflow routing, governed tools, storage, evals, and the opt-in model gateway. | `regulated-customer-operations-agent/web/js` keeps local ES modules for case investigation, approvals, trace links, theme, clipboard, and scenario drafts. | Side-effect tools require application approval, bypass attempts are refused, supervisor execution is auditable. | Run `python -B scripts/dev.py smoke` and inspect the Ivy `case-1001` approval path in the [Demo Path Map](#demo-path-map). |
 | [AI Reliability Incident Console](ai-reliability-incident-console/docs/architecture.md) | `ai-reliability-incident-console/src/reliability_console` owns release state, incident triage, eval evidence, storage, and audit records. | `ai-reliability-incident-console/web/js` keeps local ES modules for incident selection, triage rendering, trace links, theme, clipboard, and scenario drafts. | Failed eval evidence blocks unsafe rollout, remediation stays traceable, audit events link release decisions to incidents. | Run `python -B scripts/dev.py smoke` and inspect the unsafe canary release path in the [Demo Path Map](#demo-path-map). |
 
@@ -33,7 +33,7 @@ Risk badges:
 
 | Project | Control Badges | Primary Evidence |
 | --- | --- | --- |
-| Secure Enterprise Knowledge Copilot | `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
+| Secure Enterprise Knowledge Copilot | `admin ingestion` `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [API Contracts](docs/api_contracts.md), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
 | Regulated Customer Operations Agent | `tool governance` `approvals` `side-effect blocking` `supervisor review` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
 | AI Reliability Incident Console | `eval-regression evidence` `release blocking` `remediation planning` `incident triage` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
 
@@ -42,6 +42,7 @@ Risk badges:
 FDE and AI application systems need more than a model call. These reference implementations focus on the controls that usually separate production-oriented AI systems from chatbot demos:
 
 - permissions before model generation
+- admin-controlled document ingestion before retrieval
 - citations and abstention instead of unsupported answers
 - retrieved-content prompt-injection handling
 - tool permissions and approval gates
@@ -435,13 +436,13 @@ See [System Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full cla
 
 | Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
 | --- | --- | --- |
-| ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png)<br>Desktop: role-aware knowledge access, visible documents, eval gate, and trace/audit surfaces for permission-aware RAG. | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png)<br>Desktop: investigator workflow with case context, governed action buttons, eval gate, and approval-driven operations controls. | ![AI Reliability Incident Console screenshot](docs/assets/ai-reliability-incident-console-screenshot.png)<br>Desktop: release and incident triage workspace with eval evidence, rollout blocking, and audit/trace context. |
+| ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png)<br>Desktop: role-aware knowledge access, visible documents, admin ingestion, eval gate, and trace/audit surfaces for permission-aware RAG. | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png)<br>Desktop: investigator workflow with case context, governed action buttons, eval gate, and approval-driven operations controls. | ![AI Reliability Incident Console screenshot](docs/assets/ai-reliability-incident-console-screenshot.png)<br>Desktop: release and incident triage workspace with eval evidence, rollout blocking, and audit/trace context. |
 
 Mobile / narrow viewport captures are checked by the same visual asset manifest:
 
 | Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
 | --- | --- | --- |
-| ![Secure Enterprise Knowledge Copilot mobile screenshot](docs/assets/secure-knowledge-copilot-mobile.png)<br>Mobile: narrow layout keeps user context, visible documents, and permission-aware knowledge controls readable. | ![Regulated Customer Operations Agent mobile screenshot](docs/assets/regulated-ops-agent-mobile.png)<br>Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning. | ![AI Reliability Incident Console mobile screenshot](docs/assets/ai-reliability-incident-console-mobile.png)<br>Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence. |
+| ![Secure Enterprise Knowledge Copilot mobile screenshot](docs/assets/secure-knowledge-copilot-mobile.png)<br>Mobile: narrow layout keeps user context, admin source intake, and permission-aware knowledge controls readable. | ![Regulated Customer Operations Agent mobile screenshot](docs/assets/regulated-ops-agent-mobile.png)<br>Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning. | ![AI Reliability Incident Console mobile screenshot](docs/assets/ai-reliability-incident-console-mobile.png)<br>Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence. |
 
 Screenshot reviewer checklist:
 
@@ -468,11 +469,12 @@ Show:
 4. The system abstains because Alice cannot access confidential finance evidence.
 5. Morgan asks the same finance question.
 6. The system answers with `Finance Retention Plan 2026` citation.
-7. Run evals.
+7. Run `python -B scripts/dev.py contracts` to prove admin-only ingestion, non-admin refusal, audit evidence, and retrieval from an ingested document.
+8. Run evals.
 
 Core claim:
 
-> The model never receives evidence the user is not allowed to access.
+> Documents enter through an admin-controlled ingestion boundary, and the model never receives evidence the user is not allowed to access.
 
 ## Project 2: Regulated Customer Operations Agent
 
@@ -503,6 +505,7 @@ Core claim:
 ```text
 Reference Systems
   +-- Secure Enterprise Knowledge Copilot
+  |   +-- admin-only document ingestion
   |   +-- role-aware retrieval
   |   +-- citation answer shape
   |   +-- abstention logic

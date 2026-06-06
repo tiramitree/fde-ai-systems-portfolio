@@ -7,6 +7,7 @@ This MVP is intentionally dependency-free so it can run on any local Python 3.12
 ## What It Demonstrates
 
 - Role-aware retrieval across internal enterprise documents.
+- Admin-only ingestion of local text, Markdown, CSV, HTML, or JSON content.
 - Citation-required answers.
 - Abstention when accessible evidence is missing.
 - Prompt-injection detection inside retrieved documents.
@@ -62,11 +63,26 @@ Expected behaviors:
 Browser UI
   -> Python HTTP API
     -> JSON runtime state for users/documents/chunks/traces/audit/eval runs
+    -> ingestion.py: admin-only source normalization + chunk creation + audit event
     -> retrieval.py: tokenization + BM25-like scoring + role filter
     -> security.py: retrieved-content prompt-injection detection
     -> answering.py: grounded extractive answer + citations + abstention
     -> evals.py: golden regression suite
 ```
+
+## Admin Ingestion Contract
+
+`POST /api/documents/ingest` is the first production-data-plane step. It keeps the local-first demo simple while proving the control boundary for future connectors:
+
+- only admin users can ingest documents
+- admins can ingest only into their own tenant
+- confidential documents cannot include the `employee` role
+- duplicate document IDs require explicit `replace`
+- supported source types are text, Markdown, CSV, HTML, and JSON
+- ingested document bodies are not returned by `/api/documents`
+- every ingestion writes a `document_ingested` audit event with `source_hash`, `source_mime`, roles, and chunk count
+
+The API contract gate verifies admin ingestion, non-admin refusal, retrieval with citation from the ingested document, body hiding, and audit evidence.
 
 ## Deployment Positioning
 
@@ -86,7 +102,7 @@ Next iterations:
 1. Replace Python HTTP server with FastAPI.
 2. Replace JSON runtime state with PostgreSQL and pgvector.
 3. Replace local extractive answerer with OpenAI Responses API structured output.
-4. Add file upload and background ingestion queue.
+4. Extend the current admin ingestion contract into file upload, connector sync, and a background ingestion queue.
 5. Add OpenTelemetry trace export.
 6. Add Docker Compose with app, database, and worker.
 7. Add screenshot/demo video and deployment runbook.
