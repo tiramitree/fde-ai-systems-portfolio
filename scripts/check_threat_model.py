@@ -158,6 +158,7 @@ SOURCE_MARKERS = {
     "secure-enterprise-knowledge-copilot/src/copilot/answering.py": ["abstain_reason", "insert_trace", "insert_audit"],
     "secure-enterprise-knowledge-copilot/src/copilot/security.py": ["INJECTION_PATTERNS", "detect_prompt_injection"],
     "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py": ["Only admin users", "source_hash", "document_ingested", "source_sync_completed", "acl_role_drift"],
+    "secure-enterprise-knowledge-copilot/src/copilot/ingestion_jobs.py": ["idempotency_key", "dead_lettered", "ingestion_job_completed", "ingestion_job_dead_lettered"],
     "secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py": ["parse_source_content", "ParsedSource", "parser_name"],
     "regulated-customer-operations-agent/src/ops_agent/tools.py": [
         "direct_side_effect_blocked",

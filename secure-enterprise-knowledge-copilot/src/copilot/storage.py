@@ -24,6 +24,7 @@ def empty_state() -> dict:
         "traces": [],
         "audit_events": [],
         "eval_runs": [],
+        "ingestion_jobs": [],
     }
 
 

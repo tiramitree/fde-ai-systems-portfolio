@@ -15,7 +15,7 @@ Most AI app demos stop at chat. Real enterprise deployments need permission boun
 
 | Project | What It Demonstrates | Local URL |
 | --- | --- | --- |
-| Secure Enterprise Knowledge Copilot | Permission-aware RAG, admin-only document ingestion and source sync, citations, abstention, prompt-injection handling, traces, audit logs, evals | `http://127.0.0.1:8765` |
+| Secure Enterprise Knowledge Copilot | Permission-aware RAG, admin-only document ingestion, source sync, ingestion job ledger, citations, abstention, prompt-injection handling, traces, audit logs, evals | `http://127.0.0.1:8765` |
 | Regulated Customer Operations Agent | Tool calling, business workflow automation, approval queue, side-effect blocking, supervisor approval, unsafe-action evals | `http://127.0.0.1:8770` |
 | AI Reliability Incident Console | Canary release triage, eval regression evidence, rollout blocking, remediation plans, traces, audit logs | `http://127.0.0.1:8780` |
 
@@ -25,7 +25,7 @@ Read these with [Architecture Boundaries](docs/architecture_boundaries.md), [API
 
 | Project | Backend Boundary | Browser Boundary | Core Safety Controls | Fast Evidence |
 | --- | --- | --- | --- | --- |
-| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns ingestion, source sync, retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, and scenario drafts. | Admin-only ingestion and source sync, permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py contracts` and inspect the ingestion/source-sync contract plus Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |
+| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns ingestion, source sync, ingestion jobs, retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, and scenario drafts. | Admin-only ingestion, source sync, job idempotency/dead-letter evidence, permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py contracts` and inspect the ingestion/source-sync/job contract plus Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |
 | [Regulated Customer Operations Agent](regulated-customer-operations-agent/docs/architecture.md) | `regulated-customer-operations-agent/src/ops_agent` owns workflow routing, governed tools, storage, evals, and the opt-in model gateway. | `regulated-customer-operations-agent/web/js` keeps local ES modules for case investigation, approvals, trace links, theme, clipboard, and scenario drafts. | Side-effect tools require application approval, bypass attempts are refused, supervisor execution is auditable. | Run `python -B scripts/dev.py smoke` and inspect the Ivy `case-1001` approval path in the [Demo Path Map](#demo-path-map). |
 | [AI Reliability Incident Console](ai-reliability-incident-console/docs/architecture.md) | `ai-reliability-incident-console/src/reliability_console` owns release state, incident triage, eval evidence, storage, and audit records. | `ai-reliability-incident-console/web/js` keeps local ES modules for incident selection, triage rendering, trace links, theme, clipboard, and scenario drafts. | Failed eval evidence blocks unsafe rollout, remediation stays traceable, audit events link release decisions to incidents. | Run `python -B scripts/dev.py smoke` and inspect the unsafe canary release path in the [Demo Path Map](#demo-path-map). |
 
@@ -33,7 +33,7 @@ Risk badges:
 
 | Project | Control Badges | Primary Evidence |
 | --- | --- | --- |
-| Secure Enterprise Knowledge Copilot | `admin ingestion` `source sync` `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [API Contracts](docs/api_contracts.md), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
+| Secure Enterprise Knowledge Copilot | `admin ingestion` `source sync` `ingestion jobs` `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [API Contracts](docs/api_contracts.md), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
 | Regulated Customer Operations Agent | `tool governance` `approvals` `side-effect blocking` `supervisor review` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
 | AI Reliability Incident Console | `eval-regression evidence` `release blocking` `remediation planning` `incident triage` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
 
@@ -42,7 +42,7 @@ Risk badges:
 FDE and AI application systems need more than a model call. These reference implementations focus on the controls that usually separate production-oriented AI systems from chatbot demos:
 
 - permissions before model generation
-- admin-controlled document ingestion and source sync before retrieval
+- admin-controlled document ingestion, source sync, and ingestion job handling before retrieval
 - citations and abstention instead of unsupported answers
 - retrieved-content prompt-injection handling
 - tool permissions and approval gates
@@ -473,12 +473,12 @@ Show:
 4. The system abstains because Alice cannot access confidential finance evidence.
 5. Morgan asks the same finance question.
 6. The system answers with `Finance Retention Plan 2026` citation.
-7. Run `python -B scripts/dev.py contracts` to prove admin-only ingestion/source sync, non-admin refusal, audit evidence, and retrieval from ingested and synced documents.
+7. Run `python -B scripts/dev.py contracts` to prove admin-only ingestion/source sync/jobs, non-admin refusal, job idempotency/dead-letter evidence, audit evidence, and retrieval from ingested and synced documents.
 8. Run evals.
 
 Core claim:
 
-> Documents enter through admin-controlled ingestion and source sync boundaries, and the model never receives evidence the user is not allowed to access.
+> Documents enter through admin-controlled ingestion, source sync, and ingestion job boundaries, and the model never receives evidence the user is not allowed to access.
 
 ## Project 2: Regulated Customer Operations Agent
 

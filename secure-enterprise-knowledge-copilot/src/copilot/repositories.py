@@ -31,6 +31,10 @@ class KnowledgeRepository(Protocol):
     def get_document(self, doc_id: str) -> dict | None: ...
     def document_exists(self, doc_id: str) -> bool: ...
     def replace_document_with_chunks(self, document: dict, chunks: list[dict]) -> bool: ...
+    def get_ingestion_job(self, job_id: str) -> dict | None: ...
+    def get_ingestion_job_by_key(self, idempotency_key: str) -> dict | None: ...
+    def record_ingestion_job(self, job: dict) -> None: ...
+    def list_ingestion_jobs(self, limit: int = 25) -> list[dict]: ...
     def insert_trace(self, trace_id: str, user_id: str, question: str, payload: dict) -> None: ...
     def insert_audit(self, user_id: str, action: str, details: dict) -> None: ...
     def list_traces(self, limit: int = 25) -> list[dict]: ...
@@ -114,6 +118,37 @@ class JsonKnowledgeRepository:
         self.store.state["documents"].append(document)
         self.store.state["chunks"].extend(chunks)
         return replaced
+
+    def get_ingestion_job(self, job_id: str) -> dict | None:
+        return next(
+            (job for job in self.store.state.setdefault("ingestion_jobs", []) if job.get("id") == job_id),
+            None,
+        )
+
+    def get_ingestion_job_by_key(self, idempotency_key: str) -> dict | None:
+        if not idempotency_key:
+            return None
+        return next(
+            (
+                job
+                for job in self.store.state.setdefault("ingestion_jobs", [])
+                if job.get("idempotency_key") == idempotency_key
+            ),
+            None,
+        )
+
+    def record_ingestion_job(self, job: dict) -> None:
+        jobs = self.store.state.setdefault("ingestion_jobs", [])
+        jobs[:] = [existing for existing in jobs if existing.get("id") != job.get("id")]
+        jobs.append(job)
+
+    def list_ingestion_jobs(self, limit: int = 25) -> list[dict]:
+        jobs = sorted(
+            self.store.state.setdefault("ingestion_jobs", []),
+            key=lambda item: item.get("updated_at", item.get("created_at", "")),
+            reverse=True,
+        )
+        return jobs[:limit]
 
     def insert_trace(self, trace_id: str, user_id: str, question: str, payload: dict) -> None:
         self.store.state["traces"].append(

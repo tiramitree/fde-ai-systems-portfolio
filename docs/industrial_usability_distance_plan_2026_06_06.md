@@ -43,7 +43,7 @@ production-minded reference implementation
 | --- | --- | --- |
 | 数据面 | Project 1 有 seed data、admin ingestion、source span、local embedding boundary、SQL candidate、reranker boundary。 | 文件/connector ingestion、parser worker、OCR/table、incremental sync、生产 embedding/reranker、live pgvector/search 验证、大 corpus eval。 |
 | 身份权限面 | 应用层有 permission-before-generation、demo 用户/角色、connector ACL snapshot、permission drift evidence。 | SSO、tenant/user/group、真实 source ACL sync、Postgres RLS live tests、permission drift detection。 |
-| 运行时 | local JSON 是默认，Postgres 路径是 opt-in/部分验证。 | connection pool、migrations live proof、queue、retry、transactional outbox、crash recovery、backup/restore。 |
+| 运行时 | local JSON 是默认，Postgres 路径是 opt-in/部分验证；已有本地 ingestion job ledger、idempotency、dead-letter、retry parent 证据。 | connection pool、migrations live proof、真实 queue、scheduled retry、transactional outbox、crash recovery、backup/restore。 |
 | Agent 工具面 | Project 2 有 approval gate 和 side-effect blocking。 | 真实 tool registry、scoped credentials、dry-run preview、approval owner/expiry/escalation、idempotent execution、connector outage handling。 |
 | 观测面 | 本地 trace/audit 和 OTLP JSON handoff 已经有形状。 | OpenTelemetry SDK spans、Phoenix/Langfuse/OpenAI traces、dashboard、sampling、cost/latency/token/error metrics、PII redaction before export。 |
 | EvalOps | golden eval 和本地 trace-to-eval candidate workflow 正在补齐。 | human labeling、review disposition、dataset versioning、nightly regression、trace grading、model/prompt/retrieval comparison。 |
@@ -102,7 +102,7 @@ I built the production invariants first: permission before generation, grounded 
 | 真实 ingestion | 主要是 seed data 和本地/admin ingestion。 | 文件上传、source connector、parser worker、OCR/table、incremental sync、backfill、失败恢复。 |
 | 检索质量 | 有 deterministic scoring、embedding boundary、SQL candidate、reranker boundary，但语料小。 | 生产 embedding/reranker、hybrid retrieval、recall@k、MRR/nDCG、citation faithfulness、stale-source eval。 |
 | 权限身份 | UI 选择 fictional users/roles，但 source sync 已能接受 ACL snapshot 并验证 permission drift。 | SSO、tenant、group、RBAC/ABAC、真实 source ACL sync、RLS、permission drift detection。 |
-| 持久运行时 | local JSON 默认，Postgres path 还在推进。 | connection pool、migration、queue、retry、idempotency、outbox、crash recovery。 |
+| 持久运行时 | local JSON 默认，Postgres path 还在推进；本地 ingestion job contract 已覆盖 idempotency、dead-letter 和 retry parent。 | connection pool、migration、真实 queue、scheduled retry、outbox、crash recovery。 |
 | Agent connector | 工具是本地 deterministic function。 | 真实 tool registry、scoped credential、dry-run preview、approval owner/expiry、idempotent execution。 |
 | 观测 | 本地 trace 和 OTLP-like export。 | OTel SDK、Phoenix/Langfuse/OpenAI traces、dashboard、cost/latency/error metrics、trace sampling。 |
 | eval ops | 静态 golden cases。 | trace-to-eval、human label、nightly regression、prompt/model comparison、failure clustering。 |

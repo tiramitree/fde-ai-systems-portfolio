@@ -3,7 +3,7 @@
 ## Assets
 
 - Confidential documents.
-- Ingested and synced document sources, source hashes, connector names, external IDs, ACL source metadata, ACL snapshot versions, source permission IDs, permission drift evidence, and sync cursors.
+- Ingested and synced document sources, source hashes, connector names, external IDs, ACL source metadata, ACL snapshot versions, source permission IDs, permission drift evidence, sync cursors, ingestion job IDs, idempotency keys, retry parent links, and dead-letter evidence.
 - User identity and role.
 - Retrieved evidence.
 - Model prompts and outputs.
@@ -21,12 +21,12 @@
 ## Current Controls
 
 - Tenant and role filter before retrieval scoring and answer assembly.
-- Admin-only ingestion and source sync with tenant, classification, role, duplicate, parser metadata, source hash, connector metadata, ACL source, ACL snapshot fail-closed validation, source permission ID, permission drift, sync cursor, and chunk-count validation.
+- Admin-only ingestion, source sync, and ingestion jobs with tenant, classification, role, duplicate, parser metadata, source hash, connector metadata, ACL source, ACL snapshot fail-closed validation, source permission ID, permission drift, sync cursor, job idempotency, sanitized input summary, retry parent, dead-letter, and chunk-count validation.
 - Forbidden citation checks in evals.
 - Prompt injection pattern detection in retrieved content.
 - Abstention when no accessible evidence clears the threshold.
 - Trace IDs for debugging retrieval score breakdowns and answer behavior.
-- Audit events for ingestion parser warnings, source sync completion, permission drift, query, citation, abstention, and security-event counts.
+- Audit events for ingestion parser warnings, source sync completion, ingestion job completion, ingestion job dead-letter, permission drift, query, citation, abstention, and security-event counts.
 
 ## Production Controls To Add
 

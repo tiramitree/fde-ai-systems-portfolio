@@ -32,11 +32,13 @@ Source:
 | GET | `/api/documents?user_id=alice` | Visible document metadata for the requester. Document `body` is never returned. |
 | GET | `/api/traces?limit=25` | Recent trace records. |
 | GET | `/api/audit?limit=50` | Recent audit events. |
+| GET | `/api/ingestion/jobs?user_id=avery&limit=25` | Admin-only ingestion job ledger with sanitized input summaries, status, retry links, and dead-letter evidence. |
 | GET | `/api/eval/latest` | Latest eval run record. |
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/query` | Permission-aware answer generation with citations or abstention. |
 | POST | `/api/documents/ingest` | Admin-only local ingestion of searchable text, Markdown, CSV, HTML, or JSON content into the permission-aware document store. |
 | POST | `/api/sources/sync` | Admin-only connector-style batch source sync with external IDs, sync cursor, optional source ACL snapshot, permission drift evidence, parser normalization, chunking, and audit evidence. |
+| POST | `/api/ingestion/jobs` | Admin-only local ingestion worker contract for source sync jobs with idempotency, inline execution, retry parent links, completion audit, and dead-letter audit. |
 | POST | `/api/eval/run` | Run the project eval suite. |
 
 ### Query Response Shape
@@ -190,6 +192,42 @@ Source sync contract:
 - resyncs compare previous and current roles and return `acl_role_drift` plus batch `acl_drift_count` / `acl_drift_doc_ids`
 - sync writes `document_ingested` events for each document and a `source_sync_completed` audit event for the batch, including permission drift evidence
 - this route is a connector contract and sample data-plane demonstration; real external connectors, background queues, retries, and malware scanning remain production upgrade work
+
+### Ingestion Job Response Shape
+
+`POST /api/ingestion/jobs` accepts:
+
+- admin `user_id`
+- `type`, currently `source_sync`
+- required `idempotency_key`
+- optional `retry_of_job_id`
+- `payload`, which is the source sync request body
+
+The local worker executes inline so the repository stays dependency-free, but it records production-style job lifecycle evidence:
+
+- `job.id`
+- `job.type`
+- `job.status`: `queued`, `running`, `succeeded`, or `dead_lettered`
+- `job.idempotency_key`
+- `job.retry_of_job_id`
+- `job.attempts`
+- `job.payload_sha256`
+- `job.input`
+- `job.input.documents[].body_sha256`
+- `job.result`
+- `job.error`
+- `idempotency_replayed`
+- optional `result` when the source sync succeeds
+
+Ingestion job contract:
+
+- only admin users can submit or list ingestion jobs
+- repeated `idempotency_key` values return the existing job with `idempotency_replayed` instead of executing the source sync again
+- job input summaries include document IDs, titles, classifications, source MIME types, body character counts, and `body_sha256`, but never raw document bodies
+- source sync validation failures become `dead_lettered` jobs with a sanitized error object instead of silently losing the failed work
+- retry jobs must reference a previous `dead_lettered` job through `retry_of_job_id`; the retry supplies a fresh payload and idempotency key
+- successful jobs write `ingestion_job_completed` audit events
+- failed worker validation writes `ingestion_job_dead_lettered` audit events
 
 ### Scenario Snapshot Shape
 
