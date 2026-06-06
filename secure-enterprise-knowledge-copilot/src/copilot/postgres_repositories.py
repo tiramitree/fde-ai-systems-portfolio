@@ -405,6 +405,10 @@ class PostgresKnowledgeRepository:
                         "parser_name": document.get("parser_name"),
                         "parser_metadata": document.get("parser_metadata", {}),
                         "parser_warnings": document.get("parser_warnings", []),
+                        "source_connector": document.get("source_connector", "manual"),
+                        "external_id": document.get("external_id", document["id"]),
+                        "acl_source": document.get("acl_source", "manual"),
+                        "sync_cursor": document.get("sync_cursor", ""),
                     }
                 ),
             ),
@@ -418,6 +422,10 @@ class PostgresKnowledgeRepository:
                 "parser_name": chunk.get("parser_name"),
                 "parser_metadata": chunk.get("parser_metadata", {}),
                 "parser_warnings": chunk.get("parser_warnings", []),
+                "source_connector": chunk.get("source_connector", "manual"),
+                "external_id": chunk.get("external_id", chunk["doc_id"]),
+                "acl_source": chunk.get("acl_source", "manual"),
+                "sync_cursor": chunk.get("sync_cursor", ""),
                 "source_span": chunk.get("source_span", {}),
                 "chunk_source_span_unit": chunk.get("chunk_source_span_unit"),
                 "embedding_model": chunk.get("embedding_model"),
@@ -662,6 +670,10 @@ class PostgresKnowledgeRepository:
             "parser_name": metadata.get("parser_name") if isinstance(metadata, dict) else None,
             "parser_metadata": metadata.get("parser_metadata", {}) if isinstance(metadata, dict) else {},
             "parser_warnings": metadata.get("parser_warnings", []) if isinstance(metadata, dict) else [],
+            "source_connector": metadata.get("source_connector", "manual") if isinstance(metadata, dict) else "manual",
+            "external_id": metadata.get("external_id", row[1]) if isinstance(metadata, dict) else row[1],
+            "acl_source": metadata.get("acl_source", "manual") if isinstance(metadata, dict) else "manual",
+            "sync_cursor": metadata.get("sync_cursor", "") if isinstance(metadata, dict) else "",
         }
 
     def _row_to_chunk(self, row: Any) -> dict:
@@ -685,6 +697,10 @@ class PostgresKnowledgeRepository:
             "parser_name": metadata.get("parser_name") if isinstance(metadata, dict) else None,
             "parser_metadata": metadata.get("parser_metadata", {}) if isinstance(metadata, dict) else {},
             "parser_warnings": metadata.get("parser_warnings", []) if isinstance(metadata, dict) else [],
+            "source_connector": metadata.get("source_connector", "manual") if isinstance(metadata, dict) else "manual",
+            "external_id": metadata.get("external_id", row[2]) if isinstance(metadata, dict) else row[2],
+            "acl_source": metadata.get("acl_source", "manual") if isinstance(metadata, dict) else "manual",
+            "sync_cursor": metadata.get("sync_cursor", "") if isinstance(metadata, dict) else "",
             "source_span": metadata.get("source_span", {}) if isinstance(metadata, dict) else {},
             "chunk_source_span_unit": metadata.get("chunk_source_span_unit") if isinstance(metadata, dict) else None,
             "embedding_model": metadata.get("embedding_model") if isinstance(metadata, dict) else None,

@@ -23,15 +23,15 @@
         1400,
         900
       ],
-      "sha256": "dcb1119f454c9101099a0a59b6ead71fa839cc69caf647cbbdef4bc1f37f7af2",
+      "sha256": "52d4f10adc281167fc390161653d7ae6f109e232961235e7842b44f37f75d8ea",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "0800c1c2ceb4c77254110b9f7425b6ed4c1f1bb203b65ba855b4556d7fda685f"
+          "sha256": "3350a2ddaf376761e7e197dd65c1e759206e6a6e599559647fe5aace4d2e799f"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "70f9d30d4ecbc5a117a9823ef464b352157196a08a77a91c9e40baea2ecb5ab4"
+          "sha256": "dc637497c5720f1bd9ea6e01fb83f89be8ec92738e0a4fd17f0ee4fc6eb63d60"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -39,7 +39,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "840e30981c3e3ae685b446af4ac7cbbcafbe14152b80c7d2e016ceaffcdb023d"
+          "sha256": "2d566d1a4bbde48a76e5b4798ba83d52ec2ba7f5bb85ca06d4a2242a11d5f078"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -51,7 +51,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
-          "sha256": "858a20940c65163a5a1a4ddec302c1c54e0bff6cb400f505e24b8eac7765d384"
+          "sha256": "5370940a3c219783825cfca6fbed6666382d5339619bdaa7ca43afc9c19bc330"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
@@ -125,11 +125,11 @@
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "0800c1c2ceb4c77254110b9f7425b6ed4c1f1bb203b65ba855b4556d7fda685f"
+          "sha256": "3350a2ddaf376761e7e197dd65c1e759206e6a6e599559647fe5aace4d2e799f"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "70f9d30d4ecbc5a117a9823ef464b352157196a08a77a91c9e40baea2ecb5ab4"
+          "sha256": "dc637497c5720f1bd9ea6e01fb83f89be8ec92738e0a4fd17f0ee4fc6eb63d60"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -137,7 +137,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "840e30981c3e3ae685b446af4ac7cbbcafbe14152b80c7d2e016ceaffcdb023d"
+          "sha256": "2d566d1a4bbde48a76e5b4798ba83d52ec2ba7f5bb85ca06d4a2242a11d5f078"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -149,7 +149,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
-          "sha256": "858a20940c65163a5a1a4ddec302c1c54e0bff6cb400f505e24b8eac7765d384"
+          "sha256": "5370940a3c219783825cfca6fbed6666382d5339619bdaa7ca43afc9c19bc330"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",

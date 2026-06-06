@@ -4,7 +4,7 @@ from urllib.parse import parse_qs
 
 from .answering import generate_answer
 from .evals import latest_eval_run, run_evals
-from .ingestion import IngestionError, ingest_document
+from .ingestion import IngestionError, ingest_document, sync_source_batch
 from .repositories import connect_repository
 
 
@@ -49,6 +49,11 @@ class CopilotApi:
             if path == "/api/documents/ingest":
                 try:
                     return ingest_document(repo, body)
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
+            if path == "/api/sources/sync":
+                try:
+                    return sync_source_batch(repo, body)
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc
             if path == "/api/eval/run":

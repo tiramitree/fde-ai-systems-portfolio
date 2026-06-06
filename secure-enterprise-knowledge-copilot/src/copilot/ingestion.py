@@ -13,6 +13,7 @@ from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source
 VALID_CLASSIFICATIONS = {"public", "internal", "confidential"}
 VALID_ROLES = {"employee", "manager", "admin"}
 SLUG_RE = re.compile(r"[^a-z0-9]+")
+MAX_SYNC_DOCUMENTS = 10
 
 
 class IngestionError(Exception):
@@ -67,6 +68,13 @@ def _public_document(doc: dict) -> dict:
     return {key: value for key, value in doc.items() if key != "body"}
 
 
+def _metadata_string(document: dict, key: str, default: str, *, max_length: int = 180) -> str:
+    value = str(document.get(key) or default).strip()
+    if not value:
+        value = default
+    return value[:max_length]
+
+
 def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     actor_id = _as_string(payload.get("user_id"), "user_id", max_length=80)
     actor = repo.get_user(actor_id)
@@ -109,6 +117,10 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     source_hash = hashlib.sha256(raw_body.encode("utf-8")).hexdigest()
     doc_id = str(document.get("id") or _document_id(tenant_id, title, source_url, source_hash)).strip()
     replace = bool(payload.get("replace") or document.get("replace"))
+    source_connector = _metadata_string(document, "source_connector", "manual")
+    external_id = _metadata_string(document, "external_id", doc_id, max_length=240)
+    acl_source = _metadata_string(document, "acl_source", "manual")
+    sync_cursor = _metadata_string(document, "sync_cursor", "", max_length=240)
 
     exists = repo.document_exists(doc_id)
     if exists and not replace:
@@ -128,6 +140,10 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         "parser_name": parsed_source.parser_name,
         "parser_metadata": parsed_source.metadata,
         "parser_warnings": list(parsed_source.warnings),
+        "source_connector": source_connector,
+        "external_id": external_id,
+        "acl_source": acl_source,
+        "sync_cursor": sync_cursor,
         "body": body,
     }
 
@@ -153,6 +169,10 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "parser_name": parsed_source.parser_name,
                 "parser_metadata": parsed_source.metadata,
                 "parser_warnings": list(parsed_source.warnings),
+                "source_connector": source_connector,
+                "external_id": external_id,
+                "acl_source": acl_source,
+                "sync_cursor": sync_cursor,
                 "embedding": embedding.vector,
                 "chunk_source_span_unit": SOURCE_SPAN_UNIT,
                 **embedding.metadata(),
@@ -174,6 +194,10 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "source_hash": source_hash,
             "parser_name": parsed_source.parser_name,
             "parser_warnings": list(parsed_source.warnings),
+            "source_connector": source_connector,
+            "external_id": external_id,
+            "acl_source": acl_source,
+            "sync_cursor": sync_cursor,
             "normalized_characters": parsed_source.normalized_characters,
             "chunk_source_span_unit": SOURCE_SPAN_UNIT,
             "chunk_source_span_count": len(chunks),
@@ -190,6 +214,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         "ingestion": {
             "actor_user_id": actor_id,
             "replace": replace,
+            "replaced_existing": replaced_existing,
             "source_hash": source_hash,
             "supported_mime_types": sorted(SUPPORTED_MIME_TYPES),
             "parser": {
@@ -197,6 +222,12 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "normalized_characters": parsed_source.normalized_characters,
                 "metadata": parsed_source.metadata,
                 "warnings": list(parsed_source.warnings),
+            },
+            "source": {
+                "connector": source_connector,
+                "external_id": external_id,
+                "acl_source": acl_source,
+                "sync_cursor": sync_cursor,
             },
             "chunk_source_span_unit": SOURCE_SPAN_UNIT,
             "chunk_source_span_count": len(chunks),
@@ -206,4 +237,93 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "chunk_embedding_count": len(chunks),
             },
         },
+    }
+
+
+def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
+    actor_id = _as_string(payload.get("user_id"), "user_id", max_length=80)
+    actor = repo.get_user(actor_id)
+    if not actor:
+        raise IngestionError(404, f"Unknown user_id: {actor_id}")
+    if actor["role"] != "admin":
+        raise IngestionError(403, "Only admin users can sync sources.")
+
+    connector = payload.get("connector", {})
+    if not isinstance(connector, dict):
+        raise IngestionError(400, "connector must be an object")
+    connector_name = _as_string(connector.get("name"), "connector.name", max_length=80)
+    connector_cursor = _as_string(connector.get("cursor") or _utc_date(), "connector.cursor", max_length=240)
+    acl_source = _as_string(connector.get("acl_source") or connector_name, "connector.acl_source", max_length=180)
+    connector_scheme = _slug(connector_name) or "connector"
+
+    documents = payload.get("documents")
+    if not isinstance(documents, list) or not documents:
+        raise IngestionError(400, "documents must be a non-empty list")
+    if len(documents) > MAX_SYNC_DOCUMENTS:
+        raise IngestionError(413, f"source sync accepts at most {MAX_SYNC_DOCUMENTS} documents")
+
+    replace = bool(payload.get("replace", True))
+    ingested = []
+    parser_warnings: list[str] = []
+    replaced_count = 0
+    chunk_count = 0
+
+    for index, item in enumerate(documents, start=1):
+        if not isinstance(item, dict):
+            raise IngestionError(400, "each synced document must be an object")
+        external_id = _metadata_string(item, "external_id", str(item.get("id") or f"source-{index}"), max_length=240)
+        source_url = str(
+            item.get("source_url")
+            or f"{connector_scheme}://{actor['tenant_id']}/{_slug(external_id)}"
+        ).strip()
+        document = {
+            **item,
+            "tenant_id": actor["tenant_id"],
+            "source_url": source_url,
+            "source_connector": connector_name,
+            "external_id": external_id,
+            "acl_source": acl_source,
+            "sync_cursor": connector_cursor,
+            "version": str(item.get("version") or connector_cursor or _utc_date()),
+        }
+        result = ingest_document(
+            repo,
+            {
+                "user_id": actor_id,
+                "replace": replace,
+                "document": document,
+            },
+        )
+        ingested.append(result["document"])
+        replaced_count += 1 if result["ingestion"].get("replaced_existing") else 0
+        chunk_count += int(result.get("chunk_count", 0))
+        parser_warnings.extend(result["ingestion"]["parser"].get("warnings", []))
+
+    repo.insert_audit(
+        actor_id,
+        "source_sync_completed",
+        {
+            "connector": connector_name,
+            "cursor": connector_cursor,
+            "acl_source": acl_source,
+            "document_count": len(ingested),
+            "chunk_count": chunk_count,
+            "replaced_count": replaced_count,
+            "doc_ids": [item["id"] for item in ingested],
+            "parser_warnings": sorted(set(parser_warnings)),
+        },
+    )
+
+    return {
+        "sync": {
+            "actor_user_id": actor_id,
+            "connector": connector_name,
+            "cursor": connector_cursor,
+            "acl_source": acl_source,
+            "document_count": len(ingested),
+            "chunk_count": chunk_count,
+            "replaced_count": replaced_count,
+            "parser_warnings": sorted(set(parser_warnings)),
+        },
+        "documents": ingested,
     }
