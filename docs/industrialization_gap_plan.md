@@ -117,7 +117,8 @@ Add auth middleware, tenant context, policy engine, row-level security, and perm
 Current state:
 
 - Local JSON/runtime state is enough for demos.
-- No production DB, migrations, queues, recovery, or long-running workflow engine.
+- No production DB adapter, queues, recovery, or long-running workflow engine.
+- A first PostgreSQL/pgvector migration artifact now exists at `infra/postgres/migrations/001_core.sql` and is guarded by `python -B scripts/dev.py postgres-migrations`.
 
 Industrial requirement:
 

@@ -318,10 +318,17 @@ Do not assume vector recall is acceptable because the query is fast. The retriev
 
 Use versioned migrations with a tool such as Alembic, Flyway, or Sqitch.
 
+This repository now includes the first reviewable production-path migration artifact:
+
+- `infra/postgres/migrations/001_core.sql`
+- `python -B scripts/dev.py postgres-migrations`
+
+The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, and idempotent tool-action keys. It does not make PostgreSQL required for the default local demo.
+
 Migration phases:
 
-1. Create extensions, tables, indexes, and policies.
-2. Backfill tenants, users, documents, chunks, cases, approvals, audit events, and traces.
+1. Review and run `001_core.sql` in a PostgreSQL/pgvector environment.
+2. Backfill tenants, users, documents, chunks, cases, approvals, audit events, traces, and eval records.
 3. Dual-write local and PostgreSQL adapters in a staging environment.
 4. Compare read results and eval outcomes across both adapters.
 5. Cut reads to PostgreSQL behind a feature flag.
