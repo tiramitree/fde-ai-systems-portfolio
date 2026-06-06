@@ -64,6 +64,7 @@ The MVP uses:
 - JSON runtime state
 - Static HTML/CSS/JS frontend
 - BM25-like keyword retrieval with synonym expansion
+- Local hybrid retrieval profile with lexical, title, phrase, and semantic-family score breakdowns
 - Tenant and role filtering before evidence assembly
 - Deterministic extractive answer assembly
 - Citation-required answer shape
@@ -83,6 +84,7 @@ Still missing before calling the full FDE objective complete:
 - Next.js or production frontend
 - PostgreSQL + pgvector
 - Real embedding model and reranker
+- pgvector-backed hybrid retrieval and production reranking
 - File upload, PDF/DOCX/OCR support, and connector-backed document parser pipeline
 - Background ingestion worker
 - OpenAI Responses API structured output

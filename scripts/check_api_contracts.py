@@ -364,6 +364,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
         "model_provider",
         "openai_gateway_enabled",
         "retrieved",
+        "retrieval_profile",
         "permission_blocked_count",
         "latency_ms",
     }
@@ -377,11 +378,28 @@ def project_1_contracts(base_url: str) -> list[Check]:
             "missing_evidence": list,
             "security_events": list,
             "retrieved": list,
+            "retrieval_profile": dict,
             "permission_blocked_count": int,
             "latency_ms": (int, float),
         },
     )
     checks.append(check(status == 200 and has_keys(query, query_keys) and ok, "P1 query response contract", detail))
+    retrieved = query.get("retrieved", [])
+    profile = query.get("retrieval_profile", {})
+    checks.append(
+        check(
+            isinstance(profile, dict)
+            and profile.get("name") == "local-hybrid-v1"
+            and "bm25_like" in profile.get("score_components", [])
+            and profile.get("permission_filter") == "tenant_role_before_scoring"
+            and isinstance(retrieved, list)
+            and bool(retrieved)
+            and isinstance(retrieved[0].get("score_breakdown"), dict)
+            and "semantic" in retrieved[0]["score_breakdown"],
+            "P1 retrieval profile and score-breakdown contract",
+            f"profile={profile.get('name')}; top_doc={retrieved[0].get('doc_id') if retrieved else None}",
+        )
+    )
 
     status, blocked = post_json(
         f"{base_url}/api/query",

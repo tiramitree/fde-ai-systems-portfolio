@@ -10,9 +10,10 @@ THREAT_MODEL = ROOT / "docs" / "threat_model.md"
 
 THREATS = {
     "T01": {
-        "phrases": ["Unauthorized document disclosure", "tenant and role", "before answer generation"],
+        "phrases": ["Unauthorized document disclosure", "tenant and role", "before retrieval scoring"],
         "files": [
             "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py",
             "secure-enterprise-knowledge-copilot/src/copilot/answering.py",
             "secure-enterprise-knowledge-copilot/data/eval_cases.json",
             "scripts/check_observability_integrity.py",
@@ -29,9 +30,10 @@ THREATS = {
         "commands": ["evals", "smoke", "observability"],
     },
     "T03": {
-        "phrases": ["Unsupported or fabricated answers", "abstains", "citation requirements"],
+        "phrases": ["Unsupported or fabricated answers", "abstains", "citation requirements", "retrieval evals"],
         "files": [
             "secure-enterprise-knowledge-copilot/src/copilot/answering.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py",
             "secure-enterprise-knowledge-copilot/src/copilot/evals.py",
             "scripts/check_claim_consistency.py",
         ],
@@ -152,6 +154,7 @@ SUPPORTING_DOCS = [
 
 SOURCE_MARKERS = {
     "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py": ["tenant_id", "allowed_roles", "_allowed"],
+    "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py": ["local-hybrid-v1", "score_chunk", "semantic_family"],
     "secure-enterprise-knowledge-copilot/src/copilot/answering.py": ["abstain_reason", "insert_trace", "insert_audit"],
     "secure-enterprise-knowledge-copilot/src/copilot/security.py": ["INJECTION_PATTERNS", "detect_prompt_injection"],
     "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py": ["Only admin users", "source_hash", "document_ingested"],

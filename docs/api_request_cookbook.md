@@ -67,6 +67,8 @@ Useful fields to inspect:
 - `citations[].doc_id`
 - `permission_blocked_count`
 - `security_events`
+- `retrieval_profile.name`
+- `retrieved[].score_breakdown`
 - `source_hash`
 - `ingestion.parser.name`
 - `ingestion.parser.normalized_characters`

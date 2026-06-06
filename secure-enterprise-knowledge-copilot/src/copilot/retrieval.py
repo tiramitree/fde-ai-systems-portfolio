@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import math
 import re
 from collections import Counter
 
 from .repositories import KnowledgeRepository
+from .retrieval_scoring import not_run_profile, retrieval_profile, score_chunk
 from .security import detect_prompt_injection
 
 
@@ -47,7 +47,12 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
 
     query_tokens = tokenize(question)
     if not query_tokens:
-        return {"hits": [], "blocked_count": 0, "query_tokens": []}
+        return {
+            "hits": [],
+            "blocked_count": 0,
+            "query_tokens": [],
+            "profile": not_run_profile("empty_query"),
+        }
 
     doc_freq: Counter[str] = Counter()
     tokenized_chunks: dict[str, list[str]] = {}
@@ -58,30 +63,24 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
             doc_freq[token] += 1
 
     n_docs = max(len(visible_chunks), 1)
-    query_counter = Counter(query_tokens)
     scored = []
 
     for chunk in visible_chunks:
-        chunk_tokens = tokenized_chunks[chunk["id"]]
-        counts = Counter(chunk_tokens)
-        length_norm = 1 + math.log(max(len(chunk_tokens), 1))
-        bm25_like = 0.0
-        for token, q_count in query_counter.items():
-            if counts[token] == 0:
-                continue
-            idf = math.log((n_docs + 1) / (doc_freq[token] + 0.5)) + 1
-            tf = counts[token] / (counts[token] + 1.2)
-            bm25_like += q_count * idf * tf
-
-        title_tokens = set(tokenize(chunk["title"]))
-        title_boost = 0.35 * len(set(query_tokens) & title_tokens)
-        phrase_boost = 0.5 if question.lower() in chunk["text"].lower() else 0.0
-        score = (bm25_like / length_norm) + title_boost + phrase_boost
-        if score <= 0:
+        scoring = score_chunk(
+            question=question,
+            query_tokens=query_tokens,
+            chunk_text=chunk["text"],
+            title_tokens=tokenize(chunk["title"]),
+            chunk_tokens=tokenized_chunks[chunk["id"]],
+            doc_freq=doc_freq,
+            n_docs=n_docs,
+        )
+        if scoring.total <= 0:
             continue
 
         hit = dict(chunk)
-        hit["score"] = round(score, 4)
+        hit["score"] = round(scoring.total, 4)
+        hit["score_breakdown"] = scoring.as_breakdown()
         hit["security_flags"] = detect_prompt_injection(hit["text"])
         scored.append(hit)
 
@@ -93,4 +92,9 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
         "hits": scored[:k],
         "blocked_count": blocked_count,
         "query_tokens": query_tokens,
+        "profile": retrieval_profile(
+            visible_chunk_count=len(visible_chunks),
+            candidate_count=len(scored),
+            top_k=k,
+        ),
     }

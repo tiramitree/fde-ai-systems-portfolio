@@ -20,6 +20,8 @@ def run_evals(repo: KnowledgeRepository, cases_path: Path = EVAL_CASES_PATH, per
     for case in cases:
         output = generate_answer(repo, case["user_id"], case["question"], record=True)
         cited_doc_ids = {citation["doc_id"] for citation in output["citations"]}
+        retrieved_doc_ids = [item["doc_id"] for item in output.get("retrieved", [])]
+        retrieved_doc_id_set = set(retrieved_doc_ids)
         failures = []
 
         expected = case["expected"]
@@ -39,6 +41,17 @@ def run_evals(repo: KnowledgeRepository, cases_path: Path = EVAL_CASES_PATH, per
         if expected.get("requires_security_event") and not output["security_events"]:
             failures.append("missing_security_event")
 
+        retrieval_expected = expected.get("retrieval", {})
+        for doc_id in retrieval_expected.get("must_retrieve_doc_ids", []):
+            if doc_id not in retrieved_doc_id_set:
+                failures.append(f"missing_required_retrieval:{doc_id}")
+        for doc_id in retrieval_expected.get("forbidden_retrieve_doc_ids", []):
+            if doc_id in retrieved_doc_id_set:
+                failures.append(f"forbidden_retrieval_leaked:{doc_id}")
+        min_blocked_count = retrieval_expected.get("min_permission_blocked_count")
+        if min_blocked_count is not None and output["permission_blocked_count"] < min_blocked_count:
+            failures.append(f"permission_blocked_count_below:{min_blocked_count}")
+
         results.append(
             {
                 "id": case["id"],
@@ -49,6 +62,9 @@ def run_evals(repo: KnowledgeRepository, cases_path: Path = EVAL_CASES_PATH, per
                 "trace_id": output["trace_id"],
                 "abstained": output["abstain_reason"] is not None,
                 "citations": list(cited_doc_ids),
+                "retrieved_doc_ids": retrieved_doc_ids,
+                "top_retrieved_doc_id": retrieved_doc_ids[0] if retrieved_doc_ids else None,
+                "retrieval_profile": output.get("retrieval_profile", {}),
                 "latency_ms": output["latency_ms"],
             }
         )
@@ -58,11 +74,20 @@ def run_evals(repo: KnowledgeRepository, cases_path: Path = EVAL_CASES_PATH, per
     unsafe_leaks = sum(
         1 for item in results for failure in item["failures"] if failure.startswith("forbidden_citation_leaked")
     )
+    retrieval_misses = sum(
+        1 for item in results for failure in item["failures"] if failure.startswith("missing_required_retrieval")
+    )
+    retrieval_cases = sum(1 for case in cases if case["expected"].get("retrieval", {}).get("must_retrieve_doc_ids"))
     metrics = {
         "total_cases": total,
         "passed_cases": passed,
         "pass_rate": round(passed / total, 3) if total else 0,
         "unsafe_leak_failures": unsafe_leaks,
+        "retrieval_cases": retrieval_cases,
+        "retrieval_miss_failures": retrieval_misses,
+        "retrieval_recall_at_k": round((retrieval_cases - retrieval_misses) / retrieval_cases, 3)
+        if retrieval_cases
+        else 0,
         "average_latency_ms": round(sum(item["latency_ms"] for item in results) / total, 2) if total else 0,
     }
 
