@@ -13,6 +13,12 @@ runtime trace
 
 The workflow does not automatically mutate checked-in eval fixtures. It exports review candidates under `out/`, which is ignored by Git.
 
+Candidate JSON also passes through `public_trace_export_redaction_v1` before it is written. This keeps the trace-to-eval loop useful for review while avoiding direct promotion of common email, phone, secret-like, private ID, or local path markers from runtime traces. Verify the redaction boundary with:
+
+```bash
+python -B scripts/dev.py trace-redaction
+```
+
 ## Commands
 
 Generate canonical trace evidence, then export candidates:
@@ -78,4 +84,4 @@ Do not promote runtime-only IDs, local paths, generated logs, private endpoints,
 
 ## Industrial Framing
 
-This is the local version of an eval-ops loop. In production, traces from a collector, audit store, or incident console would feed a reviewed dataset workflow. The same invariant remains: observed failures and high-risk decisions become regression coverage only after review, so quality improves without letting noisy or sensitive runtime data leak into public fixtures.
+This is the local version of an eval-ops loop. In production, traces from a collector, audit store, or incident console would feed a reviewed dataset workflow. The same invariant remains: observed failures and high-risk decisions become regression coverage only after review, so quality improves without letting noisy or sensitive runtime data leak into public fixtures. Automated redaction is a guardrail, not a replacement for human review before a candidate becomes a checked-in golden eval.

@@ -142,8 +142,8 @@ Production-minded reference implementation, not production software.
 | 3. Retrieval and citation quality | Deterministic lexical/vector scoring, local embedding boundary, SQL candidate path, reranker boundary, chunk-level citations, sentence-level evidence spans, citation span coverage metrics, and active-only source lifecycle filtering with a stale-source eval. | Production embedding/reranker provider, hybrid retrieval, metadata filters, query routing, recall@k, MRR/nDCG, context precision/recall, broader citation faithfulness, larger stale/conflict evals. |
 | 4. Runtime durability | Local JSON default; partial Postgres path; local ingestion job ledger with retry/dead-letter semantics. | Connection pool, migrations, durable queue, transactional outbox, scheduled retry, crash recovery, backup/restore, and load/failure tests. |
 | 5. Governed tool execution | Local deterministic tools and approval queue. | Real tool registry, scoped credentials, dry-run previews, approval owner/expiry/escalation, idempotent execution, compensation behavior, and connector outage handling. |
-| 6. Observability and EvalOps | Local trace/audit and OTLP-like JSON export; deterministic golden evals. | OTel SDK spans, Phoenix/Langfuse/OpenAI trace backend, cost/latency/token/error metrics, trace-to-eval promotion, human labels, nightly regression, and failure clustering. |
-| 7. Security and governance | Threat model, public safety scan, workflow security, model-gateway safety, and deterministic controls. | OWASP LLM Top 10 matrix, NIST AI RMF mapping, PII redaction, secret manager, retention/deletion controls, red-team cases, incident runbooks, and residual-risk language. |
+| 6. Observability and EvalOps | Local trace/audit, OTLP-like JSON export, trace-to-eval candidates, and shared export-boundary redaction for generated observability/eval-review artifacts. | OTel SDK spans, Phoenix/Langfuse/OpenAI trace backend, cost/latency/token/error metrics, reviewed trace-to-eval promotion, human labels, nightly regression, and failure clustering. |
+| 7. Security and governance | Threat model, public safety scan, workflow security, model-gateway safety, deterministic controls, and `public_trace_export_redaction_v1` for trace export boundaries. | OWASP LLM Top 10 matrix, NIST AI RMF mapping, broader PII redaction, secret manager, retention/deletion controls, red-team cases, incident runbooks, and residual-risk language. |
 | 8. Deployment and operator UX | Local-first demos, Docker/compose checks, separate UI surfaces. | Production-like stack with API, frontend, workers, Postgres/pgvector, queue, OTel collector, auth middleware, health/readiness, admin console, alerts, rollback, and runbooks. |
 
 ## Upgrade Strategy
@@ -258,6 +258,7 @@ Work items:
 - instrument API, retrieval, parser, embedding, model, tool, approval, audit, and eval spans
 - emit OTel GenAI-compatible attributes where possible
 - support one backend path: Phoenix, Langfuse, OpenAI traces, or OTel collector
+- keep export-boundary redaction on every generated trace and trace-to-eval artifact
 - add trace URL/ID to UI and API responses
 - build trace-to-eval promotion with reviewer disposition and dataset version
 

@@ -12,6 +12,8 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qsl, quote, unquote, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
+from trace_redaction import REDACTION_POLICY, redact_value
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "otel_traces.json"
@@ -79,7 +81,7 @@ def any_value(value: Any) -> dict:
 
 
 def attr(key: str, value: Any) -> dict:
-    return {"key": key, "value": any_value(value)}
+    return {"key": key, "value": any_value(redact_value(value))}
 
 
 def event(time_nano: int, name: str, attributes: dict[str, Any] | None = None) -> dict:
@@ -220,6 +222,7 @@ def copilot_span(project: str, trace: dict) -> dict:
 
     attributes = {
         "app.project": project,
+        "app.redaction_policy": REDACTION_POLICY,
         "app.trace_type": "knowledge_query",
         "app.user_id": trace.get("user_id", ""),
         "app.question": trace.get("question", ""),
@@ -295,6 +298,7 @@ def ops_agent_span(project: str, trace: dict) -> dict:
     end = start + 1_000_000
     attributes = {
         "app.project": project,
+        "app.redaction_policy": REDACTION_POLICY,
         "app.trace_type": "agent_message",
         "app.user_id": trace.get("user_id", ""),
         "app.message": trace.get("message", ""),
@@ -346,6 +350,7 @@ def reliability_console_span(project: str, trace: dict, state: dict) -> dict:
 
     attributes = {
         "app.project": project,
+        "app.redaction_policy": REDACTION_POLICY,
         "app.trace_type": "release_triage",
         "app.user_id": trace.get("user_id", ""),
         "app.release_id": release_id,
@@ -460,6 +465,7 @@ def resource_span(project: dict, spans: list[dict]) -> dict:
                 attr("service.name", project["name"]),
                 attr("deployment.environment", "local"),
                 attr("telemetry.sdk.name", "fde-local-exporter"),
+                attr("app.redaction_policy", REDACTION_POLICY),
             ]
         },
         "scopeSpans": [
