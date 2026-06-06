@@ -4,6 +4,7 @@ import json
 import uuid
 from typing import Any, Protocol
 
+from .identity import user_group_ids, user_source_principals
 from .storage import load_scenario_snapshot
 from .time_utils import utc_now
 
@@ -64,6 +65,12 @@ def _stable_uuid(namespace: str, value: str) -> str:
     return str(uuid.uuid5(uuid.UUID(namespace), value))
 
 
+def _text_list(value: Any) -> list[str]:
+    if not value:
+        return []
+    return [str(item) for item in value]
+
+
 def _public_document(doc: dict) -> dict:
     return {key: value for key, value in doc.items() if key != "body"}
 
@@ -95,6 +102,7 @@ class PostgresKnowledgeRepository:
               u.display_name,
               u.role,
               coalesce(u.department, ''),
+              u.group_ids,
               t.id::text,
               t.slug
             from users u
@@ -111,11 +119,13 @@ class PostgresKnowledgeRepository:
             "name": row[2],
             "role": row[3],
             "department": row[4],
-            "_tenant_uuid": row[5],
-            "tenant_id": row[6],
+            "group_ids": _text_list(row[5]),
+            "_tenant_uuid": row[6],
+            "tenant_id": row[7],
         }
+        user["source_principals"] = user_source_principals(user)
         self._active_user = user
-        self._tenant_uuid_cache = row[5]
+        self._tenant_uuid_cache = row[6]
         self._apply_context(user)
         return user
 
@@ -129,6 +139,7 @@ class PostgresKnowledgeRepository:
               u.display_name,
               u.role,
               coalesce(u.department, ''),
+              u.group_ids,
               t.id::text,
               t.slug
             from users u
@@ -138,18 +149,22 @@ class PostgresKnowledgeRepository:
             """,
             (self.tenant_slug,),
         )
-        return [
+        users = [
             {
                 "_user_uuid": row[0],
                 "id": row[1],
                 "name": row[2],
                 "role": row[3],
                 "department": row[4],
-                "_tenant_uuid": row[5],
-                "tenant_id": row[6],
+                "group_ids": _text_list(row[5]),
+                "_tenant_uuid": row[6],
+                "tenant_id": row[7],
             }
             for row in rows
         ]
+        for user in users:
+            user["source_principals"] = user_source_principals(user)
+        return users
 
     def list_visible_documents(self, user: dict) -> list[dict]:
         self._active_user = user
@@ -171,10 +186,18 @@ class PostgresKnowledgeRepository:
               d.metadata
             from documents d
             join tenants t on t.id = d.tenant_id
-            where t.slug = %s and %s = any(d.allowed_roles)
+            where t.slug = %s
+              and (
+                %s = any(d.allowed_roles)
+                or exists (
+                  select 1
+                  from jsonb_array_elements_text(coalesce(d.metadata->'allowed_groups', '[]'::jsonb)) as allowed(group_id)
+                  where allowed.group_id = any(%s::text[])
+                )
+              )
             order by d.updated_at desc, d.external_doc_id
             """,
-            (user["tenant_id"], user["role"]),
+            (user["tenant_id"], user["role"], user_group_ids(user)),
         )
         return [_public_document(self._row_to_document(row)) for row in rows]
 
@@ -203,9 +226,23 @@ class PostgresKnowledgeRepository:
             join documents d on d.id = c.document_id
             join tenants t on t.id = c.tenant_id
             where t.slug = %s
+              and (
+                %s = 'admin'
+                or %s = any(d.allowed_roles)
+                or exists (
+                  select 1
+                  from jsonb_array_elements_text(coalesce(d.metadata->'allowed_groups', '[]'::jsonb)) as allowed(group_id)
+                  where allowed.group_id = any(%s::text[])
+                )
+              )
             order by d.external_doc_id, c.chunk_index
             """,
-            (tenant_id,),
+            (
+                tenant_id,
+                (self._active_user or {}).get("role", "admin"),
+                (self._active_user or {}).get("role", "admin"),
+                user_group_ids(self._active_user or {}),
+            ),
         )
         return [self._row_to_chunk(row) for row in rows]
 
@@ -255,7 +292,15 @@ class PostgresKnowledgeRepository:
               from document_chunks c
               join documents d on d.id = c.document_id
               join tenants t on t.id = c.tenant_id
-              where t.slug = %s and %s = any(d.allowed_roles)
+              where t.slug = %s
+                and (
+                  %s = any(d.allowed_roles)
+                  or exists (
+                    select 1
+                    from jsonb_array_elements_text(coalesce(d.metadata->'allowed_groups', '[]'::jsonb)) as allowed(group_id)
+                    where allowed.group_id = any(%s::text[])
+                  )
+                )
             ),
             keyword_hits as (
               select
@@ -319,6 +364,7 @@ class PostgresKnowledgeRepository:
             (
                 user["tenant_id"],
                 user["role"],
+                user_group_ids(user),
                 question,
                 question,
                 candidate_limit,
@@ -432,6 +478,8 @@ class PostgresKnowledgeRepository:
                         "parser_metadata": document.get("parser_metadata", {}),
                         "parser_warnings": document.get("parser_warnings", []),
                         "source_file": document.get("source_file", {}),
+                        "allowed_groups": document.get("allowed_groups", []),
+                        "source_acl_principals": document.get("source_acl_principals", []),
                         "source_connector": document.get("source_connector", "manual"),
                         "external_id": document.get("external_id", document["id"]),
                         "acl_source": document.get("acl_source", "manual"),
@@ -454,6 +502,8 @@ class PostgresKnowledgeRepository:
                 "parser_metadata": chunk.get("parser_metadata", {}),
                 "parser_warnings": chunk.get("parser_warnings", []),
                 "source_file": chunk.get("source_file", {}),
+                "allowed_groups": chunk.get("allowed_groups", []),
+                "source_acl_principals": chunk.get("source_acl_principals", []),
                 "source_connector": chunk.get("source_connector", "manual"),
                 "external_id": chunk.get("external_id", chunk["doc_id"]),
                 "acl_source": chunk.get("acl_source", "manual"),
@@ -795,9 +845,17 @@ class PostgresKnowledgeRepository:
             from document_chunks c
             join documents d on d.id = c.document_id
             join tenants t on t.id = c.tenant_id
-            where t.slug = %s and %s = any(d.allowed_roles)
+            where t.slug = %s
+              and (
+                %s = any(d.allowed_roles)
+                or exists (
+                  select 1
+                  from jsonb_array_elements_text(coalesce(d.metadata->'allowed_groups', '[]'::jsonb)) as allowed(group_id)
+                  where allowed.group_id = any(%s::text[])
+                )
+              )
             """,
-            (user["tenant_id"], user["role"]),
+            (user["tenant_id"], user["role"], user_group_ids(user)),
         )
         return int(row[0]) if row else 0
 
@@ -810,6 +868,8 @@ class PostgresKnowledgeRepository:
             "title": row[3],
             "classification": row[4],
             "allowed_roles": list(row[5]),
+            "allowed_groups": metadata.get("allowed_groups", []) if isinstance(metadata, dict) else [],
+            "source_acl_principals": metadata.get("source_acl_principals", []) if isinstance(metadata, dict) else [],
             "source_url": row[6],
             "source_mime": row[7],
             "source_hash": row[8],
@@ -841,6 +901,8 @@ class PostgresKnowledgeRepository:
             "text": row[6],
             "classification": row[7],
             "allowed_roles": list(row[8]),
+            "allowed_groups": metadata.get("allowed_groups", []) if isinstance(metadata, dict) else [],
+            "source_acl_principals": metadata.get("source_acl_principals", []) if isinstance(metadata, dict) else [],
             "source_url": row[9],
             "source_mime": row[10],
             "source_hash": row[11],
@@ -884,6 +946,11 @@ class PostgresKnowledgeRepository:
         user_uuid = user.get("_user_uuid") if user else "00000000-0000-0000-0000-000000000000"
         self._execute_write("select set_config('app.tenant_id', %s, true)", (tenant_uuid,))
         self._execute_write("select set_config('app.role', %s, true)", (role,))
+        self._execute_write("select set_config('app.group_ids', %s, true)", (",".join(user_group_ids(user or {})),))
+        self._execute_write(
+            "select set_config('app.source_principals', %s, true)",
+            (",".join(user_source_principals(user or {})),),
+        )
         self._execute_write("select set_config('app.user_id', %s, true)", (user_uuid,))
         self._execute_write("select set_config('app.environment', %s, true)", ("local",))
 

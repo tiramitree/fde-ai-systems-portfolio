@@ -75,17 +75,19 @@ def emit_users(seed: dict) -> list[str]:
         tenant_uuid = stable_uuid("tenant", user["tenant_id"])
         user_uuid = stable_uuid("user", f"{tenant_uuid}:{user['id']}")
         lines.append(
-            "insert into users (id, tenant_id, external_user_id, display_name, role)\n"
+            "insert into users (id, tenant_id, external_user_id, display_name, role, group_ids)\n"
             "values ("
             f"{sql_literal(user_uuid)}::uuid, "
             f"{sql_literal(tenant_uuid)}::uuid, "
             f"{sql_literal(user['id'])}, "
             f"{sql_literal(user['name'])}, "
-            f"{sql_literal(user['role'])}"
+            f"{sql_literal(user['role'])}, "
+            f"{text_array(user.get('group_ids', []))}"
             ")\n"
             "on conflict (tenant_id, external_user_id) do update set\n"
             "  display_name = excluded.display_name,\n"
-            "  role = excluded.role;"
+            "  role = excluded.role,\n"
+            "  group_ids = excluded.group_ids;"
         )
     return lines
 
@@ -97,10 +99,17 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
         doc_uuid = stable_uuid("document", f"{tenant_uuid}:{doc['id']}")
         doc_hash = source_hash(doc["body"])
         source_mime = doc.get("source_mime", "text/plain")
+        document_metadata = {
+            "allowed_groups": doc.get("allowed_groups", []),
+            "source_acl_principals": doc.get("source_acl_principals", []),
+            "source_acl_version": doc.get("source_acl_version", ""),
+            "source_acl_permission_id": doc.get("source_acl_permission_id", ""),
+            "source_acl_principal_count": doc.get("source_acl_principal_count", 0),
+        }
         lines.append(
             "insert into documents (\n"
             "  id, tenant_id, external_doc_id, title, source_uri, source_mime,\n"
-            "  source_hash, sensitivity, allowed_roles, version, updated_at\n"
+            "  source_hash, sensitivity, allowed_roles, version, updated_at, metadata\n"
             ")\n"
             "values ("
             f"{sql_literal(doc_uuid)}::uuid, "
@@ -113,7 +122,8 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
             f"{sql_literal(doc['classification'])}, "
             f"{text_array(doc['allowed_roles'])}, "
             f"{sql_literal(doc['version'])}, "
-            f"{sql_literal(doc['updated_at'])}::timestamptz"
+            f"{sql_literal(doc['updated_at'])}::timestamptz, "
+            f"{jsonb_literal(document_metadata)}"
             ")\n"
             "on conflict (id) do update set\n"
             "  title = excluded.title,\n"
@@ -123,7 +133,8 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
             "  sensitivity = excluded.sensitivity,\n"
             "  allowed_roles = excluded.allowed_roles,\n"
             "  version = excluded.version,\n"
-            "  updated_at = excluded.updated_at;"
+            "  updated_at = excluded.updated_at,\n"
+            "  metadata = excluded.metadata;"
         )
         lines.append(f"delete from document_chunks where document_id = {sql_literal(doc_uuid)}::uuid;")
         for index, chunk in enumerate(chunk_text_with_spans(doc["body"])):
@@ -132,6 +143,11 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
             embedding = embed_chunk(doc["title"], chunk.text)
             metadata = {
                 "external_chunk_id": external_chunk_id,
+                "allowed_groups": doc.get("allowed_groups", []),
+                "source_acl_principals": doc.get("source_acl_principals", []),
+                "source_acl_version": doc.get("source_acl_version", ""),
+                "source_acl_permission_id": doc.get("source_acl_permission_id", ""),
+                "source_acl_principal_count": doc.get("source_acl_principal_count", 0),
                 "source_hash": doc_hash,
                 "updated_at": doc["updated_at"],
                 "source_span": chunk.source_span,

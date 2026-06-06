@@ -21,7 +21,7 @@ Do not add secrets, private paths, real customer data, external accounts, paid-s
 
 | Fixture | Loaded Into | API Surface | Evidence Produced |
 | --- | --- | --- | --- |
-| `secure-enterprise-knowledge-copilot/data/seed_documents.json` users | `storage.seed()` copies users into `runtime_state.json`. | `/api/users`, `/api/documents`, `/api/query` | Trace and audit records include `user_id` and access outcome. |
+| `secure-enterprise-knowledge-copilot/data/seed_documents.json` users | `storage.seed()` copies users into `runtime_state.json`. | `/api/users`, `/api/documents`, `/api/query` | Trace and audit records include `user_id` and access outcome; Project 1 users can also carry fictional `group_ids` and source principals for source ACL demos. |
 | `seed_documents.json` documents | `storage.seed()` copies documents and creates chunk rows for retrieval. | `/api/documents`, `/api/query`, `/api/scenario` | Citations, abstention reasons, blocked inaccessible evidence counts, and security events. |
 | `secure-enterprise-knowledge-copilot/data/eval_cases.json` | `evals.run_evals()` reads expected behavior directly. | `/api/eval/run`, `/api/eval/latest` | Eval run metrics and case rows appended to runtime or eval state. |
 
@@ -31,7 +31,7 @@ Data flow:
 seed_documents.json
   -> storage.seed()
   -> runtime_state.json users/documents/chunks
-  -> retrieval.retrieve() filters by tenant and allowed_roles
+  -> retrieval.retrieve() filters by tenant, allowed_roles, allowed_groups
   -> answering.generate_answer()
   -> citations or abstention
   -> traces and audit_events

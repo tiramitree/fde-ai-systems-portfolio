@@ -18,7 +18,7 @@ Together they show the full control path around model-facing systems: secure dat
 
 ## Q1: Why not ask the model to obey permissions?
 
-Permission enforcement must not depend on model obedience. The retrieval layer filters by tenant and role before evidence assembly. The model never sees documents the user cannot access. This reduces leakage risk and makes permission behavior testable.
+Permission enforcement must not depend on model obedience. The retrieval layer filters by tenant, role, and source-group identity before evidence assembly. The model never sees documents the user cannot access. This reduces leakage risk and makes permission behavior testable.
 
 ## Q2: How does the RAG system handle prompt injection?
 
@@ -78,7 +78,7 @@ Start from the response or decision `trace_id`, inspect retrieved evidence or to
 
 ## Q9: What is the threat model?
 
-The threat model covers unauthorized disclosure, prompt injection, unsupported answers, unsafe side effects, approval bypass, duplicate side effects, secret or error leakage, public PR abuse, dependency drift, optional model gateway risk, observability gaps, UI serving surprises, and unsafe release rollout. Each risk has a deterministic control owner and an evidence command in `docs/threat_model.md`.
+The threat model covers unauthorized disclosure, source-group permission drift, prompt injection, unsupported answers, unsafe side effects, approval bypass, duplicate side effects, secret or error leakage, public PR abuse, dependency drift, optional model gateway risk, observability gaps, UI serving surprises, and unsafe release rollout. Each risk has a deterministic control owner and an evidence command in `docs/threat_model.md`.
 
 ## Q10: What are the biggest current limitations?
 
@@ -90,7 +90,7 @@ The systems are intentionally local-first and dependency-light. Project 1 now ha
 User
   -> UI
   -> API
-  -> Auth / role / tenant
+  -> Auth / role / group / tenant
   -> Retrieval, Tool Planner, or Release Triage
   -> Deterministic Policy Gate
   -> Optional Model Gateway

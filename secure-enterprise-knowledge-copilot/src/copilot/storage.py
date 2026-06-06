@@ -92,6 +92,8 @@ def seed(store: JsonStore, seed_path: Path = SEED_PATH) -> None:
                     "tenant_id": doc["tenant_id"],
                     "classification": doc["classification"],
                     "allowed_roles": doc["allowed_roles"],
+                    "allowed_groups": doc.get("allowed_groups", []),
+                    "source_acl_principals": doc.get("source_acl_principals", []),
                     "source_url": doc["source_url"],
                     "version": doc["version"],
                     "updated_at": doc["updated_at"],

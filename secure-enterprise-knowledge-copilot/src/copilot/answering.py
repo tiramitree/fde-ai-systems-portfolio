@@ -178,7 +178,7 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
         abstain_reason = "no_accessible_grounded_evidence"
         missing_evidence = ["No accessible retrieved chunk met the evidence threshold."]
         if retrieval["blocked_count"] > 0:
-            missing_evidence.append("Some potentially relevant sources were not accessible to this user role.")
+            missing_evidence.append("Some potentially relevant sources were not accessible to this user identity.")
         model_provider = "local"
 
     result = {

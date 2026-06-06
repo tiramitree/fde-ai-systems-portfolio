@@ -10,8 +10,9 @@ THREAT_MODEL = ROOT / "docs" / "threat_model.md"
 
 THREATS = {
     "T01": {
-        "phrases": ["Unauthorized document disclosure", "tenant and role", "before retrieval scoring"],
+        "phrases": ["Unauthorized document disclosure", "tenant, role, and source group", "before retrieval scoring"],
         "files": [
+            "secure-enterprise-knowledge-copilot/src/copilot/identity.py",
             "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py",
             "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py",
             "secure-enterprise-knowledge-copilot/src/copilot/answering.py",
@@ -154,7 +155,8 @@ SUPPORTING_DOCS = [
 
 
 SOURCE_MARKERS = {
-    "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py": ["tenant_id", "allowed_roles", "_allowed"],
+    "secure-enterprise-knowledge-copilot/src/copilot/identity.py": ["tenant_id", "allowed_roles", "allowed_groups", "has_identity_access"],
+    "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py": ["has_identity_access", "_allowed"],
     "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py": ["local-hybrid-v1", "score_chunk", "semantic_family"],
     "secure-enterprise-knowledge-copilot/src/copilot/answering.py": ["abstain_reason", "insert_trace", "insert_audit"],
     "secure-enterprise-knowledge-copilot/src/copilot/security.py": ["INJECTION_PATTERNS", "detect_prompt_injection"],

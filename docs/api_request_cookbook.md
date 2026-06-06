@@ -42,6 +42,13 @@ Ask Morgan the same question. Morgan should receive an answer with a citation to
 curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"morgan","question":"What is the finance retention plan?"}' | python -m json.tool
 ```
 
+Ask Riley about the on-call escalation matrix. Riley has the same coarse role as Alice (`employee`) but also belongs to `engineering-oncall`, so the answer should cite `engineering-oncall-escalation-2026`. Alice should abstain on the same question with a nonzero `permission_blocked_count`:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"riley","question":"How quickly must Sev2 pages be acknowledged by the primary on-call engineer?"}' | python -m json.tool
+curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"alice","question":"How quickly must Sev2 pages be acknowledged by the primary on-call engineer?"}' | python -m json.tool
+```
+
 Try ingesting a document as Alice. This should return `403` because ingestion is admin-only:
 
 ```powershell

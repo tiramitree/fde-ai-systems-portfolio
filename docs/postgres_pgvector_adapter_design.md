@@ -126,6 +126,7 @@ create table documents (
   sensitivity text not null check (sensitivity in ('public', 'internal', 'confidential')),
   allowed_roles text[] not null default '{}',
   allowed_departments text[] not null default '{}',
+  metadata jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (tenant_id, external_doc_id)
@@ -154,7 +155,7 @@ create index document_chunks_embedding_hnsw_idx
 Retrieval flow:
 
 1. Resolve user context.
-2. Apply tenant, role, department, and document sensitivity filters.
+2. Apply tenant, role, source-group, department, and document sensitivity filters.
 3. Run keyword and vector retrieval only across authorized rows.
 4. Rerank merged candidates.
 5. Remove suspicious retrieved instructions.
@@ -169,7 +170,16 @@ with authorized_chunks as (
   from document_chunks c
   join documents d on d.id = c.document_id
   where c.tenant_id = current_setting('app.tenant_id')::uuid
-    and current_setting('app.role') = any(d.allowed_roles)
+    and (
+      current_setting('app.role') = any(d.allowed_roles)
+      or exists (
+        select 1
+        from jsonb_array_elements_text(coalesce(d.metadata->'allowed_groups', '[]'::jsonb)) as allowed(group_id)
+        where allowed.group_id = any(
+          coalesce(string_to_array(nullif(current_setting('app.group_ids', true), ''), ','), array[]::text[])
+        )
+      )
+    )
 ),
 keyword_hits as (
   select id, ts_rank_cd(content_tsv, websearch_to_tsquery('english', :query)) as keyword_score, 0.0 as vector_score
@@ -337,6 +347,7 @@ This repository now includes the first reviewable production-path migration arti
 
 - `infra/postgres/migrations/001_core.sql`
 - `infra/postgres/migrations/002_project1_denied_evidence_count.sql`
+- `infra/postgres/migrations/003_project1_group_acl.sql`
 - `python -B scripts/dev.py postgres-migrations`
 - `infra/postgres/seeds/001_project1_demo.sql`
 - `docker-compose.postgres.yml`
@@ -344,9 +355,9 @@ This repository now includes the first reviewable production-path migration arti
 - `python -B scripts/dev.py postgres-runtime`
 - `python -B scripts/dev.py postgres-seed`
 
-The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, SQL-backed hybrid candidate selection, eval-state isolation, approval visibility rules, idempotent tool-action keys, the Project 1 adapter contract, and the `project1_denied_relevant_chunk_count` helper. The compose check verifies the optional digest-pinned pgvector service, init order, seed wiring, healthcheck, and local role separation. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. The seed SQL stores deterministic chunk vectors in `document_chunks.embedding`, embedding provenance in chunk metadata, and source-span metadata over parser normalized text, keeping the pgvector schema, adapter, citation output, and local seed artifact aligned before a production embedding service is introduced. None of these checks makes PostgreSQL required for the default local demo.
+The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role/source-group-aware document and chunk policies, SQL-backed hybrid candidate selection, eval-state isolation, approval visibility rules, idempotent tool-action keys, the Project 1 adapter contract, and the `project1_denied_relevant_chunk_count` helper. The compose check verifies the optional digest-pinned pgvector service, init order, seed wiring, healthcheck, and local role separation. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. The seed SQL stores deterministic chunk vectors in `document_chunks.embedding`, embedding provenance in chunk metadata, and source-span metadata over parser normalized text, keeping the pgvector schema, adapter, citation output, and local seed artifact aligned before a production embedding service is introduced. None of these checks makes PostgreSQL required for the default local demo.
 
-RLS hides unauthorized rows from the app role, which is correct for security but can remove useful audit evidence such as "this query had relevant denied evidence." `infra/postgres/migrations/002_project1_denied_evidence_count.sql` adds a security-definer function that returns only a count of denied but potentially relevant chunks for the current tenant and role. It does not return document IDs, titles, chunk text, or snippets. `PostgresKnowledgeRepository.count_potentially_blocked_chunks` calls this function so the application can preserve blocked-evidence audit semantics without weakening RLS.
+RLS hides unauthorized rows from the app role, which is correct for security but can remove useful audit evidence such as "this query had relevant denied evidence." `infra/postgres/migrations/002_project1_denied_evidence_count.sql` adds a security-definer function that returns only a count of denied but potentially relevant chunks for the current tenant and coarse role. `infra/postgres/migrations/003_project1_group_acl.sql` extends that boundary to source-group identity through `app.group_ids`. It does not return document IDs, titles, chunk text, or snippets. `PostgresKnowledgeRepository.count_potentially_blocked_chunks` calls this function so the application can preserve blocked-evidence audit semantics without weakening RLS.
 
 For local production-mode database testing on a Docker-enabled machine:
 

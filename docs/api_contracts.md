@@ -28,7 +28,7 @@ Source:
 | Method | Path | Purpose |
 | --- | --- | --- |
 | GET | `/api/health` | Service health and app name. |
-| GET | `/api/users` | Demo users with `id`, `name`, `role`, and `tenant_id`. |
+| GET | `/api/users` | Demo users with `id`, `name`, `role`, `tenant_id`, `group_ids`, and `source_principals`. |
 | GET | `/api/documents?user_id=alice` | Visible document metadata for the requester. Document `body` is never returned. |
 | GET | `/api/traces?limit=25` | Recent trace records. |
 | GET | `/api/audit?limit=50` | Recent audit events. |
@@ -80,7 +80,8 @@ Retrieval contract:
 - `retrieval_profile.reranker` is `local-evidence-reranker-v1` for the default deterministic reranker boundary
 - `retrieval_profile.rerank_features` lists the deterministic rerank features used before answer assembly
 - `retrieval_profile.embedding_model` is `local-hashing-v1` and `retrieval_profile.embedding_dimensions` is `1536` for the local deterministic embedding boundary
-- `retrieval_profile.permission_filter` is `tenant_role_before_scoring`
+- `retrieval_profile.permission_filter` is `tenant_identity_before_scoring`
+- permission filtering uses tenant, role, and source-group identity before scoring; `allowed_roles` remains the coarse-grained fallback while `allowed_groups` and `source_acl_principals` demonstrate the source ACL migration path
 - `citations[].source_span` and `retrieved[].source_span` expose the cited chunk range over parser `normalized_text`
 - `source_span.text_unit` is `normalized_text`; `source_span.start_line`, `source_span.end_line`, `source_span.start_char`, and `source_span.end_char` are integer offsets into parser-normalized source text
 - `retrieved[].score_breakdown` exposes lexical, title, phrase, semantic, vector, matched-term, and semantic-family evidence for review
@@ -101,6 +102,8 @@ The document object supports:
 - optional `document.file.mime_type`
 - `classification`
 - `allowed_roles`
+- optional `allowed_groups`
+- optional `source_acl_principals`
 - `source_url`
 - `source_mime`
 - `version`
@@ -126,6 +129,8 @@ The route returns:
 - `ingestion.source.connector`
 - `ingestion.source.external_id`
 - `ingestion.source.acl_source`
+- `ingestion.source.allowed_groups`
+- `ingestion.source.source_acl_principals`
 - `ingestion.source.sync_cursor`
 - `ingestion.chunk_source_span_unit`
 - `ingestion.chunk_source_span_count`
@@ -145,7 +150,7 @@ Ingestion contract:
 - ingestion records chunk source spans over parser `normalized_text`; `chunk_source_span_unit` is `normalized_text` and `chunk_source_span_count` matches `chunk_count`
 - ingestion creates local deterministic chunk embeddings with model `local-hashing-v1` and dimension `1536`; raw vectors are stored for retrieval/indexing but not returned by the public API
 - CSV parser metadata includes `row_count`, `column_count`, and `has_header`; parser warnings are surfaced as `parser_warnings`
-- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `source_file`, `parser_warnings`, source span metadata, embedding metadata, and role metadata
+- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `source_file`, `parser_warnings`, source span metadata, embedding metadata, role metadata, and source-group ACL metadata
 
 ### Source Sync Response Shape
 
@@ -188,6 +193,8 @@ The route returns:
 - `documents[].acl_source`
 - `documents[].sync_cursor`
 - `documents[].allowed_roles_source`
+- `documents[].allowed_groups`
+- `documents[].source_acl_principals`
 - `documents[].source_acl_version`
 - `documents[].source_acl_permission_id`
 - `documents[].source_acl_principal_count`
@@ -197,9 +204,9 @@ Source sync contract:
 - only admin users can sync connector sources
 - synced documents are normalized through the same parser, chunking, embedding, permission, and body-hiding path as local ingestion
 - the API accepts at most ten documents per local sync request so demo state remains reviewable
-- connector `name`, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, and sync cursor are persisted on documents and chunks
+- connector `name`, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, allowed groups, source ACL principals, and sync cursor are persisted on documents and chunks
 - when `connector.acl_snapshot` is present, each synced document must have a matching ACL record; missing ACL records fail closed before searchable chunks are written
-- source ACL roles override document payload roles, while classification validation still prevents confidential documents from being widened to employee access
+- source ACL roles override document payload roles, source ACL groups are carried into the same permission filter, and classification validation still prevents confidential documents from being widened to employee access
 - resyncs compare previous and current roles and return `acl_role_drift` plus batch `acl_drift_count` / `acl_drift_doc_ids`
 - when `prune_missing` is `true`, documents already indexed for the same tenant and connector but absent from the current synced document IDs are removed from the searchable document/chunk store
 - prune is opt-in so partial connector syncs do not accidentally remove still-valid source records

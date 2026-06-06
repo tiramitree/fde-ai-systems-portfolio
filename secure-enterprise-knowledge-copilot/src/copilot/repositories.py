@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from typing import Any, Callable, Protocol
 
+from .identity import has_identity_access
 from .postgres_repositories import PostgresKnowledgeRepository, SqlConnection
 from .storage import JsonStore, connect as connect_json, load_scenario_snapshot
 from .time_utils import utc_now
@@ -65,7 +66,7 @@ class JsonKnowledgeRepository:
     def list_visible_documents(self, user: dict) -> list[dict]:
         docs = []
         for doc in self.store.state["documents"]:
-            if doc["tenant_id"] == user["tenant_id"] and user["role"] in doc["allowed_roles"]:
+            if has_identity_access(doc, user):
                 docs.append(_public_document(doc))
         return docs
 
@@ -84,7 +85,7 @@ class JsonKnowledgeRepository:
         visible_chunks = [
             chunk
             for chunk in self.list_chunks(user["tenant_id"])
-            if user["role"] in chunk["allowed_roles"]
+            if has_identity_access(chunk, user)
         ]
         return {
             "chunks": visible_chunks,
@@ -97,7 +98,7 @@ class JsonKnowledgeRepository:
         query_terms = set(query_tokens)
         blocked_count = 0
         for chunk in self.store.state["chunks"]:
-            if chunk["tenant_id"] != user["tenant_id"] or user["role"] in chunk["allowed_roles"]:
+            if chunk["tenant_id"] != user["tenant_id"] or has_identity_access(chunk, user):
                 continue
             haystack = f"{chunk['title']} {chunk['text']}".lower()
             if any(term in haystack for term in query_terms):

@@ -24,7 +24,8 @@ export function renderUser(users, selectedUser) {
     element("strong", { textContent: user.name }),
     element("br"),
     tag(user.role),
-    tag(user.tenant_id)
+    tag(user.tenant_id),
+    ...Array.from(user.group_ids || []).map((groupId) => tag(groupId))
   );
 }
 
@@ -39,6 +40,7 @@ export function renderDocuments(documents) {
         element("br"),
         tag(doc.classification),
         tag(doc.version),
+        ...(doc.allowed_groups || []).map((groupId) => tag(groupId)),
       ]),
     "No visible documents."
   );

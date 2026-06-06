@@ -218,6 +218,16 @@ def project_1_contracts(base_url: str) -> list[Check]:
     if users.get("users"):
         ok, detail = expect_types(users["users"][0], {"id": str, "name": str, "role": str, "tenant_id": str})
         checks.append(check(ok, "P1 user shape contract", detail))
+        riley = next((user for user in users["users"] if user.get("id") == "riley"), {})
+        checks.append(
+            check(
+                riley.get("role") == "employee"
+                and "engineering-oncall" in riley.get("group_ids", [])
+                and "group:engineering-oncall" in riley.get("source_principals", []),
+                "P1 user identity group contract",
+                f"riley_groups={riley.get('group_ids')}; principals={riley.get('source_principals')}",
+            )
+        )
 
     status, documents = get_json(f"{base_url}/api/documents?user_id=alice")
     checks.append(check(status == 200 and isinstance(documents.get("documents"), list), "P1 visible documents contract", f"documents={len(documents.get('documents', []))}"))
@@ -227,6 +237,57 @@ def project_1_contracts(base_url: str) -> list[Check]:
             {"id": str, "tenant_id": str, "title": str, "classification": str, "allowed_roles": list},
         )
         checks.append(check(ok and "body" not in documents["documents"][0], "P1 document shape hides body", detail))
+    status, riley_documents = get_json(f"{base_url}/api/documents?user_id=riley")
+    checks.append(
+        check(
+            status == 200
+            and any(doc.get("id") == "engineering-oncall-escalation-2026" for doc in riley_documents.get("documents", []))
+            and not any(doc.get("id") == "engineering-oncall-escalation-2026" for doc in documents.get("documents", [])),
+            "P1 source group visibility differs within same role",
+            f"alice_docs={len(documents.get('documents', []))}; riley_docs={len(riley_documents.get('documents', []))}",
+        )
+    )
+
+    status, riley_oncall_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "riley",
+            "question": "How quickly must Sev2 pages be acknowledged by the primary on-call engineer?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and riley_oncall_answer.get("abstain_reason") is None
+            and any(
+                citation.get("doc_id") == "engineering-oncall-escalation-2026"
+                for citation in riley_oncall_answer.get("citations", [])
+            ),
+            "P1 source group member can retrieve group-scoped evidence",
+            f"trace={riley_oncall_answer.get('trace_id')}; citations={len(riley_oncall_answer.get('citations', []))}",
+        )
+    )
+
+    status, alice_oncall_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "alice",
+            "question": "How quickly must Sev2 pages be acknowledged by the primary on-call engineer?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and alice_oncall_answer.get("abstain_reason") == "no_accessible_grounded_evidence"
+            and alice_oncall_answer.get("permission_blocked_count", 0) >= 1
+            and not any(
+                citation.get("doc_id") == "engineering-oncall-escalation-2026"
+                for citation in alice_oncall_answer.get("citations", [])
+            ),
+            "P1 source group non-member is denied group-scoped evidence",
+            f"blocked={alice_oncall_answer.get('permission_blocked_count')}; trace={alice_oncall_answer.get('trace_id')}",
+        )
+    )
 
     forbidden_payload = {
         "user_id": "alice",
@@ -592,6 +653,90 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and any(citation.get("doc_id") == "acl-drift-playbook-2026" for citation in drift_answer.get("citations", [])),
             "P1 source ACL drift changes retrieval visibility",
             f"trace={drift_answer.get('trace_id')}; citations={len(drift_answer.get('citations', []))}",
+        )
+    )
+
+    group_acl_sync_payload = {
+        "user_id": "avery",
+        "replace": True,
+        "connector": {
+            "name": "local-drive-groups-demo",
+            "cursor": "2026-06-06T01:15:00Z",
+            "acl_source": "fixture-group-acl-v1",
+            "acl_snapshot": {
+                "version": "fixture-group-acl-v1",
+                "documents": {
+                    "drive-doc-oncall-source-groups-2026": {
+                        "allowed_roles": ["admin"],
+                        "allowed_groups": ["engineering-oncall"],
+                        "permission_id": "drive-acl-engineering-oncall-group-v1",
+                        "principal_count": 1,
+                    },
+                },
+            },
+        },
+        "documents": [
+            {
+                "id": "source-group-oncall-rotation-2026",
+                "external_id": "drive-doc-oncall-source-groups-2026",
+                "title": "Source Group On-Call Rotation 2026",
+                "body": (
+                    "Source Group On-Call Rotation 2026\n\n"
+                    "The connector group ACL demo says engineering-oncall members can view rotation handoff notes. "
+                    "Primary engineers must update the handoff checklist before leaving the rotation."
+                ),
+                "classification": "internal",
+                "source_mime": "text/markdown",
+                "updated_at": "2026-06-06",
+            },
+        ],
+    }
+    status, group_acl_sync = post_json(f"{base_url}/api/sources/sync", group_acl_sync_payload)
+    group_acl_doc = group_acl_sync.get("documents", [{}])[0] if group_acl_sync.get("documents") else {}
+    checks.append(
+        check(
+            status == 200
+            and group_acl_doc.get("allowed_roles") == ["admin"]
+            and group_acl_doc.get("allowed_groups") == ["engineering-oncall"]
+            and group_acl_doc.get("source_acl_principals") == ["group:engineering-oncall"]
+            and group_acl_doc.get("source_acl_principal_count") == 1,
+            "P1 source sync applies connector group ACL snapshot",
+            f"status={status}; groups={group_acl_doc.get('allowed_groups')}; principals={group_acl_doc.get('source_acl_principals')}",
+        )
+    )
+
+    status, group_acl_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "riley",
+            "question": "What are rotation handoff notes?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and group_acl_answer.get("abstain_reason") is None
+            and any(citation.get("doc_id") == "source-group-oncall-rotation-2026" for citation in group_acl_answer.get("citations", [])),
+            "P1 connector group ACL evidence is retrievable by group member",
+            f"trace={group_acl_answer.get('trace_id')}; citations={len(group_acl_answer.get('citations', []))}",
+        )
+    )
+
+    status, group_acl_denied = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "alice",
+            "question": "What are rotation handoff notes?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and group_acl_denied.get("abstain_reason") == "no_accessible_grounded_evidence"
+            and group_acl_denied.get("permission_blocked_count", 0) >= 1
+            and not any(citation.get("doc_id") == "source-group-oncall-rotation-2026" for citation in group_acl_denied.get("citations", [])),
+            "P1 connector group ACL non-member is denied retrieved evidence",
+            f"blocked={group_acl_denied.get('permission_blocked_count')}; trace={group_acl_denied.get('trace_id')}",
         )
     )
 
@@ -1236,7 +1381,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and "vector" in profile.get("score_components", [])
             and profile.get("embedding_model") == "local-hashing-v1"
             and profile.get("embedding_dimensions") == 1536
-            and profile.get("permission_filter") == "tenant_role_before_scoring"
+            and profile.get("permission_filter") == "tenant_identity_before_scoring"
             and profile.get("candidate_strategy") == "local_full_scan"
             and isinstance(profile.get("candidate_source_count"), int)
             and profile.get("reranker") == "local-evidence-reranker-v1"

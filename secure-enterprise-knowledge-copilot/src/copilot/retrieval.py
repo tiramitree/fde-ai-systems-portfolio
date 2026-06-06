@@ -4,6 +4,7 @@ import re
 from collections import Counter
 
 from .embeddings import embed_chunk, embed_text
+from .identity import has_identity_access
 from .reranking import RERANK_FEATURES, RERANKER_NAME, rerank_hits
 from .repositories import KnowledgeRepository
 from .retrieval_scoring import not_run_profile, retrieval_profile, score_chunk
@@ -39,8 +40,7 @@ def tokenize(text: str) -> list[str]:
 
 
 def _allowed(row: dict, user: dict) -> bool:
-    roles = row["allowed_roles"]
-    return row["tenant_id"] == user["tenant_id"] and user["role"] in roles
+    return has_identity_access(row, user)
 
 
 def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -> dict:
