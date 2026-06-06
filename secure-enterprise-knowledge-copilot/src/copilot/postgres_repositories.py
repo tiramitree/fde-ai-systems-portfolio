@@ -354,6 +354,32 @@ class PostgresKnowledgeRepository:
         )
         return int(row[0]) if row else 0
 
+    def get_document(self, doc_id: str) -> dict | None:
+        self._apply_context(self._active_user)
+        row = self._fetch_one(
+            """
+            select
+              d.id::text,
+              d.external_doc_id,
+              t.slug,
+              d.title,
+              d.sensitivity,
+              d.allowed_roles,
+              coalesce(d.source_uri, ''),
+              coalesce(d.source_mime, ''),
+              d.source_hash,
+              d.version,
+              d.updated_at::text,
+              d.metadata
+            from documents d
+            join tenants t on t.id = d.tenant_id
+            where t.slug = %s and d.external_doc_id = %s
+            limit 1
+            """,
+            (self.tenant_slug, doc_id),
+        )
+        return _public_document(self._row_to_document(row)) if row else None
+
     def document_exists(self, doc_id: str) -> bool:
         self._apply_context(self._active_user)
         row = self._fetch_one(
@@ -409,6 +435,10 @@ class PostgresKnowledgeRepository:
                         "external_id": document.get("external_id", document["id"]),
                         "acl_source": document.get("acl_source", "manual"),
                         "sync_cursor": document.get("sync_cursor", ""),
+                        "allowed_roles_source": document.get("allowed_roles_source", "document_payload"),
+                        "source_acl_version": document.get("source_acl_version", ""),
+                        "source_acl_permission_id": document.get("source_acl_permission_id", ""),
+                        "source_acl_principal_count": document.get("source_acl_principal_count", 0),
                     }
                 ),
             ),
@@ -426,6 +456,10 @@ class PostgresKnowledgeRepository:
                 "external_id": chunk.get("external_id", chunk["doc_id"]),
                 "acl_source": chunk.get("acl_source", "manual"),
                 "sync_cursor": chunk.get("sync_cursor", ""),
+                "allowed_roles_source": chunk.get("allowed_roles_source", "document_payload"),
+                "source_acl_version": chunk.get("source_acl_version", ""),
+                "source_acl_permission_id": chunk.get("source_acl_permission_id", ""),
+                "source_acl_principal_count": chunk.get("source_acl_principal_count", 0),
                 "source_span": chunk.get("source_span", {}),
                 "chunk_source_span_unit": chunk.get("chunk_source_span_unit"),
                 "embedding_model": chunk.get("embedding_model"),
@@ -674,6 +708,10 @@ class PostgresKnowledgeRepository:
             "external_id": metadata.get("external_id", row[1]) if isinstance(metadata, dict) else row[1],
             "acl_source": metadata.get("acl_source", "manual") if isinstance(metadata, dict) else "manual",
             "sync_cursor": metadata.get("sync_cursor", "") if isinstance(metadata, dict) else "",
+            "allowed_roles_source": metadata.get("allowed_roles_source", "document_payload") if isinstance(metadata, dict) else "document_payload",
+            "source_acl_version": metadata.get("source_acl_version", "") if isinstance(metadata, dict) else "",
+            "source_acl_permission_id": metadata.get("source_acl_permission_id", "") if isinstance(metadata, dict) else "",
+            "source_acl_principal_count": metadata.get("source_acl_principal_count", 0) if isinstance(metadata, dict) else 0,
         }
 
     def _row_to_chunk(self, row: Any) -> dict:
@@ -701,6 +739,10 @@ class PostgresKnowledgeRepository:
             "external_id": metadata.get("external_id", row[2]) if isinstance(metadata, dict) else row[2],
             "acl_source": metadata.get("acl_source", "manual") if isinstance(metadata, dict) else "manual",
             "sync_cursor": metadata.get("sync_cursor", "") if isinstance(metadata, dict) else "",
+            "allowed_roles_source": metadata.get("allowed_roles_source", "document_payload") if isinstance(metadata, dict) else "document_payload",
+            "source_acl_version": metadata.get("source_acl_version", "") if isinstance(metadata, dict) else "",
+            "source_acl_permission_id": metadata.get("source_acl_permission_id", "") if isinstance(metadata, dict) else "",
+            "source_acl_principal_count": metadata.get("source_acl_principal_count", 0) if isinstance(metadata, dict) else 0,
             "source_span": metadata.get("source_span", {}) if isinstance(metadata, dict) else {},
             "chunk_source_span_unit": metadata.get("chunk_source_span_unit") if isinstance(metadata, dict) else None,
             "embedding_model": metadata.get("embedding_model") if isinstance(metadata, dict) else None,

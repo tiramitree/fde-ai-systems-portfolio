@@ -64,6 +64,17 @@ def _validate_roles(value: object, classification: str) -> list[str]:
     return roles
 
 
+def _metadata_int(document: dict, key: str, default: int = 0) -> int:
+    value = document.get(key, default)
+    if isinstance(value, bool):
+        return default
+    try:
+        numeric_value = int(value)
+    except (TypeError, ValueError):
+        raise IngestionError(400, f"{key} must be an integer") from None
+    return max(numeric_value, 0)
+
+
 def _public_document(doc: dict) -> dict:
     return {key: value for key, value in doc.items() if key != "body"}
 
@@ -73,6 +84,56 @@ def _metadata_string(document: dict, key: str, default: str, *, max_length: int 
     if not value:
         value = default
     return value[:max_length]
+
+
+def _acl_role_drift(previous_document: dict | None, current_allowed_roles: list[str]) -> dict:
+    current = sorted(current_allowed_roles)
+    if not previous_document:
+        return {
+            "changed": False,
+            "previous_allowed_roles": [],
+            "current_allowed_roles": current,
+            "added_roles": [],
+            "removed_roles": [],
+        }
+    previous = sorted(str(role) for role in previous_document.get("allowed_roles", []))
+    return {
+        "changed": previous != current,
+        "previous_allowed_roles": previous,
+        "current_allowed_roles": current,
+        "added_roles": sorted(set(current) - set(previous)),
+        "removed_roles": sorted(set(previous) - set(current)),
+    }
+
+
+def _validate_acl_snapshot(value: object) -> dict | None:
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        raise IngestionError(400, "connector.acl_snapshot must be an object")
+    version = _as_string(value.get("version"), "connector.acl_snapshot.version", max_length=180)
+    documents = value.get("documents")
+    if not isinstance(documents, dict) or not documents:
+        raise IngestionError(400, "connector.acl_snapshot.documents must be a non-empty object")
+    for key, record in documents.items():
+        if not isinstance(key, str) or not key.strip():
+            raise IngestionError(400, "connector.acl_snapshot document keys must be non-empty strings")
+        if not isinstance(record, dict):
+            raise IngestionError(400, "connector.acl_snapshot document records must be objects")
+        if "allowed_roles" not in record:
+            raise IngestionError(400, f"connector ACL record missing allowed_roles: {key}")
+    return {"version": version, "documents": documents}
+
+
+def _source_acl_record(acl_snapshot: dict | None, external_id: str, doc_id: object) -> dict | None:
+    if not acl_snapshot:
+        return None
+    documents = acl_snapshot["documents"]
+    candidates = [external_id, str(doc_id or "").strip()]
+    for candidate in candidates:
+        if candidate and candidate in documents:
+            return documents[candidate]
+    raise IngestionError(403, f"source ACL snapshot is missing document permission: {external_id}")
 
 
 def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
@@ -121,10 +182,16 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     external_id = _metadata_string(document, "external_id", doc_id, max_length=240)
     acl_source = _metadata_string(document, "acl_source", "manual")
     sync_cursor = _metadata_string(document, "sync_cursor", "", max_length=240)
+    allowed_roles_source = _metadata_string(document, "allowed_roles_source", "document_payload", max_length=80)
+    source_acl_version = _metadata_string(document, "source_acl_version", "", max_length=180)
+    source_acl_permission_id = _metadata_string(document, "source_acl_permission_id", "", max_length=240)
+    source_acl_principal_count = _metadata_int(document, "source_acl_principal_count", 0)
 
     exists = repo.document_exists(doc_id)
+    previous_document = repo.get_document(doc_id) if exists else None
     if exists and not replace:
         raise IngestionError(409, f"Document already exists: {doc_id}")
+    acl_role_drift = _acl_role_drift(previous_document, allowed_roles)
 
     doc = {
         "id": doc_id,
@@ -144,6 +211,10 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         "external_id": external_id,
         "acl_source": acl_source,
         "sync_cursor": sync_cursor,
+        "allowed_roles_source": allowed_roles_source,
+        "source_acl_version": source_acl_version,
+        "source_acl_permission_id": source_acl_permission_id,
+        "source_acl_principal_count": source_acl_principal_count,
         "body": body,
     }
 
@@ -173,6 +244,10 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "external_id": external_id,
                 "acl_source": acl_source,
                 "sync_cursor": sync_cursor,
+                "allowed_roles_source": allowed_roles_source,
+                "source_acl_version": source_acl_version,
+                "source_acl_permission_id": source_acl_permission_id,
+                "source_acl_principal_count": source_acl_principal_count,
                 "embedding": embedding.vector,
                 "chunk_source_span_unit": SOURCE_SPAN_UNIT,
                 **embedding.metadata(),
@@ -198,6 +273,11 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "external_id": external_id,
             "acl_source": acl_source,
             "sync_cursor": sync_cursor,
+            "allowed_roles_source": allowed_roles_source,
+            "source_acl_version": source_acl_version,
+            "source_acl_permission_id": source_acl_permission_id,
+            "source_acl_principal_count": source_acl_principal_count,
+            "acl_role_drift": acl_role_drift,
             "normalized_characters": parsed_source.normalized_characters,
             "chunk_source_span_unit": SOURCE_SPAN_UNIT,
             "chunk_source_span_count": len(chunks),
@@ -228,6 +308,11 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "external_id": external_id,
                 "acl_source": acl_source,
                 "sync_cursor": sync_cursor,
+                "allowed_roles_source": allowed_roles_source,
+                "source_acl_version": source_acl_version,
+                "source_acl_permission_id": source_acl_permission_id,
+                "source_acl_principal_count": source_acl_principal_count,
+                "acl_role_drift": acl_role_drift,
             },
             "chunk_source_span_unit": SOURCE_SPAN_UNIT,
             "chunk_source_span_count": len(chunks),
@@ -254,6 +339,7 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
     connector_name = _as_string(connector.get("name"), "connector.name", max_length=80)
     connector_cursor = _as_string(connector.get("cursor") or _utc_date(), "connector.cursor", max_length=240)
     acl_source = _as_string(connector.get("acl_source") or connector_name, "connector.acl_source", max_length=180)
+    acl_snapshot = _validate_acl_snapshot(connector.get("acl_snapshot"))
     connector_scheme = _slug(connector_name) or "connector"
 
     documents = payload.get("documents")
@@ -267,11 +353,30 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
     parser_warnings: list[str] = []
     replaced_count = 0
     chunk_count = 0
+    acl_drift_count = 0
+    acl_drift_doc_ids: list[str] = []
 
     for index, item in enumerate(documents, start=1):
         if not isinstance(item, dict):
             raise IngestionError(400, "each synced document must be an object")
         external_id = _metadata_string(item, "external_id", str(item.get("id") or f"source-{index}"), max_length=240)
+        acl_record = _source_acl_record(acl_snapshot, external_id, item.get("id"))
+        allowed_roles = item.get("allowed_roles")
+        allowed_roles_source = "document_payload"
+        source_acl_version = ""
+        source_acl_permission_id = ""
+        source_acl_principal_count = 0
+        if acl_record is not None:
+            allowed_roles = acl_record.get("allowed_roles")
+            allowed_roles_source = "connector_acl_snapshot"
+            source_acl_version = acl_snapshot["version"]
+            source_acl_permission_id = _metadata_string(
+                acl_record,
+                "permission_id",
+                f"{acl_source}:{external_id}",
+                max_length=240,
+            )
+            source_acl_principal_count = _metadata_int(acl_record, "principal_count", 0)
         source_url = str(
             item.get("source_url")
             or f"{connector_scheme}://{actor['tenant_id']}/{_slug(external_id)}"
@@ -284,6 +389,11 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             "external_id": external_id,
             "acl_source": acl_source,
             "sync_cursor": connector_cursor,
+            "allowed_roles": allowed_roles,
+            "allowed_roles_source": allowed_roles_source,
+            "source_acl_version": source_acl_version,
+            "source_acl_permission_id": source_acl_permission_id,
+            "source_acl_principal_count": source_acl_principal_count,
             "version": str(item.get("version") or connector_cursor or _utc_date()),
         }
         result = ingest_document(
@@ -298,6 +408,10 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
         replaced_count += 1 if result["ingestion"].get("replaced_existing") else 0
         chunk_count += int(result.get("chunk_count", 0))
         parser_warnings.extend(result["ingestion"]["parser"].get("warnings", []))
+        drift = result["ingestion"]["source"].get("acl_role_drift", {})
+        if drift.get("changed"):
+            acl_drift_count += 1
+            acl_drift_doc_ids.append(result["document"]["id"])
 
     repo.insert_audit(
         actor_id,
@@ -309,6 +423,9 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             "document_count": len(ingested),
             "chunk_count": chunk_count,
             "replaced_count": replaced_count,
+            "acl_snapshot_version": acl_snapshot["version"] if acl_snapshot else "",
+            "acl_drift_count": acl_drift_count,
+            "acl_drift_doc_ids": acl_drift_doc_ids,
             "doc_ids": [item["id"] for item in ingested],
             "parser_warnings": sorted(set(parser_warnings)),
         },
@@ -323,6 +440,9 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             "document_count": len(ingested),
             "chunk_count": chunk_count,
             "replaced_count": replaced_count,
+            "acl_snapshot_version": acl_snapshot["version"] if acl_snapshot else "",
+            "acl_drift_count": acl_drift_count,
+            "acl_drift_doc_ids": acl_drift_doc_ids,
             "parser_warnings": sorted(set(parser_warnings)),
         },
         "documents": ingested,

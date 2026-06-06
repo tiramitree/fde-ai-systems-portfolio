@@ -281,6 +281,7 @@ def project_checks(project: Project) -> list[Check]:
                     "installIngestionPanel",
                     "/api/documents/ingest",
                     "/api/sources/sync",
+                    "acl_snapshot",
                     "source_hash",
                     "admin required",
                     "onIngested",

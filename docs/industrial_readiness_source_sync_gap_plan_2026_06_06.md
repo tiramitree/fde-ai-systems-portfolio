@@ -25,7 +25,7 @@ My updated rough score:
 | Limited pilot | 35-45% |
 | True production | 18-28% |
 
-The new `/api/sources/sync` work improves the data-plane story, but it is still a connector contract and sample sync path, not a real external connector.
+The new `/api/sources/sync` and ACL snapshot work improve the data-plane story, but they are still connector contracts and sample sync paths, not real external connectors backed by live identity providers.
 
 ## External Baseline Scan
 
@@ -60,22 +60,24 @@ Project 1 now has a connector-style source sync slice:
 - `POST /api/sources/sync`
 - admin-only source sync refusal for non-admin users
 - connector metadata: `connector`, `cursor`, `acl_source`
-- document metadata: `source_connector`, `external_id`, `acl_source`, `sync_cursor`
+- document metadata: `source_connector`, `external_id`, `acl_source`, `allowed_roles_source`, `source_acl_version`, `source_acl_permission_id`, `source_acl_principal_count`, `sync_cursor`
+- optional connector ACL snapshot records that override payload roles and fail closed if a synced document lacks source permission data
+- permission drift evidence: `acl_role_drift`, `acl_drift_count`, and affected document IDs
 - reuse of parser, chunking, embedding, body-hiding, permission, retrieval, and citation paths
 - per-document `document_ingested` audit events
 - batch `source_sync_completed` audit event
 - frontend `Sync connector` sample button
-- runtime API contract checks proving source sync, retrieval citation, and audit evidence
+- runtime API contract checks proving source sync, source ACL snapshot enforcement, permission drift visibility changes, retrieval citation, and audit evidence
 - updated docs, threat model, evidence matrix, public README, screenshot manifest, and visual assets
 
 Verification snapshot:
 
 ```text
 python -B scripts/dev.py contracts
-API contract checks: 68/68 passed
+API contract checks: 72/72 passed
 
 python -B scripts/dev.py ui-contracts
-Runtime UI contract checks: 335/335 passed
+Runtime UI contract checks: 336/336 passed
 
 python -B scripts/dev.py quality
 Quality gate passed.
@@ -86,7 +88,7 @@ Quality gate passed.
 | Gap | Why it matters | Next proof to build |
 | --- | --- | --- |
 | Real authentication | UI-selected users are not an enterprise identity boundary. | Add auth middleware, tenant context, and signed local demo tokens or an OIDC-ready adapter. |
-| Source ACL sync | Enterprise RAG depends on source-system permissions, not manually assigned roles. | Add a read-only connector fixture that syncs users/groups/document ACLs and proves permission drift behavior. |
+| Source ACL sync | Enterprise RAG depends on source-system permissions, not manually assigned roles. | Partially covered by connector ACL snapshots and permission drift tests. Next proof: sync user/group membership from a real read-only connector fixture and validate it against RLS-backed denial counts. |
 | Durable ingestion | Real ingestion has retries, failures, large files, deletion, and backfills. | Add ingestion jobs, cursor checkpoints, job status, dead-letter records, and retry/idempotency checks. |
 | Document parsing depth | Real corpora include PDF/DOCX/tables/OCR and malformed content. | Add parser adapters, parser warnings, page/table metadata, and parser-quality evals. |
 | Live database validation | JSON state is not enough for pilot readiness. | Run and document live Postgres/pgvector checks with RLS, migrations, indexes, pool behavior, and rollback. |

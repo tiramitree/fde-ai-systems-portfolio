@@ -50,6 +50,21 @@ function buildSampleSyncPayload(userId) {
       name: "local-drive-demo",
       cursor: "2026-06-06T00:00:00Z",
       acl_source: "fixture-acl-v1",
+      acl_snapshot: {
+        version: "fixture-acl-v1",
+        documents: {
+          "drive-doc-source-sync-playbook-2026": {
+            allowed_roles: ["employee", "manager", "admin"],
+            permission_id: "drive-acl-source-sync-playbook-v1",
+            principal_count: 3,
+          },
+          "drive-json-finance-retention-controls-2026": {
+            allowed_roles: ["manager", "admin"],
+            permission_id: "drive-acl-finance-controls-v1",
+            principal_count: 2,
+          },
+        },
+      },
     },
     documents: [
       {

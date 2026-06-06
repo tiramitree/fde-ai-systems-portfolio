@@ -87,7 +87,7 @@
 | --- | --- | --- |
 | 数据 ingestion | 主要是 seed documents 和本地模拟。 | 文件上传、PDF/DOCX/HTML/CSV 解析、OCR、表格、增量同步、失败重试。 |
 | 检索质量 | 有 deterministic embedding、hybrid candidate、reranker boundary，但不是大规模真实检索。 | pgvector/search live path、hybrid retrieval、cross-encoder/LLM reranker、recall@k、faithfulness、stale/conflict eval。 |
-| 权限同步 | UI 选择 fictional user/role。 | SSO、租户、用户组、source ACL sync、Postgres RLS、permission drift tests。 |
+| 权限同步 | 已有 fictional user/role、connector ACL snapshot、source permission ID、permission drift contract；还不是真实身份系统。 | SSO、租户、用户组、真实 source ACL sync、Postgres RLS live tests、permission drift tests。 |
 | 持久化运行 | local JSON 是默认路径，Postgres 还没完全 live 验证。 | Postgres connection pool、migrations、transactional audit、worker queue、outbox、crash recovery。 |
 | Agent connector | 工具是本地确定性函数。 | 真实 GitHub/Jira/CRM/Slack connector、credential scope、dry run、审批、幂等执行。 |
 | 外部可观测 | 有 trace shape 和 OTLP-like export。 | OpenTelemetry SDK、Phoenix/Langfuse、dashboard、cost/latency/error/token metrics。 |
@@ -164,10 +164,10 @@ sources + permission sync
 - auth middleware。
 - tenant context。
 - user/group/role model。
-- source ACL model。
+- source ACL model。当前已有 connector ACL snapshot 合约。
 - Postgres RLS。
-- permission sync fixture。
-- permission drift eval。
+- permission sync fixture。当前已有本地 ACL snapshot fixture。
+- permission drift eval。当前 API contract 已覆盖 ACL drift visibility change。
 
 验收：
 

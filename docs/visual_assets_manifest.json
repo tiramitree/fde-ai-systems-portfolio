@@ -51,7 +51,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
-          "sha256": "5370940a3c219783825cfca6fbed6666382d5339619bdaa7ca43afc9c19bc330"
+          "sha256": "769ffc3d9ec990b372e179936791f8dea88952604c6d7ce5e10a569e4b100514"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
@@ -149,7 +149,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
-          "sha256": "5370940a3c219783825cfca6fbed6666382d5339619bdaa7ca43afc9c19bc330"
+          "sha256": "769ffc3d9ec990b372e179936791f8dea88952604c6d7ce5e10a569e4b100514"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",

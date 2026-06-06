@@ -358,6 +358,7 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
             "export function installIngestionPanel",
             "/api/documents/ingest",
             "/api/sources/sync",
+            "acl_snapshot",
             "admin required",
             "source_hash",
             "syncButton",
