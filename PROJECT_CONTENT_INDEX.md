@@ -72,6 +72,9 @@ python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
 python -B scripts/dev.py threat-model
+python -B scripts/dev.py trace-redaction
+python -B scripts/dev.py trace-to-eval
+python -B scripts/dev.py trace-to-eval-check
 python -B scripts/dev.py ui-contracts
 python -B scripts/dev.py visual-assets
 python -B scripts/dev.py visual-asset-diff
@@ -131,7 +134,7 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-collector-handoff, otel-traces, postgres-compose, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, trace-to-eval, trace-to-eval-check, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-collector-handoff, otel-traces, postgres-compose, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, trace-redaction, trace-to-eval, trace-to-eval-check, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
@@ -173,9 +176,11 @@ Local Git state:
 - `scripts/run_all_evals.py`: runs all project eval suites.
 - `scripts/export_eval_csv.py`: exports repository eval summary rows to `eval_summaries.csv`.
 - `scripts/check_trace_to_eval.py`: verifies trace-to-eval candidate coverage, safety, review metadata, promotion targets, and suggested expected-contract shapes.
-- `scripts/export_trace_eval_candidates.py`: converts local trace, audit, approval, and release evidence into review-only eval-candidate artifacts under ignored `out/`, including owner roles, dispositions, promotion targets, and regression schedules.
+- `scripts/trace_redaction.py`: shared redaction policy for generated trace export and trace-to-eval artifacts.
+- `scripts/check_trace_redaction.py`: verifies that synthetic sensitive markers are removed from OTLP payloads and trace-to-eval candidates before generated artifacts leave local runtime state.
+- `scripts/export_trace_eval_candidates.py`: converts local trace, audit, approval, and release evidence into review-only eval-candidate artifacts under ignored `out/`, including owner roles, dispositions, promotion targets, redaction policy metadata, and regression schedules.
 - `scripts/check_otel_collector_handoff.py`: verifies optional OTLP/HTTP JSON collector handoff behavior with a local in-process collector stub.
-- `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload and can optionally POST OTLP/HTTP JSON to a configured traces endpoint.
+- `scripts/export_traces_otel.py`: exports redacted local trace records to an OTLP/JSON-compatible payload and can optionally POST OTLP/HTTP JSON to a configured traces endpoint.
 - `scripts/replay_demo.py`: starts clean reset demo services, runs the release validation path, and prints trace/approval evidence.
 - `scripts/export_demo_replay_artifact.py`: writes release-attachable Markdown and JSON replay evidence under ignored `out/`.
 - `scripts/smoke_test_demo_flows.py`: exercises the critical demo paths end to end.
@@ -234,7 +239,7 @@ Design Review Docs:
 - `infra/postgres/init/003_project1_runtime_grants.sql`: local compose grants for Project 1 runtime access while preserving RLS.
 - `scripts/check_postgres_migrations.py`: static migration guard for pgvector, tenant/role RLS, approval visibility, eval isolation, and unsafe migration markers.
 - `scripts/check_project1_postgres_runtime.py`: runtime guard for `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, docs, and optional live checks.
-- `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping, optional OTLP/HTTP JSON handoff command, and production collector path.
+- `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping, shared redaction policy, optional OTLP/HTTP JSON handoff command, and production collector path.
 - `docs/opentelemetry_collector_handoff_troubleshooting.md`: optional collector handoff troubleshooting, endpoint boundaries, failure modes, rollback, and claim wording.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/openai_live_mode_troubleshooting.md`: optional OpenAI live-mode setup, safe failure modes, rollback, and review guardrails.
@@ -250,7 +255,7 @@ Design Review Docs:
 - `docs/readme_navigation_audit.md`: README-to-docs navigation audit for release-facing pointers, supporting docs, owner gates, and drift risks.
 - `docs/readme_navigation_drift_examples.md`: examples for fixing stale README links, unsupported claims, missing source docs, and manual-evidence drift.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.
-- `docs/trace_to_eval_workflow.md`: review-first workflow for converting local trace evidence into eval candidates without mutating checked-in golden fixtures.
+- `docs/trace_to_eval_workflow.md`: review-first workflow for converting redacted local trace evidence into eval candidates without mutating checked-in golden fixtures.
 - `docs/eval_gate_troubleshooting_examples.md`: local troubleshooting map for unsafe retrieval, direct side-effect, and release-blocking eval failures.
 - `docs/eval_csv_troubleshooting_examples.md`: examples for missing eval CSV output, stale eval state, changed case ids, unsafe failure counts, and generated artifact handling.
 - `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.

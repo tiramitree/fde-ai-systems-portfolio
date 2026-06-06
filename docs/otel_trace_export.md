@@ -12,6 +12,12 @@ resourceSpans
 
 The exporter is deterministic and local-first. It does not require an OpenTelemetry collector, network access, or an API key for the default path. When a collector is available, the same script can optionally POST OTLP/HTTP JSON to a traces endpoint without adding runtime dependencies. For collector handoff notes, see `docs/opentelemetry_collector_handoff_troubleshooting.md`.
 
+Before writing JSON or sending the optional collector handoff, span and event attributes pass through `public_trace_export_redaction_v1` in `scripts/trace_redaction.py`. The policy removes common email, phone, secret-like, private ID, and local path markers from exported values while leaving deterministic IDs, counts, statuses, and citation metadata available for review. Verify this boundary with:
+
+```bash
+python -B scripts/dev.py trace-redaction
+```
+
 ## Command
 
 Generate fresh trace evidence, then export:
@@ -51,6 +57,7 @@ Project 1 traces become `copilot.query` spans.
 Important attributes:
 
 - `app.project`
+- `app.redaction_policy`
 - `app.trace_type`
 - `app.user_id`
 - `app.question`
@@ -76,6 +83,7 @@ Project 2 traces become `ops_agent.process_message` spans.
 Important attributes:
 
 - `app.project`
+- `app.redaction_policy`
 - `app.trace_type`
 - `app.user_id`
 - `app.message`
@@ -98,6 +106,7 @@ Project 3 traces become `reliability.release_triage` spans.
 Important attributes:
 
 - `app.project`
+- `app.redaction_policy`
 - `app.trace_type`
 - `app.user_id`
 - `app.release_id`
@@ -138,6 +147,7 @@ The production design should preserve the same invariants:
 
 - permission checks happen before evidence reaches the model
 - approval gates happen before external side effects
+- trace export boundaries redact common sensitive markers before generated observability payloads leave local runtime state
 - blocked actions are observable events, not hidden failures
 - release rollout decisions link incidents, failed eval cases, runbooks, and audit events
 - trace IDs connect UI output, audit events, eval cases, and logs

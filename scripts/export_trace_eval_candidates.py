@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from trace_redaction import REDACTION_POLICY, redact_value
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT_DIR = ROOT / "out"
@@ -112,11 +114,12 @@ def candidate(
     evidence: dict[str, Any],
 ) -> dict[str, Any]:
     trace_id = str(trace.get("id", ""))
-    return {
+    return redact_value({
         "id": f"trace-eval-{stable_id(project, category, trace_id)}",
         "project": project,
         "category": category,
         "risk": risk,
+        "redaction_policy": REDACTION_POLICY,
         "review_status": "needs_human_review",
         "reason": reason,
         "source_trace_id": trace_id,
@@ -124,7 +127,7 @@ def candidate(
         "suggested_eval": suggested_eval,
         "evidence": evidence,
         "review": review_metadata(project, category, risk),
-    }
+    })
 
 
 def project_1_candidates(state: dict[str, Any]) -> list[dict[str, Any]]:
@@ -439,6 +442,7 @@ def build_payload(candidates: list[dict[str, Any]]) -> dict[str, Any]:
     categories = sorted({item["category"] for item in candidates})
     return {
         "generated_by": "python -B scripts/dev.py trace-to-eval",
+        "redaction_policy": REDACTION_POLICY,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "summary": {
             "candidate_count": len(candidates),

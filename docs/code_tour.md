@@ -18,7 +18,9 @@ The same shape appears in all three projects so a contributor can learn one flow
 
 Shared observability scripts:
 
+- `scripts/trace_redaction.py`: shared redaction policy for trace export boundaries. It removes common email, phone, secret-like, private ID, and local path markers before local traces become OTLP payloads or trace-to-eval candidates.
 - `scripts/export_traces_otel.py`: converts persisted local trace records into OTLP/JSON `resourceSpans`, writes `otel_traces.json`, and can optionally POST the same payload to an OTLP/HTTP traces endpoint.
+- `scripts/check_trace_redaction.py`: verifies that synthetic sensitive markers are removed from exported OTLP payloads and trace-to-eval candidates.
 - `scripts/check_otel_collector_handoff.py`: verifies the optional collector handoff path with a local in-process collector stub, including endpoint construction, content type, user agent, header precedence, and payload shape.
 
 ## Project 1: Secure Enterprise Knowledge Copilot
