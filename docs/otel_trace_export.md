@@ -59,6 +59,8 @@ Important attributes:
 - `app.model_provider`
 - `app.retrieval.hit_count`
 - `app.permission_blocked_count`
+- `app.source_lifecycle_policy`
+- `app.stale_filtered_count`
 - `app.citation_count`
 - `app.security_event_count`
 

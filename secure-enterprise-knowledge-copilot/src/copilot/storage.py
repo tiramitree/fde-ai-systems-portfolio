@@ -14,6 +14,7 @@ STATE_PATH = DATA_DIR / "runtime_state.json"
 SEED_PATH = DATA_DIR / "seed_documents.json"
 EVAL_CASES_PATH = DATA_DIR / "eval_cases.json"
 STORE_LOCK = threading.RLock()
+DEFAULT_SOURCE_LIFECYCLE_STATE = "active"
 
 
 def empty_state() -> dict:
@@ -81,6 +82,7 @@ def seed(store: JsonStore, seed_path: Path = SEED_PATH) -> None:
         documents.append(doc)
         for idx, chunk in enumerate(chunk_text_with_spans(doc["body"])):
             embedding = embed_chunk(doc["title"], chunk.text)
+            lifecycle_state = doc.get("source_lifecycle_state", DEFAULT_SOURCE_LIFECYCLE_STATE)
             chunks.append(
                 {
                     "id": f"{doc['id']}::chunk-{idx + 1}",
@@ -97,6 +99,8 @@ def seed(store: JsonStore, seed_path: Path = SEED_PATH) -> None:
                     "source_url": doc["source_url"],
                     "version": doc["version"],
                     "updated_at": doc["updated_at"],
+                    "source_lifecycle_state": lifecycle_state,
+                    "superseded_by": doc.get("superseded_by", ""),
                     "embedding": embedding.vector,
                     "chunk_source_span_unit": SOURCE_SPAN_UNIT,
                     **embedding.metadata(),

@@ -133,6 +133,7 @@ def project_1_candidates(state: dict[str, Any]) -> list[dict[str, Any]]:
         trace_id = str(trace.get("id", ""))
         payload = trace.get("payload", {})
         retrieval = payload.get("retrieval", {})
+        retrieval_profile = retrieval.get("profile", {}) if isinstance(retrieval, dict) else {}
         answer = payload.get("output", {})
         question = str(trace.get("question", ""))
         citations = answer.get("citations", [])
@@ -228,6 +229,8 @@ def project_1_candidates(state: dict[str, Any]) -> list[dict[str, Any]]:
                         "audit_event_ids": audit_ids,
                         "citation_doc_ids": citation_doc_ids,
                         "retrieved_doc_ids": retrieved_doc_ids,
+                        "source_lifecycle_policy": retrieval_profile.get("source_lifecycle_policy", ""),
+                        "stale_filtered_count": retrieval_profile.get("stale_filtered_count", 0),
                         "source_span_count": sum(1 for item in citations if item.get("source_span")),
                         "sentence_evidence_span_count": sum(
                             len(item.get("evidence_spans", []))

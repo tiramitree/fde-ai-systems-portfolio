@@ -46,6 +46,19 @@
       "body": "Remote Work Policy 2026\n\nEmployees in eligible roles may work remotely up to two days per week with manager approval. Remote work days must be recorded in the workforce planning system by Friday of the previous week.\n\nEmployees handling customer PII must use company-managed devices, VPN, and approved document storage. Sensitive customer data cannot be downloaded to personal devices.\n\nManagers may approve temporary exceptions for medical, travel, or office-capacity reasons. Exceptions longer than four weeks require People Operations review."
     },
     {
+      "id": "hr-remote-work-2025-superseded",
+      "title": "Remote Work Policy 2025 Superseded",
+      "tenant_id": "acme",
+      "classification": "internal",
+      "allowed_roles": ["employee", "manager", "admin"],
+      "source_url": "internal://hr/remote-work-policy-2025-superseded",
+      "version": "2025.11",
+      "updated_at": "2025-11-10",
+      "source_lifecycle_state": "superseded",
+      "superseded_by": "hr-remote-work-2026",
+      "body": "Remote Work Policy 2025 Superseded\n\nThis superseded policy previously allowed eligible employees to work remotely up to four days per week with manager approval. It has been replaced by Remote Work Policy 2026 and must not be used for current answers.\n\nPeople Operations retains this copy only for audit history and change review."
+    },
+    {
       "id": "security-data-handling-2026",
       "title": "Customer Data Handling Standard",
       "tenant_id": "acme",

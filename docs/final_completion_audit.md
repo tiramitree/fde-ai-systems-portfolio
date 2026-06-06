@@ -48,7 +48,7 @@ python -B scripts/dev.py evals
 
 Expected result:
 
-- Project 1: 13/13 passed, unsafe leak failures 0
+- Project 1: 14/14 passed, unsafe leak failures 0
 - Project 2: 8/8 passed, unsafe direct side-effect failures 0
 - Project 3: 6/6 passed, unsafe release approval failures 0
 

@@ -81,6 +81,8 @@ Retrieval contract:
 - `retrieval_profile.rerank_features` lists the deterministic rerank features used before answer assembly
 - `retrieval_profile.embedding_model` is `local-hashing-v1` and `retrieval_profile.embedding_dimensions` is `1536` for the local deterministic embedding boundary
 - `retrieval_profile.permission_filter` is `tenant_identity_before_scoring`
+- `retrieval_profile.source_lifecycle_policy` is `active_sources_only`; superseded, deprecated, or deleted sources are retained for audit history but filtered before scoring and answer assembly
+- `retrieval_profile.stale_filtered_count` records how many visible stale chunks were removed by source lifecycle filtering for that query
 - permission filtering uses tenant, role, and source-group identity before scoring; `allowed_roles` remains the coarse-grained fallback while `allowed_groups` and `source_acl_principals` demonstrate the source ACL migration path
 - `citations[].source_span` and `retrieved[].source_span` expose the cited chunk range over parser `normalized_text`
 - `citations[].evidence_excerpt` is the accessible sentence-level support used for answer assembly
@@ -114,6 +116,8 @@ The document object supports:
 - `external_id`
 - `acl_source`
 - `sync_cursor`
+- optional `source_lifecycle_state` (`active`, `superseded`, `deprecated`, or `deleted`; defaults to `active`)
+- optional `superseded_by`
 
 The route returns:
 
@@ -134,6 +138,8 @@ The route returns:
 - `ingestion.source.allowed_groups`
 - `ingestion.source.source_acl_principals`
 - `ingestion.source.sync_cursor`
+- `ingestion.source.source_lifecycle_state`
+- `ingestion.source.superseded_by`
 - `ingestion.chunk_source_span_unit`
 - `ingestion.chunk_source_span_count`
 - `ingestion.embedding.model`
@@ -200,13 +206,15 @@ The route returns:
 - `documents[].source_acl_version`
 - `documents[].source_acl_permission_id`
 - `documents[].source_acl_principal_count`
+- `documents[].source_lifecycle_state`
+- `documents[].superseded_by`
 
 Source sync contract:
 
 - only admin users can sync connector sources
 - synced documents are normalized through the same parser, chunking, embedding, permission, and body-hiding path as local ingestion
 - the API accepts at most ten documents per local sync request so demo state remains reviewable
-- connector `name`, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, allowed groups, source ACL principals, and sync cursor are persisted on documents and chunks
+- connector `name`, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, allowed groups, source ACL principals, sync cursor, and source lifecycle metadata are persisted on documents and chunks
 - when `connector.acl_snapshot` is present, each synced document must have a matching ACL record; missing ACL records fail closed before searchable chunks are written
 - source ACL roles override document payload roles, source ACL groups are carried into the same permission filter, and classification validation still prevents confidential documents from being widened to employee access
 - resyncs compare previous and current roles and return `acl_role_drift` plus batch `acl_drift_count` / `acl_drift_doc_ids`

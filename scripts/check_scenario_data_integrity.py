@@ -22,6 +22,7 @@ P2_ROLES = {"investigator", "supervisor"}
 P3_ROLES = {"reliability_lead", "product_manager"}
 P1_BEHAVIORS = {"answer", "abstain"}
 P2_INTENTS = {"approve_action", "request_escalation", "request_notice_send", "investigate_listing", "general"}
+P1_SOURCE_LIFECYCLE_STATES = {"active", "superseded", "deprecated", "deleted"}
 
 FORBIDDEN_DATA_MARKERS = (
     "C:/",
@@ -137,6 +138,14 @@ def check_p1() -> list[str]:
             require(group_id in known_group_ids, failures, f"P1 document {doc_id}: allowed_groups references unknown group {group_id}")
         require(doc.get("source_url", "").startswith("internal://"), failures, f"P1 document {doc_id}: source_url must be internal://")
         require(str(doc.get("title", "")) in str(doc.get("body", "")), failures, f"P1 document {doc_id}: body should include title")
+        lifecycle_state = doc.get("source_lifecycle_state", "active")
+        require(
+            lifecycle_state in P1_SOURCE_LIFECYCLE_STATES,
+            failures,
+            f"P1 document {doc_id}: invalid source_lifecycle_state {lifecycle_state}",
+        )
+        if lifecycle_state == "superseded":
+            require(doc.get("superseded_by") in doc_ids, failures, f"P1 document {doc_id}: superseded_by must reference a seed document")
         if classification == "confidential":
             require("employee" not in allowed_roles, failures, f"P1 document {doc_id}: confidential docs must not allow employee")
             require({"manager", "admin"} <= allowed_roles, failures, f"P1 document {doc_id}: confidential docs must allow manager and admin")
@@ -167,6 +176,19 @@ def check_p1() -> list[str]:
             require(isinstance(values, list), failures, f"P1 eval {case_id}: {field} must be a list")
             for doc_id in values:
                 require(doc_id in doc_ids, failures, f"P1 eval {case_id}: {field} references missing doc {doc_id}")
+        retrieval = expected.get("retrieval", {})
+        require(isinstance(retrieval, dict), failures, f"P1 eval {case_id}: retrieval must be an object when present")
+        for field in ("must_retrieve_doc_ids", "forbidden_retrieve_doc_ids"):
+            values = retrieval.get(field, [])
+            require(isinstance(values, list), failures, f"P1 eval {case_id}: retrieval.{field} must be a list")
+            for doc_id in values:
+                require(doc_id in doc_ids, failures, f"P1 eval {case_id}: retrieval.{field} references missing doc {doc_id}")
+        if "min_stale_filtered_count" in retrieval:
+            require(
+                isinstance(retrieval.get("min_stale_filtered_count"), int) and retrieval["min_stale_filtered_count"] >= 0,
+                failures,
+                f"P1 eval {case_id}: retrieval.min_stale_filtered_count must be a non-negative integer",
+            )
         if expected.get("requires_security_event"):
             require(
                 has_injection_marker(case.get("question", "")),

@@ -86,7 +86,7 @@ passed
 Latest local verification:
 
 ```text
-Project 1 eval: 13/13 passed, unsafe leaks 0
+Project 1 eval: 14/14 passed, unsafe leaks 0
 Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 Project 3 eval: 6/6 passed, unsafe release approval failures 0
 Smoke tests: 13/13 passed

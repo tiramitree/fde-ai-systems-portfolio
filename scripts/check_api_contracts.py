@@ -1396,6 +1396,9 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and profile.get("embedding_model") == "local-hashing-v1"
             and profile.get("embedding_dimensions") == 1536
             and profile.get("permission_filter") == "tenant_identity_before_scoring"
+            and profile.get("source_lifecycle_policy") == "active_sources_only"
+            and isinstance(profile.get("stale_filtered_count"), int)
+            and profile.get("stale_filtered_count", 0) >= 1
             and profile.get("candidate_strategy") == "local_full_scan"
             and isinstance(profile.get("candidate_source_count"), int)
             and profile.get("reranker") == "local-evidence-reranker-v1"
@@ -1417,6 +1420,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and isinstance(citations[0].get("evidence_excerpt"), str)
             and bool(citations[0]["evidence_excerpt"].strip())
             and valid_evidence_spans(citations[0].get("evidence_spans"))
+            and "hr-remote-work-2025-superseded" not in {item.get("doc_id") for item in retrieved}
             and "embedding" not in retrieved[0],
             "P1 retrieval profile and score-breakdown contract",
             f"profile={profile.get('name')}; top_doc={retrieved[0].get('doc_id') if retrieved else None}",

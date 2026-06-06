@@ -9,6 +9,7 @@ This MVP is intentionally dependency-free so it can run on any local Python 3.12
 - Role-aware retrieval across internal enterprise documents.
 - Admin-only ingestion of local text, Markdown, CSV, HTML, or JSON content.
 - Admin-only connector-style batch source sync with external IDs, source ACL snapshots, sync cursor, permission drift, and audit evidence.
+- Source lifecycle filtering that keeps superseded sources auditable but out of current answer generation.
 - Admin-only GitHub read connector that normalizes issue/PR records through the source sync and ingestion job boundaries.
 - Admin-only ingestion job ledger with idempotency, sanitized input summaries, retry parent links, and dead-letter evidence.
 - Citation-required answers.
@@ -67,7 +68,7 @@ Browser UI
   -> Python HTTP API
     -> JSON runtime state for users/documents/chunks/traces/audit/eval runs
     -> ingestion.py: admin-only source normalization + chunk creation + audit event
-    -> retrieval.py: tokenization + BM25-like scoring + role filter
+    -> retrieval.py: tokenization + BM25-like scoring + role filter + source lifecycle filter
     -> security.py: retrieved-content prompt-injection detection
     -> answering.py: grounded extractive answer + chunk and sentence source-span citations + abstention
     -> evals.py: golden regression suite
@@ -82,7 +83,7 @@ Browser UI
 - confidential documents cannot include the `employee` role
 - duplicate document IDs require explicit `replace`
 - supported source types are text, Markdown, CSV, HTML, and JSON
-- source sync persists connector name, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, and sync cursor metadata
+- source sync persists connector name, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, sync cursor, and source lifecycle metadata
 - GitHub connector sync persists issue/PR source URLs, external IDs, connector ACL snapshots, and `github_connector_synced` audit evidence without returning raw GitHub bodies through job summaries
 - source ACL snapshots override document payload roles and fail closed when a synced document lacks a matching source permission record
 - ingested document bodies are not returned by `/api/documents`
@@ -91,7 +92,7 @@ Browser UI
 - ingestion jobs require `idempotency_key`, record sanitized input summaries with `body_sha256` instead of raw bodies, and expose `succeeded` or `dead_lettered` status
 - failed worker validation writes `ingestion_job_dead_lettered`; successful jobs write `ingestion_job_completed`
 
-The API contract gate verifies admin ingestion, non-admin refusal, source sync refusal for non-admins, GitHub connector refusal for non-admins, source ACL snapshot enforcement, permission drift visibility changes, job idempotency replay, dead-letter handling, retry recovery, retrieval with chunk-level and sentence-level citation spans from ingested, synced, and GitHub connector documents, body hiding, and audit evidence.
+The API contract gate verifies admin ingestion, non-admin refusal, source sync refusal for non-admins, GitHub connector refusal for non-admins, source ACL snapshot enforcement, permission drift visibility changes, job idempotency replay, dead-letter handling, retry recovery, retrieval with chunk-level and sentence-level citation spans from ingested, synced, and GitHub connector documents, active-only source lifecycle filtering, body hiding, and audit evidence.
 
 ## Deployment Positioning
 

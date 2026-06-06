@@ -213,6 +213,7 @@ def audit_events_for_trace(state: dict, trace: dict) -> list[dict]:
 def copilot_span(project: str, trace: dict) -> dict:
     payload = trace.get("payload", {})
     retrieval = payload.get("retrieval", {})
+    profile = retrieval.get("profile", {}) if isinstance(retrieval.get("profile", {}), dict) else {}
     output = payload.get("output", {})
     start = unix_nano(trace.get("created_at", ""))
     end = start + 1_000_000
@@ -227,6 +228,8 @@ def copilot_span(project: str, trace: dict) -> dict:
         "app.model_provider": output.get("model_provider", ""),
         "app.retrieval.hit_count": len(retrieval.get("hits", [])),
         "app.permission_blocked_count": retrieval.get("permission_blocked_count", 0),
+        "app.source_lifecycle_policy": profile.get("source_lifecycle_policy", ""),
+        "app.stale_filtered_count": profile.get("stale_filtered_count", 0),
         "app.citation_count": len(output.get("citations", [])),
         "app.security_event_count": len(output.get("security_events", [])),
     }
@@ -238,6 +241,8 @@ def copilot_span(project: str, trace: dict) -> dict:
                 "query_tokens": retrieval.get("query_tokens", []),
                 "hit_count": len(retrieval.get("hits", [])),
                 "permission_blocked_count": retrieval.get("permission_blocked_count", 0),
+                "source_lifecycle_policy": profile.get("source_lifecycle_policy", ""),
+                "stale_filtered_count": profile.get("stale_filtered_count", 0),
             },
         )
     ]
