@@ -555,6 +555,122 @@ def project_1_contracts(base_url: str) -> list[Check]:
         )
     )
 
+    prune_sync_payload = {
+        "user_id": "avery",
+        "replace": True,
+        "prune_missing": True,
+        "connector": {
+            "name": "prune-demo",
+            "cursor": "2026-06-06T01:30:00Z",
+            "acl_source": "fixture-acl-prune-v1",
+            "acl_snapshot": {
+                "version": "fixture-acl-prune-v1",
+                "documents": {
+                    "prune-demo-active-2026": {
+                        "allowed_roles": ["employee", "manager", "admin"],
+                        "permission_id": "prune-demo-active-v1",
+                        "principal_count": 3,
+                    },
+                    "prune-demo-stale-2026": {
+                        "allowed_roles": ["employee", "manager", "admin"],
+                        "permission_id": "prune-demo-stale-v1",
+                        "principal_count": 3,
+                    },
+                },
+            },
+        },
+        "documents": [
+            {
+                "id": "prune-demo-active-2026",
+                "external_id": "prune-demo-active-2026",
+                "title": "Prune Demo Active Source 2026",
+                "body": "Prune Demo Active Source 2026\n\nThe active prune source says current connector records stay searchable after a full sync.",
+                "classification": "internal",
+                "source_mime": "text/markdown",
+                "updated_at": "2026-06-06",
+            },
+            {
+                "id": "prune-demo-stale-2026",
+                "external_id": "prune-demo-stale-2026",
+                "title": "Prune Demo Stale Source 2026",
+                "body": "Prune Demo Stale Source 2026\n\nThe obsolete prune archive says the zebra quasar exception should disappear after pruning.",
+                "classification": "internal",
+                "source_mime": "text/markdown",
+                "updated_at": "2026-06-06",
+            },
+        ],
+    }
+    status, prune_seed = post_json(f"{base_url}/api/sources/sync", prune_sync_payload)
+    checks.append(
+        check(
+            status == 200
+            and prune_seed.get("sync", {}).get("connector") == "prune-demo"
+            and prune_seed.get("sync", {}).get("prune_missing") is True
+            and prune_seed.get("sync", {}).get("pruned_count") == 0,
+            "P1 source sync can run a full prune-safe snapshot",
+            f"status={status}; pruned={prune_seed.get('sync', {}).get('pruned_count')}",
+        )
+    )
+
+    prune_followup_payload = {
+        **prune_sync_payload,
+        "connector": {
+            **prune_sync_payload["connector"],
+            "cursor": "2026-06-06T01:45:00Z",
+            "acl_snapshot": {
+                "version": "fixture-acl-prune-v2",
+                "documents": {
+                    "prune-demo-active-2026": {
+                        "allowed_roles": ["employee", "manager", "admin"],
+                        "permission_id": "prune-demo-active-v2",
+                        "principal_count": 3,
+                    },
+                },
+            },
+        },
+        "documents": [prune_sync_payload["documents"][0]],
+    }
+    status, prune_followup = post_json(f"{base_url}/api/sources/sync", prune_followup_payload)
+    prune_metadata = prune_followup.get("sync", {})
+    checks.append(
+        check(
+            status == 200
+            and prune_metadata.get("prune_missing") is True
+            and prune_metadata.get("pruned_count") == 1
+            and prune_metadata.get("pruned_doc_ids") == ["prune-demo-stale-2026"],
+            "P1 source sync prunes missing connector documents",
+            f"pruned={prune_metadata.get('pruned_doc_ids')}",
+        )
+    )
+
+    status, documents_after_prune = get_json(f"{base_url}/api/documents?user_id=alice")
+    checks.append(
+        check(
+            status == 200
+            and any(doc.get("id") == "prune-demo-active-2026" for doc in documents_after_prune.get("documents", []))
+            and not any(doc.get("id") == "prune-demo-stale-2026" for doc in documents_after_prune.get("documents", [])),
+            "P1 pruned source disappears from visible documents",
+            f"documents={len(documents_after_prune.get('documents', []))}",
+        )
+    )
+
+    status, pruned_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "alice",
+            "question": "What does the obsolete prune archive say about the zebra quasar exception?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and not any(citation.get("doc_id") == "prune-demo-stale-2026" for citation in pruned_answer.get("citations", []))
+            and not any(item.get("doc_id") == "prune-demo-stale-2026" for item in pruned_answer.get("retrieved", [])),
+            "P1 pruned source is no longer retrievable",
+            f"trace={pruned_answer.get('trace_id')}; citations={len(pruned_answer.get('citations', []))}",
+        )
+    )
+
     job_sync_payload = {
         "user_id": "avery",
         "replace": True,

@@ -13,7 +13,7 @@ yet industrial production software.
 | --- | --- | --- |
 | FDE portfolio / technical review artifact | Close | The repo demonstrates the right production-minded boundaries: permission-aware RAG, citations, abstention, approvals, side-effect blocking, trace IDs, audit logs, eval gates, CI, and public repo hygiene. |
 | Serious architecture review or take-home | Close to medium | The story is credible and now includes a GitHub read connector contract, but reviewers may ask for live source permissions and durable worker execution instead of deterministic fixture mode. |
-| Controlled pilot on low-risk internal data | Medium to far | Needs real auth, durable Postgres/pgvector runtime, parser/indexing jobs, source permissions, external observability, deletion/prune handling, and broader live connectors. |
+| Controlled pilot on low-risk internal data | Medium to far | Needs real auth, durable Postgres/pgvector runtime, parser/indexing jobs, source permissions, external observability, live deletion/prune verification, and broader live connectors. |
 | Production over sensitive enterprise data | Far | Needs identity, tenant isolation, source ACL sync, online evals, security operations, cloud deployment, backups, incident runbooks, and an owner model. |
 
 Most honest framing:
@@ -89,7 +89,7 @@ Source links reviewed:
 
 | Gap | Current state | Industrial requirement |
 | --- | --- | --- |
-| Real ingestion | Fictional seed data plus local/admin ingestion, connector-style source sync, ingestion jobs, and a GitHub issue/PR read connector contract. | Uploads, broader source connectors, parser jobs, OCR/table handling, incremental sync, deletion/prune handling, backfills, source versions, and failed-job recovery. |
+| Real ingestion | Fictional seed data plus local/admin ingestion, connector-style source sync, opt-in prune semantics, ingestion jobs, and a GitHub issue/PR read connector contract. | Uploads, broader source connectors, parser jobs, OCR/table handling, incremental sync, live external prune verification, backfills, source versions, and failed-job recovery. |
 | Retrieval quality | Deterministic lexical/vector scoring now has a local embedding boundary, optional PostgreSQL SQL keyword/vector candidate selection, and a local reranker boundary, but it is still small-corpus and not production-provider backed. | Production embedding provider, larger hybrid retrieval metrics, production reranker, query routing, metadata filters, recall@k, citation faithfulness, and stale-source tests. |
 | Source permissions | UI-selected fictional users and roles plus a connector ACL snapshot contract with permission-drift evidence. | Enterprise SSO, tenant model, group membership, RBAC/ABAC, real source ACL sync, RLS defense in depth, live permission-drift detection. |
 | Runtime durability | Local JSON remains the safe default; Postgres path is partial; Project 1 now has a local ingestion job ledger with idempotency, dead-letter, retry parent, and audit evidence. | Connection pooling, migrations, transactional audit, real queue backend, scheduled retries, outbox, crash recovery. |
@@ -208,7 +208,7 @@ Success criteria:
 The repository now has a GitHub read connector boundary with deterministic fixture mode and a live REST adapter path. Extend it before adding many new connectors:
 
 - source user/group permission sync
-- deletion/prune detection
+- live deletion/prune detection against source APIs
 - durable cursor checkpoints
 - connector health and backfill logs
 - retry scheduling through a real worker queue

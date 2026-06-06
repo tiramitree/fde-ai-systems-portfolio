@@ -211,7 +211,7 @@ sources + permission sync
 
 - incremental cursor。
 - source permissions。
-- deletion/prune。
+- 本地 full snapshot deletion/prune 已有，下一步是接真实外部源 API 的删除验证。
 - backfill status。
 - connector health。
 

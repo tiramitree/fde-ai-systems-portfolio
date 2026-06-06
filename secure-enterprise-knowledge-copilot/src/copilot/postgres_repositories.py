@@ -486,6 +486,62 @@ class PostgresKnowledgeRepository:
         self._commit()
         return replaced
 
+    def list_documents_by_connector(self, tenant_id: str, connector: str) -> list[dict]:
+        self._apply_context(self._active_user)
+        rows = self._fetch_all(
+            """
+            select
+              d.id::text,
+              d.external_doc_id,
+              t.slug,
+              d.title,
+              d.sensitivity,
+              d.allowed_roles,
+              coalesce(d.source_uri, ''),
+              coalesce(d.source_mime, ''),
+              d.source_hash,
+              d.version,
+              d.updated_at::text,
+              d.metadata
+            from documents d
+            join tenants t on t.id = d.tenant_id
+            where t.slug = %s and d.metadata ->> 'source_connector' = %s
+            order by d.external_doc_id
+            """,
+            (tenant_id, connector),
+        )
+        return [_public_document(self._row_to_document(row)) for row in rows]
+
+    def delete_documents(self, tenant_id: str, doc_ids: list[str]) -> int:
+        self._apply_context(self._active_user)
+        if not doc_ids:
+            return 0
+        tenant_uuid = self._tenant_uuid(tenant_id)
+        deleted = 0
+        for doc_id in sorted(set(doc_ids)):
+            row = self._fetch_one(
+                """
+                select 1
+                from documents
+                where tenant_id = %s::uuid and external_doc_id = %s
+                limit 1
+                """,
+                (tenant_uuid, doc_id),
+            )
+            if not row:
+                continue
+            self._execute_write(
+                """
+                delete from documents
+                where tenant_id = %s::uuid and external_doc_id = %s
+                """,
+                (tenant_uuid, doc_id),
+            )
+            deleted += 1
+        if deleted:
+            self._commit()
+        return deleted
+
     def get_ingestion_job(self, job_id: str) -> dict | None:
         self._apply_context(self._active_user)
         row = self._fetch_one(

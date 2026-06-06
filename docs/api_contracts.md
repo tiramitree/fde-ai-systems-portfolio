@@ -145,6 +145,7 @@ Ingestion contract:
 ### Source Sync Response Shape
 
 `POST /api/sources/sync` accepts an admin `user_id`, a `connector` object, a non-empty `documents` list, and optional `replace`.
+It also accepts optional boolean `prune_missing`, which should be used only for full connector snapshots.
 
 The connector object supports:
 
@@ -169,6 +170,9 @@ The route returns:
 - `sync.acl_snapshot_version`
 - `sync.acl_drift_count`
 - `sync.acl_drift_doc_ids`
+- `sync.prune_missing`
+- `sync.pruned_count`
+- `sync.pruned_doc_ids`
 - `sync.document_count`
 - `sync.chunk_count`
 - `sync.replaced_count`
@@ -192,6 +196,9 @@ Source sync contract:
 - when `connector.acl_snapshot` is present, each synced document must have a matching ACL record; missing ACL records fail closed before searchable chunks are written
 - source ACL roles override document payload roles, while classification validation still prevents confidential documents from being widened to employee access
 - resyncs compare previous and current roles and return `acl_role_drift` plus batch `acl_drift_count` / `acl_drift_doc_ids`
+- when `prune_missing` is `true`, documents already indexed for the same tenant and connector but absent from the current synced document IDs are removed from the searchable document/chunk store
+- prune is opt-in so partial connector syncs do not accidentally remove still-valid source records
+- prune results are returned as `pruned_count` and `pruned_doc_ids`, and the completed sync audit event records the same fields
 - sync writes `document_ingested` events for each document and a `source_sync_completed` audit event for the batch, including permission drift evidence
 - this route is a connector contract and sample data-plane demonstration; real external connectors, background queues, retries, and malware scanning remain production upgrade work
 
@@ -220,6 +227,7 @@ The local worker executes inline so the repository stays dependency-free, but it
 - `job.error`
 - `idempotency_replayed`
 - optional `result` when the source sync succeeds
+- source sync job summaries include `prune_missing`, `pruned_count`, and `pruned_doc_ids` when pruning is enabled
 
 Ingestion job contract:
 
@@ -228,6 +236,7 @@ Ingestion job contract:
 - job input summaries include document IDs, titles, classifications, source MIME types, body character counts, and `body_sha256`, but never raw document bodies
 - source sync validation failures become `dead_lettered` jobs with a sanitized error object instead of silently losing the failed work
 - retry jobs must reference a previous `dead_lettered` job through `retry_of_job_id`; the retry supplies a fresh payload and idempotency key
+- prune metadata is summarized in job results without exposing raw document bodies
 - successful jobs write `ingestion_job_completed` audit events
 - failed worker validation writes `ingestion_job_dead_lettered` audit events
 
@@ -252,6 +261,7 @@ Each `connectors[]` item returns:
 - `document_count`
 - `chunk_count`
 - `acl_drift_count`
+- `pruned_count`
 - `success_count`
 - `dead_letter_count`
 - `job_count`
@@ -263,7 +273,7 @@ Connector status contract:
 - only admin users can view connector status
 - the response summarizes source sync jobs without returning raw document, issue, or pull request bodies
 - `dead_letter_count` remains visible after a later successful retry, so recovered connectors still show prior failed work
-- `latest_cursor`, document/chunk counts, ACL drift count, and job status are surfaced for operator review before trusting new source data
+- `latest_cursor`, document/chunk counts, ACL drift count, prune count, and job status are surfaced for operator review before trusting new source data
 - the endpoint is a local operator contract; a production deployment would attach real connector registry records, queue state, schedule metadata, and alert links
 
 ### GitHub Connector Response Shape

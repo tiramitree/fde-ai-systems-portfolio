@@ -104,6 +104,8 @@ $payload = @{
 curl.exe -s -X POST http://127.0.0.1:8765/api/sources/sync -H "Content-Type: application/json" -d $payload | python -m json.tool
 ```
 
+For full connector snapshots, add boolean `"prune_missing": true` at the top level. The sync response then exposes `sync.pruned_count` and `sync.pruned_doc_ids`, and missing connector documents are removed from the searchable document/chunk store.
+
 Ask Alice about the synced source. The response should cite `source-sync-playbook-2026`:
 
 ```powershell
@@ -155,7 +157,10 @@ Useful fields to inspect:
 - `github.record_count`
 - `connectors[].health`
 - `connectors[].latest_cursor`
+- `connectors[].pruned_count`
 - `connectors[].dead_letter_count`
+- `sync.pruned_count`
+- `sync.pruned_doc_ids`
 - `acl_source`
 - `sync_cursor`
 

@@ -90,7 +90,7 @@ Project 1 eval: 11/11 passed, unsafe leaks 0
 Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 Project 3 eval: 6/6 passed, unsafe release approval failures 0
 Smoke tests: 13/13 passed
-API contract checks: 88/88 passed
+API contract checks: 92/92 passed
 Runtime UI contracts: 294/294 passed
 Observability integrity: 42/42 passed
 Threat model: 12/12 mapped

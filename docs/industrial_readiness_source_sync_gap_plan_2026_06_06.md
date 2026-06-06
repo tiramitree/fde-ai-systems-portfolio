@@ -77,7 +77,7 @@ Verification snapshot:
 
 ```text
 python -B scripts/dev.py contracts
-API contract checks: 88/88 passed
+API contract checks: 92/92 passed
 
 python -B scripts/dev.py ui-contracts
 Runtime UI contract checks: 337/337 passed

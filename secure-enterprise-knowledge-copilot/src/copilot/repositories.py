@@ -31,6 +31,8 @@ class KnowledgeRepository(Protocol):
     def get_document(self, doc_id: str) -> dict | None: ...
     def document_exists(self, doc_id: str) -> bool: ...
     def replace_document_with_chunks(self, document: dict, chunks: list[dict]) -> bool: ...
+    def list_documents_by_connector(self, tenant_id: str, connector: str) -> list[dict]: ...
+    def delete_documents(self, tenant_id: str, doc_ids: list[str]) -> int: ...
     def get_ingestion_job(self, job_id: str) -> dict | None: ...
     def get_ingestion_job_by_key(self, idempotency_key: str) -> dict | None: ...
     def record_ingestion_job(self, job: dict) -> None: ...
@@ -118,6 +120,30 @@ class JsonKnowledgeRepository:
         self.store.state["documents"].append(document)
         self.store.state["chunks"].extend(chunks)
         return replaced
+
+    def list_documents_by_connector(self, tenant_id: str, connector: str) -> list[dict]:
+        return [
+            _public_document(doc)
+            for doc in self.store.state["documents"]
+            if doc.get("tenant_id") == tenant_id and doc.get("source_connector") == connector
+        ]
+
+    def delete_documents(self, tenant_id: str, doc_ids: list[str]) -> int:
+        doc_id_set = set(doc_ids)
+        if not doc_id_set:
+            return 0
+        before = len(self.store.state["documents"])
+        self.store.state["documents"] = [
+            doc
+            for doc in self.store.state["documents"]
+            if doc.get("tenant_id") != tenant_id or doc.get("id") not in doc_id_set
+        ]
+        self.store.state["chunks"] = [
+            chunk
+            for chunk in self.store.state["chunks"]
+            if chunk.get("tenant_id") != tenant_id or chunk.get("doc_id") not in doc_id_set
+        ]
+        return before - len(self.store.state["documents"])
 
     def get_ingestion_job(self, job_id: str) -> dict | None:
         return next(

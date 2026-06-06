@@ -2,7 +2,7 @@
   "version": 1,
   "purpose": "Keep desktop and mobile demo screenshots tied to the frontend source files they were captured from.",
   "capture": {
-    "date": "2026-06-06",
+    "date": "2026-06-07",
     "viewports": {
       "desktop": [
         1400,
@@ -51,7 +51,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
-          "sha256": "3dc0810f15c6a59d44e41076c19a84f9fb639cdd2d7282db04e7d2657b5115ce"
+          "sha256": "2a897c6bc0659ebba141b44d43327960f4f9ed4d102bd1285898a8dadb5a4847"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
@@ -149,7 +149,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
-          "sha256": "3dc0810f15c6a59d44e41076c19a84f9fb639cdd2d7282db04e7d2657b5115ce"
+          "sha256": "2a897c6bc0659ebba141b44d43327960f4f9ed4d102bd1285898a8dadb5a4847"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
