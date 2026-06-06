@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+import importlib
+import os
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Callable, Protocol
 
+from .postgres_repositories import PostgresKnowledgeRepository, SqlConnection
 from .storage import JsonStore, connect as connect_json, load_scenario_snapshot
 from .time_utils import utc_now
+
+
+_POSTGRES_POOL: Any | None = None
+_POSTGRES_POOL_DSN: str | None = None
 
 
 class KnowledgeRepository(Protocol):
@@ -119,5 +126,104 @@ class RepositorySession:
         self._store.__exit__(exc_type, exc, tb)
 
 
-def connect_repository(path: Path | None = None) -> RepositorySession:
-    return RepositorySession(path)
+def connect_repository(path: Path | None = None) -> RepositorySession | "PostgresRepositorySession":
+    if path is not None:
+        return RepositorySession(path)
+    provider = repository_provider()
+    if provider == "json":
+        return RepositorySession()
+    if provider == "postgres":
+        return PostgresRepositorySession()
+    raise RuntimeError(f"Unsupported COPILOT_REPOSITORY provider: {provider}")
+
+
+def repository_provider() -> str:
+    return os.getenv("COPILOT_REPOSITORY", "json").strip().lower() or "json"
+
+
+def postgres_tenant_slug() -> str:
+    return os.getenv("COPILOT_TENANT_SLUG", "acme").strip() or "acme"
+
+
+def postgres_dsn() -> str:
+    return os.getenv("COPILOT_POSTGRES_DSN", "").strip()
+
+
+def postgres_pool_enabled() -> bool:
+    return os.getenv("COPILOT_POSTGRES_POOL", "0").strip().lower() in {"1", "true", "yes"}
+
+
+def connect_psycopg(dsn: str) -> SqlConnection:
+    if postgres_pool_enabled():
+        return _connect_psycopg_pool(dsn)
+    try:
+        psycopg = importlib.import_module("psycopg")
+    except ImportError as exc:
+        raise RuntimeError(
+            "COPILOT_REPOSITORY=postgres requires a deployment environment with psycopg installed."
+        ) from exc
+    return psycopg.connect(dsn)
+
+
+def _connect_psycopg_pool(dsn: str) -> SqlConnection:
+    global _POSTGRES_POOL, _POSTGRES_POOL_DSN
+    try:
+        psycopg_pool = importlib.import_module("psycopg_pool")
+    except ImportError as exc:
+        raise RuntimeError(
+            "COPILOT_POSTGRES_POOL=1 requires a deployment environment with psycopg_pool installed."
+        ) from exc
+    if _POSTGRES_POOL is None or _POSTGRES_POOL_DSN != dsn:
+        min_size = int(os.getenv("COPILOT_POSTGRES_POOL_MIN", "1"))
+        max_size = int(os.getenv("COPILOT_POSTGRES_POOL_MAX", "5"))
+        _POSTGRES_POOL = psycopg_pool.ConnectionPool(conninfo=dsn, min_size=min_size, max_size=max_size)
+        _POSTGRES_POOL_DSN = dsn
+    return PooledPostgresConnection(_POSTGRES_POOL.connection())
+
+
+class PooledPostgresConnection:
+    def __init__(self, lease: Any):
+        self._lease = lease
+        self._connection = lease.__enter__()
+
+    def cursor(self) -> Any:
+        return self._connection.cursor()
+
+    def commit(self) -> None:
+        self._connection.commit()
+
+    def rollback(self) -> None:
+        self._connection.rollback()
+
+    def close(self) -> None:
+        self._lease.__exit__(None, None, None)
+
+
+class PostgresRepositorySession:
+    def __init__(
+        self,
+        dsn: str | None = None,
+        tenant_slug: str | None = None,
+        connection_factory: Callable[[str], SqlConnection] | None = None,
+    ):
+        self.dsn = dsn if dsn is not None else postgres_dsn()
+        self.tenant_slug = tenant_slug if tenant_slug is not None else postgres_tenant_slug()
+        self.connection_factory = connection_factory or connect_psycopg
+        self._connection: SqlConnection | None = None
+        self._repo: PostgresKnowledgeRepository | None = None
+
+    def __enter__(self) -> PostgresKnowledgeRepository:
+        if not self.dsn:
+            raise RuntimeError("COPILOT_REPOSITORY=postgres requires COPILOT_POSTGRES_DSN.")
+        self._connection = self.connection_factory(self.dsn)
+        self._repo = PostgresKnowledgeRepository(self._connection, self.tenant_slug)
+        return self._repo
+
+    def __exit__(self, exc_type, exc, tb) -> None:
+        if not self._connection:
+            return
+        try:
+            if exc_type is not None:
+                self._connection.rollback()
+        finally:
+            self._connection.close()

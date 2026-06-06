@@ -34,7 +34,7 @@ PROJECTS = [
             "src/copilot/postgres_repositories.py": frozenset({"PostgresKnowledgeRepository", "SqlConnection"}),
             "src/copilot/retrieval.py": frozenset({"retrieve", "tokenize"}),
             "src/copilot/repositories.py": frozenset(
-                {"KnowledgeRepository", "JsonKnowledgeRepository", "connect_repository"}
+                {"KnowledgeRepository", "JsonKnowledgeRepository", "PostgresRepositorySession", "connect_repository"}
             ),
             "src/copilot/security.py": frozenset({"detect_prompt_injection", "sanitize_evidence"}),
             "src/copilot/storage.py": frozenset({"JsonStore", "connect", "init_db"}),
@@ -245,7 +245,9 @@ def check_copilot_storage_adapter_boundary() -> list[str]:
     required_repository_markers = [
         "class KnowledgeRepository",
         "class JsonKnowledgeRepository",
+        "class PostgresRepositorySession",
         "def connect_repository",
+        "def repository_provider",
         "replace_document_with_chunks",
         "load_scenario_snapshot",
     ]

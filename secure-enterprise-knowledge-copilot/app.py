@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import mimetypes
+import os
 import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -102,7 +103,11 @@ def main() -> None:
     parser.add_argument("--reset", action="store_true", help="Recreate the SQLite database from seed data.")
     args = parser.parse_args()
 
-    init_db(reset=args.reset)
+    repository_provider = os.getenv("COPILOT_REPOSITORY", "json").strip().lower() or "json"
+    if repository_provider == "json":
+        init_db(reset=args.reset)
+    elif args.reset:
+        print(f"Ignoring --reset because COPILOT_REPOSITORY={repository_provider} is not local JSON.")
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"Secure Enterprise Knowledge Copilot running at http://{args.host}:{args.port}")
     try:
