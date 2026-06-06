@@ -117,6 +117,12 @@ curl.exe -s -X POST http://127.0.0.1:8765/api/ingestion/jobs -H "Content-Type: a
 curl.exe -s "http://127.0.0.1:8765/api/ingestion/jobs?user_id=avery&limit=5" | python -m json.tool
 ```
 
+Inspect connector lifecycle status as admin. This summarizes job-backed health, latest cursors, document/chunk counts, and dead-letter state without returning raw source bodies:
+
+```powershell
+curl.exe -s "http://127.0.0.1:8765/api/connectors/status?user_id=avery&limit=20" | python -m json.tool
+```
+
 Sync GitHub issue/PR records through the GitHub read connector. Fixture mode is deterministic for local review; live mode uses the GitHub REST issues and pulls APIs and can use `GITHUB_CONNECTOR_TOKEN` for a scoped read token without returning or storing token values:
 
 ```powershell
@@ -147,6 +153,9 @@ Useful fields to inspect:
 - `external_id`
 - `github.owner`
 - `github.record_count`
+- `connectors[].health`
+- `connectors[].latest_cursor`
+- `connectors[].dead_letter_count`
 - `acl_source`
 - `sync_cursor`
 

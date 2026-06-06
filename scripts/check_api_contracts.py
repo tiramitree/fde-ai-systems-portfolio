@@ -880,6 +880,42 @@ def project_1_contracts(base_url: str) -> list[Check]:
         )
     )
 
+    status, forbidden_connector_status = get_json(f"{base_url}/api/connectors/status?user_id=alice")
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_connector_status.get("error", ""),
+            "P1 connector status rejects non-admin users",
+            json.dumps(forbidden_connector_status),
+        )
+    )
+
+    status, connector_status = get_json(f"{base_url}/api/connectors/status?user_id=avery&limit=20")
+    connectors = connector_status.get("connectors", [])
+    github_status = next((item for item in connectors if item.get("connector") == "github"), {})
+    local_status = next((item for item in connectors if item.get("connector") == "local-drive-demo"), {})
+    serialized_connector_status = json.dumps(connector_status)
+    checks.append(
+        check(
+            status == 200
+            and connector_status.get("status_source") == "ingestion_jobs"
+            and connector_status.get("connector_count") >= 2
+            and github_status.get("health") == "healthy"
+            and github_status.get("latest_job_id") == github_job.get("id")
+            and github_status.get("latest_cursor") == "2026-06-06T04:00:00Z"
+            and github_status.get("document_count") == 2
+            and github_status.get("chunk_count", 0) >= 2
+            and local_status.get("health") == "recovered"
+            and local_status.get("latest_job_status") == "succeeded"
+            and local_status.get("latest_cursor") == "2026-06-06T03:05:00Z"
+            and local_status.get("dead_letter_count", 0) >= 1
+            and local_status.get("success_count", 0) >= 1
+            and "eval summary exports must include" not in serialized_connector_status
+            and "Durable ingestion jobs must record queued" not in serialized_connector_status,
+            "P1 connector status summarizes job health without raw bodies",
+            f"connectors={len(connectors)}; github={github_status.get('health')}; local={local_status.get('health')}",
+        )
+    )
+
     status, documents_after_ingest = get_json(f"{base_url}/api/documents?user_id=alice")
     checks.append(
         check(

@@ -214,6 +214,7 @@ def project_checks(project: Project) -> list[Check]:
                     'id="syncSampleSource"',
                     'id="syncGitHubConnector"',
                     'id="ingestionStatus"',
+                    'id="connectorStatus"',
                     'id="ingestionJobs"',
                 ],
             )
@@ -283,6 +284,7 @@ def project_checks(project: Project) -> list[Check]:
                     "installIngestionPanel",
                     "/api/documents/ingest",
                     "/api/ingestion/jobs",
+                    "/api/connectors/status",
                     "/api/connectors/github/sync",
                     "acl_snapshot",
                     "idempotency_key",
@@ -290,6 +292,8 @@ def project_checks(project: Project) -> list[Check]:
                     "admin required",
                     "githubButton",
                     "renderJobList",
+                    "renderConnectorStatus",
+                    "connectorStatus",
                     "onIngested",
                 ],
             )

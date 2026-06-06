@@ -3,6 +3,7 @@ from __future__ import annotations
 from urllib.parse import parse_qs
 
 from .answering import generate_answer
+from .connector_status import list_connector_status
 from .evals import latest_eval_run, run_evals
 from .github_connector import sync_github_repository
 from .ingestion import IngestionError, ingest_document, sync_source_batch
@@ -42,6 +43,15 @@ class CopilotApi:
                         repo,
                         user_id=self._first(query, "user_id", "avery"),
                         limit=self._int(query, "limit", 25),
+                    )
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
+            if path == "/api/connectors/status":
+                try:
+                    return list_connector_status(
+                        repo,
+                        user_id=self._first(query, "user_id", "avery"),
+                        limit=self._int(query, "limit", 100),
                     )
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc

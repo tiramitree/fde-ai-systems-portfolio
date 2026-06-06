@@ -40,7 +40,30 @@ function renderJobList(container, jobs) {
       const detail = `${result.document_count || job.input?.document_count || 0} docs, ${result.chunk_count || 0} chunks`;
       return element("div", { className: "item" }, [
         element("div", { textContent: label }),
-        element("small", { textContent: `${job.id} · ${detail}` }),
+        element("small", { textContent: `${job.id} | ${detail}` }),
+      ]);
+    })
+  );
+}
+
+function renderConnectorStatus(container, connectors) {
+  if (!container) {
+    return;
+  }
+  if (!connectors.length) {
+    container.replaceChildren(element("div", { className: "muted", textContent: "No connector status recorded." }));
+    return;
+  }
+  container.replaceChildren(
+    ...connectors.slice(0, 4).map((connector) => {
+      const label = `${connector.connector}: ${connector.health}`;
+      const cursor = connector.latest_cursor || "no cursor";
+      const detail =
+        `${connector.latest_job_status} ${connector.latest_job_id} | ${connector.document_count || 0} docs, `
+        + `${connector.chunk_count || 0} chunks, ${connector.dead_letter_count || 0} dead letters, cursor ${cursor}`;
+      return element("div", { className: "item" }, [
+        element("div", { textContent: label }),
+        element("small", { textContent: detail }),
       ]);
     })
   );
@@ -177,6 +200,24 @@ function buildGitHubConnectorPayload(userId) {
 }
 
 export function installIngestionPanel({ api, elements, currentUser, onIngested }) {
+  async function refreshConnectorStatus(user) {
+    if (!elements.connectorStatus) {
+      return;
+    }
+    if (user?.role !== "admin") {
+      elements.connectorStatus.replaceChildren(
+        element("div", { className: "muted", textContent: "Connector status is admin-only." })
+      );
+      return;
+    }
+    try {
+      const data = await api(`/api/connectors/status?user_id=${encodeURIComponent(user.id)}&limit=20`);
+      renderConnectorStatus(elements.connectorStatus, data.connectors || []);
+    } catch (error) {
+      elements.connectorStatus.replaceChildren(element("div", { className: "muted", textContent: error.message }));
+    }
+  }
+
   async function refreshJobs(user) {
     if (!elements.jobs) {
       return;
@@ -205,6 +246,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     } else if (!elements.status.textContent || elements.status.textContent.includes("Switch to")) {
       setStatus(elements.status, "Ready to ingest a local source.", "ok");
     }
+    await refreshConnectorStatus(user);
     await refreshJobs(user);
   }
 

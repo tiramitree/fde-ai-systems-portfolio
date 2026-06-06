@@ -58,7 +58,7 @@ Approximate maturity:
 | Area | Evidence in repo | Why it matters |
 | --- | --- | --- |
 | Security boundary | The model is explicitly not the security boundary; permissions and side effects are enforced in application code. | This is the core enterprise AI principle reviewers care about. |
-| Project 1 RAG controls | Permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, source sync, GitHub read connector, ingestion job ledger, traces, audit logs, evals. | Stronger than a normal RAG demo because it shows data-plane and evidence controls. |
+| Project 1 RAG controls | Permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, source sync, GitHub read connector, ingestion job ledger, connector status surface, traces, audit logs, evals. | Stronger than a normal RAG demo because it shows data-plane, operator, and evidence controls. |
 | Project 2 agent controls | Tool side effects require approval and supervisor execution; unsafe bypasses are refused. | Aligns with modern agent governance and FDE enterprise workflows. |
 | Project 3 reliability controls | Failed eval evidence can block unsafe release rollout and create remediation evidence. | Shows the "AI app changes need release gates" story. |
 | Public repo hygiene | CI, API contracts, threat model, screenshots, safety checks, release docs, branch protection notes, PR review policy. | Makes the repo credible as a public artifact, not only a local project. |
@@ -104,6 +104,7 @@ Project 3: reliability layer
 
 1. Finish the Project 1 operator surface already in progress.
    - Show GitHub connector sync from the browser.
+   - Show connector lifecycle health from job-backed status.
    - Show recent ingestion jobs and statuses.
    - Update frontend integrity/UI contract checks.
    - Refresh visual assets only if the UI intentionally changes.
