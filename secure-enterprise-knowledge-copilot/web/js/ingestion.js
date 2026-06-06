@@ -13,6 +13,55 @@ function setStatus(node, message, state = "") {
   }
 }
 
+function mimeExtension(mime) {
+  if (mime === "text/csv") {
+    return "csv";
+  }
+  if (mime === "text/html") {
+    return "html";
+  }
+  if (mime === "application/json") {
+    return "json";
+  }
+  if (mime === "text/plain") {
+    return "txt";
+  }
+  return "md";
+}
+
+function base64FromBytes(bytes) {
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    const chunk = bytes.subarray(index, index + chunkSize);
+    binary += String.fromCharCode(...chunk);
+  }
+  return btoa(binary);
+}
+
+function base64FromText(text) {
+  return base64FromBytes(new TextEncoder().encode(text));
+}
+
+async function filePayload(elements) {
+  const selected = elements.file?.files?.[0];
+  if (selected) {
+    const bytes = new Uint8Array(await selected.arrayBuffer());
+    return {
+      filename: selected.name,
+      mime_type: selected.type || elements.mime.value,
+      content_base64: base64FromBytes(bytes),
+    };
+  }
+  const titleSlug = elements.title.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-") || "source";
+  const fallbackName = `${titleSlug}.${mimeExtension(elements.mime.value)}`;
+  return {
+    filename: (elements.fileName.value.trim() || fallbackName),
+    mime_type: elements.mime.value,
+    content_base64: base64FromText(elements.body.value),
+  };
+}
+
 function renderSummary(container, user) {
   container.replaceChildren(
     element("div", {}, [
@@ -70,17 +119,17 @@ function renderConnectorStatus(container, connectors) {
   );
 }
 
-function buildPayload(elements, userId) {
+async function buildPayload(elements, userId) {
   const allowedRoles = selectedOptions(elements.roles);
+  const file = await filePayload(elements);
   return {
     user_id: userId,
     replace: elements.replace.checked,
     document: {
       title: elements.title.value.trim(),
-      body: elements.body.value.trim(),
+      file,
       classification: elements.classification.value,
       allowed_roles: allowedRoles,
-      source_url: `ingested://acme/${elements.title.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
       source_mime: elements.mime.value,
       version: "ui-draft",
     },
@@ -260,7 +309,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     elements.button.disabled = true;
     setStatus(elements.status, "Ingesting document...");
     try {
-      const payload = buildPayload(elements, user.id);
+      const payload = await buildPayload(elements, user.id);
       const data = await api("/api/documents/ingest", {
         method: "POST",
         body: JSON.stringify(payload),

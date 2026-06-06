@@ -77,10 +77,10 @@ Verification snapshot:
 
 ```text
 python -B scripts/dev.py contracts
-API contract checks: 92/92 passed
+API contract checks: 94/94 passed
 
 python -B scripts/dev.py ui-contracts
-Runtime UI contract checks: 337/337 passed
+Runtime UI contract checks: 349/349 passed
 
 python -B scripts/dev.py quality
 Quality gate passed.

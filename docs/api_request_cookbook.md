@@ -54,6 +54,30 @@ Ingest the same local policy as admin `avery`:
 curl.exe -s -X POST http://127.0.0.1:8765/api/documents/ingest -H "Content-Type: application/json" -d '{"user_id":"avery","replace":true,"document":{"title":"Travel Expense Policy 2026","body":"Travel Expense Policy 2026\n\nEmployees must submit travel expense receipts within five business days after each approved trip. Expense reports must include the trip purpose, manager approval, and original receipt evidence.","classification":"internal","allowed_roles":["employee","manager","admin"],"source_url":"ingested://acme/travel-expense-policy-2026","source_mime":"text/markdown","version":"2026.06","updated_at":"2026-06-06"}}' | python -m json.tool
 ```
 
+Ingest a file-like source through the same admin route. The API accepts a UTF-8 text file as base64 JSON, infers `text/markdown` from the filename, returns `source_file` metadata, and defaults the source URL to `uploaded://acme/benefits-open-enrollment-2026.md`:
+
+```powershell
+$fileText = "Benefits Open Enrollment Notice 2026`n`nEmployees may enroll in the wellness stipend during the source-file intake pilot window from June 10 through June 20."
+$fileBase64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($fileText))
+$payload = @{
+  user_id = "avery"
+  replace = $true
+  document = @{
+    title = "Benefits Open Enrollment Notice 2026"
+    file = @{
+      filename = "benefits-open-enrollment-2026.md"
+      content_base64 = $fileBase64
+    }
+    classification = "internal"
+    allowed_roles = @("employee", "manager", "admin")
+    version = "2026.06"
+    updated_at = "2026-06-06"
+  }
+} | ConvertTo-Json -Depth 6 -Compress
+curl.exe -s -X POST http://127.0.0.1:8765/api/documents/ingest -H "Content-Type: application/json" -d $payload | python -m json.tool
+curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"alice","question":"What are the wellness stipend enrollment dates from the source-file intake pilot?"}' | python -m json.tool
+```
+
 Sync two sample connector documents as admin `avery`. The response should include `sync.connector`, `source_connector`, `external_id`, `acl_source`, and `sync_cursor` metadata without returning document bodies:
 
 ```powershell
@@ -148,6 +172,7 @@ Useful fields to inspect:
 - `retrieval_profile.name`
 - `retrieved[].score_breakdown`
 - `source_hash`
+- `source_file`
 - `ingestion.parser.name`
 - `ingestion.parser.normalized_characters`
 - `ingestion.parser.metadata`

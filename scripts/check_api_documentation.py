@@ -116,6 +116,12 @@ PROJECTS = {
             "normalized_characters",
             "parser_warnings",
             "row_count",
+            "document.file",
+            "content_base64",
+            "source_file",
+            "ingestion.source.file",
+            "file_size_bytes",
+            "file_content_encoding",
         },
     },
     "Regulated Customer Operations Agent": {

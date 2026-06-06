@@ -96,6 +96,9 @@ The document object supports:
 
 - `title`
 - `body` or `content`
+- optional `document.file.filename`
+- optional `document.file.content_base64`
+- optional `document.file.mime_type`
 - `classification`
 - `allowed_roles`
 - `source_url`
@@ -119,6 +122,7 @@ The route returns:
 - `ingestion.parser.normalized_characters`
 - `ingestion.parser.metadata`
 - `ingestion.parser.warnings`
+- `ingestion.source.file`
 - `ingestion.source.connector`
 - `ingestion.source.external_id`
 - `ingestion.source.acl_source`
@@ -136,11 +140,12 @@ Ingestion contract:
 - confidential documents cannot include the `employee` role
 - duplicate document IDs require `replace`
 - the raw document body is never returned
+- file-like ingestion accepts UTF-8 text files through `document.file.content_base64`; returned public metadata includes `source_file.file_name`, `source_file.file_size_bytes`, `source_file.file_content_encoding`, and inferred MIME provenance without returning file contents
 - ingestion normalizes supported source formats through parser versions such as `plain-text-v1`, `markdown-v1`, `csv-v1`, `html-v1`, and `json-v1`
 - ingestion records chunk source spans over parser `normalized_text`; `chunk_source_span_unit` is `normalized_text` and `chunk_source_span_count` matches `chunk_count`
 - ingestion creates local deterministic chunk embeddings with model `local-hashing-v1` and dimension `1536`; raw vectors are stored for retrieval/indexing but not returned by the public API
 - CSV parser metadata includes `row_count`, `column_count`, and `has_header`; parser warnings are surfaced as `parser_warnings`
-- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `parser_warnings`, source span metadata, embedding metadata, and role metadata
+- ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `source_file`, `parser_warnings`, source span metadata, embedding metadata, and role metadata
 
 ### Source Sync Response Shape
 
