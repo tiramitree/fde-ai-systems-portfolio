@@ -35,6 +35,15 @@ out/trace_eval_candidates.json
 out/trace_eval_candidates.md
 ```
 
+Each JSON candidate carries review metadata:
+
+- `review.owner_role`: the maintainer role expected to inspect the candidate.
+- `review.default_disposition`: starts as `undecided`.
+- `review.allowed_dispositions`: `promote_to_golden_eval`, `needs_fixture_edit`, or `reject_noisy_or_duplicate_trace`.
+- `review.promotion_target`: the checked-in eval fixture path to edit after review.
+- `review.regression_schedule`: `nightly` for high/critical risks and `release-gate` for medium risks.
+- `review.promotion_requirements`: the checks that must pass before promotion.
+
 ## Candidate Types
 
 Project 1 candidates:
@@ -61,6 +70,8 @@ Before promoting a candidate into a checked-in eval fixture:
 - keep the expected contract minimal and tied to one durable invariant
 - preserve existing unsafe counters at zero
 - copy only the suggested input and expected behavior, not generated trace IDs
+- set a human disposition before changing source fixtures
+- route Project 1 candidates to the knowledge-safety reviewer, Project 2 candidates to the agent-governance reviewer, and Project 3 candidates to the release-reliability reviewer
 - rerun `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`
 
 Do not promote runtime-only IDs, local paths, generated logs, private endpoints, tokens, or environment dumps into source files.

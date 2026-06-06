@@ -172,8 +172,8 @@ Local Git state:
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
 - `scripts/run_all_evals.py`: runs all project eval suites.
 - `scripts/export_eval_csv.py`: exports repository eval summary rows to `eval_summaries.csv`.
-- `scripts/check_trace_to_eval.py`: verifies trace-to-eval candidate coverage, safety, and suggested expected-contract shapes.
-- `scripts/export_trace_eval_candidates.py`: converts local trace, audit, approval, and release evidence into review-only eval-candidate artifacts under ignored `out/`.
+- `scripts/check_trace_to_eval.py`: verifies trace-to-eval candidate coverage, safety, review metadata, promotion targets, and suggested expected-contract shapes.
+- `scripts/export_trace_eval_candidates.py`: converts local trace, audit, approval, and release evidence into review-only eval-candidate artifacts under ignored `out/`, including owner roles, dispositions, promotion targets, and regression schedules.
 - `scripts/check_otel_collector_handoff.py`: verifies optional OTLP/HTTP JSON collector handoff behavior with a local in-process collector stub.
 - `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload and can optionally POST OTLP/HTTP JSON to a configured traces endpoint.
 - `scripts/replay_demo.py`: starts clean reset demo services, runs the release validation path, and prints trace/approval evidence.

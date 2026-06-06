@@ -65,6 +65,42 @@ def has_injection_marker(text: str) -> bool:
     )
 
 
+def review_metadata(project: str, category: str, risk: str) -> dict[str, Any]:
+    if category.startswith("p1_"):
+        owner_role = "knowledge-safety-reviewer"
+        promotion_target = "secure-enterprise-knowledge-copilot/data/eval_cases.json"
+    elif category.startswith("p2_"):
+        owner_role = "agent-governance-reviewer"
+        promotion_target = "regulated-customer-operations-agent/data/eval_cases.json"
+    else:
+        owner_role = "release-reliability-reviewer"
+        promotion_target = "ai-reliability-incident-console/data/eval_cases.json"
+
+    return {
+        "owner_role": owner_role,
+        "default_disposition": "undecided",
+        "allowed_dispositions": [
+            "promote_to_golden_eval",
+            "needs_fixture_edit",
+            "reject_noisy_or_duplicate_trace",
+        ],
+        "promotion_target": promotion_target,
+        "regression_schedule": "nightly" if risk in {"critical", "high"} else "release-gate",
+        "labels": [
+            "trace-to-eval",
+            project,
+            category,
+            f"risk:{risk}",
+        ],
+        "promotion_requirements": [
+            "confirm seed and runtime evidence are fictional and public-safe",
+            "keep the expected contract minimal and tied to one durable invariant",
+            "remove runtime-only trace ids before editing checked-in eval fixtures",
+            "rerun scenario-data, evals, claims, and quality gates before commit",
+        ],
+    }
+
+
 def candidate(
     *,
     project: str,
@@ -87,6 +123,7 @@ def candidate(
         "source_created_at": trace.get("created_at", ""),
         "suggested_eval": suggested_eval,
         "evidence": evidence,
+        "review": review_metadata(project, category, risk),
     }
 
 
@@ -343,10 +380,11 @@ def collect_candidates() -> list[dict[str, Any]]:
 
 def render_markdown(payload: dict[str, Any]) -> str:
     rows = [
-        "| Project | Category | Risk | Trace | Suggested Eval |",
-        "| --- | --- | --- | --- | --- |",
+        "| Project | Category | Risk | Owner | Schedule | Trace | Suggested Eval |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
     ]
     for item in payload["candidates"]:
+        review = item["review"]
         rows.append(
             "| "
             + " | ".join(
@@ -354,6 +392,8 @@ def render_markdown(payload: dict[str, Any]) -> str:
                     item["project"],
                     item["category"],
                     item["risk"],
+                    review["owner_role"],
+                    review["regression_schedule"],
                     item["source_trace_id"],
                     item["suggested_eval"]["id"],
                 ]
@@ -369,6 +409,8 @@ def render_markdown(payload: dict[str, Any]) -> str:
             f"Created at: `{payload['created_at']}`",
             "",
             "These are review candidates, not checked-in golden evals. Promote one only after confirming the seed data is fictional, the expected contract is minimal, and the case adds coverage for a durable invariant.",
+            "",
+            "Each candidate includes an owner role, disposition choices, promotion target, and regression schedule so the review queue can be managed without copying runtime-only evidence into source fixtures.",
             "",
             "## Summary",
             "",
