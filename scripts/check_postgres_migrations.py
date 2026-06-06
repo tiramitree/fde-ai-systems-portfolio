@@ -59,6 +59,9 @@ REQUIRED_MARKERS = [
     "supervisor_approval_select",
     "eval_state_isolation_runs",
     "eval_state_isolation_cases",
+    "project1_denied_relevant_chunk_count",
+    "security definer",
+    "revoke all on function project1_denied_relevant_chunk_count(text[]) from public",
 ]
 
 FORBIDDEN_MARKERS = [
@@ -93,20 +96,20 @@ def check_version_order(files: list[Path]) -> list[str]:
     return failures
 
 
-def check_core_migration(sql: str) -> list[str]:
+def check_migration_sql(sql: str) -> list[str]:
     failures: list[str] = []
     for table in REQUIRED_TABLES:
         if f"create table if not exists {table}" not in sql:
-            failures.append(f"001_core.sql: missing table {table}")
+            failures.append(f"PostgreSQL migrations: missing table {table}")
     for table in RLS_TABLES:
         if f"alter table {table} enable row level security" not in sql:
-            failures.append(f"001_core.sql: missing RLS enablement for {table}")
+            failures.append(f"PostgreSQL migrations: missing RLS enablement for {table}")
     for marker in REQUIRED_MARKERS:
         if marker.lower() not in sql:
-            failures.append(f"001_core.sql: missing marker {marker}")
+            failures.append(f"PostgreSQL migrations: missing marker {marker}")
     for marker in FORBIDDEN_MARKERS:
         if marker in sql:
-            failures.append(f"001_core.sql: forbidden marker {marker}")
+            failures.append(f"PostgreSQL migrations: forbidden marker {marker}")
     return failures
 
 
@@ -156,6 +159,8 @@ def check_adapter_contract() -> list[str]:
         "select set_config('app.environment'",
         "def list_visible_documents",
         "def list_chunks",
+        "def count_potentially_blocked_chunks",
+        "select project1_denied_relevant_chunk_count",
         "def replace_document_with_chunks",
         "insert into documents",
         "insert into document_chunks",
@@ -180,8 +185,9 @@ def main() -> int:
     if not CORE_MIGRATION.exists():
         failures.append("missing infra/postgres/migrations/001_core.sql")
     failures.extend(check_version_order(files))
-    if CORE_MIGRATION.exists():
-        failures.extend(check_core_migration(normalized_sql(CORE_MIGRATION)))
+    if files:
+        combined_sql = " ".join(normalized_sql(path) for path in files)
+        failures.extend(check_migration_sql(combined_sql))
     failures.extend(check_adapter_contract())
     failures.extend(check_docs())
 

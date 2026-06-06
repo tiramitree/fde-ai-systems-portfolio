@@ -189,6 +189,17 @@ class PostgresKnowledgeRepository:
         )
         return [self._row_to_chunk(row) for row in rows]
 
+    def count_potentially_blocked_chunks(self, user: dict, query_tokens: list[str]) -> int:
+        self._active_user = user
+        self._apply_context(user)
+        if not query_tokens:
+            return 0
+        row = self._fetch_one(
+            "select project1_denied_relevant_chunk_count(%s::text[])",
+            (query_tokens,),
+        )
+        return int(row[0]) if row else 0
+
     def document_exists(self, doc_id: str) -> bool:
         self._apply_context(self._active_user)
         row = self._fetch_one(

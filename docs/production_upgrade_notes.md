@@ -71,6 +71,7 @@ Next.js frontend
 Current production-path artifacts:
 
 - `infra/postgres/migrations/001_core.sql`
+- `infra/postgres/migrations/002_project1_denied_evidence_count.sql`
 - `infra/postgres/seeds/001_project1_demo.sql`
 - `docker-compose.postgres.yml`
 - `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`
@@ -88,10 +89,11 @@ Project 1 runtime switch:
 - `python -B scripts/dev.py postgres-runtime` verifies the offline runtime switch contract; `python -B scripts/check_project1_postgres_runtime.py --live` verifies a real seeded database when `COPILOT_POSTGRES_DSN` is available.
 - `python -B scripts/dev.py postgres-compose` verifies the optional local pgvector compose file, digest-pinned image, init order, seed wiring, healthcheck, and local role separation.
 - `docker-compose.postgres.yml` runs Project 1 local production-mode Postgres on host port `55432`; its public local-only app role is `fde_app` with demo password `fde_app_demo_password`.
+- `project1_denied_relevant_chunk_count` preserves denied-evidence audit counts under RLS without exposing unauthorized document IDs, titles, or chunk bodies.
 
 Next steps:
 
-1. Run `python -B scripts/check_project1_postgres_runtime.py --live` on a Docker-enabled machine after starting `docker-compose.postgres.yml`.
+1. Run `python -B scripts/check_project1_postgres_runtime.py --live` on a Docker-enabled machine after starting `docker-compose.postgres.yml`; verify Alice finance denial, Morgan finance access, and denied-evidence count behavior.
 2. Extend the current admin-only ingestion contract into file upload and connector sync.
 3. Add a background document parser pipeline.
 4. Add embedding model and vector retrieval.

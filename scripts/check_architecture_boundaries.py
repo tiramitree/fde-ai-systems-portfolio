@@ -248,6 +248,7 @@ def check_copilot_storage_adapter_boundary() -> list[str]:
         "class PostgresRepositorySession",
         "def connect_repository",
         "def repository_provider",
+        "count_potentially_blocked_chunks",
         "replace_document_with_chunks",
         "load_scenario_snapshot",
     ]

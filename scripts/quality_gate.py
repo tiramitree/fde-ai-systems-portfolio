@@ -62,6 +62,7 @@ REQUIRED_FILES = [
     "docs/postgres_pgvector_adapter_design.md",
     "docker-compose.postgres.yml",
     "infra/postgres/migrations/001_core.sql",
+    "infra/postgres/migrations/002_project1_denied_evidence_count.sql",
     "infra/postgres/init/000_project1_runtime_roles.sql",
     "infra/postgres/init/003_project1_runtime_grants.sql",
     "infra/postgres/seeds/001_project1_demo.sql",

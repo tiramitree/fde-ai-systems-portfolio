@@ -87,13 +87,7 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
 
     scored.sort(key=lambda item: item["score"], reverse=True)
 
-    blocked_count = 0
-    for chunk in all_chunks:
-        if _allowed(chunk, user):
-            continue
-        inaccessible_tokens = tokenize(chunk["title"] + " " + chunk["text"])
-        if set(query_tokens) & set(inaccessible_tokens):
-            blocked_count += 1
+    blocked_count = repo.count_potentially_blocked_chunks(user, query_tokens)
 
     return {
         "hits": scored[:k],

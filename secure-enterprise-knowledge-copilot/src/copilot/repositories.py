@@ -19,6 +19,7 @@ class KnowledgeRepository(Protocol):
     def list_users(self) -> list[dict]: ...
     def list_visible_documents(self, user: dict) -> list[dict]: ...
     def list_chunks(self, tenant_id: str) -> list[dict]: ...
+    def count_potentially_blocked_chunks(self, user: dict, query_tokens: list[str]) -> int: ...
     def document_exists(self, doc_id: str) -> bool: ...
     def replace_document_with_chunks(self, document: dict, chunks: list[dict]) -> bool: ...
     def insert_trace(self, trace_id: str, user_id: str, question: str, payload: dict) -> None: ...
@@ -55,6 +56,17 @@ class JsonKnowledgeRepository:
 
     def list_chunks(self, tenant_id: str) -> list[dict]:
         return [chunk for chunk in self.store.state["chunks"] if chunk["tenant_id"] == tenant_id]
+
+    def count_potentially_blocked_chunks(self, user: dict, query_tokens: list[str]) -> int:
+        query_terms = set(query_tokens)
+        blocked_count = 0
+        for chunk in self.store.state["chunks"]:
+            if chunk["tenant_id"] != user["tenant_id"] or user["role"] in chunk["allowed_roles"]:
+                continue
+            haystack = f"{chunk['title']} {chunk['text']}".lower()
+            if any(term in haystack for term in query_terms):
+                blocked_count += 1
+        return blocked_count
 
     def document_exists(self, doc_id: str) -> bool:
         return any(doc["id"] == doc_id for doc in self.store.state["documents"])

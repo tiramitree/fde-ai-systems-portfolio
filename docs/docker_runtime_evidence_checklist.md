@@ -12,7 +12,7 @@ There are two different Docker checks:
 | --- | --- | --- |
 | `python -B scripts/dev.py container-release` | Dockerfiles, Compose ports, health checks, startup commands, optional env defaults, pinned base images, and build-context ignores are statically aligned. | It does not build images, start containers, or prove containerized smoke flows. |
 | `python -B scripts/dev.py docker-runtime` | On a Docker-enabled machine, Compose can build and start all services, health checks pass, smoke flows pass through containerized endpoints, and the stack tears down. | It is not verified on machines without Docker and should not be claimed from README text alone. |
-| `python -B scripts/dev.py postgres-compose` | The optional Project 1 PostgreSQL/pgvector file `docker-compose.postgres.yml` is statically aligned with migration SQL, seed SQL, init grants, host port `55432`, and app role `fde_app`. | It does not start PostgreSQL, prove `COPILOT_POSTGRES_DSN`, or run live RLS/runtime queries. |
+| `python -B scripts/dev.py postgres-compose` | The optional Project 1 PostgreSQL/pgvector file `docker-compose.postgres.yml` is statically aligned with migration SQL, denied-evidence count function, seed SQL, init grants, host port `55432`, and app role `fde_app`. | It does not start PostgreSQL, prove `COPILOT_POSTGRES_DSN`, or run live RLS/runtime queries. |
 
 Do not claim Docker runtime verification until `python -B scripts/dev.py docker-runtime` passes on the machine where the evidence is being collected. Treat `container-release` as static config evidence and `docker-runtime` as runtime evidence only on a Docker-enabled machine.
 
@@ -63,7 +63,7 @@ python -B scripts/check_project1_postgres_runtime.py --live
 docker compose -f docker-compose.postgres.yml down --remove-orphans
 ```
 
-The `fde_app` / `fde_app_demo_password` values are public local-only demo credentials for `docker-compose.postgres.yml`. Do not reuse them outside local verification.
+The `fde_app` / `fde_app_demo_password` values are public local-only demo credentials for `docker-compose.postgres.yml`. Do not reuse them outside local verification. The live runtime probe checks Alice finance denial, Morgan finance access, and `project1_denied_relevant_chunk_count` behavior without exposing unauthorized content.
 
 ## Expected Evidence
 
