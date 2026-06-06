@@ -325,17 +325,20 @@ This repository now includes the first reviewable production-path migration arti
 
 - `infra/postgres/migrations/001_core.sql`
 - `python -B scripts/dev.py postgres-migrations`
+- `infra/postgres/seeds/001_project1_demo.sql`
+- `python -B scripts/dev.py postgres-seed`
 
-The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, and the Project 1 adapter contract. It does not make PostgreSQL required for the default local demo.
+The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, and the Project 1 adapter contract. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. Neither check makes PostgreSQL required for the default local demo.
 
 Migration phases:
 
 1. Review and run `001_core.sql` in a PostgreSQL/pgvector environment.
-2. Backfill tenants, users, documents, chunks, cases, approvals, audit events, traces, and eval records.
-3. Dual-write local and PostgreSQL adapters in a staging environment.
-4. Compare read results and eval outcomes across both adapters.
-5. Cut reads to PostgreSQL behind a feature flag.
-6. Remove dual-write only after evals and replay checks are stable.
+2. Seed the Project 1 demo tenant, users, documents, and chunks with `infra/postgres/seeds/001_project1_demo.sql`.
+3. Backfill cases, approvals, audit events, traces, and eval records for Projects 2 and 3 when those adapters are added.
+4. Dual-write local and PostgreSQL adapters in a staging environment.
+5. Compare read results and eval outcomes across both adapters.
+6. Cut reads to PostgreSQL behind a feature flag.
+7. Remove dual-write only after evals and replay checks are stable.
 
 Rollback rules:
 
@@ -381,8 +384,8 @@ This keeps the technical review story inspectable: a reviewer can connect an ans
 
 1. Extend the existing `KnowledgeRepository` boundary while keeping local JSON adapters. Done for Project 1.
 2. Keep building the optional PostgreSQL adapter path behind a future `PORTFOLIO_STORAGE_PROVIDER=postgres` switch. The current adapter contract exists, but it is not wired as the default runtime.
-3. Add migrations and seed scripts.
-4. Port Project 1 documents, chunks, traces, audit, and eval state.
+3. Add migrations and seed scripts. Done for the Project 1 demo seed path.
+4. Wire Project 1 documents, chunks, traces, audit, and eval state to a real PostgreSQL connection pool.
 5. Add pgvector embeddings and hybrid retrieval behind a feature flag.
 6. Port Project 2 cases, tool actions, approvals, traces, and audit state.
 7. Add RLS tests, unauthorized retrieval tests, and cross-tenant side-effect tests.

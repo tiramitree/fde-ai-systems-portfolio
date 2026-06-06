@@ -42,12 +42,29 @@ Reference signals:
 
 - Azure's RAG sample uses Azure AI Search, Azure OpenAI, cloud ingestion, optional Entra login/access control, Application Insights monitoring, deployment infrastructure, and cost guidance. It also warns that additional security work is required before production.
 - AWS Generative AI Application Builder centers on managed dashboards for MCP servers, agents, multi-agent workflows, and RAG chatbot deployments.
-- Dify combines AI workflow, RAG pipeline, agents, model management, and observability as one platform surface.
-- RAGFlow emphasizes deep document understanding, complex unstructured formats, chunk visualization, and grounded citations.
-- OpenAI's current guidance treats evals as necessary because model behavior is variable, and recommends trace grading before repeatable eval datasets for agent workflows.
+- Dify combines AI workflow, RAG pipeline, agents, model management, integrations, and observability as one platform surface.
+- RAGFlow emphasizes deep document understanding, complex unstructured formats, chunk visualization, grounded citations, multiple recall paths, reranking, and deployable Docker/self-hosting surfaces.
+- Onyx emphasizes enterprise connectors and permission-aware retrieval; its GitHub connector specifically documents permission synchronization so users only see search results they are allowed to access in the source system.
+- EnterpriseRAG-Bench simulates internal-company RAG over more than 500,000 documents and 500 questions, which is a useful scale marker for how far real enterprise retrieval differs from small demo seed data.
+- OpenAI's current guidance treats evals as necessary because model behavior is variable, recommends building with the strongest model first to establish an accuracy baseline, and then optimizing with smaller models for cost and latency.
+- OpenAI's agent safety guidance explicitly recommends tool approvals, guardrails, trace graders, evals, and keeping untrusted data from directly driving agent behavior.
 - OpenTelemetry now has GenAI semantic conventions for model spans, agent spans, metrics, events, and provider-specific conventions.
 - Phoenix/Langfuse-style platforms turn traces, evals, prompt versions, datasets, and annotations into the operational loop.
+- LangGraph-style production agent systems treat checkpointing and persistence as core because crash recovery and human-in-the-loop workflows require durable state.
 - OWASP and NIST frame the risk surface: prompt injection, insecure output handling, excessive agency, data leakage, and organizational risk management.
+
+Source links reviewed on 2026-06-06:
+
+- OpenAI eval best practices: https://developers.openai.com/api/docs/guides/evaluation-best-practices
+- OpenAI agent build guide: https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/
+- OpenAI agent safety: https://developers.openai.com/api/docs/guides/agent-builder-safety
+- Onyx RAG and Search: https://docs.onyx.app/overview/core_features/internal_search
+- Onyx GitHub connector permission sync: https://docs.onyx.app/admins/connectors/official/github
+- EnterpriseRAG-Bench: https://github.com/onyx-dot-app/EnterpriseRAG-Bench
+- RAGFlow: https://github.com/infiniflow/ragflow
+- Phoenix: https://arize.com/docs/phoenix
+- Langfuse: https://langfuse.com/docs
+- LangGraph persistence: https://langgraphjs.guide/persistence/
 
 ## 2026-06 External Benchmark Snapshot
 
@@ -76,6 +93,7 @@ Current ecosystem examples checked with GitHub metadata on 2026-06-06:
 | Project | Stars checked | Main industrial lesson |
 | --- | ---: | --- |
 | `langgenius/dify` | 144099 | Unified workflow/RAG/agent/model-management surface matters. |
+| `infiniflow/ragflow` | 82000+ | Complex document parsing, chunk visibility, citations, and reranking are production RAG differentiators. |
 | `run-llama/llama_index` | 49947 | Document agents, parsing/OCR, and data connectors are a major layer by themselves. |
 | `langchain-ai/langgraph` | 34018 | Durable, stateful, human-in-the-loop agent execution is a core production abstraction. |
 | `microsoft/graphrag` | 33494 | Graph-augmented retrieval is used when flat chunks are not enough for enterprise reasoning. |
@@ -178,6 +196,7 @@ Current state:
 - Local JSON/runtime state is enough for demos.
 - No production DB adapter, queues, recovery, or long-running workflow engine.
 - A first PostgreSQL/pgvector migration artifact now exists at `infra/postgres/migrations/001_core.sql` and is guarded by `python -B scripts/dev.py postgres-migrations`.
+- A deterministic Project 1 demo seed SQL artifact now exists at `infra/postgres/seeds/001_project1_demo.sql` and is guarded by `python -B scripts/dev.py postgres-seed`.
 - Project 1 application modules now depend on `KnowledgeRepository` in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py` instead of directly depending on JSON state internals.
 - Project 1 now also has an optional `PostgresKnowledgeRepository` adapter contract in `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`, covering tenant context, documents, chunks, traces, audit events, and eval runs without making PostgreSQL required for the local demo.
 
@@ -194,7 +213,7 @@ Industrial requirement:
 Upgrade:
 
 ```text
-Wire the existing repository interface and PostgreSQL adapter contract to a real connection pool; add seed/backfill scripts, outbox, worker queue, and crash-recovery tests.
+Wire the existing repository interface and PostgreSQL adapter contract to a real connection pool; add remaining backfill scripts, outbox, worker queue, and crash-recovery tests.
 ```
 
 ### 4. Model Runtime And Prompt/Policy Versioning

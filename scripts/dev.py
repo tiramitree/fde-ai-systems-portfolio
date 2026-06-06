@@ -38,6 +38,7 @@ COMMANDS = {
     "openai-live": ["scripts/check_openai_live_mode.py"],
     "otel-traces": ["scripts/export_traces_otel.py"],
     "postgres-migrations": ["scripts/check_postgres_migrations.py"],
+    "postgres-seed": ["scripts/generate_postgres_seed.py", "--check"],
     "pr-policy": ["scripts/check_pr_review_policy.py"],
     "pr-triage": ["scripts/review_open_prs.py"],
     "readiness-report": ["scripts/generate_final_readiness_report.py"],
@@ -70,7 +71,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/demo-presets/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/postgres-migrations/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/visual-asset-diff/workflow-security: run individual gates; "
+            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/demo-presets/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-traces/postgres-migrations/postgres-seed/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/visual-asset-diff/workflow-security: run individual gates; "
             "visual-asset-diff: summarize changed visual assets without printing binary image contents; "
             "verify: start services if needed and run the full CI-quality gate."
         ),

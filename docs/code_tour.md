@@ -152,7 +152,7 @@ Use the smallest checklist that matches the change:
 | Backend route or response shape | project `app.py`, `src/<package>/api.py`, `docs/api_contracts.md`, `scripts/check_api_contracts.py` | `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py quality` |
 | Domain policy or side-effect behavior | domain module, `repositories.py`, `storage.py`, `evals.py`, `data/*.json`, threat/model docs if relevant | `python -B scripts/dev.py architecture`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py quality` |
 | Frontend UI or client behavior | project `web/` folder, `docs/frontend_integrity.md`, `docs/runtime_ui_contracts.md` | `python -B scripts/dev.py frontend`, `python -B scripts/dev.py ui-contracts`, `python -B scripts/dev.py quality` |
-| Scenario or seed data | `data/*.json`, `docs/demo_state_presets.json`, scenario/eval docs | `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py quality` |
+| Scenario or seed data | `data/*.json`, `infra/postgres/seeds/*.sql`, `docs/demo_state_presets.json`, scenario/eval docs | `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py postgres-seed`, `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py quality` |
 | Architecture boundary | `app.py`, `src/`, `web/js/`, `docs/architecture_boundaries.md` | `python -B scripts/dev.py architecture`, `python -B scripts/dev.py quality` |
 | Public repo or contributor docs | README, `PROJECT_CONTENT_INDEX.md`, `.github/`, growth and review docs | `python -B scripts/dev.py community-issues`, `python -B scripts/dev.py safety`, `python -B scripts/dev.py quality` |
 

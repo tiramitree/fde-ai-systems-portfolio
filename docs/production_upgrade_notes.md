@@ -68,13 +68,24 @@ Next.js frontend
 
 ## Project 1 Upgrade Path
 
-1. Extend the current admin-only ingestion contract into file upload and connector sync.
-2. Add a background document parser pipeline.
-3. Add embedding model and vector retrieval.
-4. Add BM25 + vector hybrid ranking.
-5. Add reranker.
-6. Add PostgreSQL row-level security.
-7. Add eval cases from real failure logs.
+Current production-path artifacts:
+
+- `infra/postgres/migrations/001_core.sql`
+- `infra/postgres/seeds/001_project1_demo.sql`
+- `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`
+- `python -B scripts/dev.py postgres-migrations`
+- `python -B scripts/dev.py postgres-seed`
+
+Next steps:
+
+1. Wire the optional PostgreSQL repository contract to a real connection pool behind a feature flag.
+2. Extend the current admin-only ingestion contract into file upload and connector sync.
+3. Add a background document parser pipeline.
+4. Add embedding model and vector retrieval.
+5. Add BM25 + vector hybrid ranking.
+6. Add reranker.
+7. Add PostgreSQL row-level security tests against a running database.
+8. Add eval cases from real failure logs.
 
 ## Project 2 Upgrade Path
 
