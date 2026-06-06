@@ -70,14 +70,14 @@ Project 1 now has a connector-style source sync slice:
 - per-document `document_ingested` audit events
 - batch `source_sync_completed` audit event
 - frontend `Sync connector` sample button
-- runtime API contract checks proving source sync, GitHub connector sync, source ACL snapshot enforcement, permission drift visibility changes, ingestion job idempotency, dead-letter handling, retry recovery, retrieval citation, and audit evidence
+- runtime API contract checks proving source sync, source bundle sync, GitHub connector sync, source ACL snapshot enforcement, permission drift visibility changes, ingestion job idempotency, dead-letter handling, retry recovery, retrieval citation, and audit evidence
 - updated docs, threat model, evidence matrix, public README, screenshot manifest, and visual assets
 
 Verification snapshot:
 
 ```text
 python -B scripts/dev.py contracts
-API contract checks: 105/105 passed
+API contract checks: 111/111 passed
 
 python -B scripts/dev.py ui-contracts
 Runtime UI contract checks: 349/349 passed

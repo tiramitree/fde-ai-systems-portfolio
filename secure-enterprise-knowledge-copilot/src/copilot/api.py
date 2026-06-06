@@ -16,6 +16,7 @@ from .github_connector import sync_github_repository
 from .ingestion import IngestionError, ingest_document, sync_source_batch
 from .ingestion_jobs import list_ingestion_jobs, submit_ingestion_job
 from .repositories import connect_repository
+from .source_bundle_connector import sync_source_bundle
 
 
 class ApiError(Exception):
@@ -105,6 +106,11 @@ class CopilotApi:
             if path == "/api/connectors/github/sync":
                 try:
                     return sync_github_repository(repo, self._body_with_resolved_user(repo, body, headers))
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
+            if path == "/api/connectors/source-bundle/sync":
+                try:
+                    return sync_source_bundle(repo, self._body_with_resolved_user(repo, body, headers))
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc
             if path == "/api/eval/run":

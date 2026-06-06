@@ -131,6 +131,7 @@ THREATS = {
         "phrases": ["Unauthorized or poisoned document ingestion", "admin-only ingestion", "parser metadata", "source_hash"],
         "files": [
             "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/source_bundle_connector.py",
             "secure-enterprise-knowledge-copilot/src/copilot/github_connector.py",
             "secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py",
             "scripts/check_api_contracts.py",
@@ -161,6 +162,7 @@ SOURCE_MARKERS = {
     "secure-enterprise-knowledge-copilot/src/copilot/answering.py": ["abstain_reason", "insert_trace", "insert_audit"],
     "secure-enterprise-knowledge-copilot/src/copilot/security.py": ["INJECTION_PATTERNS", "detect_prompt_injection"],
     "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py": ["Only admin users", "source_hash", "document_ingested", "source_sync_completed", "acl_role_drift"],
+    "secure-enterprise-knowledge-copilot/src/copilot/source_bundle_connector.py": ["Only admin users", "source_bundle_synced", "manifest_sha256", "bundle document path must stay inside"],
     "secure-enterprise-knowledge-copilot/src/copilot/github_connector.py": ["Only admin users", "github_connector_synced", "GITHUB_CONNECTOR_TOKEN", "source_payload_sha256"],
     "secure-enterprise-knowledge-copilot/src/copilot/ingestion_jobs.py": ["idempotency_key", "dead_lettered", "ingestion_job_completed", "ingestion_job_dead_lettered"],
     "secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py": ["parse_source_content", "ParsedSource", "parser_name"],

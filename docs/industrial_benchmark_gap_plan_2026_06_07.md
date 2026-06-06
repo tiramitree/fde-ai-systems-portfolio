@@ -29,6 +29,7 @@ The repository already proves the right control boundaries:
 - grounded citations and abstention
 - prompt-injection handling in retrieved context
 - admin ingestion and connector-style source sync
+- allowlisted source bundle sync for checked-in synthetic files, manifest hashes, source ACL snapshots, and citation-ready ingestion jobs
 - connector job ledger, retry lineage, dead letters, status, and opt-in prune
 - governed tool actions and approval queues
 - trace, audit, eval, release gate, and CI evidence
@@ -126,8 +127,8 @@ Production-minded reference implementation, not production software.
 | Area | Current repository evidence |
 | --- | --- |
 | Security invariant | The model is not treated as a security boundary; app code enforces permissions, source-group ACL checks, local bearer-token subject matching, and side-effect gates. |
-| RAG behavior | Project 1 supports permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, connector source sync, source lifecycle filtering, job status, and opt-in source prune. |
-| Connector operations | Project 1 now includes a GitHub read connector contract, ingestion job ledger, idempotency, retry parent, dead-letter records, connector status, and prune semantics. |
+| RAG behavior | Project 1 supports permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, connector source sync, allowlisted source bundle sync, source lifecycle filtering, job status, and opt-in source prune. |
+| Connector operations | Project 1 now includes a source bundle connector, GitHub read connector contract, ingestion job ledger, idempotency, retry parent, dead-letter records, connector status, and prune semantics. |
 | Agent governance | Project 2 blocks direct side effects and requires supervisor approval for sensitive operations. |
 | Reliability workflow | Project 3 links failed eval evidence to release blocking and incident triage. |
 | Public maintainability | The repo has README, case studies, threat model, API docs, screenshots, CI, PR policy, public-safety scan, and GitHub maintenance docs. |
@@ -137,7 +138,7 @@ Production-minded reference implementation, not production software.
 
 | Gap | Current state | Industrial target |
 | --- | --- | --- |
-| 1. Data ingestion and parsing | Seed data, admin ingestion, source sync, GitHub read connector, job ledger, status, and opt-in prune. | Upload/pull connectors for real docs, parser worker, OCR/table/PDF/DOCX/CSV handling, source versions, source hashes, incremental sync, live prune/delete verification, and backfill recovery. |
+| 1. Data ingestion and parsing | Seed data, admin ingestion, source sync, allowlisted source bundle connector, GitHub read connector, job ledger, status, and opt-in prune. | Upload/pull connectors for real docs, parser worker, OCR/table/PDF/DOCX/CSV handling, source versions, source hashes, incremental sync, live prune/delete verification, and backfill recovery. |
 | 2. Identity and permissions | Fictional users/roles, group IDs, source ACL principals, source ACL snapshot contracts, permission-drift evidence, group-aware PostgreSQL RLS migration artifacts, and a local signed demo bearer-token boundary with user mismatch rejection. | SSO-compatible auth, tenant context, real users, real groups, RBAC/ABAC, source ACL sync, Postgres RLS live tests, and permission drift alerts. |
 | 3. Retrieval and citation quality | Deterministic lexical/vector scoring, local embedding boundary, SQL candidate path, reranker boundary, chunk-level citations, sentence-level evidence spans, citation span coverage metrics, and active-only source lifecycle filtering with a stale-source eval. | Production embedding/reranker provider, hybrid retrieval, metadata filters, query routing, recall@k, MRR/nDCG, context precision/recall, broader citation faithfulness, larger stale/conflict evals. |
 | 4. Runtime durability | Local JSON default; partial Postgres path; local ingestion job ledger with retry/dead-letter semantics. | Connection pool, migrations, durable queue, transactional outbox, scheduled retry, crash recovery, backup/restore, and load/failure tests. |

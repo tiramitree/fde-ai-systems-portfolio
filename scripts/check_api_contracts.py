@@ -1249,6 +1249,102 @@ def project_1_contracts(base_url: str) -> list[Check]:
         )
     )
 
+    source_bundle_payload = {
+        "user_id": "avery",
+        "bundle": "operations-handbook",
+        "cursor": "2026-06-07T00:00:00Z",
+        "idempotency_key": "contract-source-bundle-sync-v1",
+        "prune_missing": True,
+    }
+    status, forbidden_bundle = post_json(
+        f"{base_url}/api/connectors/source-bundle/sync",
+        {**source_bundle_payload, "user_id": "alice"},
+    )
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_bundle.get("error", ""),
+            "P1 source bundle connector rejects non-admin users",
+            json.dumps(forbidden_bundle),
+        )
+    )
+    status, traversal_bundle = post_json(
+        f"{base_url}/api/connectors/source-bundle/sync",
+        {**source_bundle_payload, "bundle": "../seed_documents"},
+    )
+    checks.append(
+        check(
+            status == 400 and "unsupported characters" in traversal_bundle.get("error", ""),
+            "P1 source bundle connector rejects path traversal bundle names",
+            json.dumps(traversal_bundle),
+        )
+    )
+    status, source_bundle_sync = post_json(f"{base_url}/api/connectors/source-bundle/sync", source_bundle_payload)
+    source_bundle_meta = source_bundle_sync.get("source_bundle", {})
+    source_bundle_job = source_bundle_sync.get("job", {})
+    source_bundle_result = source_bundle_sync.get("result", {})
+    source_bundle_docs = source_bundle_result.get("documents", [])
+    serialized_source_bundle = json.dumps(source_bundle_sync)
+    checks.append(
+        check(
+            status == 200
+            and source_bundle_meta.get("bundle") == "operations-handbook"
+            and source_bundle_meta.get("connector") == "source-bundle"
+            and source_bundle_meta.get("document_count") == 3
+            and isinstance(source_bundle_meta.get("manifest_sha256"), str)
+            and len(source_bundle_meta.get("manifest_sha256", "")) == 64
+            and source_bundle_job.get("status") == "succeeded"
+            and source_bundle_result.get("sync", {}).get("connector") == "source-bundle"
+            and source_bundle_result.get("sync", {}).get("document_count") == 3
+            and len(source_bundle_docs) == 3
+            and all("body" not in item for item in source_bundle_docs)
+            and any(
+                item.get("id") == "source-bundle-operations-handbook-incident-escalation"
+                and item.get("source_connector") == "source-bundle"
+                and item.get("external_id") == "source-bundle:operations-handbook:incident-escalation.md"
+                and item.get("source_url") == "source-bundle://operations-handbook/incident-escalation.md"
+                and item.get("allowed_roles_source") == "connector_acl_snapshot"
+                and "engineering-oncall" in item.get("allowed_groups", [])
+                for item in source_bundle_docs
+            )
+            and "Sev2 incidents from the source bundle" not in serialized_source_bundle,
+            "P1 source bundle connector syncs checked-in files through ingestion jobs",
+            f"job={source_bundle_job.get('id')}; docs={len(source_bundle_docs)}",
+        )
+    )
+    status, replayed_source_bundle_sync = post_json(
+        f"{base_url}/api/connectors/source-bundle/sync",
+        source_bundle_payload,
+    )
+    checks.append(
+        check(
+            status == 200
+            and replayed_source_bundle_sync.get("idempotency_replayed") is True
+            and replayed_source_bundle_sync.get("job", {}).get("id") == source_bundle_job.get("id"),
+            "P1 source bundle connector idempotency replays existing sync",
+            f"job={replayed_source_bundle_sync.get('job', {}).get('id')}; replay={replayed_source_bundle_sync.get('idempotency_replayed')}",
+        )
+    )
+    status, source_bundle_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "riley",
+            "question": "What must Sev2 incidents from the source bundle include before escalation?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and source_bundle_answer.get("abstain_reason") is None
+            and any(
+                citation.get("doc_id") == "source-bundle-operations-handbook-incident-escalation"
+                and valid_source_span(citation.get("source_span"))
+                for citation in source_bundle_answer.get("citations", [])
+            ),
+            "P1 source bundle content is retrievable by source group with citation",
+            f"trace={source_bundle_answer.get('trace_id')}; citations={len(source_bundle_answer.get('citations', []))}",
+        )
+    )
+
     status, forbidden_connector_status = get_json(f"{base_url}/api/connectors/status?user_id=alice")
     checks.append(
         check(
@@ -1262,26 +1358,33 @@ def project_1_contracts(base_url: str) -> list[Check]:
     connectors = connector_status.get("connectors", [])
     github_status = next((item for item in connectors if item.get("connector") == "github"), {})
     local_status = next((item for item in connectors if item.get("connector") == "local-drive-demo"), {})
+    source_bundle_status = next((item for item in connectors if item.get("connector") == "source-bundle"), {})
     serialized_connector_status = json.dumps(connector_status)
     checks.append(
         check(
             status == 200
             and connector_status.get("status_source") == "ingestion_jobs"
-            and connector_status.get("connector_count") >= 2
+            and connector_status.get("connector_count") >= 3
             and github_status.get("health") == "healthy"
             and github_status.get("latest_job_id") == github_job.get("id")
             and github_status.get("latest_cursor") == "2026-06-06T04:00:00Z"
             and github_status.get("document_count") == 2
             and github_status.get("chunk_count", 0) >= 2
+            and source_bundle_status.get("health") == "healthy"
+            and source_bundle_status.get("latest_job_id") == source_bundle_job.get("id")
+            and source_bundle_status.get("latest_cursor") == "2026-06-07T00:00:00Z"
+            and source_bundle_status.get("document_count") == 3
+            and source_bundle_status.get("chunk_count", 0) >= 3
             and local_status.get("health") == "recovered"
             and local_status.get("latest_job_status") == "succeeded"
             and local_status.get("latest_cursor") == "2026-06-06T03:05:00Z"
             and local_status.get("dead_letter_count", 0) >= 1
             and local_status.get("success_count", 0) >= 1
             and "eval summary exports must include" not in serialized_connector_status
+            and "Sev2 incidents from the source bundle" not in serialized_connector_status
             and "Durable ingestion jobs must record queued" not in serialized_connector_status,
             "P1 connector status summarizes job health without raw bodies",
-            f"connectors={len(connectors)}; github={github_status.get('health')}; local={local_status.get('health')}",
+            f"connectors={len(connectors)}; github={github_status.get('health')}; source_bundle={source_bundle_status.get('health')}; local={local_status.get('health')}",
         )
     )
 
@@ -1395,6 +1498,22 @@ def project_1_contracts(base_url: str) -> list[Check]:
             ),
             "P1 GitHub connector writes audit event",
             f"events={len(github_connector_audit.get('events', []))}",
+        )
+    )
+    status, source_bundle_audit = get_json(f"{base_url}/api/audit?limit=100")
+    checks.append(
+        check(
+            status == 200
+            and any(
+                event.get("action") == "source_bundle_synced"
+                and event.get("details", {}).get("bundle") == "operations-handbook"
+                and event.get("details", {}).get("connector") == "source-bundle"
+                and event.get("details", {}).get("job_id") == source_bundle_job.get("id")
+                and event.get("details", {}).get("job_status") == "succeeded"
+                for event in source_bundle_audit.get("events", [])
+            ),
+            "P1 source bundle connector writes audit event",
+            f"events={len(source_bundle_audit.get('events', []))}",
         )
     )
 

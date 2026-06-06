@@ -48,6 +48,7 @@ const ingestionPanel = installIngestionPanel({
     replace: byId("ingestReplace"),
     button: byId("ingestDocument"),
     syncButton: byId("syncSampleSource"),
+    bundleButton: byId("syncSourceBundle"),
     githubButton: byId("syncGitHubConnector"),
     status: byId("ingestionStatus"),
     connectorStatus: byId("connectorStatus"),

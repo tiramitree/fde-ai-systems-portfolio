@@ -30,6 +30,7 @@ PROJECTS = {
             "/api/sources/sync",
             "/api/ingestion/jobs",
             "/api/connectors/github/sync",
+            "/api/connectors/source-bundle/sync",
             "/api/eval/run",
         },
         "fields": {
@@ -111,6 +112,10 @@ PROJECTS = {
             "github.mode",
             "github.record_count",
             "github_connector_synced",
+            "source_bundle",
+            "source_bundle.bundle",
+            "source_bundle.manifest_sha256",
+            "source_bundle_synced",
             "connectors",
             "connector_count",
             "status_source",
