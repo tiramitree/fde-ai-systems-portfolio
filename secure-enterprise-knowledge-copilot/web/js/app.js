@@ -46,7 +46,9 @@ const ingestionPanel = installIngestionPanel({
     replace: byId("ingestReplace"),
     button: byId("ingestDocument"),
     syncButton: byId("syncSampleSource"),
+    githubButton: byId("syncGitHubConnector"),
     status: byId("ingestionStatus"),
+    jobs: byId("ingestionJobs"),
   },
 });
 installScenarioEditor({
