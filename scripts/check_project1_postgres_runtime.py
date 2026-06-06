@@ -58,6 +58,10 @@ def check_static_contract() -> list[str]:
                 "def close",
                 "select set_config('app.tenant_id'",
                 "select set_config('app.tenant_slug'",
+                "def list_retrieval_candidates",
+                "postgres_hybrid_sql_v1",
+                "websearch_to_tsquery",
+                "embedding <=> %s::vector",
                 "def count_potentially_blocked_chunks",
                 "select project1_denied_relevant_chunk_count",
             ],
@@ -126,6 +130,18 @@ def check_live_runtime() -> list[str]:
                 failures.append("RLS violation: Alice can read finance-retention-plan-2026 chunks")
 
             finance_tokens = tokenize("What is the finance retention plan?")
+            alice_candidates = repo.list_retrieval_candidates(
+                alice,
+                "How many days per week can employees work remotely?",
+                tokenize("How many days per week can employees work remotely?"),
+                [0.0] * 1536,
+                10,
+            )
+            if alice_candidates.get("candidate_strategy") != "postgres_hybrid_sql_v1":
+                failures.append("Postgres runtime retrieval candidates should use postgres_hybrid_sql_v1")
+            if "hr-remote-work-2026" not in {chunk["doc_id"] for chunk in alice_candidates.get("chunks", [])}:
+                failures.append("Postgres hybrid candidates missed the expected HR remote-work document")
+
             alice_blocked = repo.count_potentially_blocked_chunks(alice, finance_tokens)
             if alice_blocked < 1:
                 failures.append("Denied-evidence count failed: Alice finance query should report at least one blocked chunk")

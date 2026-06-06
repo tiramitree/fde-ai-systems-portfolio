@@ -19,6 +19,14 @@ class KnowledgeRepository(Protocol):
     def list_users(self) -> list[dict]: ...
     def list_visible_documents(self, user: dict) -> list[dict]: ...
     def list_chunks(self, tenant_id: str) -> list[dict]: ...
+    def list_retrieval_candidates(
+        self,
+        user: dict,
+        question: str,
+        query_tokens: list[str],
+        query_embedding: list[float],
+        limit: int,
+    ) -> dict: ...
     def count_potentially_blocked_chunks(self, user: dict, query_tokens: list[str]) -> int: ...
     def document_exists(self, doc_id: str) -> bool: ...
     def replace_document_with_chunks(self, document: dict, chunks: list[dict]) -> bool: ...
@@ -56,6 +64,27 @@ class JsonKnowledgeRepository:
 
     def list_chunks(self, tenant_id: str) -> list[dict]:
         return [chunk for chunk in self.store.state["chunks"] if chunk["tenant_id"] == tenant_id]
+
+    def list_retrieval_candidates(
+        self,
+        user: dict,
+        question: str,
+        query_tokens: list[str],
+        query_embedding: list[float],
+        limit: int,
+    ) -> dict:
+        del question, query_tokens, query_embedding, limit
+        visible_chunks = [
+            chunk
+            for chunk in self.list_chunks(user["tenant_id"])
+            if user["role"] in chunk["allowed_roles"]
+        ]
+        return {
+            "chunks": visible_chunks,
+            "visible_chunk_count": len(visible_chunks),
+            "candidate_count": len(visible_chunks),
+            "candidate_strategy": "local_full_scan",
+        }
 
     def count_potentially_blocked_chunks(self, user: dict, query_tokens: list[str]) -> int:
         query_terms = set(query_tokens)

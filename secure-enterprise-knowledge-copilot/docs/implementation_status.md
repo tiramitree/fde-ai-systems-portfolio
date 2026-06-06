@@ -45,6 +45,7 @@ python -B scripts\run_eval.py
 - Trace records include retrieved chunks, blocked count, output, confidence, and security events.
 - Admin ingestion normalizes plain text, Markdown, CSV, HTML, and JSON through a parser boundary before chunking.
 - Seed and admin-ingested chunks carry deterministic local embeddings with model `local-hashing-v1` and 1536 dimensions.
+- Retrieval exposes candidate strategy metadata: the default JSON path uses `local_full_scan`, while the optional PostgreSQL path uses SQL-backed `postgres_hybrid_sql_v1`.
 - UI eval button runs the golden eval suite.
 - CLI eval suite passes.
 
@@ -67,6 +68,7 @@ The MVP uses:
 - BM25-like keyword retrieval with synonym expansion
 - Local hybrid retrieval profile with lexical, title, phrase, semantic-family, and vector score breakdowns
 - Local deterministic embedding boundary for chunk metadata and pgvector handoff
+- Optional PostgreSQL/pgvector adapter contract with SQL keyword/vector candidate selection
 - Tenant and role filtering before evidence assembly
 - Deterministic extractive answer assembly
 - Citation-required answer shape
@@ -84,14 +86,14 @@ Still missing before calling the full FDE objective complete:
 
 - FastAPI backend
 - Next.js or production frontend
-- PostgreSQL + pgvector
+- Live PostgreSQL/pgvector deployment validation beyond the optional adapter, migration, seed, and compose artifacts
 - Production embedding model and reranker
-- pgvector-backed hybrid retrieval and production reranking
+- Production SQL retrieval metrics and reranking
 - File upload, PDF/DOCX/OCR support, and connector-backed document parser pipeline
 - Background ingestion worker
 - OpenAI Responses API structured output
 - OpenTelemetry or external trace backend
-- Docker Compose
+- Cloud deployment or managed Docker deployment
 - Auth provider integration
 - PII redaction pipeline
 - Screenshot/demo video package
@@ -102,10 +104,10 @@ Still missing before calling the full FDE objective complete:
 
 Convert the current MVP into an industrialized service layout without losing the runnable demo:
 
-1. Add Docker Compose.
-2. Add FastAPI-compatible service layer or migrate directly to FastAPI if dependencies are available.
-3. Extend the current admin parser boundary into upload, connector sync, and background ingestion.
-4. Add optional OpenAI Responses API answer generation behind a model gateway.
-5. Add screenshots and a 5-minute recorded demo script.
+1. Run the live PostgreSQL probe against a seeded Docker-enabled machine and record the evidence.
+2. Extend the current admin parser boundary into upload, connector sync, and background ingestion.
+3. Replace the deterministic embedding boundary with a production provider behind the same interface.
+4. Add retrieval metrics for SQL candidate recall, citation spans, stale sources, and reranker quality.
+5. Add FastAPI-compatible service layer or migrate directly to FastAPI if dependencies are available.
 
 

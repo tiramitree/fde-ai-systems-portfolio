@@ -43,9 +43,6 @@ def _allowed(row: dict, user: dict) -> bool:
 
 
 def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -> dict:
-    all_chunks = repo.list_chunks(user["tenant_id"])
-    visible_chunks = [chunk for chunk in all_chunks if _allowed(chunk, user)]
-
     query_tokens = tokenize(question)
     if not query_tokens:
         return {
@@ -55,6 +52,20 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
             "profile": not_run_profile("empty_query"),
         }
 
+    query_embedding = embed_text(question)
+    candidate_limit = max(k * 4, 20)
+    candidate_payload = repo.list_retrieval_candidates(
+        user=user,
+        question=question,
+        query_tokens=query_tokens,
+        query_embedding=query_embedding.vector,
+        limit=candidate_limit,
+    )
+    visible_chunks = [chunk for chunk in candidate_payload.get("chunks", []) if _allowed(chunk, user)]
+    visible_chunk_count = int(candidate_payload.get("visible_chunk_count", len(visible_chunks)))
+    candidate_source_count = int(candidate_payload.get("candidate_count", len(visible_chunks)))
+    candidate_strategy = str(candidate_payload.get("candidate_strategy", "local_full_scan"))
+
     doc_freq: Counter[str] = Counter()
     tokenized_chunks: dict[str, list[str]] = {}
     for chunk in visible_chunks:
@@ -63,8 +74,7 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
         for token in set(tokens):
             doc_freq[token] += 1
 
-    n_docs = max(len(visible_chunks), 1)
-    query_embedding = embed_text(question)
+    n_docs = max(visible_chunk_count, 1)
     scored = []
 
     for chunk in visible_chunks:
@@ -107,8 +117,10 @@ def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -
         "blocked_count": blocked_count,
         "query_tokens": query_tokens,
         "profile": retrieval_profile(
-            visible_chunk_count=len(visible_chunks),
+            visible_chunk_count=visible_chunk_count,
             candidate_count=len(scored),
             top_k=k,
+            candidate_strategy=candidate_strategy,
+            candidate_source_count=candidate_source_count,
         ),
     }

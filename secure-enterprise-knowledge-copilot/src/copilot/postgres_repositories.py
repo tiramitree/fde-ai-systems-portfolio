@@ -209,6 +209,140 @@ class PostgresKnowledgeRepository:
         )
         return [self._row_to_chunk(row) for row in rows]
 
+    def list_retrieval_candidates(
+        self,
+        user: dict,
+        question: str,
+        query_tokens: list[str],
+        query_embedding: list[float],
+        limit: int,
+    ) -> dict:
+        self._active_user = user
+        self._apply_context(user)
+        visible_count = self._visible_chunk_count(user)
+        if not query_tokens:
+            return {
+                "chunks": [],
+                "visible_chunk_count": visible_count,
+                "candidate_count": 0,
+                "candidate_strategy": "postgres_hybrid_sql_v1",
+            }
+
+        candidate_limit = max(limit, 1)
+        vector_payload = _vector_payload(query_embedding)
+        rows = self._fetch_all(
+            """
+            with visible_chunks as (
+              select
+                c.id,
+                c.id::text as chunk_uuid,
+                coalesce(c.metadata->>'external_chunk_id', c.id::text) as external_chunk_id,
+                d.external_doc_id,
+                c.chunk_index,
+                t.slug as tenant_slug,
+                d.title,
+                c.content,
+                d.sensitivity,
+                d.allowed_roles,
+                coalesce(d.source_uri, '') as source_uri,
+                coalesce(d.source_mime, '') as source_mime,
+                d.source_hash,
+                d.version,
+                d.updated_at::text as updated_at,
+                c.embedding,
+                c.metadata,
+                c.content_tsv
+              from document_chunks c
+              join documents d on d.id = c.document_id
+              join tenants t on t.id = c.tenant_id
+              where t.slug = %s and %s = any(d.allowed_roles)
+            ),
+            keyword_hits as (
+              select
+                id,
+                ts_rank_cd(content_tsv, websearch_to_tsquery('english', %s)) as keyword_score,
+                0::double precision as vector_score
+              from visible_chunks
+              where content_tsv @@ websearch_to_tsquery('english', %s)
+              order by keyword_score desc
+              limit %s
+            ),
+            vector_hits as (
+              select
+                id,
+                0::double precision as keyword_score,
+                1 - (embedding <=> %s::vector) as vector_score
+              from visible_chunks
+              where embedding is not null
+              order by embedding <=> %s::vector
+              limit %s
+            ),
+            merged_hits as (
+              select
+                id,
+                max(keyword_score) as keyword_score,
+                max(vector_score) as vector_score
+              from (
+                select * from keyword_hits
+                union all
+                select * from vector_hits
+              ) hits
+              group by id
+            )
+            select
+              vc.chunk_uuid,
+              vc.external_chunk_id,
+              vc.external_doc_id,
+              vc.chunk_index,
+              vc.tenant_slug,
+              vc.title,
+              vc.content,
+              vc.sensitivity,
+              vc.allowed_roles,
+              vc.source_uri,
+              vc.source_mime,
+              vc.source_hash,
+              vc.version,
+              vc.updated_at,
+              vc.embedding::text,
+              vc.metadata,
+              coalesce(mh.keyword_score, 0.0),
+              coalesce(mh.vector_score, 0.0)
+            from visible_chunks vc
+            join merged_hits mh on mh.id = vc.id
+            order by
+              (coalesce(mh.keyword_score, 0.0) * 0.65 + coalesce(mh.vector_score, 0.0) * 0.35) desc,
+              vc.external_doc_id,
+              vc.chunk_index
+            limit %s
+            """,
+            (
+                user["tenant_id"],
+                user["role"],
+                question,
+                question,
+                candidate_limit,
+                vector_payload,
+                vector_payload,
+                candidate_limit,
+                candidate_limit,
+            ),
+        )
+        chunks = []
+        for row in rows:
+            chunk = self._row_to_chunk(row)
+            chunk["candidate_source_scores"] = {
+                "keyword": float(row[16] or 0.0),
+                "vector": float(row[17] or 0.0),
+            }
+            chunks.append(chunk)
+        return {
+            "chunks": chunks,
+            "visible_chunk_count": visible_count,
+            "candidate_count": len(chunks),
+            "candidate_strategy": "postgres_hybrid_sql_v1",
+        }
+
     def count_potentially_blocked_chunks(self, user: dict, query_tokens: list[str]) -> int:
         self._active_user = user
         self._apply_context(user)
@@ -495,6 +629,19 @@ class PostgresKnowledgeRepository:
 
     def load_scenario_snapshot(self) -> dict:
         return load_scenario_snapshot()
+
+    def _visible_chunk_count(self, user: dict) -> int:
+        row = self._fetch_one(
+            """
+            select count(*)
+            from document_chunks c
+            join documents d on d.id = c.document_id
+            join tenants t on t.id = c.tenant_id
+            where t.slug = %s and %s = any(d.allowed_roles)
+            """,
+            (user["tenant_id"], user["role"]),
+        )
+        return int(row[0]) if row else 0
 
     def _row_to_document(self, row: Any) -> dict:
         metadata = _coerce_json(row[11]) if len(row) > 11 else {}
