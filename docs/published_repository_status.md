@@ -1,6 +1,6 @@
 # Published Repository Status
 
-Date: 2026-06-04
+Date: 2026-06-06
 
 Use `docs/public_maintainer_status_update_examples.md` before turning this status page into a public maintainer update. Keep local quality, pushed code, remote GitHub evidence, account-level/manual setup, and roadmap promises separate.
 
@@ -45,13 +45,26 @@ https://github.com/tiramitree/fde-ai-systems-portfolio/actions/workflows/ci.yml
 Latest observed successful main run:
 
 ```text
-https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/26945014975/job/79495695197
+https://github.com/tiramitree/fde-ai-systems-portfolio/actions/runs/27048923720/job/79840487564
 ```
 
 Current expected result:
 
 ```text
 success
+```
+
+Release page:
+
+```text
+https://github.com/tiramitree/fde-ai-systems-portfolio/releases/tag/v0.1.0
+```
+
+Release attachments:
+
+```text
+demo_replay_artifact.md
+demo_replay_artifact.json
 ```
 
 README badge and workflow status should be compared with `docs/github_actions_badge_verification_examples.md` before claiming the rendered badge is current.
@@ -96,8 +109,13 @@ Quality gate: passed
 Confirmed:
 
 - repository page reachable
+- repository description and topics are set
 - raw README reachable
 - GitHub Actions workflow reachable
+- main branch-protection readiness row is `PASS: protected`
+- `v0.1.0` release evidence is visible on GitHub
+- `demo_replay_artifact.md` and `demo_replay_artifact.json` are attached to the release
+- GitHub labels are synced from `docs/github_labels.json`
 - key documentation files published
 - observability integrity script and documentation published
 - threat model script and documentation published
@@ -119,6 +137,8 @@ Confirmed:
 - open issues observed: 0
 - open PRs observed: 0
 
+Release note freshness should still be reviewed with `docs/release_note_refresh_checklist.md`, release upload evidence with `docs/release_asset_upload_dry_run_examples.md`, and release attachment screenshots with `docs/github_release_attachment_screenshot_checklist.md` before reusing release evidence in public copy.
+
 ## Initial Public Issues Created
 
 - https://github.com/tiramitree/fde-ai-systems-portfolio/issues/1
@@ -129,10 +149,7 @@ Confirmed:
 
 ## Still Manual
 
-- Add repository description and topics from `docs/github_repository_settings.md`; `python -B scripts/dev.py github-maintenance` dry-runs the required authenticated maintenance commands.
-- Enable branch protection on `main`; `docs/github_branch_protection.json` is the tracked API payload used by `python -B scripts/maintain_github_state.py --apply`.
 - Add social preview using `docs/assets/github-preview.png`.
-- Create a GitHub release page for `v0.1.0` and attach current replay artifacts; run `python -B scripts/dev.py replay-artifact` first, then `python -B scripts/maintain_github_state.py --apply` after `gh auth login`. Release note freshness should be reviewed with `docs/release_note_refresh_checklist.md`, release asset upload plans should be reviewed with `docs/release_asset_upload_dry_run_examples.md`, and release attachment screenshots should be reviewed with `docs/github_release_attachment_screenshot_checklist.md`.
 - Pin repository on profile.
 - Verify Docker runtime with `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine; static Docker/Compose release hygiene is already gated.
 - Verify optional OpenAI mode with `python -B scripts/dev.py openai-live` and a live API key.

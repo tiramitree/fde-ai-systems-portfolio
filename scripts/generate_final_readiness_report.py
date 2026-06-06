@@ -20,6 +20,7 @@ def display_name(name: str) -> str:
         "stars observed": "stars observed at generation",
         "forks observed": "forks observed at generation",
         "latest main GitHub Actions run passed": "main GitHub Actions run passed at generation",
+        "main branch protection enabled": "main branch protection state",
     }
     return snapshot_names.get(name, name)
 
