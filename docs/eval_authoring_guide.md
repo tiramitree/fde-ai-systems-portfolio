@@ -2,7 +2,7 @@
 
 This guide shows how to add local-first eval cases for the three systems without changing the repository's safety posture. Evals use only checked-in fictional seed data, deterministic local behavior, and JSON fixtures. Do not add secrets, private paths, real customer data, external accounts, paid-service requirements, or generated runtime state.
 
-Use this guide with `docs/scenario_data_integrity.md`, `docs/local_artifact_glossary.md`, `docs/eval_gate_troubleshooting_examples.md`, `docs/eval_csv_troubleshooting_examples.md`, `docs/api_contracts.md`, and the project-level `evals.py` runner before changing regression coverage.
+Use this guide with `docs/scenario_data_integrity.md`, `docs/local_artifact_glossary.md`, `docs/trace_to_eval_workflow.md`, `docs/eval_gate_troubleshooting_examples.md`, `docs/eval_csv_troubleshooting_examples.md`, `docs/api_contracts.md`, and the project-level `evals.py` runner before changing regression coverage.
 
 ## Authoring Flow
 
@@ -22,6 +22,23 @@ python -B scripts/dev.py quality
 ```
 
 Use `python -B scripts/dev.py demo-presets` as well when the new case depends on a canonical reset preset.
+
+## Trace-To-Eval Candidate Flow
+
+When a local replay, smoke run, or technical review flow exposes useful behavior, generate review candidates before editing checked-in eval fixtures:
+
+```powershell
+python -B scripts/dev.py replay
+python -B scripts/dev.py trace-to-eval
+python -B scripts/dev.py trace-to-eval-check
+```
+
+The exporter writes ignored artifacts under `out/`:
+
+- `out/trace_eval_candidates.json`
+- `out/trace_eval_candidates.md`
+
+These artifacts are review inputs, not source fixtures. Promote a candidate only after checking that it uses fictional data, targets one durable invariant, and does not copy generated trace IDs, local paths, private endpoints, tokens, or runtime-only evidence into `data/eval_cases.json`.
 
 ## Shared Rules
 

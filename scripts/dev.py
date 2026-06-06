@@ -54,6 +54,8 @@ COMMANDS = {
     "safety": ["scripts/public_safety_scan.py"],
     "quality": ["scripts/quality_gate.py"],
     "threat-model": ["scripts/check_threat_model.py"],
+    "trace-to-eval": ["scripts/export_trace_eval_candidates.py"],
+    "trace-to-eval-check": ["scripts/check_trace_to_eval.py"],
     "ui-contracts": ["scripts/check_runtime_ui_contracts.py"],
     "verify": ["scripts/ci_quality_gate.py"],
     "visual-assets": ["scripts/check_visual_asset_manifest.py"],
@@ -74,7 +76,7 @@ def main() -> int:
         "command",
         choices=sorted(COMMANDS.keys()),
         help=(
-            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/demo-presets/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-collector-handoff/otel-traces/postgres-compose/postgres-migrations/postgres-runtime/postgres-seed/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/ui-contracts/visual-assets/visual-asset-diff/workflow-security: run individual gates; "
+            "start: run all demo servers; api-docs/architecture/assets/claims/community-issues/container-release/docker-runtime/dependency-surface/demo-presets/contracts/error-hygiene/health/evals/eval-csv/frontend/fresh-clone/fresh-clone-local/github-community/github-launch-setup/github-maintenance/github-readiness/governance/launch-assets/model-gateway-safety/observability/openai-live/otel-collector-handoff/otel-traces/postgres-compose/postgres-migrations/postgres-runtime/postgres-seed/pr-policy/pr-triage/readiness-report/refresh-visual-assets/replay/replay-artifact/scenario-data/smoke/report/safety/quality/threat-model/trace-to-eval/trace-to-eval-check/ui-contracts/visual-assets/visual-asset-diff/workflow-security: run individual gates; "
             "visual-asset-diff: summarize changed visual assets without printing binary image contents; "
             "verify: start services if needed and run the full CI-quality gate."
         ),
