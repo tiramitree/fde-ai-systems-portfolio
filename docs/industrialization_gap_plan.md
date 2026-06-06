@@ -119,6 +119,7 @@ Current state:
 - Local JSON/runtime state is enough for demos.
 - No production DB adapter, queues, recovery, or long-running workflow engine.
 - A first PostgreSQL/pgvector migration artifact now exists at `infra/postgres/migrations/001_core.sql` and is guarded by `python -B scripts/dev.py postgres-migrations`.
+- Project 1 application modules now depend on `KnowledgeRepository` in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py` instead of directly depending on JSON state internals.
 
 Industrial requirement:
 

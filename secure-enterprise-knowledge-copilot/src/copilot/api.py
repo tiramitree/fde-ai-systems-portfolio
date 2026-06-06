@@ -5,15 +5,7 @@ from urllib.parse import parse_qs
 from .answering import generate_answer
 from .evals import latest_eval_run, run_evals
 from .ingestion import IngestionError, ingest_document
-from .storage import (
-    connect,
-    get_user,
-    list_audit_events,
-    list_traces,
-    list_users,
-    list_visible_documents,
-    load_scenario_snapshot,
-)
+from .repositories import connect_repository
 
 
 class ApiError(Exception):
@@ -27,40 +19,40 @@ class CopilotApi:
     app_name = "secure-enterprise-knowledge-copilot"
 
     def get(self, path: str, query: dict[str, list[str]]) -> dict:
-        with connect() as conn:
+        with connect_repository() as repo:
             if path == "/api/health":
                 return {"status": "ok", "app": self.app_name}
             if path == "/api/users":
-                return {"users": list_users(conn)}
+                return {"users": repo.list_users()}
             if path == "/api/documents":
                 user_id = self._first(query, "user_id", "alice")
-                user = get_user(conn, user_id)
+                user = repo.get_user(user_id)
                 if not user:
                     raise ApiError(404, f"Unknown user_id: {user_id}")
-                return {"documents": list_visible_documents(conn, user)}
+                return {"documents": repo.list_visible_documents(user)}
             if path == "/api/traces":
-                return {"traces": list_traces(conn, limit=self._int(query, "limit", 25))}
+                return {"traces": repo.list_traces(limit=self._int(query, "limit", 25))}
             if path == "/api/audit":
-                return {"events": list_audit_events(conn, limit=self._int(query, "limit", 50))}
+                return {"events": repo.list_audit_events(limit=self._int(query, "limit", 50))}
             if path == "/api/eval/latest":
-                return {"eval_run": latest_eval_run(conn)}
+                return {"eval_run": latest_eval_run(repo)}
             if path == "/api/scenario":
-                snapshot = load_scenario_snapshot()
+                snapshot = repo.load_scenario_snapshot()
                 snapshot["app"] = self.app_name
                 return {"scenario": snapshot}
         raise ApiError(404, f"Unknown endpoint: {path}")
 
     def post(self, path: str, body: dict) -> dict:
-        with connect() as conn:
+        with connect_repository() as repo:
             if path == "/api/query":
-                return generate_answer(conn, body.get("user_id", ""), body.get("question", ""))
+                return generate_answer(repo, body.get("user_id", ""), body.get("question", ""))
             if path == "/api/documents/ingest":
                 try:
-                    return ingest_document(conn, body)
+                    return ingest_document(repo, body)
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc
             if path == "/api/eval/run":
-                return run_evals(conn)
+                return run_evals(repo)
         raise ApiError(404, f"Unknown endpoint: {path}")
 
     @staticmethod
