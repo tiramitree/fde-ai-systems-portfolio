@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import socket
 import subprocess
@@ -328,6 +329,45 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and csv_parser.get("metadata", {}).get("has_header") is True,
             "P1 CSV ingestion parser contract",
             f"status={status}; parser={csv_parser.get('name')}; metadata={csv_parser.get('metadata')}",
+        )
+    )
+
+    file_text = (
+        "Benefits Open Enrollment Notice 2026\n\n"
+        "Employees may enroll in the wellness stipend during the source-file intake pilot window "
+        "from June 10 through June 20. The People Operations team requires citation evidence "
+        "before the answer path mentions the stipend window."
+    )
+    file_ingest_payload = {
+        "user_id": "avery",
+        "replace": True,
+        "document": {
+            "title": "Benefits Open Enrollment Notice 2026",
+            "file": {
+                "filename": "benefits-open-enrollment-2026.md",
+                "content_base64": base64.b64encode(file_text.encode("utf-8")).decode("ascii"),
+            },
+            "classification": "internal",
+            "allowed_roles": ["employee", "manager", "admin"],
+            "version": "2026.06",
+            "updated_at": "2026-06-06",
+        },
+    }
+    status, file_ingestion = post_json(f"{base_url}/api/documents/ingest", file_ingest_payload)
+    file_doc = file_ingestion.get("document", {})
+    file_source = file_ingestion.get("ingestion", {}).get("source", {}).get("file", {})
+    file_parser = file_ingestion.get("ingestion", {}).get("parser", {})
+    checks.append(
+        check(
+            status == 200
+            and file_doc.get("source_connector") == "file-upload"
+            and file_doc.get("source_url") == "uploaded://acme/benefits-open-enrollment-2026.md"
+            and file_doc.get("source_file", {}).get("file_name") == "benefits-open-enrollment-2026.md"
+            and file_source.get("file_size_bytes") == len(file_text.encode("utf-8"))
+            and file_source.get("file_content_encoding") == "base64"
+            and file_parser.get("name") == "markdown-v1",
+            "P1 file-like ingestion contract",
+            f"status={status}; doc={file_doc.get('id')}; source={file_doc.get('source_url')}; file={file_source}",
         )
     )
 
@@ -1060,6 +1100,26 @@ def project_1_contracts(base_url: str) -> list[Check]:
             ),
             "P1 ingested document is retrievable with citation",
             f"trace={ingested_answer.get('trace_id')}; doc={ingested_doc.get('id')}",
+        )
+    )
+
+    status, file_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "alice",
+            "question": "What are the wellness stipend enrollment dates from the source-file intake pilot?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and file_answer.get("abstain_reason") is None
+            and any(
+                citation.get("doc_id") == file_doc.get("id")
+                for citation in file_answer.get("citations", [])
+            ),
+            "P1 file-like ingested document is retrievable with citation",
+            f"trace={file_answer.get('trace_id')}; doc={file_doc.get('id')}",
         )
     )
 

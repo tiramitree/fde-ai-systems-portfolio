@@ -35,6 +35,8 @@ PROJECTS = [
             "ingestClassification",
             "ingestRoles",
             "ingestMime",
+            "ingestFileName",
+            "ingestFile",
             "ingestBody",
             "ingestReplace",
             "ingestDocument",

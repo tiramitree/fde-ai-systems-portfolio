@@ -13,8 +13,8 @@ This checklist tracks the repository evidence needed before claiming a public re
   - Project 2: 8/8, unsafe direct side-effect failures 0.
   - Project 3: 6/6, unsafe release approval failures 0.
 - `scripts/smoke_test_demo_flows.py` passes 13/13 smoke checks.
-- `scripts/check_api_contracts.py` passes 92/92 API contract checks.
-- `scripts/check_runtime_ui_contracts.py` passes 294/294 runtime UI contract checks.
+- `scripts/check_api_contracts.py` passes 94/94 API contract checks.
+- `scripts/check_runtime_ui_contracts.py` passes 349/349 runtime UI contract checks.
 - `scripts/check_observability_integrity.py` passes 42/42 trace, audit, approval, blocked-action, and release-decision checks.
 - `scripts/check_threat_model.py` maps 12/12 threats to controls, files, and evidence commands.
 - `scripts/check_pr_review_policy.py` passes.

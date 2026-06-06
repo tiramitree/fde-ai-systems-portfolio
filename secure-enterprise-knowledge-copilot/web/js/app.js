@@ -42,6 +42,8 @@ const ingestionPanel = installIngestionPanel({
     classification: byId("ingestClassification"),
     roles: byId("ingestRoles"),
     mime: byId("ingestMime"),
+    fileName: byId("ingestFileName"),
+    file: byId("ingestFile"),
     body: byId("ingestBody"),
     replace: byId("ingestReplace"),
     button: byId("ingestDocument"),

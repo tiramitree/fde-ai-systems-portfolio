@@ -208,6 +208,8 @@ def project_checks(project: Project) -> list[Check]:
                     'id="ingestClassification"',
                     'id="ingestRoles"',
                     'id="ingestMime"',
+                    'id="ingestFileName"',
+                    'id="ingestFile"',
                     'id="ingestBody"',
                     'id="ingestReplace"',
                     'id="ingestDocument"',

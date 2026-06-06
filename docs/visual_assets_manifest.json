@@ -23,11 +23,11 @@
         1400,
         900
       ],
-      "sha256": "a10a68164a57174ccc3c7f03cb07fceb81a8843d2c0215d1839454afdd617589",
+      "sha256": "cd97b65fe22f1480563860af0946d864130d681954e6ca93cedc42671a8b37d3",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "5e7bb0f4c4016703d9b569abf753bd458dcf2ec815c975f90b87f4755edd4872"
+          "sha256": "f11e22417364505898a04602177168e8ba6ad8e875333b67a13c6e5ba0352b08"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
@@ -39,7 +39,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "b20848ca6afb924510ab77176c23ccf64245a5bfbc0b99eb0f1716b8a112c1cc"
+          "sha256": "b020b3e72c5e10e835a9e07ca68e5a06c0537a02ea843b8dd906a58627dc80f0"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -51,7 +51,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
-          "sha256": "2a897c6bc0659ebba141b44d43327960f4f9ed4d102bd1285898a8dadb5a4847"
+          "sha256": "2456a617b0a94b6aaba061225a410a145ab9f85db6c167acc2955f637ad3269c"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
@@ -121,11 +121,11 @@
         500,
         844
       ],
-      "sha256": "ee7897dc4d459561fb11ce4552d8bf6aa7106836dd86c95764c59c7089a98868",
+      "sha256": "0e2c4ff5d862b692e3cbd25347be7dea1a9c0379e07ce765eaadb5a49b83b2c3",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "5e7bb0f4c4016703d9b569abf753bd458dcf2ec815c975f90b87f4755edd4872"
+          "sha256": "f11e22417364505898a04602177168e8ba6ad8e875333b67a13c6e5ba0352b08"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
@@ -137,7 +137,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "b20848ca6afb924510ab77176c23ccf64245a5bfbc0b99eb0f1716b8a112c1cc"
+          "sha256": "b020b3e72c5e10e835a9e07ca68e5a06c0537a02ea843b8dd906a58627dc80f0"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -149,7 +149,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
-          "sha256": "2a897c6bc0659ebba141b44d43327960f4f9ed4d102bd1285898a8dadb5a4847"
+          "sha256": "2456a617b0a94b6aaba061225a410a145ab9f85db6c167acc2955f637ad3269c"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",

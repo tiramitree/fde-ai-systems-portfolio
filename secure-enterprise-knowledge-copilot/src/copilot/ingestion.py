@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from .chunking import SOURCE_SPAN_UNIT, chunk_text_with_spans
 from .embeddings import EMBEDDING_DIMENSIONS, EMBEDDING_MODEL, embed_chunk
 from .repositories import KnowledgeRepository
+from .source_files import SourceFileError, decode_source_file
 from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source_content
 
 
@@ -157,10 +158,20 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         raise IngestionError(400, "document must be an object")
 
     title = _as_string(document.get("title"), "title", max_length=180)
-    raw_body = _as_string(document.get("body") or document.get("content"), "body")
-    source_mime = str(document.get("source_mime", "text/plain")).strip().lower()
-    if source_mime not in SUPPORTED_MIME_TYPES:
-        raise IngestionError(415, f"Unsupported source_mime: {source_mime}")
+    source_file: dict = {}
+    if document.get("file") is not None:
+        try:
+            decoded_file = decode_source_file(document.get("file"), document.get("source_mime"))
+        except SourceFileError as exc:
+            raise IngestionError(400, str(exc)) from exc
+        raw_body = _as_string(decoded_file.text, "document.file decoded text")
+        source_mime = decoded_file.mime_type
+        source_file = decoded_file.metadata
+    else:
+        raw_body = _as_string(document.get("body") or document.get("content"), "body")
+        source_mime = str(document.get("source_mime", "text/plain")).strip().lower()
+        if source_mime not in SUPPORTED_MIME_TYPES:
+            raise IngestionError(415, f"Unsupported source_mime: {source_mime}")
 
     try:
         parsed_source = parse_source_content(raw_body, source_mime)
@@ -180,13 +191,18 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         raise IngestionError(400, f"Unsupported classification: {classification}")
     allowed_roles = _validate_roles(document.get("allowed_roles"), classification)
 
-    source_url = str(document.get("source_url") or f"ingested://{tenant_id}/{_slug(title)}").strip()
+    default_source_url = (
+        f"uploaded://{tenant_id}/{source_file['file_name']}"
+        if source_file
+        else f"ingested://{tenant_id}/{_slug(title)}"
+    )
+    source_url = str(document.get("source_url") or default_source_url).strip()
     version = str(document.get("version") or _utc_date()).strip()
     updated_at = str(document.get("updated_at") or _utc_date()).strip()
     source_hash = hashlib.sha256(raw_body.encode("utf-8")).hexdigest()
     doc_id = str(document.get("id") or _document_id(tenant_id, title, source_url, source_hash)).strip()
     replace = bool(payload.get("replace") or document.get("replace"))
-    source_connector = _metadata_string(document, "source_connector", "manual")
+    source_connector = _metadata_string(document, "source_connector", "file-upload" if source_file else "manual")
     external_id = _metadata_string(document, "external_id", doc_id, max_length=240)
     acl_source = _metadata_string(document, "acl_source", "manual")
     sync_cursor = _metadata_string(document, "sync_cursor", "", max_length=240)
@@ -215,6 +231,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         "parser_name": parsed_source.parser_name,
         "parser_metadata": parsed_source.metadata,
         "parser_warnings": list(parsed_source.warnings),
+        "source_file": source_file,
         "source_connector": source_connector,
         "external_id": external_id,
         "acl_source": acl_source,
@@ -248,6 +265,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "parser_name": parsed_source.parser_name,
                 "parser_metadata": parsed_source.metadata,
                 "parser_warnings": list(parsed_source.warnings),
+                "source_file": source_file,
                 "source_connector": source_connector,
                 "external_id": external_id,
                 "acl_source": acl_source,
@@ -277,6 +295,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "source_hash": source_hash,
             "parser_name": parsed_source.parser_name,
             "parser_warnings": list(parsed_source.warnings),
+            "source_file": source_file,
             "source_connector": source_connector,
             "external_id": external_id,
             "acl_source": acl_source,
@@ -312,6 +331,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "warnings": list(parsed_source.warnings),
             },
             "source": {
+                "file": source_file,
                 "connector": source_connector,
                 "external_id": external_id,
                 "acl_source": acl_source,
