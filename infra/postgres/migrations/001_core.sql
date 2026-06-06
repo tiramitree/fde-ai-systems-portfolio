@@ -168,6 +168,9 @@ alter table cases enable row level security;
 alter table tool_actions enable row level security;
 alter table approval_requests enable row level security;
 
+create policy tenant_lookup_by_slug on tenants
+  for select using (slug = current_setting('app.tenant_slug', true));
+
 create policy tenant_isolation_users on users
   using (tenant_id = current_setting('app.tenant_id')::uuid)
   with check (tenant_id = current_setting('app.tenant_id')::uuid);

@@ -47,7 +47,7 @@ Projects with persistent application state should use repository interfaces so l
 - `ApprovalRepository`
 - `ToolActionRepository`
 
-Project 1 now has the first local version of this boundary in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: application modules depend on `KnowledgeRepository` and `JsonKnowledgeRepository` while the local JSON mechanics stay in `storage.py`. The PostgreSQL adapter should implement the same application-facing methods rather than making answering, retrieval, ingestion, or eval code depend on database-specific queries.
+Project 1 now has the first local version of this boundary in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: application modules depend on `KnowledgeRepository` and `JsonKnowledgeRepository` while the local JSON mechanics stay in `storage.py`. It also has an optional production-path adapter contract in `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`: `PostgresKnowledgeRepository` maps the same application-facing methods to tenant-scoped PostgreSQL tables for users, documents, chunks, traces, audit events, and eval runs. The default demo still does not require PostgreSQL.
 
 The application layer receives a typed user context:
 
@@ -62,6 +62,7 @@ request_id
 The database session sets the same context with transaction-local settings before queries:
 
 ```sql
+select set_config('app.tenant_slug', :tenant_slug, true);
 select set_config('app.tenant_id', :tenant_id, true);
 select set_config('app.user_id', :user_id, true);
 select set_config('app.role', :role, true);
@@ -325,7 +326,7 @@ This repository now includes the first reviewable production-path migration arti
 - `infra/postgres/migrations/001_core.sql`
 - `python -B scripts/dev.py postgres-migrations`
 
-The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, and idempotent tool-action keys. It does not make PostgreSQL required for the default local demo.
+The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, and the Project 1 adapter contract. It does not make PostgreSQL required for the default local demo.
 
 Migration phases:
 
@@ -378,8 +379,8 @@ This keeps the technical review story inspectable: a reviewer can connect an ans
 
 ## Phased Implementation Plan
 
-1. Extend the existing `KnowledgeRepository` boundary while keeping local JSON adapters.
-2. Add PostgreSQL adapter behind `PORTFOLIO_STORAGE_PROVIDER=postgres`.
+1. Extend the existing `KnowledgeRepository` boundary while keeping local JSON adapters. Done for Project 1.
+2. Keep building the optional PostgreSQL adapter path behind a future `PORTFOLIO_STORAGE_PROVIDER=postgres` switch. The current adapter contract exists, but it is not wired as the default runtime.
 3. Add migrations and seed scripts.
 4. Port Project 1 documents, chunks, traces, audit, and eval state.
 5. Add pgvector embeddings and hybrid retrieval behind a feature flag.

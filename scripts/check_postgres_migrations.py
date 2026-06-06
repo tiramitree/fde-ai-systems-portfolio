@@ -7,6 +7,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS_DIR = ROOT / "infra" / "postgres" / "migrations"
 CORE_MIGRATION = MIGRATIONS_DIR / "001_core.sql"
+POSTGRES_ADAPTER = (
+    ROOT / "secure-enterprise-knowledge-copilot" / "src" / "copilot" / "postgres_repositories.py"
+)
 
 REQUIRED_TABLES = [
     "tenants",
@@ -46,11 +49,13 @@ REQUIRED_MARKERS = [
     "idempotency_key text not null",
     "unique (tenant_id, idempotency_key)",
     "current_setting('app.tenant_id')::uuid",
+    "current_setting('app.tenant_slug', true)",
     "current_setting('app.role')",
     "current_setting('app.user_id')::uuid",
     "current_setting('app.environment', true)",
     "authorized_documents_select",
     "authorized_chunks_select",
+    "tenant_lookup_by_slug",
     "supervisor_approval_select",
     "eval_state_isolation_runs",
     "eval_state_isolation_cases",
@@ -137,6 +142,36 @@ def check_docs() -> list[str]:
     return failures
 
 
+def check_adapter_contract() -> list[str]:
+    if not POSTGRES_ADAPTER.exists():
+        return ["missing secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py"]
+    text = POSTGRES_ADAPTER.read_text(encoding="utf-8")
+    required_markers = [
+        "class PostgresKnowledgeRepository",
+        "provider = \"postgres\"",
+        "select set_config('app.tenant_id'",
+        "select set_config('app.tenant_slug'",
+        "select set_config('app.role'",
+        "select set_config('app.user_id'",
+        "select set_config('app.environment'",
+        "def list_visible_documents",
+        "def list_chunks",
+        "def replace_document_with_chunks",
+        "insert into documents",
+        "insert into document_chunks",
+        "insert into traces",
+        "insert into audit_events",
+        "insert into eval_runs",
+        "insert into eval_cases",
+        "load_scenario_snapshot",
+    ]
+    return [
+        f"postgres_repositories.py: missing adapter marker {marker}"
+        for marker in required_markers
+        if marker not in text
+    ]
+
+
 def main() -> int:
     failures: list[str] = []
     files = migration_files()
@@ -147,6 +182,7 @@ def main() -> int:
     failures.extend(check_version_order(files))
     if CORE_MIGRATION.exists():
         failures.extend(check_core_migration(normalized_sql(CORE_MIGRATION)))
+    failures.extend(check_adapter_contract())
     failures.extend(check_docs())
 
     if failures:
@@ -155,7 +191,7 @@ def main() -> int:
             print(f"- {failure}")
         return 1
 
-    print("PostgreSQL migration check passed: core schema, pgvector indexes, RLS policies, eval isolation, and idempotent action keys are present.")
+    print("PostgreSQL migration check passed: core schema, pgvector indexes, RLS policies, eval isolation, idempotent action keys, and the Project 1 adapter contract are present.")
     return 0
 
 
