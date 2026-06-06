@@ -1,0 +1,35 @@
+name: fde-ai-systems-postgres
+
+services:
+  project1-postgres:
+    image: pgvector/pgvector:0.8.1-pg17-trixie@sha256:cab20e476214dfd8f2456b8bacd502fb2f8dfc3d899808ab92fdf6355c0889a8
+    environment:
+      POSTGRES_DB: fde_portfolio
+      POSTGRES_USER: fde_migrator
+      POSTGRES_PASSWORD: fde_migrator_demo_password
+    ports:
+      - "${COPILOT_POSTGRES_PORT:-55432}:5432"
+    configs:
+      - source: project1_runtime_roles
+        target: /docker-entrypoint-initdb.d/000_project1_runtime_roles.sql
+      - source: project1_core_migration
+        target: /docker-entrypoint-initdb.d/001_core.sql
+      - source: project1_demo_seed
+        target: /docker-entrypoint-initdb.d/002_project1_demo_seed.sql
+      - source: project1_runtime_grants
+        target: /docker-entrypoint-initdb.d/003_project1_runtime_grants.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+configs:
+  project1_runtime_roles:
+    file: ./infra/postgres/init/000_project1_runtime_roles.sql
+  project1_core_migration:
+    file: ./infra/postgres/migrations/001_core.sql
+  project1_demo_seed:
+    file: ./infra/postgres/seeds/001_project1_demo.sql
+  project1_runtime_grants:
+    file: ./infra/postgres/init/003_project1_runtime_grants.sql

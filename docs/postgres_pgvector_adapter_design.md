@@ -326,10 +326,24 @@ This repository now includes the first reviewable production-path migration arti
 - `infra/postgres/migrations/001_core.sql`
 - `python -B scripts/dev.py postgres-migrations`
 - `infra/postgres/seeds/001_project1_demo.sql`
+- `docker-compose.postgres.yml`
+- `python -B scripts/dev.py postgres-compose`
 - `python -B scripts/dev.py postgres-runtime`
 - `python -B scripts/dev.py postgres-seed`
 
-The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, and the Project 1 adapter contract. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. None of these checks makes PostgreSQL required for the default local demo.
+The migration check verifies that the artifact keeps the core industrialization invariants visible: pgvector extension setup, document and chunk tables, source hashes, hybrid retrieval indexes, tenant-scoped RLS, role-aware document and chunk policies, eval-state isolation, approval visibility rules, idempotent tool-action keys, and the Project 1 adapter contract. The compose check verifies the optional digest-pinned pgvector service, init order, seed wiring, healthcheck, and local role separation. The runtime check verifies that `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, and docs stay aligned. The seed check verifies that checked-in Project 1 demo SQL is generated from the fictional JSON seed data and does not drift. None of these checks makes PostgreSQL required for the default local demo.
+
+For local production-mode database testing on a Docker-enabled machine:
+
+```bash
+python -B scripts/dev.py postgres-compose
+docker compose -f docker-compose.postgres.yml up -d
+export COPILOT_REPOSITORY=postgres
+export COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio
+python -B scripts/check_project1_postgres_runtime.py --live
+```
+
+The `fde_app` / `fde_app_demo_password` credentials are public local-only demo values for the compose stack. They exist to prove the app does not need the migrator/table-owner role; any non-local deployment must replace them with secret-managed credentials.
 
 Migration phases:
 
@@ -386,7 +400,7 @@ This keeps the technical review story inspectable: a reviewer can connect an ans
 1. Extend the existing `KnowledgeRepository` boundary while keeping local JSON adapters. Done for Project 1.
 2. Keep building the optional PostgreSQL adapter path behind the `COPILOT_REPOSITORY=postgres` switch. Done for the Project 1 documents, chunks, traces, audit, and eval repository session path.
 3. Add migrations and seed scripts. Done for the Project 1 demo seed path.
-4. Add a Docker Compose PostgreSQL/pgvector service and run `python -B scripts/check_project1_postgres_runtime.py --live` against seeded data.
+4. Run `python -B scripts/check_project1_postgres_runtime.py --live` against the seeded `docker-compose.postgres.yml` database on port `55432`.
 5. Add pgvector embeddings and hybrid retrieval behind a feature flag.
 6. Port Project 2 cases, tool actions, approvals, traces, and audit state.
 7. Add RLS tests, unauthorized retrieval tests, and cross-tenant side-effect tests.
