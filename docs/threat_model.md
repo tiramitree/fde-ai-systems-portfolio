@@ -36,12 +36,14 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 | T10 | Optional model gateway weakens controls or leaks keys | OpenAI mode is opt-in, key references are constrained, structured outputs are required, and failures fall back locally. | `python -B scripts/dev.py model-gateway-safety` |
 | T11 | Trace, audit, approval, or release-decision evidence does not explain behavior | Observability integrity checks connect responses to persisted trace IDs, audit events, blocked actions, approval records, and release decisions. | `python -B scripts/dev.py observability`, `python -B scripts/dev.py otel-traces` |
 | T12 | Browser/static route surprises | Runtime UI contracts verify content types, basic safety headers, JSON 404s, and traversal blocking. | `python -B scripts/dev.py ui-contracts` |
+| T13 | Unauthorized or poisoned document ingestion | Project 1 uses admin-only ingestion, tenant checks, role/classification validation, duplicate protection, `source_hash`, chunk-count evidence, and a `document_ingested` audit event before new content becomes searchable. | `python -B scripts/dev.py contracts`, `python -B scripts/dev.py api-docs` |
 
 ## Trust Boundaries
 
 | Boundary | Trusted Component | Untrusted Input | Rule |
 | --- | --- | --- | --- |
 | Retrieval | `retrieval.py` role/tenant filter | user question and document corpus | Filter before evidence assembly. |
+| Ingestion | `ingestion.py` admin gate and source normalization | admin-supplied source text, HTML, CSV, Markdown, or JSON | Validate actor, tenant, classification, roles, duplicate policy, and source hash before creating searchable chunks. |
 | Answering | `answering.py` and `security.py` | user text and retrieved text | Cite accessible evidence or abstain. |
 | Agent tools | `tools.py` and `agent.py` | user request and model/router output | Side effects require deterministic approval. |
 | Approval | `approve_action` and approval endpoint | approval ID and requester role | Supervisor-only execution. |
@@ -53,6 +55,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 
 - Real authentication and session management.
 - PostgreSQL row-level security and transactionally persisted traces/audit events.
+- Connector-backed ingestion with source-system permission sync, malware scanning, and parser isolation.
 - Immutable audit/event storage with retention and redaction policies.
 - Policy-as-code for retrieval permissions, tool authorization, and approval routing.
 - OpenTelemetry SDK instrumentation around API handlers, retrieval, model calls, tool calls, approvals, and audit writes.

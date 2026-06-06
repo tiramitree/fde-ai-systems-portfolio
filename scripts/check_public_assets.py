@@ -16,16 +16,16 @@ REQUIRED_IMAGE_SIZES = {
     "docs/assets/github-preview.png": (1200, 520),
 }
 REQUIRED_README_CAPTIONS = [
-    "Desktop: role-aware knowledge access, visible documents, eval gate, and trace/audit surfaces for permission-aware RAG.",
+    "Desktop: role-aware knowledge access, visible documents, admin ingestion, eval gate, and trace/audit surfaces for permission-aware RAG.",
     "Desktop: investigator workflow with case context, governed action buttons, eval gate, and approval-driven operations controls.",
     "Desktop: release and incident triage workspace with eval evidence, rollout blocking, and audit/trace context.",
-    "Mobile: narrow layout keeps user context, visible documents, and permission-aware knowledge controls readable.",
+    "Mobile: narrow layout keeps user context, admin source intake, and permission-aware knowledge controls readable.",
     "Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning.",
     "Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence.",
 ]
 REQUIRED_PROJECT_RISK_BADGES = [
     "Risk badges:",
-    "| Secure Enterprise Knowledge Copilot | `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |",
+    "| Secure Enterprise Knowledge Copilot | `admin ingestion` `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [API Contracts](docs/api_contracts.md), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |",
     "| Regulated Customer Operations Agent | `tool governance` `approvals` `side-effect blocking` `supervisor review` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |",
     "| AI Reliability Incident Console | `eval-regression evidence` `release blocking` `remediation planning` `incident triage` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |",
 ]
@@ -117,7 +117,7 @@ REQUIRED_EVIDENCE_FRESHNESS_CHECKLIST = [
 REQUIRED_ARCHITECTURE_CARDS = [
     "Architecture cards:",
     "Read these with [Architecture Boundaries](docs/architecture_boundaries.md), [API Contracts](docs/api_contracts.md), and [Runtime UI Contracts](docs/runtime_ui_contracts.md).",
-    "| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, and scenario drafts. | Permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py smoke` and inspect the Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |",
+    "| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns ingestion, retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, and scenario drafts. | Admin-only ingestion, permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py contracts` and inspect the ingestion contract plus Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |",
     "| [Regulated Customer Operations Agent](regulated-customer-operations-agent/docs/architecture.md) | `regulated-customer-operations-agent/src/ops_agent` owns workflow routing, governed tools, storage, evals, and the opt-in model gateway. | `regulated-customer-operations-agent/web/js` keeps local ES modules for case investigation, approvals, trace links, theme, clipboard, and scenario drafts. | Side-effect tools require application approval, bypass attempts are refused, supervisor execution is auditable. | Run `python -B scripts/dev.py smoke` and inspect the Ivy `case-1001` approval path in the [Demo Path Map](#demo-path-map). |",
     "| [AI Reliability Incident Console](ai-reliability-incident-console/docs/architecture.md) | `ai-reliability-incident-console/src/reliability_console` owns release state, incident triage, eval evidence, storage, and audit records. | `ai-reliability-incident-console/web/js` keeps local ES modules for incident selection, triage rendering, trace links, theme, clipboard, and scenario drafts. | Failed eval evidence blocks unsafe rollout, remediation stays traceable, audit events link release decisions to incidents. | Run `python -B scripts/dev.py smoke` and inspect the unsafe canary release path in the [Demo Path Map](#demo-path-map). |",
 ]

@@ -1,6 +1,7 @@
 import { api } from "./api.js";
 import { byId } from "./dom.js";
 import { installCopyButton, installTraceCopyButton } from "./clipboard.js";
+import { installIngestionPanel } from "./ingestion.js";
 import { installScenarioEditor } from "./scenarioEditor.js";
 import {
   installTraceHashSync,
@@ -28,6 +29,25 @@ const state = {
 
 const setTraceCopyState = installTraceCopyButton(byId("copyTraceId"), () => state.lastTraceId);
 const setTraceLinkCopyState = installCopyButton(byId("copyTraceLink"), () => traceUrl(state.lastTraceId));
+const ingestionPanel = installIngestionPanel({
+  api,
+  currentUser: () => state.users.find((user) => user.id === state.selectedUser),
+  onIngested: async () => {
+    await loadDocuments();
+    await refreshObservability();
+  },
+  elements: {
+    summary: byId("ingestionSummary"),
+    title: byId("ingestTitle"),
+    classification: byId("ingestClassification"),
+    roles: byId("ingestRoles"),
+    mime: byId("ingestMime"),
+    body: byId("ingestBody"),
+    replace: byId("ingestReplace"),
+    button: byId("ingestDocument"),
+    status: byId("ingestionStatus"),
+  },
+});
 installScenarioEditor({
   loadScenario: () => api("/api/scenario"),
   summary: byId("scenarioSummary"),
@@ -46,6 +66,7 @@ async function loadUsers() {
   state.users = data.users;
   populateUserSelect(state.users, state.selectedUser);
   renderUser(state.users, state.selectedUser);
+  await ingestionPanel.sync();
 }
 
 async function loadDocuments() {
@@ -110,6 +131,7 @@ async function boot() {
 byId("userSelect").addEventListener("change", async (event) => {
   state.selectedUser = event.target.value;
   renderUser(state.users, state.selectedUser);
+  await ingestionPanel.sync();
   await loadDocuments();
 });
 

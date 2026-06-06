@@ -213,6 +213,92 @@ def project_1_contracts(base_url: str) -> list[Check]:
         )
         checks.append(check(ok and "body" not in documents["documents"][0], "P1 document shape hides body", detail))
 
+    forbidden_payload = {
+        "user_id": "alice",
+        "document": {
+            "title": "Employee Travel Expense Policy 2026",
+            "body": "Employees must submit travel expense receipts within five business days after each approved trip.",
+            "classification": "internal",
+            "allowed_roles": ["employee", "manager", "admin"],
+            "source_url": "ingested://acme/travel-expense-policy-2026",
+        },
+    }
+    status, forbidden = post_json(f"{base_url}/api/documents/ingest", forbidden_payload)
+    checks.append(check(status == 403 and "Only admin users" in forbidden.get("error", ""), "P1 ingestion rejects non-admin users", json.dumps(forbidden)))
+
+    ingest_payload = {
+        "user_id": "avery",
+        "replace": True,
+        "document": {
+            "title": "Employee Travel Expense Policy 2026",
+            "body": (
+                "Employee Travel Expense Policy 2026\n\n"
+                "Employees must submit travel expense receipts within five business days after each approved trip. "
+                "Expense reports must include the trip purpose, manager approval, and original receipt evidence."
+            ),
+            "classification": "internal",
+            "allowed_roles": ["employee", "manager", "admin"],
+            "source_url": "ingested://acme/travel-expense-policy-2026",
+            "source_mime": "text/markdown",
+            "version": "2026.06",
+            "updated_at": "2026-06-06",
+        },
+    }
+    status, ingestion = post_json(f"{base_url}/api/documents/ingest", ingest_payload)
+    ingested_doc = ingestion.get("document", {})
+    checks.append(
+        check(
+            status == 200
+            and isinstance(ingested_doc, dict)
+            and "body" not in ingested_doc
+            and ingestion.get("chunk_count", 0) >= 1
+            and len(ingestion.get("ingestion", {}).get("source_hash", "")) == 64,
+            "P1 admin ingestion contract",
+            f"status={status}; doc={ingested_doc.get('id')}; chunks={ingestion.get('chunk_count')}",
+        )
+    )
+
+    status, documents_after_ingest = get_json(f"{base_url}/api/documents?user_id=alice")
+    checks.append(
+        check(
+            status == 200
+            and any(doc.get("id") == ingested_doc.get("id") and "body" not in doc for doc in documents_after_ingest.get("documents", [])),
+            "P1 ingested document appears without body",
+            f"documents={len(documents_after_ingest.get('documents', []))}",
+        )
+    )
+
+    status, ingested_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "alice",
+            "question": "When must employees submit travel expense receipts?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and ingested_answer.get("abstain_reason") is None
+            and any(citation.get("doc_id") == ingested_doc.get("id") for citation in ingested_answer.get("citations", [])),
+            "P1 ingested document is retrievable with citation",
+            f"trace={ingested_answer.get('trace_id')}; doc={ingested_doc.get('id')}",
+        )
+    )
+
+    status, audit = get_json(f"{base_url}/api/audit?limit=10")
+    checks.append(
+        check(
+            status == 200
+            and any(
+                event.get("action") == "document_ingested"
+                and event.get("details", {}).get("doc_id") == ingested_doc.get("id")
+                for event in audit.get("events", [])
+            ),
+            "P1 ingestion writes audit event",
+            f"events={len(audit.get('events', []))}",
+        )
+    )
+
     status, query = post_json(
         f"{base_url}/api/query",
         {

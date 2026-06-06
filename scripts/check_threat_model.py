@@ -124,6 +124,15 @@ THREATS = {
         ],
         "commands": ["ui-contracts"],
     },
+    "T13": {
+        "phrases": ["Unauthorized or poisoned document ingestion", "admin-only ingestion", "source_hash"],
+        "files": [
+            "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py",
+            "scripts/check_api_contracts.py",
+            "docs/api_contracts.md",
+        ],
+        "commands": ["contracts", "api-docs"],
+    },
 }
 
 
@@ -144,6 +153,7 @@ SOURCE_MARKERS = {
     "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py": ["tenant_id", "allowed_roles", "_allowed"],
     "secure-enterprise-knowledge-copilot/src/copilot/answering.py": ["abstain_reason", "insert_trace", "insert_audit"],
     "secure-enterprise-knowledge-copilot/src/copilot/security.py": ["INJECTION_PATTERNS", "detect_prompt_injection"],
+    "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py": ["Only admin users", "source_hash", "document_ingested"],
     "regulated-customer-operations-agent/src/ops_agent/tools.py": [
         "direct_side_effect_blocked",
         "request_approval",

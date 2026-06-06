@@ -196,6 +196,25 @@ def project_checks(project: Project) -> list[Check]:
             ],
         )
     )
+    if project.name == "P1":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/",
+                "text/html",
+                [
+                    'id="ingestionSummary"',
+                    'id="ingestTitle"',
+                    'id="ingestClassification"',
+                    'id="ingestRoles"',
+                    'id="ingestMime"',
+                    'id="ingestBody"',
+                    'id="ingestReplace"',
+                    'id="ingestDocument"',
+                    'id="ingestionStatus"',
+                ],
+            )
+        )
     checks.extend(
         check_text_asset(
             project,
@@ -221,6 +240,21 @@ def project_checks(project: Project) -> list[Check]:
             ],
         )
     )
+    if project.name == "P1":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/styles.css",
+                "text/css",
+                    [
+                        ".ingestionBody",
+                        ".inlineCheck",
+                        ".ingestionGrid",
+                        ".ingestionWide",
+                        'input[type="text"]',
+                    ],
+            )
+        )
     checks.extend(
         check_text_asset(
             project,
@@ -235,6 +269,21 @@ def project_checks(project: Project) -> list[Check]:
             ],
         )
     )
+    if project.name == "P1":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/js/ingestion.js",
+                "text/javascript",
+                [
+                    "installIngestionPanel",
+                    "/api/documents/ingest",
+                    "source_hash",
+                    "admin required",
+                    "onIngested",
+                ],
+            )
+        )
     checks.extend(
         check_text_asset(
             project,
@@ -249,6 +298,19 @@ def project_checks(project: Project) -> list[Check]:
             ],
         )
     )
+    if project.name == "P1":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/js/app.js",
+                "text/javascript",
+                [
+                    'from "./ingestion.js"',
+                    "installIngestionPanel",
+                    "ingestionPanel.sync",
+                ],
+            )
+        )
     checks.extend(
         check_text_asset(
             project,

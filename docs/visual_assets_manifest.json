@@ -2,7 +2,7 @@
   "version": 1,
   "purpose": "Keep desktop and mobile demo screenshots tied to the frontend source files they were captured from.",
   "capture": {
-    "date": "2026-06-04",
+    "date": "2026-06-06",
     "viewports": {
       "desktop": [
         1400,
@@ -23,15 +23,15 @@
         1400,
         900
       ],
-      "sha256": "f0fc147835c313439ab7d0691cd897ec3bd3bb8102c541da9ccba636c13d03c0",
+      "sha256": "5b234a1448c43c17681ecd0925d3e68204d9aa562b63f860de9ecddf306aeecb",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "4c93f58f75fb5ef41af78f965453c0af24b4e4d20068aa2dc4958f9dddaa721b"
+          "sha256": "0800c1c2ceb4c77254110b9f7425b6ed4c1f1bb203b65ba855b4556d7fda685f"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "62fbfe97b253e5302476657d66a1123878084c02f3d245fae4f79d158aa41cb4"
+          "sha256": "70f9d30d4ecbc5a117a9823ef464b352157196a08a77a91c9e40baea2ecb5ab4"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -39,7 +39,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "fd8470f82f8594acf4b9bbbb62c346e747c113127fda609021c7de176669e945"
+          "sha256": "840e30981c3e3ae685b446af4ac7cbbcafbe14152b80c7d2e016ceaffcdb023d"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -50,8 +50,12 @@
           "sha256": "d778c3e77a18bb562f59ba1d1a41de168d01116415c7566e40730a6014a1ae67"
         },
         {
+          "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
+          "sha256": "2cac38e5b47317643434ddeffd9006b25acc6a579d1246d543576ef650fee892"
+        },
+        {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
-          "sha256": "ccd4fbac121b1be6ab940d45f6bd4c54171e05b0f61f58e7740b66836fe6f525"
+          "sha256": "693cc71e53834a1665dee709e9613cb1934015e6fb92bd495d395f89466e9999"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/scenarioEditor.js",
@@ -117,15 +121,15 @@
         500,
         844
       ],
-      "sha256": "8f3c25b1729ddb01d5737cde46eede05d30bb06e66dfebe06dcd379f1e02d758",
+      "sha256": "e526109865f8d8c675111d4175bc3b411d48db4743616dc8c2e3ce6b3771640f",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "4c93f58f75fb5ef41af78f965453c0af24b4e4d20068aa2dc4958f9dddaa721b"
+          "sha256": "0800c1c2ceb4c77254110b9f7425b6ed4c1f1bb203b65ba855b4556d7fda685f"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "62fbfe97b253e5302476657d66a1123878084c02f3d245fae4f79d158aa41cb4"
+          "sha256": "70f9d30d4ecbc5a117a9823ef464b352157196a08a77a91c9e40baea2ecb5ab4"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -133,7 +137,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "fd8470f82f8594acf4b9bbbb62c346e747c113127fda609021c7de176669e945"
+          "sha256": "840e30981c3e3ae685b446af4ac7cbbcafbe14152b80c7d2e016ceaffcdb023d"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -144,8 +148,12 @@
           "sha256": "d778c3e77a18bb562f59ba1d1a41de168d01116415c7566e40730a6014a1ae67"
         },
         {
+          "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
+          "sha256": "2cac38e5b47317643434ddeffd9006b25acc6a579d1246d543576ef650fee892"
+        },
+        {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
-          "sha256": "ccd4fbac121b1be6ab940d45f6bd4c54171e05b0f61f58e7740b66836fe6f525"
+          "sha256": "693cc71e53834a1665dee709e9613cb1934015e6fb92bd495d395f89466e9999"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/scenarioEditor.js",

@@ -94,6 +94,13 @@ export function renderAnswer(data) {
 }
 
 export function renderAudit(events) {
+  const auditTag = (event) => {
+    if (event.action === "document_ingested") {
+      return tag("ingested");
+    }
+    return tag(event.details.abstained ? "abstained" : "answered");
+  };
+
   renderList(
     byId("audit"),
     events,
@@ -103,7 +110,7 @@ export function renderAudit(events) {
         element("span", { textContent: event.created_at }),
         element("br"),
         tag(event.user_id),
-        tag(event.details.abstained ? "abstained" : "answered"),
+        auditTag(event),
       ]),
     "No audit events."
   );

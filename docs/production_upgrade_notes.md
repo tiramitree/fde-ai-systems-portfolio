@@ -41,6 +41,7 @@ The model should not enforce security by itself.
 
 Project 1 still performs:
 
+- admin-only ingestion before document chunks are added to searchable state
 - tenant and role filtering before generation
 - unsafe retrieved-content removal before generation
 - citation and abstention decisions in application logic
@@ -67,8 +68,8 @@ Next.js frontend
 
 ## Project 1 Upgrade Path
 
-1. Add file upload.
-2. Add document parser pipeline.
+1. Extend the current admin-only ingestion contract into file upload and connector sync.
+2. Add a background document parser pipeline.
 3. Add embedding model and vector retrieval.
 4. Add BM25 + vector hybrid ranking.
 5. Add reranker.
