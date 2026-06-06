@@ -350,10 +350,12 @@ Important files:
 
 - `app.py`: Python HTTP server and API routes.
 - `src/copilot/api.py`: application API layer for HTTP-facing use cases.
+- `src/copilot/repositories.py`: application-facing storage adapter boundary over the local JSON provider.
+- `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
 - `src/copilot/retrieval.py`: role-aware retrieval and evidence selection.
 - `src/copilot/security.py`: unsafe retrieved-content detection.
 - `src/copilot/answering.py`: answer shaping, citation behavior, abstention.
-- `src/copilot/storage.py`: thread-safe JSON state, traces, audit log.
+- `src/copilot/storage.py`: thread-safe local JSON state implementation used through the repository adapter.
 - `src/copilot/evals.py`: golden eval definitions and assertions.
 - `src/copilot/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.

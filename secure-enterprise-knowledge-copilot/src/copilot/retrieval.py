@@ -4,8 +4,8 @@ import math
 import re
 from collections import Counter
 
+from .repositories import KnowledgeRepository
 from .security import detect_prompt_injection
-from .storage import JsonStore, list_chunks
 
 
 TOKEN_RE = re.compile(r"[a-z0-9_]+|[\u4e00-\u9fff]", re.IGNORECASE)
@@ -41,8 +41,8 @@ def _allowed(row: dict, user: dict) -> bool:
     return row["tenant_id"] == user["tenant_id"] and user["role"] in roles
 
 
-def retrieve(conn: JsonStore, user: dict, question: str, k: int = 5) -> dict:
-    all_chunks = list_chunks(conn, user["tenant_id"])
+def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -> dict:
+    all_chunks = repo.list_chunks(user["tenant_id"])
     visible_chunks = [chunk for chunk in all_chunks if _allowed(chunk, user)]
 
     query_tokens = tokenize(question)

@@ -47,6 +47,8 @@ Projects with persistent application state should use repository interfaces so l
 - `ApprovalRepository`
 - `ToolActionRepository`
 
+Project 1 now has the first local version of this boundary in `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: application modules depend on `KnowledgeRepository` and `JsonKnowledgeRepository` while the local JSON mechanics stay in `storage.py`. The PostgreSQL adapter should implement the same application-facing methods rather than making answering, retrieval, ingestion, or eval code depend on database-specific queries.
+
 The application layer receives a typed user context:
 
 ```text
@@ -376,7 +378,7 @@ This keeps the technical review story inspectable: a reviewer can connect an ans
 
 ## Phased Implementation Plan
 
-1. Add repository interfaces while keeping local JSON adapters.
+1. Extend the existing `KnowledgeRepository` boundary while keeping local JSON adapters.
 2. Add PostgreSQL adapter behind `PORTFOLIO_STORAGE_PROVIDER=postgres`.
 3. Add migrations and seed scripts.
 4. Port Project 1 documents, chunks, traces, audit, and eval state.

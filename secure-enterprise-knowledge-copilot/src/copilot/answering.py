@@ -5,9 +5,9 @@ import time
 import uuid
 
 from .model_gateway import generate_structured_answer, should_use_openai
+from .repositories import KnowledgeRepository
 from .retrieval import retrieve, tokenize
 from .security import detect_prompt_injection, sanitize_evidence
-from .storage import JsonStore, get_user, insert_audit, insert_trace
 
 
 SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
@@ -26,9 +26,9 @@ def _select_sentences(question: str, text: str, limit: int = 4) -> list[str]:
     return [sentence for _, sentence in scored[:limit]]
 
 
-def generate_answer(conn: JsonStore, user_id: str, question: str, record: bool = True) -> dict:
+def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, record: bool = True) -> dict:
     start = time.perf_counter()
-    user = get_user(conn, user_id)
+    user = repo.get_user(user_id)
     if not user:
         raise ValueError(f"Unknown user_id: {user_id}")
 
@@ -63,8 +63,7 @@ def generate_answer(conn: JsonStore, user_id: str, question: str, record: bool =
             "latency_ms": round((time.perf_counter() - start) * 1000, 2),
         }
         if record:
-            insert_trace(
-                conn,
+            repo.insert_trace(
                 trace_id,
                 user_id,
                 question,
@@ -84,8 +83,7 @@ def generate_answer(conn: JsonStore, user_id: str, question: str, record: bool =
                     },
                 },
             )
-            insert_audit(
-                conn,
+            repo.insert_audit(
                 user_id,
                 "query_answered",
                 {
@@ -99,7 +97,7 @@ def generate_answer(conn: JsonStore, user_id: str, question: str, record: bool =
             )
         return result
 
-    retrieval = retrieve(conn, user, question, k=5)
+    retrieval = retrieve(repo, user, question, k=5)
     hits = retrieval["hits"]
     trace_id = str(uuid.uuid4())
     security_events = []
@@ -208,8 +206,7 @@ def generate_answer(conn: JsonStore, user_id: str, question: str, record: bool =
     }
 
     if record:
-        insert_trace(
-            conn,
+        repo.insert_trace(
             trace_id,
             user_id,
             question,
@@ -229,8 +226,7 @@ def generate_answer(conn: JsonStore, user_id: str, question: str, record: bool =
                 },
             },
         )
-        insert_audit(
-            conn,
+        repo.insert_audit(
             user_id,
             "query_answered",
             {

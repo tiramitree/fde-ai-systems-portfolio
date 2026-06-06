@@ -11,7 +11,7 @@ Use this page with `docs/architecture_boundaries.md` for the boundary contract a
 | HTTP and static shell | project `app.py` | Local HTTP routing, static files, JSON parsing, security headers, generic JSON errors, reset-state startup. | Domain decisions, permission policy, side effects, eval assertions, frontend rendering. |
 | API layer | `src/<package>/api.py` | UI-facing use cases, route dispatch, response shape assembly, `ApiError` status mapping. | Low-level storage mutation details, frontend DOM behavior, direct sibling-project imports. |
 | Domain/service logic | `answering.py`, `retrieval.py`, `security.py`, `agent.py`, `tools.py`, `triage.py`, optional `model_gateway.py` | Permission filtering, evidence shaping, deterministic workflow decisions, tool governance, release-blocking logic, optional model calls behind local fallback. | Raw HTTP parsing, static files, generated artifacts. |
-| State and eval support | `storage.py`, `evals.py`, `data/*.json`, project `scripts/run_eval.py` | Fictional seed data, runtime JSON state, traces, audit logs, approvals, eval runs, regression assertions. | Browser layout and external persistence adapters. |
+| Repository and state support | `repositories.py`, `storage.py`, `evals.py`, `data/*.json`, project `scripts/run_eval.py` | Application-facing repository interfaces, local JSON adapter details, fictional seed data, traces, audit logs, approvals, eval runs, regression assertions. | Browser layout, prompts as authorization boundaries, or direct external persistence calls from domain modules. |
 | Frontend boundary | project `web/index.html`, `web/styles.css`, `web/js/*.js` | Local ES-module UI, HTTP client calls, rendering, trace links, clipboard actions, scenario draft editing, theme state. | Backend policy, authorization, side-effect execution. |
 
 The same shape appears in all three projects so a contributor can learn one flow and apply it across the portfolio.
@@ -23,10 +23,12 @@ Primary path:
 ```text
 secure-enterprise-knowledge-copilot/app.py
   -> src/copilot/api.py: CopilotApi
+  -> src/copilot/repositories.py
   -> src/copilot/retrieval.py
   -> src/copilot/security.py
   -> src/copilot/answering.py
   -> src/copilot/model_gateway.py
+  -> src/copilot/chunking.py
   -> src/copilot/storage.py
   -> src/copilot/evals.py
   -> web/js/*.js
@@ -36,11 +38,13 @@ Key files:
 
 - `secure-enterprise-knowledge-copilot/app.py`: stdlib HTTP server and static shell. It imports only `copilot.api` and `copilot.storage` from the backend package.
 - `secure-enterprise-knowledge-copilot/src/copilot/api.py`: `CopilotApi` maps browser/API requests to users, visible documents, query handling, traces, audit, scenario snapshots, and eval runs.
+- `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: `KnowledgeRepository`, `JsonKnowledgeRepository`, and `connect_repository` define the application-facing storage adapter boundary used by API, retrieval, answering, ingestion, and eval logic.
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py`: tenant, role, keyword, and synonym retrieval before answering.
 - `secure-enterprise-knowledge-copilot/src/copilot/security.py`: prompt-injection detection and evidence sanitization.
 - `secure-enterprise-knowledge-copilot/src/copilot/answering.py`: answer, citation, confidence, missing-evidence, and abstention behavior.
+- `secure-enterprise-knowledge-copilot/src/copilot/chunking.py`: shared deterministic text chunking used by JSON seeding and admin ingestion.
 - `secure-enterprise-knowledge-copilot/src/copilot/model_gateway.py`: optional OpenAI structured-output path with local fallback as the default.
-- `secure-enterprise-knowledge-copilot/src/copilot/storage.py`: JSON state, users, documents, chunks, traces, audit events, and eval run persistence.
+- `secure-enterprise-knowledge-copilot/src/copilot/storage.py`: local JSON state mechanics and seed/reset support; application modules should go through `repositories.py`.
 - `secure-enterprise-knowledge-copilot/src/copilot/evals.py`: retrieval, citation, abstention, and leak-prevention regression cases.
 - `secure-enterprise-knowledge-copilot/web/js/api.js`: browser HTTP client.
 - `secure-enterprise-knowledge-copilot/web/js/app.js`: screen orchestration.
@@ -50,7 +54,7 @@ Key files:
 
 Safe change paths:
 
-- Permission or evidence behavior: update `retrieval.py`, `security.py`, `answering.py`, seed/eval cases, and `docs/api_contracts.md` when response shape changes.
+- Permission or evidence behavior: update `retrieval.py`, `security.py`, `answering.py`, repository methods when persistence behavior changes, seed/eval cases, and `docs/api_contracts.md` when response shape changes.
 - Optional model behavior: keep `model_gateway.py` opt-in, preserve local fallback, and run `python -B scripts/dev.py model-gateway-safety`.
 - UI behavior: keep `web/js/api.js` as the only fetch helper and run frontend and UI contract gates.
 
@@ -144,7 +148,7 @@ Use the smallest checklist that matches the change:
 | Change Type | Files To Inspect | Evidence Commands |
 | --- | --- | --- |
 | Backend route or response shape | project `app.py`, `src/<package>/api.py`, `docs/api_contracts.md`, `scripts/check_api_contracts.py` | `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py quality` |
-| Domain policy or side-effect behavior | domain module, `storage.py`, `evals.py`, `data/*.json`, threat/model docs if relevant | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py quality` |
+| Domain policy or side-effect behavior | domain module, `repositories.py`, `storage.py`, `evals.py`, `data/*.json`, threat/model docs if relevant | `python -B scripts/dev.py architecture`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py quality` |
 | Frontend UI or client behavior | project `web/` folder, `docs/frontend_integrity.md`, `docs/runtime_ui_contracts.md` | `python -B scripts/dev.py frontend`, `python -B scripts/dev.py ui-contracts`, `python -B scripts/dev.py quality` |
 | Scenario or seed data | `data/*.json`, `docs/demo_state_presets.json`, scenario/eval docs | `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py quality` |
 | Architecture boundary | `app.py`, `src/`, `web/js/`, `docs/architecture_boundaries.md` | `python -B scripts/dev.py architecture`, `python -B scripts/dev.py quality` |

@@ -5,7 +5,8 @@ import html
 import re
 from datetime import datetime, timezone
 
-from .storage import JsonStore, chunk_text, get_user, insert_audit
+from .chunking import chunk_text
+from .repositories import KnowledgeRepository
 
 
 VALID_CLASSIFICATIONS = {"public", "internal", "confidential"}
@@ -85,9 +86,9 @@ def _public_document(doc: dict) -> dict:
     return {key: value for key, value in doc.items() if key != "body"}
 
 
-def ingest_document(store: JsonStore, payload: dict) -> dict:
+def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     actor_id = _as_string(payload.get("user_id"), "user_id", max_length=80)
-    actor = get_user(store, actor_id)
+    actor = repo.get_user(actor_id)
     if not actor:
         raise IngestionError(404, f"Unknown user_id: {actor_id}")
     if actor["role"] != "admin":
@@ -123,12 +124,9 @@ def ingest_document(store: JsonStore, payload: dict) -> dict:
     doc_id = str(document.get("id") or _document_id(tenant_id, title, source_url, source_hash)).strip()
     replace = bool(payload.get("replace") or document.get("replace"))
 
-    existing = next((doc for doc in store.state["documents"] if doc["id"] == doc_id), None)
-    if existing and not replace:
+    exists = repo.document_exists(doc_id)
+    if exists and not replace:
         raise IngestionError(409, f"Document already exists: {doc_id}")
-    if existing:
-        store.state["documents"] = [doc for doc in store.state["documents"] if doc["id"] != doc_id]
-        store.state["chunks"] = [chunk for chunk in store.state["chunks"] if chunk["doc_id"] != doc_id]
 
     doc = {
         "id": doc_id,
@@ -164,10 +162,8 @@ def ingest_document(store: JsonStore, payload: dict) -> dict:
             }
         )
 
-    store.state["documents"].append(doc)
-    store.state["chunks"].extend(chunks)
-    insert_audit(
-        store,
+    replaced_existing = repo.replace_document_with_chunks(doc, chunks)
+    repo.insert_audit(
         actor_id,
         "document_ingested",
         {
@@ -179,7 +175,7 @@ def ingest_document(store: JsonStore, payload: dict) -> dict:
             "source_url": source_url,
             "source_mime": source_mime,
             "source_hash": source_hash,
-            "replaced_existing": existing is not None,
+            "replaced_existing": replaced_existing,
         },
     )
 

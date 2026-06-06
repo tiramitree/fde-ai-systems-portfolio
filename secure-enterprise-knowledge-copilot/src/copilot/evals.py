@@ -5,18 +5,20 @@ import uuid
 from pathlib import Path
 
 from .answering import generate_answer
-from .storage import DATA_DIR, JsonStore, insert_eval_run, latest_eval_run as load_latest_eval_run, utc_now
+from .repositories import KnowledgeRepository
+from .time_utils import utc_now
 
 
+DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 EVAL_CASES_PATH = DATA_DIR / "eval_cases.json"
 
 
-def run_evals(conn: JsonStore, cases_path: Path = EVAL_CASES_PATH, persist: bool = True) -> dict:
+def run_evals(repo: KnowledgeRepository, cases_path: Path = EVAL_CASES_PATH, persist: bool = True) -> dict:
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
     results = []
 
     for case in cases:
-        output = generate_answer(conn, case["user_id"], case["question"], record=True)
+        output = generate_answer(repo, case["user_id"], case["question"], record=True)
         cited_doc_ids = {citation["doc_id"] for citation in output["citations"]}
         failures = []
 
@@ -67,9 +69,9 @@ def run_evals(conn: JsonStore, cases_path: Path = EVAL_CASES_PATH, persist: bool
     run_id = str(uuid.uuid4())
     payload = {"id": run_id, "created_at": utc_now(), "metrics": metrics, "cases": results}
     if persist:
-        insert_eval_run(conn, payload)
+        repo.insert_eval_run(payload)
     return payload
 
 
-def latest_eval_run(conn: JsonStore) -> dict | None:
-    return load_latest_eval_run(conn)
+def latest_eval_run(repo: KnowledgeRepository) -> dict | None:
+    return repo.latest_eval_run()
