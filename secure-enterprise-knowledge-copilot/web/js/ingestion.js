@@ -18,10 +18,31 @@ function renderSummary(container, user) {
     element("div", {}, [
       element("strong", { textContent: "Admin-only source intake" }),
       element("p", {
-        textContent: "Adds searchable sources with role filters, source hash, and audit evidence.",
+        textContent: "Adds searchable sources with role filters, source hash, connector jobs, and audit evidence.",
       }),
       tag(user?.role === "admin" ? "admin enabled" : "admin required", user?.role === "admin" ? "" : "warn"),
     ])
+  );
+}
+
+function renderJobList(container, jobs) {
+  if (!container) {
+    return;
+  }
+  if (!jobs.length) {
+    container.replaceChildren(element("div", { className: "muted", textContent: "No ingestion jobs recorded." }));
+    return;
+  }
+  container.replaceChildren(
+    ...jobs.slice(0, 4).map((job) => {
+      const result = job.result || {};
+      const label = `${job.status} ${result.connector || job.input?.connector || job.type}`;
+      const detail = `${result.document_count || job.input?.document_count || 0} docs, ${result.chunk_count || 0} chunks`;
+      return element("div", { className: "item" }, [
+        element("div", { textContent: label }),
+        element("small", { textContent: `${job.id} · ${detail}` }),
+      ]);
+    })
   );
 }
 
@@ -112,18 +133,79 @@ function buildSampleSyncJobPayload(userId) {
   };
 }
 
+function githubSourceUrl(path) {
+  return `https:${"//"}github.com/tiramitree/fde-ai-systems-portfolio${path}`;
+}
+
+function buildGitHubConnectorPayload(userId) {
+  return {
+    user_id: userId,
+    mode: "fixture",
+    owner: "tiramitree",
+    repo: "fde-ai-systems-portfolio",
+    cursor: "2026-06-06T04:00:00Z",
+    idempotency_key: "github-fde-portfolio-fixture-2026-06-06",
+    records: [
+      {
+        kind: "issue",
+        number: 5,
+        title: "CSV export for eval summaries",
+        body:
+          "GitHub connector fixture records that eval summary exports must include pass_rate, failed_cases, and trace_id columns before review.",
+        state: "open",
+        html_url: githubSourceUrl("/issues/5"),
+        updated_at: "2026-06-06T04:00:00Z",
+        labels: [{ name: "evals" }, { name: "export" }],
+        user: { login: "contributor-fixture" },
+        allowed_roles: ["employee", "manager", "admin"],
+      },
+      {
+        kind: "pull",
+        number: 7,
+        title: "Add GitHub connector runbook",
+        body:
+          "GitHub pull request runbook says connector syncs need cursor checkpoints, source URLs, and permission snapshots.",
+        state: "open",
+        html_url: githubSourceUrl("/pull/7"),
+        updated_at: "2026-06-06T04:05:00Z",
+        labels: ["connector", "runbook"],
+        user: { login: "reviewer-fixture" },
+        allowed_roles: ["manager", "admin"],
+      },
+    ],
+  };
+}
+
 export function installIngestionPanel({ api, elements, currentUser, onIngested }) {
+  async function refreshJobs(user) {
+    if (!elements.jobs) {
+      return;
+    }
+    if (user?.role !== "admin") {
+      elements.jobs.replaceChildren(element("div", { className: "muted", textContent: "Job ledger is admin-only." }));
+      return;
+    }
+    try {
+      const data = await api(`/api/ingestion/jobs?user_id=${encodeURIComponent(user.id)}&limit=4`);
+      renderJobList(elements.jobs, data.jobs || []);
+    } catch (error) {
+      elements.jobs.replaceChildren(element("div", { className: "muted", textContent: error.message }));
+    }
+  }
+
   async function sync() {
     const user = currentUser();
     const isAdmin = user?.role === "admin";
     renderSummary(elements.summary, user);
     elements.button.disabled = !isAdmin;
     elements.syncButton.disabled = !isAdmin;
+    elements.githubButton.disabled = !isAdmin;
     if (!isAdmin) {
       setStatus(elements.status, "Switch to Avery Admin before ingesting a source.");
     } else if (!elements.status.textContent || elements.status.textContent.includes("Switch to")) {
       setStatus(elements.status, "Ready to ingest a local source.", "ok");
     }
+    await refreshJobs(user);
   }
 
   async function submit() {
@@ -163,6 +245,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
     elements.button.disabled = true;
     elements.syncButton.disabled = true;
+    elements.githubButton.disabled = true;
     setStatus(elements.status, "Queueing sample connector sync job...");
     try {
       const data = await api("/api/ingestion/jobs", {
@@ -184,8 +267,40 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
   }
 
+  async function syncGitHubSource() {
+    const user = currentUser();
+    if (!user) {
+      setStatus(elements.status, "No user selected.", "error");
+      return;
+    }
+    elements.button.disabled = true;
+    elements.syncButton.disabled = true;
+    elements.githubButton.disabled = true;
+    setStatus(elements.status, "Queueing GitHub connector sync...");
+    try {
+      const data = await api("/api/connectors/github/sync", {
+        method: "POST",
+        body: JSON.stringify(buildGitHubConnectorPayload(user.id)),
+      });
+      const github = data.github || {};
+      const result = data.result?.sync || data.job?.result || {};
+      const replayed = data.idempotency_replayed ? "Replayed" : "Completed";
+      setStatus(
+        elements.status,
+        `${replayed} GitHub job ${data.job.id} (${data.job.status}): ${github.record_count || result.document_count || 0} records from ${github.owner}/${github.repo}.`,
+        "ok"
+      );
+      await onIngested(data);
+    } catch (error) {
+      setStatus(elements.status, error.message, "error");
+    } finally {
+      await sync();
+    }
+  }
+
   elements.button.addEventListener("click", submit);
   elements.syncButton.addEventListener("click", syncSampleSource);
+  elements.githubButton.addEventListener("click", syncGitHubSource);
   sync();
   return { sync };
 }

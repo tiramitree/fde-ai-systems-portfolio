@@ -219,6 +219,7 @@ Design Review Docs:
 - `docs/industrial_grade_gap_assessment_2026_06_06.md`: web-refreshed industrial-grade gap assessment and concrete upgrade sequence for the eight major production-readiness gaps.
 - `docs/industrial_readiness_plan_cn_2026_06_06.md`: Chinese industrial-readiness judgment, external project baseline, current gap matrix, and FDE-oriented upgrade plan.
 - `docs/industrial_readiness_source_sync_gap_plan_2026_06_06.md`: source-sync-focused industrial readiness gap plan, external baseline scan, current maturity estimate, and prioritized upgrade sequence.
+- `docs/current_industrial_readiness_assessment_2026_06_06.md`: latest external scan decision record, current distance estimate, gap matrix, and next engineering sequence.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
 - `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
