@@ -20,7 +20,7 @@
 | --- | --- | --- |
 | FDE 技术作品集 | 很近 | 已经能讲清楚“模型不是安全边界”、RAG、Agent 审批、eval gate、trace/audit、CI/release hygiene。 |
 | 高质量 take-home / 架构 review | 较近 | 结构和故事可信，但最好补一个真正跑通的生产数据面切片。 |
-| 低风险客户试点 | 中到远 | 需要真实身份、Postgres/pgvector、文件/连接器 ingestion、外部观测、真实模型路径、运行手册。 |
+| 低风险客户试点 | 中到远 | 已有 GitHub read connector 合约，但仍需要真实身份、Postgres/pgvector、文件/连接器 ingestion、外部观测、真实模型路径、运行手册。 |
 | 真实企业生产系统 | 远 | 需要 SSO/租户隔离/权限同步/安全运营/备份恢复/在线评测/部署/告警/支持模型。 |
 
 如果按“真实生产系统完整度”粗略打分，我会给：
@@ -195,22 +195,20 @@ sources + permission sync
 - 能按 tenant/user/model/retrieval profile/tool/action 查失败。
 - 一个坏 case 能进入 eval 并阻止回归。
 
-### 4. 接一个 read-only connector
+### 4. 加固第一个 read-only connector
 
-目标：证明能处理真实企业知识来源。
+目标：把已经存在的 GitHub read connector 从可审查合约推进到更接近真实企业知识来源。
 
-优先候选：
+已经有：
 
-- GitHub issues/PRs。
-- Google Drive。
-- 本地 S3-compatible object storage。
+- `POST /api/connectors/github/sync`。
+- fixture 模式用于 CI 稳定验证。
+- live 模式可走 GitHub REST issues/pulls API。
+- issue/PR 会转成 source sync ingestion job。
+- 记录 source URL、external ID、ACL snapshot、idempotency、audit 和 citation。
 
-建议先做 GitHub，因为你现在 repo 就是 GitHub public 项目，展示路径短。
+继续补：
 
-要补：
-
-- connector config。
-- sync job。当前已有本地 ingestion job ledger、idempotency replay、dead-letter 和 retry parent contract。
 - incremental cursor。
 - source permissions。
 - deletion/prune。

@@ -8,7 +8,7 @@ The repository contains three runnable FDE-style AI reference systems:
 
 1. `secure-enterprise-knowledge-copilot`
    - Demonstrates permission-aware enterprise RAG.
-   - Core behaviors: admin-only ingestion, connector-style source sync, ingestion job ledger, source ACL snapshot enforcement, permission drift evidence, retrieval filtering, citations, abstention, prompt-injection detection, traces, audit logs, golden evals.
+   - Core behaviors: admin-only ingestion, connector-style source sync, GitHub read connector intake, ingestion job ledger, source ACL snapshot enforcement, permission drift evidence, retrieval filtering, citations, abstention, prompt-injection detection, traces, audit logs, golden evals.
    - Local URL: `http://127.0.0.1:8765`
 
 2. `regulated-customer-operations-agent`
@@ -376,6 +376,7 @@ Important files:
 - `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate selection outside application modules.
 - `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts.
 - `src/copilot/ingestion.py`: admin-only document ingestion and connector-style source sync; validates tenant, classification, roles, duplicate policy, parser output, source hash, external IDs, ACL source metadata, source ACL snapshots, sync cursor, permission drift, chunk counts, and audit events before adding searchable content.
+- `src/copilot/github_connector.py`: admin-only GitHub read connector; normalizes fixture or live issue/PR records into source sync jobs with source URLs, external IDs, connector ACL snapshots, job idempotency, sanitized job summaries, and `github_connector_synced` audit evidence.
 - `src/copilot/ingestion_jobs.py`: local ingestion worker contract for source sync jobs; records sanitized input summaries, `idempotency_key` replay, `dead_lettered` failures, retry parent links, completion audit, and dead-letter audit without exposing raw document bodies through the job list.
 - `src/copilot/source_parsing.py`: admin-ingestion parser boundary for plain text, Markdown, CSV, HTML, and JSON sources; returns normalized searchable text plus parser metadata and warnings before chunking.
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.

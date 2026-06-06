@@ -4,6 +4,7 @@ from urllib.parse import parse_qs
 
 from .answering import generate_answer
 from .evals import latest_eval_run, run_evals
+from .github_connector import sync_github_repository
 from .ingestion import IngestionError, ingest_document, sync_source_batch
 from .ingestion_jobs import list_ingestion_jobs, submit_ingestion_job
 from .repositories import connect_repository
@@ -69,6 +70,11 @@ class CopilotApi:
             if path == "/api/ingestion/jobs":
                 try:
                     return submit_ingestion_job(repo, body)
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
+            if path == "/api/connectors/github/sync":
+                try:
+                    return sync_github_repository(repo, body)
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc
             if path == "/api/eval/run":

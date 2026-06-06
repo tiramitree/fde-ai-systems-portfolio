@@ -117,6 +117,13 @@ curl.exe -s -X POST http://127.0.0.1:8765/api/ingestion/jobs -H "Content-Type: a
 curl.exe -s "http://127.0.0.1:8765/api/ingestion/jobs?user_id=avery&limit=5" | python -m json.tool
 ```
 
+Sync GitHub issue/PR records through the GitHub read connector. Fixture mode is deterministic for local review; live mode uses the GitHub REST issues and pulls APIs and can use `GITHUB_CONNECTOR_TOKEN` for a scoped read token without returning or storing token values:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8765/api/connectors/github/sync -H "Content-Type: application/json" -d '{"user_id":"avery","mode":"fixture","owner":"tiramitree","repo":"fde-ai-systems-portfolio","cursor":"2026-06-06T04:00:00Z","idempotency_key":"cookbook-github-sync-v1","records":[{"kind":"issue","number":5,"title":"CSV export for eval summaries","body":"GitHub connector fixture records that eval summary exports must include pass_rate, failed_cases, and trace_id columns before review.","state":"open","html_url":"https://github.com/tiramitree/fde-ai-systems-portfolio/issues/5","updated_at":"2026-06-06T04:00:00Z","labels":[{"name":"evals"},{"name":"export"}],"user":{"login":"contributor-fixture"},"allowed_roles":["employee","manager","admin"]},{"kind":"pull","number":7,"title":"Add GitHub connector runbook","body":"GitHub pull request runbook says connector syncs need cursor checkpoints, source URLs, and permission snapshots.","state":"open","html_url":"https://github.com/tiramitree/fde-ai-systems-portfolio/pull/7","updated_at":"2026-06-06T04:05:00Z","labels":["connector","runbook"],"user":{"login":"reviewer-fixture"},"allowed_roles":["manager","admin"]}]}' | python -m json.tool
+curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"alice","question":"What columns must eval summary exports include before review?"}' | python -m json.tool
+```
+
 Ask Alice about the ingested document. The response should cite the generated `ingested-...` document ID:
 
 ```powershell
@@ -138,6 +145,8 @@ Useful fields to inspect:
 - `ingestion.parser.metadata`
 - `source_connector`
 - `external_id`
+- `github.owner`
+- `github.record_count`
 - `acl_source`
 - `sync_cursor`
 

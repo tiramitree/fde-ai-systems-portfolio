@@ -752,6 +752,134 @@ def project_1_contracts(base_url: str) -> list[Check]:
         )
     )
 
+    github_payload = {
+        "user_id": "avery",
+        "mode": "fixture",
+        "owner": "tiramitree",
+        "repo": "fde-ai-systems-portfolio",
+        "cursor": "2026-06-06T04:00:00Z",
+        "idempotency_key": "contract-github-connector-sync-v1",
+        "records": [
+            {
+                "kind": "issue",
+                "number": 5,
+                "title": "CSV export for eval summaries",
+                "body": (
+                    "GitHub connector fixture records that eval summary exports must include pass_rate, "
+                    "failed_cases, and trace_id columns before review."
+                ),
+                "state": "open",
+                "html_url": "https://github.com/tiramitree/fde-ai-systems-portfolio/issues/5",
+                "updated_at": "2026-06-06T04:00:00Z",
+                "labels": [{"name": "evals"}, {"name": "export"}],
+                "user": {"login": "contributor-fixture"},
+                "allowed_roles": ["employee", "manager", "admin"],
+            },
+            {
+                "kind": "pull",
+                "number": 7,
+                "title": "Add GitHub connector runbook",
+                "body": (
+                    "GitHub pull request runbook says connector syncs need cursor checkpoints, "
+                    "source URLs, and permission snapshots."
+                ),
+                "state": "open",
+                "html_url": "https://github.com/tiramitree/fde-ai-systems-portfolio/pull/7",
+                "updated_at": "2026-06-06T04:05:00Z",
+                "labels": ["connector", "runbook"],
+                "user": {"login": "reviewer-fixture"},
+                "allowed_roles": ["manager", "admin"],
+            },
+        ],
+    }
+    status, forbidden_github = post_json(
+        f"{base_url}/api/connectors/github/sync",
+        {**github_payload, "user_id": "alice"},
+    )
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_github.get("error", ""),
+            "P1 GitHub connector rejects non-admin users",
+            json.dumps(forbidden_github),
+        )
+    )
+
+    status, github_sync = post_json(f"{base_url}/api/connectors/github/sync", github_payload)
+    github_meta = github_sync.get("github", {})
+    github_job = github_sync.get("job", {})
+    github_result = github_sync.get("result", {})
+    github_docs = github_result.get("documents", [])
+    checks.append(
+        check(
+            status == 200
+            and github_meta.get("owner") == "tiramitree"
+            and github_meta.get("repo") == "fde-ai-systems-portfolio"
+            and github_meta.get("mode") == "fixture"
+            and github_meta.get("record_count") == 2
+            and github_job.get("status") == "succeeded"
+            and github_job.get("input", {}).get("connector") == "github"
+            and github_result.get("sync", {}).get("connector") == "github"
+            and github_result.get("sync", {}).get("document_count") == 2
+            and len(github_docs) == 2
+            and all("body" not in item for item in github_docs)
+            and any(
+                item.get("id") == "github-tiramitree-fde-ai-systems-portfolio-issue-5"
+                and item.get("source_connector") == "github"
+                and item.get("external_id") == "github:tiramitree/fde-ai-systems-portfolio:issue:5"
+                and item.get("source_url") == "https://github.com/tiramitree/fde-ai-systems-portfolio/issues/5"
+                and item.get("allowed_roles_source") == "connector_acl_snapshot"
+                for item in github_docs
+            ),
+            "P1 GitHub connector syncs issues and PRs through ingestion jobs",
+            f"job={github_job.get('id')}; docs={len(github_docs)}",
+        )
+    )
+
+    status, replayed_github_sync = post_json(f"{base_url}/api/connectors/github/sync", github_payload)
+    checks.append(
+        check(
+            status == 200
+            and replayed_github_sync.get("idempotency_replayed") is True
+            and replayed_github_sync.get("job", {}).get("id") == github_job.get("id"),
+            "P1 GitHub connector idempotency replays existing sync",
+            f"job={replayed_github_sync.get('job', {}).get('id')}; replay={replayed_github_sync.get('idempotency_replayed')}",
+        )
+    )
+
+    status, github_answer = post_json(
+        f"{base_url}/api/query",
+        {
+            "user_id": "alice",
+            "question": "What columns must eval summary exports include before review?",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and github_answer.get("abstain_reason") is None
+            and any(
+                citation.get("doc_id") == "github-tiramitree-fde-ai-systems-portfolio-issue-5"
+                and valid_source_span(citation.get("source_span"))
+                for citation in github_answer.get("citations", [])
+            ),
+            "P1 GitHub connector content is retrievable with citation",
+            f"trace={github_answer.get('trace_id')}; citations={len(github_answer.get('citations', []))}",
+        )
+    )
+
+    status, github_jobs_list = get_json(f"{base_url}/api/ingestion/jobs?user_id=avery&limit=20")
+    github_jobs = github_jobs_list.get("jobs", [])
+    serialized_github_jobs = json.dumps(github_jobs)
+    checks.append(
+        check(
+            status == 200
+            and any(item.get("id") == github_job.get("id") and item.get("status") == "succeeded" for item in github_jobs)
+            and "eval summary exports must include" not in serialized_github_jobs,
+            "P1 GitHub connector job list hides raw GitHub bodies",
+            f"jobs={len(github_jobs)}",
+        )
+    )
+
     status, documents_after_ingest = get_json(f"{base_url}/api/documents?user_id=alice")
     checks.append(
         check(
@@ -796,7 +924,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
             f"events={len(audit.get('events', []))}",
         )
     )
-    status, source_sync_audit = get_json(f"{base_url}/api/audit?limit=20")
+    status, source_sync_audit = get_json(f"{base_url}/api/audit?limit=80")
     checks.append(
         check(
             status == 200
@@ -811,7 +939,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
             f"events={len(source_sync_audit.get('events', []))}",
         )
     )
-    status, ingestion_job_audit = get_json(f"{base_url}/api/audit?limit=50")
+    status, ingestion_job_audit = get_json(f"{base_url}/api/audit?limit=80")
     checks.append(
         check(
             status == 200
@@ -827,6 +955,21 @@ def project_1_contracts(base_url: str) -> list[Check]:
             ),
             "P1 ingestion jobs write completion and dead-letter audit events",
             f"events={len(ingestion_job_audit.get('events', []))}",
+        )
+    )
+    status, github_connector_audit = get_json(f"{base_url}/api/audit?limit=80")
+    checks.append(
+        check(
+            status == 200
+            and any(
+                event.get("action") == "github_connector_synced"
+                and event.get("details", {}).get("owner") == "tiramitree"
+                and event.get("details", {}).get("repo") == "fde-ai-systems-portfolio"
+                and event.get("details", {}).get("job_id") == github_job.get("id")
+                for event in github_connector_audit.get("events", [])
+            ),
+            "P1 GitHub connector writes audit event",
+            f"events={len(github_connector_audit.get('events', []))}",
         )
     )
 

@@ -16,8 +16,8 @@ enterprise data.
 | Target | Current distance | Judgment |
 | --- | --- | --- |
 | FDE portfolio / technical storytelling | Close | The project already demonstrates the right control boundaries: permissions before generation, citations, abstention, approvals, traces, audit, evals, release gates, public CI, and documentation. |
-| Serious take-home / system-design review | Close to medium | The architecture is credible, but reviewers will expect one production data-plane slice to be live, not only documented. |
-| Controlled internal pilot on low-risk data | Medium to far | Needs real auth, durable Postgres/pgvector runtime, ingestion/parser/embedding pipeline, external observability, and at least one real connector. |
+| Serious take-home / system-design review | Close to medium | The architecture is credible and now has a GitHub read connector contract, but reviewers will expect live permission sync and durable worker execution before pilot claims. |
+| Controlled internal pilot on low-risk data | Medium to far | Needs real auth, durable Postgres/pgvector runtime, ingestion/parser/embedding pipeline, external observability, live permission sync, and hardened connectors. |
 | Production over real enterprise data | Far | Needs enterprise identity, source permission sync, tenant isolation, security operations, online evals, backups, incident runbooks, deployment, and support ownership. |
 
 The honest framing remains:
@@ -52,7 +52,7 @@ The repo is stronger than a normal portfolio demo in these areas:
 
 - It treats the model as untrusted and keeps security decisions in application code.
 - Project 1 filters by tenant/role before evidence reaches the answer layer.
-- Project 1 records citations, abstentions, prompt-injection handling, traces, audit events, and evals.
+- Project 1 records citations, abstentions, prompt-injection handling, traces, audit events, evals, source sync jobs, and a GitHub issue/PR read connector boundary.
 - Project 2 has deterministic approval gates before side effects.
 - Project 3 connects eval failures to release-blocking decisions.
 - CI and local quality gates protect public claims, screenshots, docs, evals, and runtime contracts.
@@ -62,7 +62,7 @@ The repo is stronger than a normal portfolio demo in these areas:
 
 | Area | Current gap | Industrial requirement |
 | --- | --- | --- |
-| Data ingestion | Fictional seed data and deterministic local ingestion. | Uploads, connector sync, document parsing, OCR/table handling, incremental indexing, source versioning, and backfills. |
+| Data ingestion | Fictional seed data, deterministic local ingestion, source sync, ingestion jobs, and a GitHub issue/PR read connector contract. | Uploads, broader connector sync, document parsing, OCR/table handling, incremental indexing, deletion/prune handling, source versioning, and backfills. |
 | Retrieval quality | Local deterministic embeddings, vector score reporting, optional PostgreSQL keyword/vector candidate selection, and a deterministic reranker boundary now exist, but the path is not live-validated against a large corpus or production reranker provider. | Production embeddings, hybrid search metrics, pgvector/search backend validation, production reranker, recall/precision evals, citation span checks, stale-source handling. |
 | Source permissions | UI-selected fictional users and roles. | Enterprise SSO, tenant isolation, source ACL sync, RBAC/ABAC, database RLS, permission-drift tests. |
 | Runtime durability | Local JSON path remains default; Postgres path is in progress. | Migrations, connection pooling, durable audit/traces, queues, retries, transactional outbox, crash recovery. |
@@ -150,10 +150,9 @@ This is ordered by technical-review value and industrial value.
    - Compare model/prompt/retrieval changes before release.
    - Track cost, latency, token use, and failure class.
 
-7. Add one read-only connector.
-   - Best candidates: GitHub issues/PRs, Google Drive, or local S3-style object storage.
-   - Start read-only to avoid side-effect risk.
-   - Include source permissions, incremental sync, connector health, and backfill logs.
+7. Harden the GitHub read connector.
+   - Add authenticated live smoke evidence when an environment is available.
+   - Include source permissions, incremental sync, deletion/prune handling, connector health, and backfill logs.
 
 8. Add one governed write connector.
    - Best candidates: GitHub issue comment, Jira/Linear ticket update, or CRM note draft.

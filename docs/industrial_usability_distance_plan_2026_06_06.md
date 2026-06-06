@@ -22,7 +22,7 @@ production-minded reference implementation
 | --- | --- | --- |
 | FDE 技术评审 / 技术展示作品 | 很近 | 已经能说明你理解企业 AI 系统真正难点，不只是 prompt。 |
 | 系统设计 / take-home review | 近到中等 | 需要一个真实 production data-plane slice 来压实可信度。 |
-| 低风险内部 pilot | 中等偏远 | 需要真实 auth、Postgres/pgvector、ingestion pipeline、观测后端、至少一个真实 connector。 |
+| 低风险内部 pilot | 中等偏远 | 已有第一个 GitHub read connector 合约，但仍需要真实 auth、Postgres/pgvector、ingestion pipeline、观测后端、真实权限同步和 worker。 |
 | 敏感企业数据生产上线 | 远 | 需要 SSO、租户隔离、源系统 ACL 同步、安全运营、备份恢复、在线 eval、incident runbook、云部署和 owner model。 |
 
 ## 2026-06-06 全网再扫后的校准
@@ -41,7 +41,7 @@ production-minded reference implementation
 
 | 工业平面 | 当前状态 | 到生产还缺什么 |
 | --- | --- | --- |
-| 数据面 | Project 1 有 seed data、admin ingestion、source span、local embedding boundary、SQL candidate、reranker boundary。 | 文件/connector ingestion、parser worker、OCR/table、incremental sync、生产 embedding/reranker、live pgvector/search 验证、大 corpus eval。 |
+| 数据面 | Project 1 有 seed data、admin ingestion、source sync、GitHub read connector、source span、local embedding boundary、SQL candidate、reranker boundary。 | 文件/connector ingestion、parser worker、OCR/table、incremental sync、删除/prune、生产 embedding/reranker、live pgvector/search 验证、大 corpus eval。 |
 | 身份权限面 | 应用层有 permission-before-generation、demo 用户/角色、connector ACL snapshot、permission drift evidence。 | SSO、tenant/user/group、真实 source ACL sync、Postgres RLS live tests、permission drift detection。 |
 | 运行时 | local JSON 是默认，Postgres 路径是 opt-in/部分验证；已有本地 ingestion job ledger、idempotency、dead-letter、retry parent 证据。 | connection pool、migrations live proof、真实 queue、scheduled retry、transactional outbox、crash recovery、backup/restore。 |
 | Agent 工具面 | Project 2 有 approval gate 和 side-effect blocking。 | 真实 tool registry、scoped credentials、dry-run preview、approval owner/expiry/escalation、idempotent execution、connector outage handling。 |
@@ -99,7 +99,7 @@ I built the production invariants first: permission before generation, grounded 
 
 | 差距 | 现在的状态 | 工业要求 |
 | --- | --- | --- |
-| 真实 ingestion | 主要是 seed data 和本地/admin ingestion。 | 文件上传、source connector、parser worker、OCR/table、incremental sync、backfill、失败恢复。 |
+| 真实 ingestion | 有 seed data、本地/admin ingestion、source sync、ingestion job ledger、GitHub read connector 合约。 | 文件上传、更多 source connector、parser worker、OCR/table、incremental sync、删除/prune、backfill、失败恢复。 |
 | 检索质量 | 有 deterministic scoring、embedding boundary、SQL candidate、reranker boundary，但语料小。 | 生产 embedding/reranker、hybrid retrieval、recall@k、MRR/nDCG、citation faithfulness、stale-source eval。 |
 | 权限身份 | UI 选择 fictional users/roles，但 source sync 已能接受 ACL snapshot 并验证 permission drift。 | SSO、tenant、group、RBAC/ABAC、真实 source ACL sync、RLS、permission drift detection。 |
 | 持久运行时 | local JSON 默认，Postgres path 还在推进；本地 ingestion job contract 已覆盖 idempotency、dead-letter 和 retry parent。 | connection pool、migration、真实 queue、scheduled retry、outbox、crash recovery。 |
@@ -141,7 +141,7 @@ Enterprise AI Control Plane
 2. 真实权限模型：tenant/user/group/source ACL/RLS/permission drift eval；当前先有本地 ACL snapshot 和 drift contract。
 3. 外部观测：OpenTelemetry SDK -> Phoenix/Langfuse/OpenAI traces。
 4. trace-to-eval：坏 trace 自动进入 eval dataset，支持 prompt/model/retrieval 比较。
-5. 一个 read connector：GitHub、Google Drive、Confluence、S3-style storage 选一个。
+5. 加固 GitHub read connector：live smoke、source permissions、deletion/prune、cursor checkpoint、connector health。
 6. 一个 governed write connector：GitHub issue comment、Jira/Linear update、CRM note draft 选一个。
 7. 统一 operator console：sources、sync、permissions、evals、traces、approval、release gate。
 8. OWASP/NIST 安全治理：PII redaction、secret manager、retention、red team、incident runbook。
