@@ -45,7 +45,7 @@ Project 1 still performs:
 - tenant and role filtering before generation
 - unsafe retrieved-content removal before generation
 - citation and abstention decisions in application logic
-- normalized-text source spans attached to citations and retrieved chunks
+- normalized-text source spans attached to retrieved chunks, cited chunks, and sentence-level answer evidence
 
 Project 2 still performs:
 
@@ -114,7 +114,7 @@ Next steps:
 2. Extend the current admin-only text/file-like ingestion, ACL-snapshot source sync, source-group permission checks, and GitHub read connector contracts into multipart uploads, broader external connectors, source user/group membership sync, connector checkpoint recovery, and live deletion/prune verification against external source APIs.
 3. Move the local inline ingestion job contract behind a real background parser pipeline with external worker processes, durable queue storage, retry scheduling, and sync checkpoint recovery.
 4. Replace the deterministic local hashing embedding with a production embedding model.
-5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, rerank quality, citation span accuracy, and stale-source handling.
+5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, rerank quality, broader citation span accuracy, and stale-source handling.
 6. Replace the deterministic reranker with a production reranker provider behind the existing boundary.
 7. Connect trace-to-eval candidate review metadata to a checked-in reviewed-dataset ledger and nightly regression scheduling automation.
 8. Send OTLP traces to a real collector or hosted backend in a documented target environment, preserving the local collector-stub check as the default CI proof.

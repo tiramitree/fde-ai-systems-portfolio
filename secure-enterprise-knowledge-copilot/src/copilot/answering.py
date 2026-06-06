@@ -14,7 +14,40 @@ from .security import detect_prompt_injection, sanitize_evidence
 SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
 
 
-def _select_sentences(question: str, text: str, limit: int = 4) -> list[str]:
+def _find_sentence_span(text: str, sentence: str) -> tuple[int, int] | None:
+    start = text.find(sentence)
+    if start >= 0:
+        return start, start + len(sentence)
+    parts = sentence.split()
+    if not parts:
+        return None
+    pattern = r"\s+".join(re.escape(part) for part in parts)
+    match = re.search(pattern, text)
+    if not match:
+        return None
+    return match.start(), match.end()
+
+
+def _source_span_for_selection(chunk_span: dict, chunk_text: str, start_offset: int, end_offset: int) -> dict:
+    if not isinstance(chunk_span, dict) or start_offset < 0 or end_offset <= start_offset:
+        return {}
+    try:
+        chunk_start_char = int(chunk_span["start_char"])
+        chunk_start_line = int(chunk_span["start_line"])
+    except (KeyError, TypeError, ValueError):
+        return {}
+    prefix_before_start = chunk_text[:start_offset]
+    prefix_before_end = chunk_text[: max(start_offset, end_offset - 1)]
+    return {
+        "text_unit": chunk_span.get("text_unit", "normalized_text"),
+        "start_char": chunk_start_char + start_offset,
+        "end_char": chunk_start_char + end_offset,
+        "start_line": chunk_start_line + prefix_before_start.count("\n"),
+        "end_line": chunk_start_line + prefix_before_end.count("\n"),
+    }
+
+
+def _select_sentence_records(question: str, text: str, chunk_span: dict, limit: int = 4) -> list[dict]:
     query_tokens = set(tokenize(question))
     sentences = [s.strip() for s in SENTENCE_RE.split(text.replace("\n", " ")) if s.strip()]
     scored = []
@@ -22,9 +55,19 @@ def _select_sentences(question: str, text: str, limit: int = 4) -> list[str]:
         tokens = set(tokenize(sentence))
         score = len(tokens & query_tokens)
         if score > 0:
-            scored.append((score, sentence))
-    scored.sort(key=lambda item: item[0], reverse=True)
-    return [sentence for _, sentence in scored[:limit]]
+            span = _find_sentence_span(text, sentence)
+            start_offset, end_offset = span if span else (-1, -1)
+            scored.append((score, start_offset if start_offset >= 0 else 10**9, sentence, start_offset, end_offset))
+    scored.sort(key=lambda item: (-item[0], item[1], item[2]))
+    records = []
+    for _, _, sentence, start_offset, end_offset in scored[:limit]:
+        records.append(
+            {
+                "text": sentence,
+                "source_span": _source_span_for_selection(chunk_span, text, start_offset, end_offset),
+            }
+        )
+    return records
 
 
 def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, record: bool = True) -> dict:
@@ -125,10 +168,10 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
             continue
         if not clean_text:
             continue
-        selected = _select_sentences(question, clean_text)
+        selected = _select_sentence_records(question, clean_text, hit.get("source_span", {}))
         if not selected:
             continue
-        answer_parts.extend(selected)
+        answer_parts.extend(record["text"] for record in selected)
         citations.append(
             {
                 "chunk_id": hit["id"],
@@ -138,6 +181,8 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
                 "version": hit["version"],
                 "score": hit["score"],
                 "source_span": hit.get("source_span", {}),
+                "evidence_excerpt": " ".join(record["text"] for record in selected),
+                "evidence_spans": selected,
             }
         )
         if len(citations) >= 3:
@@ -159,9 +204,9 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
         evidence = [
             {
                 "citation": citation,
-                "selected_text": part,
+                "selected_text": citation.get("evidence_excerpt", ""),
             }
-            for citation, part in zip(citations, deduped)
+            for citation in citations
         ]
         openai_answer = generate_structured_answer(question, evidence, answer)
         model_provider = "openai" if openai_answer else "local"

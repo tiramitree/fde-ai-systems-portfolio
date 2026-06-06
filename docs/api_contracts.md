@@ -83,11 +83,13 @@ Retrieval contract:
 - `retrieval_profile.permission_filter` is `tenant_identity_before_scoring`
 - permission filtering uses tenant, role, and source-group identity before scoring; `allowed_roles` remains the coarse-grained fallback while `allowed_groups` and `source_acl_principals` demonstrate the source ACL migration path
 - `citations[].source_span` and `retrieved[].source_span` expose the cited chunk range over parser `normalized_text`
+- `citations[].evidence_excerpt` is the accessible sentence-level support used for answer assembly
+- `citations[].evidence_spans` contains sentence-level evidence records; each record has `text` plus `evidence_spans[].source_span` over parser `normalized_text`
 - `source_span.text_unit` is `normalized_text`; `source_span.start_line`, `source_span.end_line`, `source_span.start_char`, and `source_span.end_char` are integer offsets into parser-normalized source text
 - `retrieved[].score_breakdown` exposes lexical, title, phrase, semantic, vector, matched-term, and semantic-family evidence for review
 - `retrieved[].rerank_score` and `retrieved[].rerank_breakdown` expose the staged reranker decision separately from first-stage retrieval scoring
 - `retrieved[].embedding_model` and `retrieved[].embedding_dimensions` expose embedding provenance, while raw embedding vectors are not returned
-- evals can assert expected retrieved document IDs before answer generation changes are trusted
+- evals assert expected retrieved document IDs and citation span coverage before answer generation changes are trusted
 
 ### Document Ingestion Response Shape
 

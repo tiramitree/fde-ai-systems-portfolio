@@ -6,7 +6,7 @@ Use this document to evaluate the system design, safety boundaries, operational 
 
 This repository implements three runnable enterprise AI reference systems.
 
-The first system is a secure enterprise knowledge copilot. It enforces role-aware retrieval before answer generation, requires citations, abstains when accessible evidence is missing, detects prompt injection inside retrieved documents, and records traces, audit events, and eval results.
+The first system is a secure enterprise knowledge copilot. It enforces identity-aware retrieval before answer generation, requires chunk-level and sentence-level source-span citations, abstains when accessible evidence is missing, detects prompt injection inside retrieved documents, and records traces, audit events, and eval results.
 
 The second system is a governed customer operations agent for product-recall compliance. It investigates cases, searches policies, inspects listings, creates internal violations, drafts seller notices, and schedules follow-up. External notices and escalations are deterministic side effects that go through a supervisor approval queue with idempotency, audit logs, traces, and unsafe-action evals.
 
@@ -41,7 +41,7 @@ Secure retrieval and governed tools are necessary before deployment, but AI team
 Project 1:
 
 - permission leak evals
-- required citation evals
+- required citation and citation-span evals
 - unsupported question abstention evals
 - prompt-injection evals
 

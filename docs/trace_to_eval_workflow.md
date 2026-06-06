@@ -50,7 +50,7 @@ Project 1 candidates:
 
 - `p1_permission_abstain`: inaccessible evidence caused abstention and recorded denied-evidence count.
 - `p1_prompt_injection_abstain`: unsafe override, exfiltration, or retrieved-content injection caused abstention with a security event.
-- `p1_grounded_citation_answer`: cited answer can become a grounding and citation-shape regression case.
+- `p1_grounded_citation_answer`: cited answer can become a grounding, citation-shape, chunk-span, and sentence evidence-span regression case.
 
 Project 2 candidates:
 

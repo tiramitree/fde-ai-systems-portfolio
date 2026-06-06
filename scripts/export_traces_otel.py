@@ -243,6 +243,7 @@ def copilot_span(project: str, trace: dict) -> dict:
     ]
     for citation in output.get("citations", []):
         source_span = citation.get("source_span", {})
+        evidence_spans = citation.get("evidence_spans", [])
         events.append(
             event(
                 start,
@@ -255,9 +256,28 @@ def copilot_span(project: str, trace: dict) -> dict:
                     "source_span.text_unit": source_span.get("text_unit", ""),
                     "source_span.start_line": source_span.get("start_line", 0),
                     "source_span.end_line": source_span.get("end_line", 0),
+                    "evidence_excerpt": citation.get("evidence_excerpt", ""),
+                    "evidence_span_count": len(evidence_spans) if isinstance(evidence_spans, list) else 0,
                 },
             )
         )
+        if isinstance(evidence_spans, list):
+            for item in evidence_spans[:5]:
+                item_span = item.get("source_span", {}) if isinstance(item, dict) else {}
+                events.append(
+                    event(
+                        start,
+                        "evidence.sentence_span",
+                        {
+                            "doc_id": citation.get("doc_id", ""),
+                            "chunk_id": citation.get("chunk_id", ""),
+                            "text": item.get("text", "") if isinstance(item, dict) else "",
+                            "source_span.text_unit": item_span.get("text_unit", ""),
+                            "source_span.start_line": item_span.get("start_line", 0),
+                            "source_span.end_line": item_span.get("end_line", 0),
+                        },
+                    )
+                )
     for item in output.get("security_events", []):
         events.append(event(start, "security.event", item))
 

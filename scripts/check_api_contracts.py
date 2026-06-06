@@ -153,6 +153,20 @@ def valid_source_span(value: Any) -> bool:
     )
 
 
+def valid_evidence_spans(value: Any) -> bool:
+    return (
+        isinstance(value, list)
+        and bool(value)
+        and all(
+            isinstance(item, dict)
+            and isinstance(item.get("text"), str)
+            and bool(item["text"].strip())
+            and valid_source_span(item.get("source_span"))
+            for item in value
+        )
+    )
+
+
 def check(condition: bool, name: str, detail: str) -> Check:
     return Check(name=name, passed=condition, detail=detail)
 
@@ -1400,6 +1414,9 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and valid_source_span(retrieved[0].get("source_span"))
             and bool(citations)
             and valid_source_span(citations[0].get("source_span"))
+            and isinstance(citations[0].get("evidence_excerpt"), str)
+            and bool(citations[0]["evidence_excerpt"].strip())
+            and valid_evidence_spans(citations[0].get("evidence_spans"))
             and "embedding" not in retrieved[0],
             "P1 retrieval profile and score-breakdown contract",
             f"profile={profile.get('name')}; top_doc={retrieved[0].get('doc_id') if retrieved else None}",
