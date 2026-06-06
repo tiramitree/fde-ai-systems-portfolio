@@ -246,6 +246,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
     }
     status, ingestion = post_json(f"{base_url}/api/documents/ingest", ingest_payload)
     ingested_doc = ingestion.get("document", {})
+    parser = ingestion.get("ingestion", {}).get("parser", {})
     checks.append(
         check(
             status == 200
@@ -255,6 +256,50 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and len(ingestion.get("ingestion", {}).get("source_hash", "")) == 64,
             "P1 admin ingestion contract",
             f"status={status}; doc={ingested_doc.get('id')}; chunks={ingestion.get('chunk_count')}",
+        )
+    )
+    checks.append(
+        check(
+            isinstance(parser, dict)
+            and parser.get("name") == "markdown-v1"
+            and isinstance(parser.get("normalized_characters"), int)
+            and parser.get("normalized_characters", 0) >= 20
+            and isinstance(parser.get("metadata"), dict)
+            and isinstance(parser.get("warnings"), list),
+            "P1 ingestion parser metadata contract",
+            f"parser={parser.get('name')}; chars={parser.get('normalized_characters')}",
+        )
+    )
+
+    csv_ingest_payload = {
+        "user_id": "avery",
+        "replace": True,
+        "document": {
+            "title": "Operations Vendor Contacts 2026",
+            "body": (
+                "vendor,owner,status\n"
+                "Northwind Logistics,Avery Stone,approved\n"
+                "Contoso Facilities,Morgan Lee,review required"
+            ),
+            "classification": "internal",
+            "allowed_roles": ["employee", "manager", "admin"],
+            "source_url": "ingested://acme/operations-vendor-contacts-2026",
+            "source_mime": "text/csv",
+            "version": "2026.06",
+            "updated_at": "2026-06-06",
+        },
+    }
+    status, csv_ingestion = post_json(f"{base_url}/api/documents/ingest", csv_ingest_payload)
+    csv_parser = csv_ingestion.get("ingestion", {}).get("parser", {})
+    checks.append(
+        check(
+            status == 200
+            and csv_parser.get("name") == "csv-v1"
+            and csv_parser.get("metadata", {}).get("row_count") == 2
+            and csv_parser.get("metadata", {}).get("column_count") == 3
+            and csv_parser.get("metadata", {}).get("has_header") is True,
+            "P1 CSV ingestion parser contract",
+            f"status={status}; parser={csv_parser.get('name')}; metadata={csv_parser.get('metadata')}",
         )
     )
 

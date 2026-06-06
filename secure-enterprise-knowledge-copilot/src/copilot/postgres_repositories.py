@@ -150,7 +150,8 @@ class PostgresKnowledgeRepository:
               coalesce(d.source_mime, ''),
               d.source_hash,
               d.version,
-              d.updated_at::text
+              d.updated_at::text,
+              d.metadata
             from documents d
             join tenants t on t.id = d.tenant_id
             where t.slug = %s and %s = any(d.allowed_roles)
@@ -178,7 +179,8 @@ class PostgresKnowledgeRepository:
               coalesce(d.source_mime, ''),
               d.source_hash,
               d.version,
-              d.updated_at::text
+              d.updated_at::text,
+              c.metadata
             from document_chunks c
             join documents d on d.id = c.document_id
             join tenants t on t.id = c.tenant_id
@@ -230,9 +232,9 @@ class PostgresKnowledgeRepository:
             """
             insert into documents (
               id, tenant_id, external_doc_id, title, source_uri, source_mime,
-              source_hash, sensitivity, allowed_roles, version, updated_at
+              source_hash, sensitivity, allowed_roles, version, updated_at, metadata
             )
-            values (%s::uuid, %s::uuid, %s, %s, %s, %s, %s, %s, %s, %s, %s::timestamptz)
+            values (%s::uuid, %s::uuid, %s, %s, %s, %s, %s, %s, %s, %s, %s::timestamptz, %s::jsonb)
             """,
             (
                 doc_uuid,
@@ -246,6 +248,13 @@ class PostgresKnowledgeRepository:
                 document["allowed_roles"],
                 document["version"],
                 document["updated_at"],
+                _json_payload(
+                    {
+                        "parser_name": document.get("parser_name"),
+                        "parser_metadata": document.get("parser_metadata", {}),
+                        "parser_warnings": document.get("parser_warnings", []),
+                    }
+                ),
             ),
         )
         for chunk in chunks:
@@ -254,6 +263,9 @@ class PostgresKnowledgeRepository:
                 "external_chunk_id": chunk["id"],
                 "source_hash": chunk.get("source_hash"),
                 "updated_at": chunk.get("updated_at"),
+                "parser_name": chunk.get("parser_name"),
+                "parser_metadata": chunk.get("parser_metadata", {}),
+                "parser_warnings": chunk.get("parser_warnings", []),
             }
             self._execute_write(
                 """
@@ -463,6 +475,7 @@ class PostgresKnowledgeRepository:
         return load_scenario_snapshot()
 
     def _row_to_document(self, row: Any) -> dict:
+        metadata = _coerce_json(row[11]) if len(row) > 11 else {}
         return {
             "_document_uuid": row[0],
             "id": row[1],
@@ -475,9 +488,13 @@ class PostgresKnowledgeRepository:
             "source_hash": row[8],
             "version": row[9],
             "updated_at": row[10],
+            "parser_name": metadata.get("parser_name") if isinstance(metadata, dict) else None,
+            "parser_metadata": metadata.get("parser_metadata", {}) if isinstance(metadata, dict) else {},
+            "parser_warnings": metadata.get("parser_warnings", []) if isinstance(metadata, dict) else [],
         }
 
     def _row_to_chunk(self, row: Any) -> dict:
+        metadata = _coerce_json(row[14]) if len(row) > 14 else {}
         return {
             "_chunk_uuid": row[0],
             "id": row[1],
@@ -493,6 +510,9 @@ class PostgresKnowledgeRepository:
             "source_hash": row[11],
             "version": row[12],
             "updated_at": row[13],
+            "parser_name": metadata.get("parser_name") if isinstance(metadata, dict) else None,
+            "parser_metadata": metadata.get("parser_metadata", {}) if isinstance(metadata, dict) else {},
+            "parser_warnings": metadata.get("parser_warnings", []) if isinstance(metadata, dict) else [],
         }
 
     def _tenant_uuid(self, tenant_slug: str) -> str:

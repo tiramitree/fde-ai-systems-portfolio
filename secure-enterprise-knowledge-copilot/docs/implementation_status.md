@@ -1,6 +1,6 @@
 ﻿# Implementation Status
 
-Date: 2026-06-01
+Date: 2026-06-06
 
 ## Current Runnable State
 
@@ -43,14 +43,15 @@ python -B scripts\run_eval.py
 - Unknown questions abstain instead of fabricating.
 - Audit events are recorded.
 - Trace records include retrieved chunks, blocked count, output, confidence, and security events.
+- Admin ingestion normalizes plain text, Markdown, CSV, HTML, and JSON through a parser boundary before chunking.
 - UI eval button runs the golden eval suite.
 - CLI eval suite passes.
 
 Latest CLI eval result:
 
 ```text
-total_cases: 7
-passed_cases: 7
+total_cases: 11
+passed_cases: 11
 pass_rate: 1.0
 unsafe_leak_failures: 0
 ```
@@ -68,6 +69,7 @@ The MVP uses:
 - Citation-required answer shape
 - Abstention threshold
 - Prompt-injection pattern detection
+- Admin source parser boundary for text, Markdown, CSV, HTML, and JSON
 - Trace and audit logging
 - Golden eval cases
 
@@ -81,7 +83,7 @@ Still missing before calling the full FDE objective complete:
 - Next.js or production frontend
 - PostgreSQL + pgvector
 - Real embedding model and reranker
-- File upload and document parser pipeline
+- File upload, PDF/DOCX/OCR support, and connector-backed document parser pipeline
 - Background ingestion worker
 - OpenAI Responses API structured output
 - OpenTelemetry or external trace backend
@@ -98,7 +100,7 @@ Convert the current MVP into an industrialized service layout without losing the
 
 1. Add Docker Compose.
 2. Add FastAPI-compatible service layer or migrate directly to FastAPI if dependencies are available.
-3. Add upload/ingestion pipeline.
+3. Extend the current admin parser boundary into upload, connector sync, and background ingestion.
 4. Add optional OpenAI Responses API answer generation behind a model gateway.
 5. Add screenshots and a 5-minute recorded demo script.
 

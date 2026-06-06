@@ -70,9 +70,10 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
         body: JSON.stringify(payload),
       });
       const doc = data.document;
+      const parserName = data.ingestion?.parser?.name || "parser";
       setStatus(
         elements.status,
-        `Ingested ${doc.title} (${data.chunk_count} chunk, hash ${data.ingestion.source_hash.slice(0, 12)}...).`,
+        `Ingested ${doc.title} via ${parserName} (${data.chunk_count} chunk, hash ${data.ingestion.source_hash.slice(0, 12)}...).`,
         "ok"
       );
       await onIngested(data);

@@ -48,6 +48,10 @@ PROJECTS = {
             "document_ingested",
             "source_hash",
             "chunk_count",
+            "ingestion.parser.name",
+            "normalized_characters",
+            "parser_warnings",
+            "row_count",
         },
     },
     "Regulated Customer Operations Agent": {
