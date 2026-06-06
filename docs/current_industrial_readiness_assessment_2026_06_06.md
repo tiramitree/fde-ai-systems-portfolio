@@ -58,7 +58,7 @@ Approximate maturity:
 | Area | Evidence in repo | Why it matters |
 | --- | --- | --- |
 | Security boundary | The model is explicitly not the security boundary; permissions and side effects are enforced in application code. | This is the core enterprise AI principle reviewers care about. |
-| Project 1 RAG controls | Permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, source sync, GitHub read connector, ingestion job ledger, connector status surface, traces, audit logs, evals. | Stronger than a normal RAG demo because it shows data-plane, operator, and evidence controls. |
+| Project 1 RAG controls | Permission-aware retrieval, citations, abstention, prompt-injection handling, admin ingestion, source sync, opt-in stale-source prune, GitHub read connector, ingestion job ledger, connector status surface, traces, audit logs, evals. | Stronger than a normal RAG demo because it shows data-plane, stale-data, operator, and evidence controls. |
 | Project 2 agent controls | Tool side effects require approval and supervisor execution; unsafe bypasses are refused. | Aligns with modern agent governance and FDE enterprise workflows. |
 | Project 3 reliability controls | Failed eval evidence can block unsafe release rollout and create remediation evidence. | Shows the "AI app changes need release gates" story. |
 | Public repo hygiene | CI, API contracts, threat model, screenshots, safety checks, release docs, branch protection notes, PR review policy. | Makes the repo credible as a public artifact, not only a local project. |
@@ -68,7 +68,7 @@ Approximate maturity:
 
 | Gap | Current state | Industrial requirement |
 | --- | --- | --- |
-| Data ingestion | Seed data plus admin/source sync/GitHub connector contracts. | Uploads, parsers for PDF/DOCX/HTML/CSV/images/tables, OCR, incremental sync, deletion/prune, backfills, worker retries, source versioning. |
+| Data ingestion | Seed data plus admin/source sync/GitHub connector contracts and local full-snapshot prune semantics. | Uploads, parsers for PDF/DOCX/HTML/CSV/images/tables, OCR, incremental sync, live external deletion/prune verification, backfills, worker retries, source versioning. |
 | Retrieval quality | Deterministic local embeddings/reranker boundary and optional Postgres design. | Live pgvector/search backend, production embedding model, hybrid lexical/vector retrieval, reranker provider, recall@k, MRR/nDCG, faithfulness, citation-span and stale/conflict evals. |
 | Identity and permissions | UI-selected fictional users and connector ACL snapshot contracts. | SSO/auth middleware, tenants, groups, source ACL sync, RBAC/ABAC, Postgres RLS live tests, permission drift detection. |
 | Runtime durability | Local JSON default; ingestion job ledger exists but still inline/local. | Durable DB, connection pool, real queue, retry scheduling, transactional outbox, crash recovery, migration discipline, immutable audit retention. |
@@ -127,7 +127,7 @@ Project 3: reliability layer
 4. Harden the GitHub read connector.
    - Durable cursor checkpoints.
    - Permission sync model.
-   - Deletion/prune handling.
+   - Live deletion/prune handling against the real connector API.
    - Connector health/backfill logs.
    - Authenticated live smoke proof when credentials are available.
 

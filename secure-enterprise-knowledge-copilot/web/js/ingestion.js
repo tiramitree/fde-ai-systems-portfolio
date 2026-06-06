@@ -60,7 +60,8 @@ function renderConnectorStatus(container, connectors) {
       const cursor = connector.latest_cursor || "no cursor";
       const detail =
         `${connector.latest_job_status} ${connector.latest_job_id} | ${connector.document_count || 0} docs, `
-        + `${connector.chunk_count || 0} chunks, ${connector.dead_letter_count || 0} dead letters, cursor ${cursor}`;
+        + `${connector.chunk_count || 0} chunks, ${connector.pruned_count || 0} pruned, `
+        + `${connector.dead_letter_count || 0} dead letters, cursor ${cursor}`;
       return element("div", { className: "item" }, [
         element("div", { textContent: label }),
         element("small", { textContent: detail }),

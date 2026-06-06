@@ -62,6 +62,7 @@ def _source_sync_input_summary(payload: dict) -> dict:
         "acl_snapshot_version": acl_snapshot.get("version"),
         "acl_snapshot_document_count": len(acl_documents),
         "replace": bool(payload.get("replace", True)),
+        "prune_missing": payload.get("prune_missing") is True or connector.get("prune_missing") is True,
         "document_count": len(documents) if isinstance(documents, list) else 0,
         "documents": [_document_summary(item) for item in documents if isinstance(item, dict)],
     }
@@ -79,6 +80,9 @@ def _result_summary(result: dict) -> dict:
         "replaced_count": sync.get("replaced_count", 0),
         "acl_drift_count": sync.get("acl_drift_count", 0),
         "acl_drift_doc_ids": sync.get("acl_drift_doc_ids", []),
+        "prune_missing": sync.get("prune_missing", False),
+        "pruned_count": sync.get("pruned_count", 0),
+        "pruned_doc_ids": sync.get("pruned_doc_ids", []),
         "doc_ids": [document.get("id") for document in documents if isinstance(document, dict)],
     }
 

@@ -38,6 +38,14 @@ def _as_string(value: object, field: str, *, min_length: int = 1, max_length: in
     return normalized
 
 
+def _as_bool(value: object, field: str, default: bool = False) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    raise IngestionError(400, f"{field} must be a boolean")
+
+
 def _slug(text: str) -> str:
     slug = SLUG_RE.sub("-", text.lower()).strip("-")
     return slug[:72] or "document"
@@ -341,6 +349,11 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
     acl_source = _as_string(connector.get("acl_source") or connector_name, "connector.acl_source", max_length=180)
     acl_snapshot = _validate_acl_snapshot(connector.get("acl_snapshot"))
     connector_scheme = _slug(connector_name) or "connector"
+    prune_missing = _as_bool(
+        payload.get("prune_missing", connector.get("prune_missing")),
+        "prune_missing",
+        default=False,
+    )
 
     documents = payload.get("documents")
     if not isinstance(documents, list) or not documents:
@@ -360,6 +373,7 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
         if not isinstance(item, dict):
             raise IngestionError(400, "each synced document must be an object")
         external_id = _metadata_string(item, "external_id", str(item.get("id") or f"source-{index}"), max_length=240)
+        stable_doc_id = str(item.get("id") or f"{connector_scheme}-{_slug(external_id)}").strip()
         acl_record = _source_acl_record(acl_snapshot, external_id, item.get("id"))
         allowed_roles = item.get("allowed_roles")
         allowed_roles_source = "document_payload"
@@ -383,6 +397,7 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
         ).strip()
         document = {
             **item,
+            "id": stable_doc_id,
             "tenant_id": actor["tenant_id"],
             "source_url": source_url,
             "source_connector": connector_name,
@@ -413,6 +428,17 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             acl_drift_count += 1
             acl_drift_doc_ids.append(result["document"]["id"])
 
+    pruned_doc_ids: list[str] = []
+    if prune_missing:
+        current_doc_ids = {document["id"] for document in ingested}
+        existing_connector_docs = repo.list_documents_by_connector(actor["tenant_id"], connector_name)
+        pruned_doc_ids = sorted(
+            document["id"]
+            for document in existing_connector_docs
+            if document.get("id") not in current_doc_ids
+        )
+        repo.delete_documents(actor["tenant_id"], pruned_doc_ids)
+
     repo.insert_audit(
         actor_id,
         "source_sync_completed",
@@ -426,6 +452,9 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             "acl_snapshot_version": acl_snapshot["version"] if acl_snapshot else "",
             "acl_drift_count": acl_drift_count,
             "acl_drift_doc_ids": acl_drift_doc_ids,
+            "prune_missing": prune_missing,
+            "pruned_count": len(pruned_doc_ids),
+            "pruned_doc_ids": pruned_doc_ids,
             "doc_ids": [item["id"] for item in ingested],
             "parser_warnings": sorted(set(parser_warnings)),
         },
@@ -443,6 +472,9 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             "acl_snapshot_version": acl_snapshot["version"] if acl_snapshot else "",
             "acl_drift_count": acl_drift_count,
             "acl_drift_doc_ids": acl_drift_doc_ids,
+            "prune_missing": prune_missing,
+            "pruned_count": len(pruned_doc_ids),
+            "pruned_doc_ids": pruned_doc_ids,
             "parser_warnings": sorted(set(parser_warnings)),
         },
         "documents": ingested,

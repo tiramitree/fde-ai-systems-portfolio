@@ -294,6 +294,7 @@ def project_checks(project: Project) -> list[Check]:
                     "renderJobList",
                     "renderConnectorStatus",
                     "connectorStatus",
+                    "pruned_count",
                     "onIngested",
                 ],
             )

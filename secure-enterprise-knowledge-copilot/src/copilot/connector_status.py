@@ -34,6 +34,7 @@ def _job_counts(job: dict) -> dict:
         "document_count": _safe_int(result.get("document_count", input_summary.get("document_count", 0))),
         "chunk_count": _safe_int(result.get("chunk_count", 0)),
         "acl_drift_count": _safe_int(result.get("acl_drift_count", 0)),
+        "pruned_count": _safe_int(result.get("pruned_count", 0)),
     }
 
 
@@ -76,6 +77,7 @@ def _connector_row(connector: str, jobs: list[dict]) -> dict:
         "document_count": latest_counts["document_count"],
         "chunk_count": latest_counts["chunk_count"],
         "acl_drift_count": latest_counts["acl_drift_count"],
+        "pruned_count": latest_counts["pruned_count"],
         "success_count": len(successes),
         "dead_letter_count": len(dead_letters),
         "job_count": len(jobs),

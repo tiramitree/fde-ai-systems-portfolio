@@ -372,6 +372,7 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
             "renderJobList",
             "renderConnectorStatus",
             "connectorStatus",
+            "pruned_count",
             "onIngested",
             "currentUser",
         ]
