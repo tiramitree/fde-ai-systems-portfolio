@@ -41,7 +41,7 @@ Frontend
 
 ```text
 question
-  -> resolve user role
+  -> resolve user role and source groups
   -> retrieve tenant chunks
   -> filter by allowed roles
   -> detect unsafe retrieved instructions

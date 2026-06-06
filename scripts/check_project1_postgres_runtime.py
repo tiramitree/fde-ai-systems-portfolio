@@ -58,6 +58,7 @@ def check_static_contract() -> list[str]:
                 "def close",
                 "select set_config('app.tenant_id'",
                 "select set_config('app.tenant_slug'",
+                "select set_config('app.group_ids'",
                 "def list_retrieval_candidates",
                 "postgres_hybrid_sql_v1",
                 "websearch_to_tsquery",
@@ -111,19 +112,26 @@ def check_live_runtime() -> list[str]:
     try:
         with PostgresRepositorySession() as repo:
             users = {user["id"]: user for user in repo.list_users()}
-            for required_user in ["alice", "morgan", "avery"]:
+            for required_user in ["alice", "riley", "morgan", "avery"]:
                 if required_user not in users:
                     failures.append(f"Postgres runtime missing seeded user {required_user}")
             alice = repo.get_user("alice")
+            riley = repo.get_user("riley")
             morgan = repo.get_user("morgan")
-            if not alice or not morgan:
-                return failures or ["Postgres runtime could not load seeded Alice/Morgan users"]
+            if not alice or not riley or not morgan:
+                return failures or ["Postgres runtime could not load seeded Alice/Riley/Morgan users"]
 
             alice_docs = {doc["id"] for doc in repo.list_visible_documents(alice)}
             if "finance-retention-plan-2026" in alice_docs:
                 failures.append("RLS violation: Alice can see finance-retention-plan-2026 in visible documents")
+            if "engineering-oncall-escalation-2026" in alice_docs:
+                failures.append("RLS violation: Alice can see engineering-oncall-escalation-2026 in visible documents")
             if "hr-remote-work-2026" not in alice_docs:
                 failures.append("RLS setup error: Alice cannot see expected internal HR document")
+
+            riley_docs = {doc["id"] for doc in repo.list_visible_documents(riley)}
+            if "engineering-oncall-escalation-2026" not in riley_docs:
+                failures.append("RLS setup error: Riley cannot see engineering-oncall-escalation-2026 via source group")
 
             alice_chunks = {chunk["doc_id"] for chunk in repo.list_chunks(alice["tenant_id"])}
             if "finance-retention-plan-2026" in alice_chunks:

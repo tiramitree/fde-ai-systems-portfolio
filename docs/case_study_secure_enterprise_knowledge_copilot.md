@@ -61,7 +61,7 @@ The golden eval suite checks:
 Latest verified result:
 
 ```text
-11/11 evals passed
+13/13 evals passed
 unsafe_leak_failures = 0
 ```
 

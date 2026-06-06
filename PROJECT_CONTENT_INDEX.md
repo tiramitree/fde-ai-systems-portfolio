@@ -96,7 +96,7 @@ python -B scripts/dev.py verify
 Result:
 
 - all services healthy
-- Project 1 eval: 11/11 passed, unsafe leaks 0
+- Project 1 eval: 13/13 passed, unsafe leaks 0
 - Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 - Project 3 eval: 6/6 passed, unsafe release approval failures 0
 - smoke tests: 13/13 passed
@@ -222,10 +222,12 @@ Design Review Docs:
 - `docs/current_industrial_readiness_assessment_2026_06_06.md`: latest external scan decision record, current distance estimate, gap matrix, and next engineering sequence.
 - `docs/industrial_benchmark_gap_plan_2026_06_07.md`: current external benchmark scan, industrial-readiness distance estimate, eight-gap matrix, and concrete upgrade sequence toward a production-shaped Enterprise AI Control Plane.
 - `secure-enterprise-knowledge-copilot/src/copilot/source_files.py`: Project 1 UTF-8 file-like ingestion decoder for base64 JSON payloads, safe filenames, MIME inference, size limits, and file metadata before parser/chunk/embed indexing.
+- `secure-enterprise-knowledge-copilot/src/copilot/identity.py`: Project 1 identity helper for tenant, role, group, and source-principal access checks before retrieval evidence reaches the model.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
 - `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
 - `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
 - `infra/postgres/migrations/002_project1_denied_evidence_count.sql`: security-definer helper that returns only denied relevant evidence counts for Project 1 RLS audit semantics.
+- `infra/postgres/migrations/003_project1_group_acl.sql`: source-group ACL migration path with `users.group_ids`, group-aware RLS policies, and group-aware denied-evidence counting.
 - `infra/postgres/seeds/001_project1_demo.sql`: deterministic Project 1 demo seed SQL generated from `secure-enterprise-knowledge-copilot/data/seed_documents.json`.
 - `infra/postgres/init/000_project1_runtime_roles.sql`: local compose role initializer for the non-owner `fde_app` runtime role.
 - `infra/postgres/init/003_project1_runtime_grants.sql`: local compose grants for Project 1 runtime access while preserving RLS.
@@ -376,16 +378,16 @@ Important files:
 - `app.py`: Python HTTP server and API routes.
 - `src/copilot/api.py`: application API layer for HTTP-facing use cases.
 - `src/copilot/repositories.py`: application-facing storage adapter boundary over the local JSON provider.
-- `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate selection outside application modules.
-- `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts.
-- `src/copilot/ingestion.py`: admin-only document ingestion and connector-style source sync; validates tenant, classification, roles, duplicate policy, parser output, source hash, external IDs, ACL source metadata, source ACL snapshots, sync cursor, permission drift, opt-in missing-source prune, chunk counts, and audit events before adding searchable content.
+- `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, group identity context, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate selection outside application modules.
+- `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts across role and source-group ACLs.
+- `src/copilot/ingestion.py`: admin-only document ingestion and connector-style source sync; validates tenant, classification, roles, source groups, duplicate policy, parser output, source hash, external IDs, ACL source metadata, source ACL snapshots, sync cursor, permission drift, opt-in missing-source prune, chunk counts, and audit events before adding searchable content.
 - `src/copilot/github_connector.py`: admin-only GitHub read connector; normalizes fixture or live issue/PR records into source sync jobs with source URLs, external IDs, connector ACL snapshots, job idempotency, sanitized job summaries, and `github_connector_synced` audit evidence.
 - `src/copilot/ingestion_jobs.py`: local ingestion worker contract for source sync jobs; records sanitized input summaries, `idempotency_key` replay, `dead_lettered` failures, retry parent links, completion audit, and dead-letter audit without exposing raw document bodies through the job list.
 - `src/copilot/connector_status.py`: admin-only connector lifecycle summary derived from ingestion jobs; reports connector health, latest cursor, document/chunk counts, ACL drift, retry recovery, and dead-letter state for the operator surface.
 - `src/copilot/source_parsing.py`: admin-ingestion parser boundary for plain text, Markdown, CSV, HTML, and JSON sources; returns normalized searchable text plus parser metadata and warnings before chunking.
 - `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
 - `src/copilot/embeddings.py`: local deterministic chunk embedding boundary with 1536-dimensional vectors, metadata, and cosine scoring helpers for the pgvector/hybrid retrieval path.
-- `src/copilot/retrieval.py`: role-aware candidate retrieval and evidence selection with shared final scoring across JSON and PostgreSQL providers.
+- `src/copilot/retrieval.py`: identity-aware candidate retrieval and evidence selection with shared final scoring across JSON and PostgreSQL providers.
 - `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, vector, and candidate-strategy metadata for traceable first-stage retrieval evidence.
 - `src/copilot/reranking.py`: deterministic local evidence reranker boundary with feature-level rerank metadata.
 - `src/copilot/security.py`: unsafe retrieved-content detection.

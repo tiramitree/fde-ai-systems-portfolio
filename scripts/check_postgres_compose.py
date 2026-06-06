@@ -9,6 +9,7 @@ ROLE_INIT = ROOT / "infra" / "postgres" / "init" / "000_project1_runtime_roles.s
 GRANTS_INIT = ROOT / "infra" / "postgres" / "init" / "003_project1_runtime_grants.sql"
 MIGRATION = ROOT / "infra" / "postgres" / "migrations" / "001_core.sql"
 DENIED_COUNT_MIGRATION = ROOT / "infra" / "postgres" / "migrations" / "002_project1_denied_evidence_count.sql"
+GROUP_ACL_MIGRATION = ROOT / "infra" / "postgres" / "migrations" / "003_project1_group_acl.sql"
 SEED = ROOT / "infra" / "postgres" / "seeds" / "001_project1_demo.sql"
 README = ROOT / "README.md"
 POSTGRES_DESIGN = ROOT / "docs" / "postgres_pgvector_adapter_design.md"
@@ -67,13 +68,16 @@ def check_compose(failures: list[str]) -> None:
             "target: /docker-entrypoint-initdb.d/001_core.sql",
             "project1_denied_evidence_count",
             "target: /docker-entrypoint-initdb.d/002_project1_denied_evidence_count.sql",
+            "project1_group_acl",
+            "target: /docker-entrypoint-initdb.d/003_project1_group_acl.sql",
             "project1_demo_seed",
-            "target: /docker-entrypoint-initdb.d/003_project1_demo_seed.sql",
+            "target: /docker-entrypoint-initdb.d/004_project1_demo_seed.sql",
             "project1_runtime_grants",
-            "target: /docker-entrypoint-initdb.d/004_project1_runtime_grants.sql",
+            "target: /docker-entrypoint-initdb.d/005_project1_runtime_grants.sql",
             "file: ./infra/postgres/init/000_project1_runtime_roles.sql",
             "file: ./infra/postgres/migrations/001_core.sql",
             "file: ./infra/postgres/migrations/002_project1_denied_evidence_count.sql",
+            "file: ./infra/postgres/migrations/003_project1_group_acl.sql",
             "file: ./infra/postgres/seeds/001_project1_demo.sql",
             "file: ./infra/postgres/init/003_project1_runtime_grants.sql",
         ],
@@ -121,6 +125,16 @@ def check_role_files(failures: list[str]) -> None:
 
 def check_supporting_artifacts(failures: list[str]) -> None:
     require_file(MIGRATION, failures)
+    require_contains(
+        GROUP_ACL_MIGRATION,
+        [
+            "alter table users add column if not exists group_ids",
+            "authorized_documents_select",
+            "authorized_chunks_select",
+            "current_setting('app.group_ids', true)",
+        ],
+        failures,
+    )
     require_contains(
         DENIED_COUNT_MIGRATION,
         [

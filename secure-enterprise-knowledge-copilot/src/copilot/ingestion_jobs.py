@@ -44,6 +44,7 @@ def _document_summary(document: dict) -> dict:
         "external_id": document.get("external_id"),
         "title": document.get("title"),
         "classification": document.get("classification", "internal"),
+        "allowed_groups": document.get("allowed_groups", []),
         "source_mime": document.get("source_mime", "text/plain"),
         "body_sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
         "body_characters": len(body),

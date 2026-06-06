@@ -112,24 +112,39 @@ def check_p1() -> list[str]:
     user_ids = ids(users, "P1 users", failures)
     doc_ids = ids(documents, "P1 documents", failures)
     roles = {user.get("role") for user in users}
+    known_group_ids: set[str] = set()
 
     require(P1_ROLES.issubset(roles), failures, "P1: employee, manager, and admin demo roles must all exist")
     for user in users:
         require(user.get("role") in P1_ROLES, failures, f"P1 user {user.get('id')}: unknown role {user.get('role')}")
         require(user.get("tenant_id") == "acme", failures, f"P1 user {user.get('id')}: tenant_id must be acme")
+        group_ids = user.get("group_ids", [])
+        require(isinstance(group_ids, list), failures, f"P1 user {user.get('id')}: group_ids must be a list")
+        for group_id in group_ids:
+            require(isinstance(group_id, str) and group_id, failures, f"P1 user {user.get('id')}: group_ids must be non-empty strings")
+            known_group_ids.add(str(group_id))
 
     for doc in documents:
         doc_id = doc.get("id")
         allowed_roles = set(doc.get("allowed_roles", []))
+        allowed_groups = doc.get("allowed_groups", [])
         classification = doc.get("classification")
         require(classification in {"internal", "confidential"}, failures, f"P1 document {doc_id}: invalid classification")
         require(bool(allowed_roles), failures, f"P1 document {doc_id}: allowed_roles cannot be empty")
         require(allowed_roles <= P1_ROLES, failures, f"P1 document {doc_id}: allowed_roles contains unknown role")
+        require(isinstance(allowed_groups, list), failures, f"P1 document {doc_id}: allowed_groups must be a list when present")
+        for group_id in allowed_groups:
+            require(group_id in known_group_ids, failures, f"P1 document {doc_id}: allowed_groups references unknown group {group_id}")
         require(doc.get("source_url", "").startswith("internal://"), failures, f"P1 document {doc_id}: source_url must be internal://")
         require(str(doc.get("title", "")) in str(doc.get("body", "")), failures, f"P1 document {doc_id}: body should include title")
         if classification == "confidential":
             require("employee" not in allowed_roles, failures, f"P1 document {doc_id}: confidential docs must not allow employee")
             require({"manager", "admin"} <= allowed_roles, failures, f"P1 document {doc_id}: confidential docs must allow manager and admin")
+    require(
+        any(doc.get("allowed_groups") for doc in documents),
+        failures,
+        "P1: seed data must include at least one source-group restricted document",
+    )
 
     unsafe_docs = [doc for doc in documents if has_injection_marker(str(doc.get("body", "")))]
     require(bool(unsafe_docs), failures, "P1: seed data must include at least one unsafe retrieved-content document")

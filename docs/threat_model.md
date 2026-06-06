@@ -13,7 +13,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 | Asset | Why It Matters |
 | --- | --- |
 | Internal documents and citations | Users must not receive evidence they cannot access. |
-| User identity and role | Retrieval and approval behavior depends on role. |
+| User identity, role, and group membership | Retrieval and approval behavior depends on deterministic identity context. |
 | Retrieved evidence and prompt context | Retrieved text may contain untrusted instructions. |
 | Case, seller, listing, approval, and notice state | Agent side effects must be controlled and auditable. |
 | API keys and local environment values | Secrets must stay outside the public repository and browser-visible errors. |
@@ -24,7 +24,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 
 | ID | Threat | Deterministic Control | Evidence |
 | --- | --- | --- | --- |
-| T01 | Unauthorized document disclosure | Project 1 filters by tenant and role before retrieval scoring and answer generation; inaccessible chunks are counted but not passed as answer evidence. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
+| T01 | Unauthorized document disclosure | Project 1 filters by tenant, role, and source group before retrieval scoring and answer generation; inaccessible chunks are counted but not passed as answer evidence. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
 | T02 | User or retrieved-content prompt injection | User messages are rejected before retrieval when they match injection patterns; retrieved unsafe lines are treated as data and removed from evidence. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
 | T03 | Unsupported or fabricated answers | The answer layer abstains when accessible evidence does not clear the threshold or citation requirements; retrieval evals assert expected source recall before answer text is trusted. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py claims` |
 | T04 | External side effect without approval | Project 2 blocks direct side-effect tools for investigator users and creates approval requests instead. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py observability` |
@@ -42,7 +42,7 @@ The model is not the security boundary. Permissions, side effects, audit, traces
 
 | Boundary | Trusted Component | Untrusted Input | Rule |
 | --- | --- | --- | --- |
-| Retrieval | `retrieval.py` role/tenant filter | user question and document corpus | Filter before evidence assembly. |
+| Retrieval | `identity.py` plus `retrieval.py` tenant/role/source-group filter | user question and document corpus | Filter before evidence assembly. |
 | Ingestion | `ingestion.py` admin gate, `github_connector.py` issue/PR adapter, `ingestion_jobs.py` job ledger, plus `source_parsing.py` parser normalization | admin-supplied source text, connector batch payloads, GitHub issue/PR records, optional connector ACL snapshots, ingestion job payloads, HTML, CSV, Markdown, or JSON | Validate actor, tenant, classification, roles, duplicate policy, parser metadata, source hash, connector name, GitHub owner/repo, external ID, source URL, ACL source, ACL snapshot permission records, source permission ID, permission drift, idempotency key, retry parent, sync cursor, and explicit full-snapshot prune intent before changing searchable chunks. |
 | Answering | `answering.py` and `security.py` | user text and retrieved text | Cite accessible evidence or abstain. |
 | Agent tools | `tools.py` and `agent.py` | user request and model/router output | Side effects require deterministic approval. |

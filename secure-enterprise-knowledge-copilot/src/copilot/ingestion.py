@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 
 from .chunking import SOURCE_SPAN_UNIT, chunk_text_with_spans
 from .embeddings import EMBEDDING_DIMENSIONS, EMBEDDING_MODEL, embed_chunk
+from .identity import string_list
 from .repositories import KnowledgeRepository
 from .source_files import SourceFileError, decode_source_file
 from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source_content
@@ -13,6 +14,7 @@ from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source
 
 VALID_CLASSIFICATIONS = {"public", "internal", "confidential"}
 VALID_ROLES = {"employee", "manager", "admin"}
+GROUP_ID_RE = re.compile(r"^[a-z0-9][a-z0-9:_-]{1,80}$")
 SLUG_RE = re.compile(r"[^a-z0-9]+")
 MAX_SYNC_DOCUMENTS = 10
 
@@ -73,6 +75,23 @@ def _validate_roles(value: object, classification: str) -> list[str]:
     return roles
 
 
+def _validate_groups(value: object, field: str = "allowed_groups") -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise IngestionError(400, f"{field} must be a list")
+    groups: list[str] = []
+    for group in value:
+        if not isinstance(group, str):
+            raise IngestionError(400, f"{field} values must be strings")
+        normalized = group.strip().lower()
+        if not GROUP_ID_RE.fullmatch(normalized):
+            raise IngestionError(400, f"Unsupported {field} value: {group}")
+        if normalized not in groups:
+            groups.append(normalized)
+    return groups
+
+
 def _metadata_int(document: dict, key: str, default: int = 0) -> int:
     value = document.get(key, default)
     if isinstance(value, bool):
@@ -131,6 +150,8 @@ def _validate_acl_snapshot(value: object) -> dict | None:
             raise IngestionError(400, "connector.acl_snapshot document records must be objects")
         if "allowed_roles" not in record:
             raise IngestionError(400, f"connector ACL record missing allowed_roles: {key}")
+        if "allowed_groups" in record:
+            _validate_groups(record.get("allowed_groups"), "connector ACL allowed_groups")
     return {"version": version, "documents": documents}
 
 
@@ -190,6 +211,12 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     if classification not in VALID_CLASSIFICATIONS:
         raise IngestionError(400, f"Unsupported classification: {classification}")
     allowed_roles = _validate_roles(document.get("allowed_roles"), classification)
+    allowed_groups = _validate_groups(document.get("allowed_groups"))
+    source_acl_principals = string_list(document.get("source_acl_principals"))
+    for group_id in allowed_groups:
+        principal = f"group:{group_id}"
+        if principal not in source_acl_principals:
+            source_acl_principals.append(principal)
 
     default_source_url = (
         f"uploaded://{tenant_id}/{source_file['file_name']}"
@@ -210,6 +237,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     source_acl_version = _metadata_string(document, "source_acl_version", "", max_length=180)
     source_acl_permission_id = _metadata_string(document, "source_acl_permission_id", "", max_length=240)
     source_acl_principal_count = _metadata_int(document, "source_acl_principal_count", 0)
+    if source_acl_principal_count == 0 and source_acl_principals:
+        source_acl_principal_count = len(source_acl_principals)
 
     exists = repo.document_exists(doc_id)
     previous_document = repo.get_document(doc_id) if exists else None
@@ -223,6 +252,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         "tenant_id": tenant_id,
         "classification": classification,
         "allowed_roles": allowed_roles,
+        "allowed_groups": allowed_groups,
+        "source_acl_principals": source_acl_principals,
         "source_url": source_url,
         "source_mime": source_mime,
         "source_hash": source_hash,
@@ -257,6 +288,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "tenant_id": tenant_id,
                 "classification": classification,
                 "allowed_roles": allowed_roles,
+                "allowed_groups": allowed_groups,
+                "source_acl_principals": source_acl_principals,
                 "source_url": source_url,
                 "source_mime": source_mime,
                 "source_hash": source_hash,
@@ -289,6 +322,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "title": title,
             "classification": classification,
             "allowed_roles": allowed_roles,
+            "allowed_groups": allowed_groups,
+            "source_acl_principals": source_acl_principals,
             "chunk_count": len(chunks),
             "source_url": source_url,
             "source_mime": source_mime,
@@ -335,6 +370,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "connector": source_connector,
                 "external_id": external_id,
                 "acl_source": acl_source,
+                "allowed_groups": allowed_groups,
+                "source_acl_principals": source_acl_principals,
                 "sync_cursor": sync_cursor,
                 "allowed_roles_source": allowed_roles_source,
                 "source_acl_version": source_acl_version,
@@ -397,11 +434,13 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
         acl_record = _source_acl_record(acl_snapshot, external_id, item.get("id"))
         allowed_roles = item.get("allowed_roles")
         allowed_roles_source = "document_payload"
+        allowed_groups = _validate_groups(item.get("allowed_groups"))
         source_acl_version = ""
         source_acl_permission_id = ""
         source_acl_principal_count = 0
         if acl_record is not None:
             allowed_roles = acl_record.get("allowed_roles")
+            allowed_groups = _validate_groups(acl_record.get("allowed_groups"))
             allowed_roles_source = "connector_acl_snapshot"
             source_acl_version = acl_snapshot["version"]
             source_acl_permission_id = _metadata_string(
@@ -411,6 +450,7 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
                 max_length=240,
             )
             source_acl_principal_count = _metadata_int(acl_record, "principal_count", 0)
+        source_acl_principals = [f"group:{group_id}" for group_id in allowed_groups]
         source_url = str(
             item.get("source_url")
             or f"{connector_scheme}://{actor['tenant_id']}/{_slug(external_id)}"
@@ -425,6 +465,8 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             "acl_source": acl_source,
             "sync_cursor": connector_cursor,
             "allowed_roles": allowed_roles,
+            "allowed_groups": allowed_groups,
+            "source_acl_principals": source_acl_principals,
             "allowed_roles_source": allowed_roles_source,
             "source_acl_version": source_acl_version,
             "source_acl_permission_id": source_acl_permission_id,

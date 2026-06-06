@@ -55,7 +55,7 @@ def retrieval_profile(
     return {
         "name": "local-hybrid-v1",
         "score_components": list(SCORE_COMPONENTS),
-        "permission_filter": "tenant_role_before_scoring",
+        "permission_filter": "tenant_identity_before_scoring",
         "candidate_strategy": candidate_strategy,
         "candidate_source_count": candidate_count if candidate_source_count is None else candidate_source_count,
         "reranker": reranker,
@@ -73,7 +73,7 @@ def not_run_profile(reason: str) -> dict:
         "name": "not-run",
         "reason": reason,
         "score_components": [],
-        "permission_filter": "tenant_role_before_scoring",
+        "permission_filter": "tenant_identity_before_scoring",
         "visible_chunk_count": 0,
         "candidate_count": 0,
         "top_k": 0,
