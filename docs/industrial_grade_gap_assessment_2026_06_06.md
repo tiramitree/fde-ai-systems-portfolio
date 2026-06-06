@@ -32,6 +32,10 @@ The current industrial ecosystem converges on a few repeated patterns.
 | Reference | Public signal | Lesson for this repo |
 | --- | --- | --- |
 | OpenAI agent guide | Agents combine model, tools, and instructions/guardrails; useful agent systems act across workflows rather than only chatting. | Project 2 has the right side-effect governance idea, but needs durable workflow state and real tool connectors. |
+| OpenAI Responses / eval guidance | New agentic apps should use the modern Responses surface, and production LLM apps need evals because model behavior is variable. | The model gateway path should stay opt-in and structured, while evals should expand from deterministic smoke cases into retrieval and trace regression suites. |
+| OpenAI rate-limit guidance | Production clients need backoff, token budgeting, org/project isolation, and usage-tier awareness. | The repo still needs provider retry, rate-limit, budget, and cost telemetry controls before real traffic. |
+| Azure AI Search RAG guidance | Enterprise RAG must handle multi-source access, token constraints, response time expectations, security trimming, citations, and retrieval metadata. | Project 1 is aligned conceptually, but needs real source ingestion, security-trimmed retrieval at scale, and live hybrid search. |
+| AWS Well-Architected Generative AI Lens | Mature GenAI systems are reviewed through security, reliability, operational excellence, performance, cost, sustainability, data architecture, and responsible AI. | The repo needs an operator and deployment plan, not only application-level controls. |
 | OpenAI Agents SDK tracing | Production agent traces record model generations, tool calls, handoffs, guardrails, custom events, and sensitive-data controls. | Local traces are good; production needs real trace processors and privacy controls. |
 | Dify | Public repo positions Dify as a production-ready agentic workflow platform with API, web, workflow, agent, Docker, E2E, SDK, and stress-test surfaces. | Industrial products expose an operator platform, not separate toy demos. |
 | RAGFlow | Large deployable RAG engine with deep document understanding, agent/RAG modules, Docker/Helm, API, MCP, memory, and vector/search infrastructure. | Project 1 needs real parsing, embedding, hybrid retrieval, reranking, source spans, and ingestion operations. |
@@ -39,12 +43,20 @@ The current industrial ecosystem converges on a few repeated patterns.
 | LangGraph | Production agent systems emphasize durable execution, human-in-the-loop, memory, observability, and deployment for long-running stateful agents. | Approval workflows should survive restarts and continue deterministically. |
 | Langfuse | LLMOps platforms bundle traces, metrics, evals, prompt management, playgrounds, and datasets. | Static evals are not enough; traces should feed eval datasets and regression gates. |
 | OpenTelemetry GenAI conventions | GenAI observability now has conventions for model spans, agent spans, metrics, events, and provider-specific attributes. | Use OTel spans for API, retrieval, model, tool, approval, audit, and eval events. |
+| Phoenix / RAGAS | Open-source LLMOps and RAG evaluation tools emphasize traces, datasets, experiments, context precision/recall, and faithfulness. | Add a stable external evaluation/observability surface instead of relying only on local JSON traces. |
 | Onyx / EnterpriseRAG-Bench | Enterprise RAG is tested on 500K+ documents, 500 questions, and 9 internal source types with permission-aware retrieval expectations. | The current fictional seed corpus is tiny; production credibility requires larger noisy corpora and source ACL sync. |
 | OWASP LLM Top 10 / NIST AI RMF | Prompt injection, excessive agency, data leakage, vector weaknesses, and lifecycle risk governance are explicit industrial concerns. | The threat model should become a mapped security control matrix with tests, owners, and incident procedures. |
 
 Source links reviewed:
 
 - OpenAI agent guide: https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/
+- OpenAI Responses API: https://platform.openai.com/docs/api-reference/responses/compact
+- OpenAI migration guidance: https://platform.openai.com/docs/guides/migrate-to-responses
+- OpenAI eval best practices: https://platform.openai.com/docs/guides/evaluation-best-practices
+- OpenAI rate-limit best practices: https://help.openai.com/en/articles/6891753
+- Azure AI Search RAG overview: https://learn.microsoft.com/en-us/azure/search/retrieval-augmented-generation-overview
+- Azure Search OpenAI Demo: https://github.com/Azure-Samples/azure-search-openai-demo
+- AWS Well-Architected Generative AI Lens: https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html
 - OpenAI Agents SDK tracing: https://openai.github.io/openai-agents-python/tracing/
 - Dify: https://github.com/langgenius/dify
 - RAGFlow: https://github.com/infiniflow/ragflow
@@ -52,11 +64,14 @@ Source links reviewed:
 - LangGraph: https://github.com/langchain-ai/langgraph
 - Langfuse: https://github.com/langfuse/langfuse
 - OpenTelemetry GenAI conventions: https://opentelemetry.io/docs/specs/semconv/gen-ai/
+- Phoenix: https://arize.com/docs/phoenix/
+- RAGAS metrics: https://docs.ragas.io/en/latest/concepts/metrics/available_metrics/
 - Onyx EnterpriseRAG-Bench: https://onyx.app/enterpriserag-bench
 - Onyx connector permissions: https://docs.onyx.app/admin/connectors
 - Qdrant hybrid search with reranking: https://qdrant.tech/documentation/tutorials-search-engineering/reranking-hybrid-search/
 - OWASP LLM Top 10: https://owasp.org/www-project-top-10-for-large-language-model-applications/
 - NIST AI RMF: https://doi.org/10.6028/NIST.AI.100-1
+- NIST Generative AI Profile: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
 
 ## What The Repo Already Has
 
@@ -77,7 +92,7 @@ Source links reviewed:
 | Real ingestion | Mostly fictional seed data plus local/admin ingestion. | Uploads, source connectors, parser jobs, OCR/table handling, incremental sync, backfills, source versions, and failed-job recovery. |
 | Retrieval quality | Deterministic lexical/vector scoring now has a local embedding boundary, optional PostgreSQL SQL keyword/vector candidate selection, and a local reranker boundary, but it is still small-corpus and not production-provider backed. | Production embedding provider, larger hybrid retrieval metrics, production reranker, query routing, metadata filters, recall@k, citation faithfulness, and stale-source tests. |
 | Source permissions | UI-selected fictional users and roles plus a connector ACL snapshot contract with permission-drift evidence. | Enterprise SSO, tenant model, group membership, RBAC/ABAC, real source ACL sync, RLS defense in depth, live permission-drift detection. |
-| Runtime durability | Local JSON remains the safe default; Postgres path is partial. | Connection pooling, migrations, transactional audit, queues, retries, idempotency, outbox, crash recovery. |
+| Runtime durability | Local JSON remains the safe default; Postgres path is partial; Project 1 now has a local ingestion job ledger with idempotency, dead-letter, retry parent, and audit evidence. | Connection pooling, migrations, transactional audit, real queue backend, scheduled retries, outbox, crash recovery. |
 | Agent workflow | Local deterministic tools and approval model. | Real tool registry, scoped credentials, preview diffs, approval ownership/expiry/escalation, idempotent execution, connector outage handling. |
 | Observability | Local trace IDs and OTLP-shaped export. | OpenTelemetry SDK, Phoenix/Langfuse/OpenAI traces, dashboards, production trace sampling, cost/latency/error metrics. |
 | Eval operations | Static deterministic golden cases. | Trace-to-eval promotion, human annotation, nightly regression, online evals, model/prompt comparison, failure clustering. |

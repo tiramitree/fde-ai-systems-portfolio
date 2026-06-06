@@ -357,8 +357,9 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
         required_ingestion_markers = [
             "export function installIngestionPanel",
             "/api/documents/ingest",
-            "/api/sources/sync",
+            "/api/ingestion/jobs",
             "acl_snapshot",
+            "idempotency_key",
             "admin required",
             "source_hash",
             "syncButton",

@@ -555,6 +555,203 @@ def project_1_contracts(base_url: str) -> list[Check]:
         )
     )
 
+    job_sync_payload = {
+        "user_id": "avery",
+        "replace": True,
+        "connector": {
+            "name": "local-drive-demo",
+            "cursor": "2026-06-06T02:00:00Z",
+            "acl_source": "fixture-acl-job-v1",
+            "acl_snapshot": {
+                "version": "fixture-acl-job-v1",
+                "documents": {
+                    "drive-doc-job-source-readiness-2026": {
+                        "allowed_roles": ["employee", "manager", "admin"],
+                        "permission_id": "drive-acl-job-source-readiness-v1",
+                        "principal_count": 3,
+                    },
+                },
+            },
+        },
+        "documents": [
+            {
+                "id": "job-source-readiness-2026",
+                "external_id": "drive-doc-job-source-readiness-2026",
+                "title": "Ingestion Job Readiness 2026",
+                "body": (
+                    "Ingestion Job Readiness 2026\n\n"
+                    "Durable ingestion jobs must record queued, running, succeeded, and dead-lettered states. "
+                    "Operators use idempotency keys to avoid duplicate connector sync execution."
+                ),
+                "classification": "internal",
+                "source_mime": "text/markdown",
+                "updated_at": "2026-06-06",
+            },
+        ],
+    }
+    ingestion_job_payload = {
+        "user_id": "avery",
+        "type": "source_sync",
+        "idempotency_key": "contract-source-sync-job-v1",
+        "payload": job_sync_payload,
+    }
+    status, forbidden_job = post_json(
+        f"{base_url}/api/ingestion/jobs",
+        {**ingestion_job_payload, "user_id": "alice"},
+    )
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_job.get("error", ""),
+            "P1 ingestion job rejects non-admin users",
+            json.dumps(forbidden_job),
+        )
+    )
+
+    status, ingestion_job = post_json(f"{base_url}/api/ingestion/jobs", ingestion_job_payload)
+    job = ingestion_job.get("job", {})
+    job_result = ingestion_job.get("result", {}).get("sync", {})
+    checks.append(
+        check(
+            status == 200
+            and job.get("status") == "succeeded"
+            and job.get("type") == "source_sync"
+            and job.get("attempts") == 1
+            and job.get("idempotency_key") == "contract-source-sync-job-v1"
+            and job.get("input", {}).get("document_count") == 1
+            and "body" not in job.get("input", {}).get("documents", [{}])[0]
+            and len(job.get("input", {}).get("documents", [{}])[0].get("body_sha256", "")) == 64
+            and job_result.get("document_count") == 1
+            and job_result.get("chunk_count", 0) >= 1,
+            "P1 ingestion job succeeds with sanitized input summary",
+            f"job={job.get('id')}; status={job.get('status')}; chunks={job_result.get('chunk_count')}",
+        )
+    )
+
+    status, replayed_job = post_json(f"{base_url}/api/ingestion/jobs", ingestion_job_payload)
+    checks.append(
+        check(
+            status == 200
+            and replayed_job.get("idempotency_replayed") is True
+            and replayed_job.get("job", {}).get("id") == job.get("id")
+            and replayed_job.get("job", {}).get("status") == "succeeded",
+            "P1 ingestion job idempotency replays existing job",
+            f"job={replayed_job.get('job', {}).get('id')}; replay={replayed_job.get('idempotency_replayed')}",
+        )
+    )
+
+    status, forbidden_jobs_list = get_json(f"{base_url}/api/ingestion/jobs?user_id=alice")
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_jobs_list.get("error", ""),
+            "P1 ingestion job list rejects non-admin users",
+            json.dumps(forbidden_jobs_list),
+        )
+    )
+
+    failed_job_payload = {
+        "user_id": "avery",
+        "type": "source_sync",
+        "idempotency_key": "contract-source-sync-job-missing-acl-v1",
+        "payload": {
+            "user_id": "avery",
+            "replace": True,
+            "connector": {
+                "name": "local-drive-demo",
+                "cursor": "2026-06-06T03:00:00Z",
+                "acl_source": "fixture-acl-missing",
+                "acl_snapshot": {
+                    "version": "fixture-acl-missing",
+                    "documents": {
+                        "drive-doc-unrelated-source-2026": {
+                            "allowed_roles": ["employee", "manager", "admin"],
+                            "permission_id": "drive-acl-unrelated-source-v1",
+                            "principal_count": 3,
+                        },
+                    },
+                },
+            },
+            "documents": [
+                {
+                    "id": "dead-letter-source-2026",
+                    "external_id": "drive-doc-dead-letter-source-2026",
+                    "title": "Dead Letter Source 2026",
+                    "body": (
+                        "Dead Letter Source 2026\n\n"
+                        "This source should never become searchable until the connector provides a matching ACL record."
+                    ),
+                    "classification": "internal",
+                    "source_mime": "text/markdown",
+                    "updated_at": "2026-06-06",
+                },
+            ],
+        },
+    }
+    status, failed_job = post_json(f"{base_url}/api/ingestion/jobs", failed_job_payload)
+    failed_job_record = failed_job.get("job", {})
+    checks.append(
+        check(
+            status == 200
+            and failed_job_record.get("status") == "dead_lettered"
+            and failed_job_record.get("error", {}).get("retryable") is True
+            and "source ACL snapshot" in failed_job_record.get("error", {}).get("message", ""),
+            "P1 ingestion job dead-letters failed source sync",
+            f"job={failed_job_record.get('id')}; error={failed_job_record.get('error', {}).get('status')}",
+        )
+    )
+
+    retry_payload = {
+        "user_id": "avery",
+        "type": "source_sync",
+        "idempotency_key": "contract-source-sync-job-retry-v1",
+        "retry_of_job_id": failed_job_record.get("id"),
+        "payload": {
+            **failed_job_payload["payload"],
+            "connector": {
+                "name": "local-drive-demo",
+                "cursor": "2026-06-06T03:05:00Z",
+                "acl_source": "fixture-acl-retry",
+                "acl_snapshot": {
+                    "version": "fixture-acl-retry",
+                    "documents": {
+                        "drive-doc-dead-letter-source-2026": {
+                            "allowed_roles": ["employee", "manager", "admin"],
+                            "permission_id": "drive-acl-dead-letter-source-v1",
+                            "principal_count": 3,
+                        },
+                    },
+                },
+            },
+        },
+    }
+    status, retry_job = post_json(f"{base_url}/api/ingestion/jobs", retry_payload)
+    retry_job_record = retry_job.get("job", {})
+    checks.append(
+        check(
+            status == 200
+            and retry_job_record.get("status") == "succeeded"
+            and retry_job_record.get("retry_of_job_id") == failed_job_record.get("id")
+            and retry_job_record.get("result", {}).get("doc_ids") == ["dead-letter-source-2026"],
+            "P1 ingestion job retry can recover a dead-letter",
+            f"job={retry_job_record.get('id')}; retry_of={retry_job_record.get('retry_of_job_id')}",
+        )
+    )
+
+    status, jobs_list = get_json(f"{base_url}/api/ingestion/jobs?user_id=avery&limit=10")
+    jobs = jobs_list.get("jobs", [])
+    serialized_jobs = json.dumps(jobs)
+    checks.append(
+        check(
+            status == 200
+            and isinstance(jobs, list)
+            and any(item.get("id") == job.get("id") for item in jobs)
+            and any(item.get("id") == failed_job_record.get("id") and item.get("status") == "dead_lettered" for item in jobs)
+            and any(item.get("retry_of_job_id") == failed_job_record.get("id") for item in jobs)
+            and "Durable ingestion jobs must record queued" not in serialized_jobs,
+            "P1 ingestion jobs list exposes status without raw bodies",
+            f"jobs={len(jobs)}",
+        )
+    )
+
     status, documents_after_ingest = get_json(f"{base_url}/api/documents?user_id=alice")
     checks.append(
         check(
@@ -612,6 +809,24 @@ def project_1_contracts(base_url: str) -> list[Check]:
             ),
             "P1 source sync writes ACL drift audit event",
             f"events={len(source_sync_audit.get('events', []))}",
+        )
+    )
+    status, ingestion_job_audit = get_json(f"{base_url}/api/audit?limit=50")
+    checks.append(
+        check(
+            status == 200
+            and any(
+                event.get("action") == "ingestion_job_completed"
+                and event.get("details", {}).get("job_id") == job.get("id")
+                for event in ingestion_job_audit.get("events", [])
+            )
+            and any(
+                event.get("action") == "ingestion_job_dead_lettered"
+                and event.get("details", {}).get("job_id") == failed_job_record.get("id")
+                for event in ingestion_job_audit.get("events", [])
+            ),
+            "P1 ingestion jobs write completion and dead-letter audit events",
+            f"events={len(ingestion_job_audit.get('events', []))}",
         )
     )
 

@@ -101,12 +101,13 @@ Project 1 runtime switch:
 - `scripts/export_traces_otel.py --send-otlp-http` adds an optional OTLP/HTTP JSON collector handoff path, while `scripts/check_otel_collector_handoff.py` verifies the POST behavior with a local collector stub so hosted observability remains opt-in.
 - `scripts/export_trace_eval_candidates.py` adds a local trace-to-eval candidate workflow so permission abstentions, prompt-injection refusals, approval gates, bypass refusals, release blocks, and monitor-only eval signals can be reviewed before promotion into checked-in golden evals. Candidate artifacts include owner roles, allowed dispositions, promotion targets, and regression schedules so review remains explicit.
 - `POST /api/sources/sync` adds an admin-only connector-style source sync contract. It persists connector name, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, and sync cursor metadata on documents and chunks. It reuses parser/chunking/embedding boundaries, fails closed when a provided ACL snapshot lacks a document permission record, writes per-document `document_ingested` events, and writes a batch `source_sync_completed` audit event with `acl_drift_count` and affected document IDs. The frontend includes a sample connector sync button so reviewers can exercise the data-plane contract without external accounts.
+- `POST /api/ingestion/jobs` and `GET /api/ingestion/jobs` add a local ingestion worker contract. The local demo still executes inline, but it records job lifecycle state, `idempotency_key` replay, sanitized input summaries with `body_sha256`, `dead_lettered` validation failures, retry parent links, `ingestion_job_completed`, and `ingestion_job_dead_lettered` audit evidence.
 
 Next steps:
 
 1. Run `python -B scripts/check_project1_postgres_runtime.py --live` on a Docker-enabled machine after starting `docker-compose.postgres.yml`; verify Alice finance denial, Morgan finance access, SQL hybrid candidate retrieval, and denied-evidence count behavior.
 2. Extend the current admin-only ingestion and ACL-snapshot source sync contracts into file upload and real external connectors with source user/group membership sync.
-3. Add a background document parser pipeline with retries, dead-letter records, and sync checkpoint recovery.
+3. Move the local inline ingestion job contract behind a real background parser pipeline with external worker processes, durable queue storage, retry scheduling, and sync checkpoint recovery.
 4. Replace the deterministic local hashing embedding with a production embedding model.
 5. Add retrieval metrics for SQL candidate recall, lexical/vector balance, rerank quality, citation span accuracy, and stale-source handling.
 6. Replace the deterministic reranker with a production reranker provider behind the existing boundary.

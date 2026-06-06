@@ -103,6 +103,15 @@ function buildSampleSyncPayload(userId) {
   };
 }
 
+function buildSampleSyncJobPayload(userId) {
+  return {
+    user_id: userId,
+    type: "source_sync",
+    idempotency_key: "local-drive-demo-source-sync-2026-06-06",
+    payload: buildSampleSyncPayload(userId),
+  };
+}
+
 export function installIngestionPanel({ api, elements, currentUser, onIngested }) {
   async function sync() {
     const user = currentUser();
@@ -154,15 +163,17 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
     elements.button.disabled = true;
     elements.syncButton.disabled = true;
-    setStatus(elements.status, "Syncing sample connector...");
+    setStatus(elements.status, "Queueing sample connector sync job...");
     try {
-      const data = await api("/api/sources/sync", {
+      const data = await api("/api/ingestion/jobs", {
         method: "POST",
-        body: JSON.stringify(buildSampleSyncPayload(user.id)),
+        body: JSON.stringify(buildSampleSyncJobPayload(user.id)),
       });
+      const sync = data.result?.sync || data.job?.result || {};
+      const replayed = data.idempotency_replayed ? "Replayed" : "Completed";
       setStatus(
         elements.status,
-        `Synced ${data.sync.document_count} source docs from ${data.sync.connector} (${data.sync.chunk_count} chunks).`,
+        `${replayed} job ${data.job.id} (${data.job.status}): ${sync.document_count || 0} docs from ${sync.connector || "connector"} (${sync.chunk_count || 0} chunks).`,
         "ok"
       );
       await onIngested(data);

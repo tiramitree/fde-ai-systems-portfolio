@@ -5,6 +5,7 @@ from urllib.parse import parse_qs
 from .answering import generate_answer
 from .evals import latest_eval_run, run_evals
 from .ingestion import IngestionError, ingest_document, sync_source_batch
+from .ingestion_jobs import list_ingestion_jobs, submit_ingestion_job
 from .repositories import connect_repository
 
 
@@ -34,6 +35,15 @@ class CopilotApi:
                 return {"traces": repo.list_traces(limit=self._int(query, "limit", 25))}
             if path == "/api/audit":
                 return {"events": repo.list_audit_events(limit=self._int(query, "limit", 50))}
+            if path == "/api/ingestion/jobs":
+                try:
+                    return list_ingestion_jobs(
+                        repo,
+                        user_id=self._first(query, "user_id", "avery"),
+                        limit=self._int(query, "limit", 25),
+                    )
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
             if path == "/api/eval/latest":
                 return {"eval_run": latest_eval_run(repo)}
             if path == "/api/scenario":
@@ -54,6 +64,11 @@ class CopilotApi:
             if path == "/api/sources/sync":
                 try:
                     return sync_source_batch(repo, body)
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
+            if path == "/api/ingestion/jobs":
+                try:
+                    return submit_ingestion_job(repo, body)
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc
             if path == "/api/eval/run":

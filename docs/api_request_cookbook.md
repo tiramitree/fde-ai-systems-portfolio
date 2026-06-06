@@ -110,6 +110,13 @@ Ask Alice about the synced source. The response should cite `source-sync-playboo
 curl.exe -s -X POST http://127.0.0.1:8765/api/query -H "Content-Type: application/json" -d '{"user_id":"alice","question":"What must administrators review after each connector sync?"}' | python -m json.tool
 ```
 
+Queue a source sync through the local ingestion job ledger. The job input summary stores hashes and metadata, not raw document bodies:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8765/api/ingestion/jobs -H "Content-Type: application/json" -d '{"user_id":"avery","type":"source_sync","idempotency_key":"cookbook-source-sync-job-v1","payload":{"user_id":"avery","replace":true,"connector":{"name":"local-drive-demo","cursor":"2026-06-06T02:00:00Z","acl_source":"fixture-acl-job-v1","acl_snapshot":{"version":"fixture-acl-job-v1","documents":{"drive-doc-job-source-readiness-2026":{"allowed_roles":["employee","manager","admin"],"permission_id":"drive-acl-job-source-readiness-v1","principal_count":3}}}},"documents":[{"id":"job-source-readiness-2026","external_id":"drive-doc-job-source-readiness-2026","title":"Ingestion Job Readiness 2026","body":"Ingestion Job Readiness 2026\n\nDurable ingestion jobs must record queued, running, succeeded, and dead-lettered states. Operators use idempotency keys to avoid duplicate connector sync execution.","classification":"internal","source_mime":"text/markdown","updated_at":"2026-06-06"}]}}' | python -m json.tool
+curl.exe -s "http://127.0.0.1:8765/api/ingestion/jobs?user_id=avery&limit=5" | python -m json.tool
+```
+
 Ask Alice about the ingested document. The response should cite the generated `ingested-...` document ID:
 
 ```powershell

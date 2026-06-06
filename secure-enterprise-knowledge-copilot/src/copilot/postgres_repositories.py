@@ -486,6 +486,62 @@ class PostgresKnowledgeRepository:
         self._commit()
         return replaced
 
+    def get_ingestion_job(self, job_id: str) -> dict | None:
+        self._apply_context(self._active_user)
+        row = self._fetch_one(
+            """
+            select ae.payload
+            from audit_events ae
+            join tenants t on t.id = ae.tenant_id
+            where t.slug = %s
+              and ae.event_type = 'ingestion_job_state'
+              and ae.payload->>'id' = %s
+            order by ae.created_at desc, ae.id desc
+            limit 1
+            """,
+            (self.tenant_slug, job_id),
+        )
+        return _coerce_json(row[0]) if row else None
+
+    def get_ingestion_job_by_key(self, idempotency_key: str) -> dict | None:
+        if not idempotency_key:
+            return None
+        self._apply_context(self._active_user)
+        row = self._fetch_one(
+            """
+            select ae.payload
+            from audit_events ae
+            join tenants t on t.id = ae.tenant_id
+            where t.slug = %s
+              and ae.event_type = 'ingestion_job_state'
+              and ae.payload->>'idempotency_key' = %s
+            order by ae.created_at desc, ae.id desc
+            limit 1
+            """,
+            (self.tenant_slug, idempotency_key),
+        )
+        return _coerce_json(row[0]) if row else None
+
+    def record_ingestion_job(self, job: dict) -> None:
+        self.insert_audit(str(job.get("user_id", "")), "ingestion_job_state", job)
+
+    def list_ingestion_jobs(self, limit: int = 25) -> list[dict]:
+        self._apply_context(self._active_user)
+        rows = self._fetch_all(
+            """
+            select distinct on (ae.payload->>'id') ae.payload
+            from audit_events ae
+            join tenants t on t.id = ae.tenant_id
+            where t.slug = %s and ae.event_type = 'ingestion_job_state'
+            order by ae.payload->>'id', ae.created_at desc, ae.id desc
+            """,
+            (self.tenant_slug,),
+        )
+        jobs = [_coerce_json(row[0]) for row in rows]
+        jobs = [job for job in jobs if isinstance(job, dict)]
+        jobs.sort(key=lambda item: item.get("updated_at", item.get("created_at", "")), reverse=True)
+        return jobs[:limit]
+
     def insert_trace(self, trace_id: str, user_id: str, question: str, payload: dict) -> None:
         user = self._active_user if self._active_user and self._active_user["id"] == user_id else self.get_user(user_id)
         if not user:

@@ -67,17 +67,17 @@ Project 1 now has a connector-style source sync slice:
 - per-document `document_ingested` audit events
 - batch `source_sync_completed` audit event
 - frontend `Sync connector` sample button
-- runtime API contract checks proving source sync, source ACL snapshot enforcement, permission drift visibility changes, retrieval citation, and audit evidence
+- runtime API contract checks proving source sync, source ACL snapshot enforcement, permission drift visibility changes, ingestion job idempotency, dead-letter handling, retry recovery, retrieval citation, and audit evidence
 - updated docs, threat model, evidence matrix, public README, screenshot manifest, and visual assets
 
 Verification snapshot:
 
 ```text
 python -B scripts/dev.py contracts
-API contract checks: 72/72 passed
+API contract checks: 80/80 passed
 
 python -B scripts/dev.py ui-contracts
-Runtime UI contract checks: 336/336 passed
+Runtime UI contract checks: 337/337 passed
 
 python -B scripts/dev.py quality
 Quality gate passed.
@@ -89,7 +89,7 @@ Quality gate passed.
 | --- | --- | --- |
 | Real authentication | UI-selected users are not an enterprise identity boundary. | Add auth middleware, tenant context, and signed local demo tokens or an OIDC-ready adapter. |
 | Source ACL sync | Enterprise RAG depends on source-system permissions, not manually assigned roles. | Partially covered by connector ACL snapshots and permission drift tests. Next proof: sync user/group membership from a real read-only connector fixture and validate it against RLS-backed denial counts. |
-| Durable ingestion | Real ingestion has retries, failures, large files, deletion, and backfills. | Add ingestion jobs, cursor checkpoints, job status, dead-letter records, and retry/idempotency checks. |
+| Durable ingestion | Real ingestion has retries, failures, large files, deletion, and backfills. | Partially covered by local ingestion jobs with idempotency replay, sanitized summaries, dead-letter state, retry parent links, and audit events. Next proof: external worker process, durable queue backend, cursor checkpoint recovery, deletion/prune, and scheduled retries. |
 | Document parsing depth | Real corpora include PDF/DOCX/tables/OCR and malformed content. | Add parser adapters, parser warnings, page/table metadata, and parser-quality evals. |
 | Live database validation | JSON state is not enough for pilot readiness. | Run and document live Postgres/pgvector checks with RLS, migrations, indexes, pool behavior, and rollback. |
 | Retrieval quality metrics | A working answer path does not prove retrieval quality. | Add recall@k, precision@k, citation-span accuracy, conflict/stale-source cases, and reranker comparison. |
@@ -104,7 +104,7 @@ Quality gate passed.
    - Real file upload endpoint.
    - One read-only source connector.
    - Incremental cursor and prune/delete behavior.
-   - Parser job state and dead-letter records.
+   - Parser job state and dead-letter records. Current local job contract covers idempotency, dead-letter, and retry parent evidence; remaining work is a real worker/queue/checkpoint backend.
    - Postgres/pgvector live verification.
 
 2. Add permission realism.

@@ -280,8 +280,9 @@ def project_checks(project: Project) -> list[Check]:
                 [
                     "installIngestionPanel",
                     "/api/documents/ingest",
-                    "/api/sources/sync",
+                    "/api/ingestion/jobs",
                     "acl_snapshot",
+                    "idempotency_key",
                     "source_hash",
                     "admin required",
                     "onIngested",

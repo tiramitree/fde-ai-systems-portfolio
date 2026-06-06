@@ -21,7 +21,10 @@ Python standard-library HTTP server
   |
   +-- Ingestion
   |   +-- admin-only document intake
+  |   +-- ingestion_jobs.py local worker ledger
   |   +-- source_parsing.py parser normalization
+  |   +-- source sync ACL snapshot and drift evidence
+  |   +-- idempotency replay and dead-letter evidence
   |   +-- parser metadata and warning audit
   |   +-- embeddings.py chunk embedding boundary
   |   +-- classification and role validation
@@ -76,7 +79,7 @@ Next.js UI
 
 Permission filtering happens before evidence is assembled. The model should never receive chunks the user cannot access.
 
-Ingestion is an application boundary, not a frontend shortcut. Only admin users can add searchable documents, and each new document passes through a versioned parser boundary before chunking and embedding. Each ingest records source hash, chunk count, parser name, parser warnings, source MIME type, embedding model, roles, and classification in the audit log.
+Ingestion is an application boundary, not a frontend shortcut. Only admin users can add searchable documents, sync connector sources, or submit ingestion jobs. Each new document passes through a versioned parser boundary before chunking and embedding. Each ingest records source hash, chunk count, parser name, parser warnings, source MIME type, embedding model, roles, and classification in the audit log. The local ingestion job contract runs inline for the dependency-free demo, but records production-style job state: idempotency replay, sanitized input summaries, retry parent links, succeeded jobs, and dead-lettered validation failures.
 
 The application modules depend on `KnowledgeRepository` rather than direct JSON state. The current `JsonKnowledgeRepository` keeps the local demo zero-dependency. The optional `PostgresKnowledgeRepository` maps the same contract to tenant-scoped PostgreSQL tables, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate retrieval without making answering, retrieval, ingestion, or eval modules import SQL directly.
 
