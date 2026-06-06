@@ -42,6 +42,7 @@ Source:
 | POST | `/api/sources/sync` | Admin-only connector-style batch source sync with external IDs, sync cursor, optional source ACL snapshot, permission drift evidence, parser normalization, chunking, and audit evidence. |
 | POST | `/api/ingestion/jobs` | Admin-only local ingestion worker contract for source sync jobs with idempotency, inline execution, retry parent links, completion audit, and dead-letter audit. |
 | POST | `/api/connectors/github/sync` | Admin-only GitHub read connector that normalizes issue/PR records into source sync jobs with source URLs, permission snapshots, idempotency, citation-ready chunks, and audit evidence. |
+| POST | `/api/connectors/source-bundle/sync` | Admin-only allowlisted source bundle connector that reads checked-in synthetic files through manifest ACL snapshots and the ingestion job ledger. |
 | POST | `/api/eval/run` | Run the project eval suite. |
 
 ### Local Auth Contract
@@ -346,6 +347,39 @@ GitHub connector contract:
 - `allowed_roles` are converted into a connector ACL snapshot so the normal fail-closed source ACL and permission filtering path still applies
 - the connector submits a source sync ingestion job, so GitHub content inherits `idempotency_key` replay, sanitized job input summaries, `body_sha256`, completion audit, dead-letter behavior, and citation-ready chunks
 - successful connector runs write `github_connector_synced` audit events with owner, repo, mode, cursor, record count, job ID, job status, and replay state, but never raw issue or pull request bodies
+
+### Source Bundle Connector Response Shape
+
+`POST /api/connectors/source-bundle/sync` accepts:
+
+- admin `user_id`
+- `bundle`, currently an allowlisted checked-in synthetic bundle such as `operations-handbook`
+- optional `cursor`
+- optional `idempotency_key`
+- optional `prune_missing`
+
+The route returns:
+
+- `source_bundle.bundle`
+- `source_bundle.connector`
+- `source_bundle.cursor`
+- `source_bundle.document_count`
+- `source_bundle.synced_document_count`
+- `source_bundle.manifest`
+- `source_bundle.manifest_sha256`
+- `source_bundle.source_payload_sha256`
+- `job`
+- `idempotency_replayed`
+- optional `result` when the ingestion job succeeds
+
+Source bundle connector contract:
+
+- only admin users can sync source bundles
+- bundle names are allowlisted by a strict slug pattern and cannot contain path traversal characters
+- source bundle documents are read only from `secure-enterprise-knowledge-copilot/data/source_bundles/<bundle>` and must be UTF-8 text under the size limit
+- the manifest maps each checked-in synthetic file to source sync documents, ACL snapshot records, source URLs, parser MIME types, and source lifecycle metadata
+- source bundle content inherits the same parser, chunking, embedding, permission filtering, idempotency, prune, audit, and citation path as other connector data
+- successful connector runs write `source_bundle_synced` audit events with bundle, connector, cursor, document count, job ID, job status, replay state, and payload hash; raw source bodies are not returned in connector status or job summaries
 
 ### Scenario Snapshot Shape
 

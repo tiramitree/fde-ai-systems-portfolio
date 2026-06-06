@@ -206,6 +206,16 @@ function buildSampleSyncJobPayload(userId) {
   };
 }
 
+function buildSourceBundlePayload(userId) {
+  return {
+    user_id: userId,
+    bundle: "operations-handbook",
+    cursor: "2026-06-07T00:00:00Z",
+    idempotency_key: "source-bundle-operations-handbook-2026-06-07",
+    prune_missing: true,
+  };
+}
+
 function githubSourceUrl(path) {
   return `https:${"//"}github.com/tiramitree/fde-ai-systems-portfolio${path}`;
 }
@@ -290,6 +300,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     renderSummary(elements.summary, user);
     elements.button.disabled = !isAdmin;
     elements.syncButton.disabled = !isAdmin;
+    elements.bundleButton.disabled = !isAdmin;
     elements.githubButton.disabled = !isAdmin;
     if (!isAdmin) {
       setStatus(elements.status, "Switch to Avery Admin before ingesting a source.");
@@ -337,6 +348,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
     elements.button.disabled = true;
     elements.syncButton.disabled = true;
+    elements.bundleButton.disabled = true;
     elements.githubButton.disabled = true;
     setStatus(elements.status, "Queueing sample connector sync job...");
     try {
@@ -367,6 +379,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
     elements.button.disabled = true;
     elements.syncButton.disabled = true;
+    elements.bundleButton.disabled = true;
     elements.githubButton.disabled = true;
     setStatus(elements.status, "Queueing GitHub connector sync...");
     try {
@@ -390,8 +403,41 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
   }
 
+  async function syncSourceBundle() {
+    const user = currentUser();
+    if (!user) {
+      setStatus(elements.status, "No user selected.", "error");
+      return;
+    }
+    elements.button.disabled = true;
+    elements.syncButton.disabled = true;
+    elements.bundleButton.disabled = true;
+    elements.githubButton.disabled = true;
+    setStatus(elements.status, "Queueing source bundle sync...");
+    try {
+      const data = await api("/api/connectors/source-bundle/sync", {
+        method: "POST",
+        body: JSON.stringify(buildSourceBundlePayload(user.id)),
+      });
+      const bundle = data.source_bundle || {};
+      const result = data.result?.sync || data.job?.result || {};
+      const replayed = data.idempotency_replayed ? "Replayed" : "Completed";
+      setStatus(
+        elements.status,
+        `${replayed} bundle job ${data.job.id} (${data.job.status}): ${bundle.document_count || result.document_count || 0} docs from ${bundle.bundle || "source bundle"}.`,
+        "ok"
+      );
+      await onIngested(data);
+    } catch (error) {
+      setStatus(elements.status, error.message, "error");
+    } finally {
+      await sync();
+    }
+  }
+
   elements.button.addEventListener("click", submit);
   elements.syncButton.addEventListener("click", syncSampleSource);
+  elements.bundleButton.addEventListener("click", syncSourceBundle);
   elements.githubButton.addEventListener("click", syncGitHubSource);
   sync();
   return { sync };

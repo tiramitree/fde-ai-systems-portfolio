@@ -226,6 +226,7 @@ Design Review Docs:
 - `docs/industrial_readiness_source_sync_gap_plan_2026_06_06.md`: source-sync-focused industrial readiness gap plan, external baseline scan, current maturity estimate, and prioritized upgrade sequence.
 - `docs/current_industrial_readiness_assessment_2026_06_06.md`: latest external scan decision record, current distance estimate, gap matrix, and next engineering sequence.
 - `docs/industrial_benchmark_gap_plan_2026_06_07.md`: current external benchmark scan, industrial-readiness distance estimate, eight-gap matrix, and concrete upgrade sequence toward a production-shaped Enterprise AI Control Plane.
+- `docs/industrial_reality_check_2026_06_07_cn.md`: Chinese strict reality check for how far the repository is from true industrial use, with external benchmark notes and the shortest upgrade route.
 - `secure-enterprise-knowledge-copilot/src/copilot/source_files.py`: Project 1 UTF-8 file-like ingestion decoder for base64 JSON payloads, safe filenames, MIME inference, size limits, and file metadata before parser/chunk/embed indexing.
 - `secure-enterprise-knowledge-copilot/src/copilot/source_lifecycle.py`: Project 1 source lifecycle policy helpers for active-only retrieval and stale source filtering.
 - `secure-enterprise-knowledge-copilot/src/copilot/identity.py`: Project 1 identity helper for tenant, role, group, and source-principal access checks before retrieval evidence reaches the model.
@@ -387,6 +388,7 @@ Important files:
 - `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, group identity context, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate selection outside application modules.
 - `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts across role and source-group ACLs.
 - `src/copilot/ingestion.py`: admin-only document ingestion and connector-style source sync; validates tenant, classification, roles, source groups, duplicate policy, parser output, source hash, external IDs, ACL source metadata, source ACL snapshots, sync cursor, permission drift, opt-in missing-source prune, chunk counts, and audit events before adding searchable content.
+- `src/copilot/source_bundle_connector.py`: admin-only allowlisted source bundle connector; reads checked-in synthetic files from `data/source_bundles`, rejects unsafe bundle names and path traversal, maps manifest ACL snapshots into source sync jobs, and writes `source_bundle_synced` audit evidence without returning raw bodies.
 - `src/copilot/github_connector.py`: admin-only GitHub read connector; normalizes fixture or live issue/PR records into source sync jobs with source URLs, external IDs, connector ACL snapshots, job idempotency, sanitized job summaries, and `github_connector_synced` audit evidence.
 - `src/copilot/ingestion_jobs.py`: local ingestion worker contract for source sync jobs; records sanitized input summaries, `idempotency_key` replay, `dead_lettered` failures, retry parent links, completion audit, and dead-letter audit without exposing raw document bodies through the job list.
 - `src/copilot/connector_status.py`: admin-only connector lifecycle summary derived from ingestion jobs; reports connector health, latest cursor, document/chunk counts, ACL drift, retry recovery, and dead-letter state for the operator surface.
@@ -405,6 +407,7 @@ Important files:
 - `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, scenario draft helper, renderers, and app orchestration.
 - `data/seed_documents.json`: seed knowledge base.
 - `data/eval_cases.json`: eval cases.
+- `data/source_bundles/operations-handbook`: checked-in synthetic source bundle used by the source bundle connector contract.
 - `docs/architecture.md`: project architecture.
 - `docs/threat_model.md`: threat model and security assumptions.
 - `docs/demo_script.md`: exact project demo script.
@@ -415,7 +418,7 @@ Key demo claims:
 
 - Users only retrieve evidence they are authorized to see.
 - The model is never treated as the permission boundary.
-- Admin-only source intake includes local ingestion and a sample connector sync contract with audit evidence.
+- Admin-only source intake includes local ingestion, source bundle sync, and sample connector sync contracts with audit evidence.
 - Unsupported or unsafe answers abstain instead of guessing.
 - Eval cases prove normal answers, denied access, injection handling, and unknown-question abstention.
 
