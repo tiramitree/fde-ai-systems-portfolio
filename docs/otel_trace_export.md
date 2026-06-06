@@ -65,7 +65,8 @@ Important attributes:
 Important events:
 
 - `retrieval.completed`
-- `evidence.cited`, including citation source-span line metadata when present
+- `evidence.cited`, including citation chunk source-span line metadata and sentence-level `evidence_span_count`
+- `evidence.sentence_span`, including the cited answer-support sentence and its parser-normalized source-span line metadata
 - `security.event`
 
 Project 2 traces become `ops_agent.process_message` spans.

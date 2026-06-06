@@ -85,13 +85,18 @@ export function renderAnswer(data) {
     data.citations,
     (citation) => {
       const spanLabel = sourceSpanLabel(citation.source_span);
+      const evidenceLabels = (citation.evidence_spans || [])
+        .map((item) => sourceSpanLabel(item.source_span))
+        .filter(Boolean);
       return element("div", { className: "item" }, [
         element("strong", { textContent: citation.title }),
         element("span", { textContent: citation.source_url }),
+        citation.evidence_excerpt ? element("span", { textContent: citation.evidence_excerpt }) : null,
         element("br"),
         tag(citation.doc_id),
         tag(`score ${citation.score}`),
         spanLabel ? tag(spanLabel) : null,
+        evidenceLabels.length ? tag(`evidence ${evidenceLabels.join(", ")}`) : null,
       ].filter(Boolean));
     },
     "No citations returned."

@@ -229,6 +229,11 @@ def project_1_candidates(state: dict[str, Any]) -> list[dict[str, Any]]:
                         "citation_doc_ids": citation_doc_ids,
                         "retrieved_doc_ids": retrieved_doc_ids,
                         "source_span_count": sum(1 for item in citations if item.get("source_span")),
+                        "sentence_evidence_span_count": sum(
+                            len(item.get("evidence_spans", []))
+                            for item in citations
+                            if isinstance(item.get("evidence_spans"), list)
+                        ),
                     },
                 )
             )

@@ -69,7 +69,7 @@ Browser UI
     -> ingestion.py: admin-only source normalization + chunk creation + audit event
     -> retrieval.py: tokenization + BM25-like scoring + role filter
     -> security.py: retrieved-content prompt-injection detection
-    -> answering.py: grounded extractive answer + source-span citations + abstention
+    -> answering.py: grounded extractive answer + chunk and sentence source-span citations + abstention
     -> evals.py: golden regression suite
 ```
 
@@ -91,7 +91,7 @@ Browser UI
 - ingestion jobs require `idempotency_key`, record sanitized input summaries with `body_sha256` instead of raw bodies, and expose `succeeded` or `dead_lettered` status
 - failed worker validation writes `ingestion_job_dead_lettered`; successful jobs write `ingestion_job_completed`
 
-The API contract gate verifies admin ingestion, non-admin refusal, source sync refusal for non-admins, GitHub connector refusal for non-admins, source ACL snapshot enforcement, permission drift visibility changes, job idempotency replay, dead-letter handling, retry recovery, retrieval with citation and source span from ingested, synced, and GitHub connector documents, body hiding, and audit evidence.
+The API contract gate verifies admin ingestion, non-admin refusal, source sync refusal for non-admins, GitHub connector refusal for non-admins, source ACL snapshot enforcement, permission drift visibility changes, job idempotency replay, dead-letter handling, retry recovery, retrieval with chunk-level and sentence-level citation spans from ingested, synced, and GitHub connector documents, body hiding, and audit evidence.
 
 ## Deployment Positioning
 
