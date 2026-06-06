@@ -4,7 +4,7 @@ import hashlib
 import re
 from datetime import datetime, timezone
 
-from .chunking import chunk_text
+from .chunking import SOURCE_SPAN_UNIT, chunk_text_with_spans
 from .embeddings import EMBEDDING_DIMENSIONS, EMBEDDING_MODEL, embed_chunk
 from .repositories import KnowledgeRepository
 from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source_content
@@ -132,15 +132,16 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     }
 
     chunks = []
-    for idx, text in enumerate(chunk_text(body)):
-        embedding = embed_chunk(title, text)
+    for idx, chunk in enumerate(chunk_text_with_spans(body)):
+        embedding = embed_chunk(title, chunk.text)
         chunks.append(
             {
                 "id": f"{doc_id}::chunk-{idx + 1}",
                 "doc_id": doc_id,
                 "chunk_index": idx,
                 "title": title,
-                "text": text,
+                "text": chunk.text,
+                "source_span": chunk.source_span,
                 "tenant_id": tenant_id,
                 "classification": classification,
                 "allowed_roles": allowed_roles,
@@ -153,6 +154,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "parser_metadata": parsed_source.metadata,
                 "parser_warnings": list(parsed_source.warnings),
                 "embedding": embedding.vector,
+                "chunk_source_span_unit": SOURCE_SPAN_UNIT,
                 **embedding.metadata(),
             }
         )
@@ -173,6 +175,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "parser_name": parsed_source.parser_name,
             "parser_warnings": list(parsed_source.warnings),
             "normalized_characters": parsed_source.normalized_characters,
+            "chunk_source_span_unit": SOURCE_SPAN_UNIT,
+            "chunk_source_span_count": len(chunks),
             "embedding_model": EMBEDDING_MODEL,
             "embedding_dimensions": EMBEDDING_DIMENSIONS,
             "chunk_embedding_count": len(chunks),
@@ -194,6 +198,8 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "metadata": parsed_source.metadata,
                 "warnings": list(parsed_source.warnings),
             },
+            "chunk_source_span_unit": SOURCE_SPAN_UNIT,
+            "chunk_source_span_count": len(chunks),
             "embedding": {
                 "model": EMBEDDING_MODEL,
                 "dimensions": EMBEDDING_DIMENSIONS,

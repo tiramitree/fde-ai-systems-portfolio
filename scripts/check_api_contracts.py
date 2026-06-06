@@ -138,6 +138,20 @@ def type_name(value: Any) -> str:
     return type(value).__name__
 
 
+def valid_source_span(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    required_ints = ("start_char", "end_char", "start_line", "end_line")
+    if value.get("text_unit") != "normalized_text":
+        return False
+    if not all(isinstance(value.get(key), int) for key in required_ints):
+        return False
+    return (
+        int(value["start_char"]) <= int(value["end_char"])
+        and int(value["start_line"]) <= int(value["end_line"])
+    )
+
+
 def check(condition: bool, name: str, detail: str) -> Check:
     return Check(name=name, passed=condition, detail=detail)
 
@@ -247,15 +261,18 @@ def project_1_contracts(base_url: str) -> list[Check]:
     status, ingestion = post_json(f"{base_url}/api/documents/ingest", ingest_payload)
     ingested_doc = ingestion.get("document", {})
     parser = ingestion.get("ingestion", {}).get("parser", {})
+    ingestion_metadata = ingestion.get("ingestion", {})
     checks.append(
         check(
             status == 200
             and isinstance(ingested_doc, dict)
             and "body" not in ingested_doc
             and ingestion.get("chunk_count", 0) >= 1
-            and len(ingestion.get("ingestion", {}).get("source_hash", "")) == 64,
+            and len(ingestion_metadata.get("source_hash", "")) == 64
+            and ingestion_metadata.get("chunk_source_span_unit") == "normalized_text"
+            and ingestion_metadata.get("chunk_source_span_count") == ingestion.get("chunk_count"),
             "P1 admin ingestion contract",
-            f"status={status}; doc={ingested_doc.get('id')}; chunks={ingestion.get('chunk_count')}",
+            f"status={status}; doc={ingested_doc.get('id')}; chunks={ingestion.get('chunk_count')}; span_unit={ingestion_metadata.get('chunk_source_span_unit')}",
         )
     )
     checks.append(
@@ -335,7 +352,11 @@ def project_1_contracts(base_url: str) -> list[Check]:
         check(
             status == 200
             and ingested_answer.get("abstain_reason") is None
-            and any(citation.get("doc_id") == ingested_doc.get("id") for citation in ingested_answer.get("citations", [])),
+            and any(
+                citation.get("doc_id") == ingested_doc.get("id")
+                and valid_source_span(citation.get("source_span"))
+                for citation in ingested_answer.get("citations", [])
+            ),
             "P1 ingested document is retrievable with citation",
             f"trace={ingested_answer.get('trace_id')}; doc={ingested_doc.get('id')}",
         )
@@ -396,6 +417,7 @@ def project_1_contracts(base_url: str) -> list[Check]:
     )
     checks.append(check(status == 200 and has_keys(query, query_keys) and ok, "P1 query response contract", detail))
     retrieved = query.get("retrieved", [])
+    citations = query.get("citations", [])
     profile = query.get("retrieval_profile", {})
     checks.append(
         check(
@@ -421,6 +443,9 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and "security_penalty" in retrieved[0]["rerank_breakdown"]
             and retrieved[0].get("embedding_model") == "local-hashing-v1"
             and retrieved[0].get("embedding_dimensions") == 1536
+            and valid_source_span(retrieved[0].get("source_span"))
+            and bool(citations)
+            and valid_source_span(citations[0].get("source_span"))
             and "embedding" not in retrieved[0],
             "P1 retrieval profile and score-breakdown contract",
             f"profile={profile.get('name')}; top_doc={retrieved[0].get('doc_id') if retrieved else None}",

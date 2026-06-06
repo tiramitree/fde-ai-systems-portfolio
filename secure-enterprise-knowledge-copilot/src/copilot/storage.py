@@ -4,7 +4,7 @@ import json
 import threading
 from pathlib import Path
 
-from .chunking import chunk_text
+from .chunking import SOURCE_SPAN_UNIT, chunk_text_with_spans
 from .embeddings import embed_chunk
 
 
@@ -78,15 +78,16 @@ def seed(store: JsonStore, seed_path: Path = SEED_PATH) -> None:
     chunks = []
     for doc in payload["documents"]:
         documents.append(doc)
-        for idx, text in enumerate(chunk_text(doc["body"])):
-            embedding = embed_chunk(doc["title"], text)
+        for idx, chunk in enumerate(chunk_text_with_spans(doc["body"])):
+            embedding = embed_chunk(doc["title"], chunk.text)
             chunks.append(
                 {
                     "id": f"{doc['id']}::chunk-{idx + 1}",
                     "doc_id": doc["id"],
                     "chunk_index": idx,
                     "title": doc["title"],
-                    "text": text,
+                    "text": chunk.text,
+                    "source_span": chunk.source_span,
                     "tenant_id": doc["tenant_id"],
                     "classification": doc["classification"],
                     "allowed_roles": doc["allowed_roles"],
@@ -94,6 +95,7 @@ def seed(store: JsonStore, seed_path: Path = SEED_PATH) -> None:
                     "version": doc["version"],
                     "updated_at": doc["updated_at"],
                     "embedding": embedding.vector,
+                    "chunk_source_span_unit": SOURCE_SPAN_UNIT,
                     **embedding.metadata(),
                 }
             )

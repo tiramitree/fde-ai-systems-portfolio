@@ -45,6 +45,7 @@ Project 1 still performs:
 - tenant and role filtering before generation
 - unsafe retrieved-content removal before generation
 - citation and abstention decisions in application logic
+- normalized-text source spans attached to citations and retrieved chunks
 
 Project 2 still performs:
 
@@ -94,6 +95,7 @@ Project 1 runtime switch:
 - `local-hashing-v1` provides a deterministic 1536-dimensional embedding boundary for seed data and admin ingestion so pgvector storage and vector score reporting are now concrete, while a production embedding model remains a later replacement.
 - `PostgresKnowledgeRepository.list_retrieval_candidates` adds `postgres_hybrid_sql_v1`, a SQL-backed keyword/vector candidate selection path that applies tenant and role filters before `websearch_to_tsquery` and pgvector nearest-neighbor retrieval.
 - `local-evidence-reranker-v1` provides a deterministic reranker boundary with feature-level rerank scores so production rerankers can be added without changing the permission or citation invariants.
+- Project 1 chunk metadata now carries normalized-text `source_span` values through JSON seed state, admin ingestion, citation output, traces, and the optional PostgreSQL adapter.
 
 Next steps:
 

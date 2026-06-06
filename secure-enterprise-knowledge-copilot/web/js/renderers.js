@@ -44,6 +44,18 @@ export function renderDocuments(documents) {
   );
 }
 
+function sourceSpanLabel(sourceSpan) {
+  if (!sourceSpan || sourceSpan.text_unit !== "normalized_text") {
+    return "";
+  }
+  const startLine = Number(sourceSpan.start_line);
+  const endLine = Number(sourceSpan.end_line);
+  if (!Number.isFinite(startLine) || !Number.isFinite(endLine)) {
+    return "";
+  }
+  return startLine === endLine ? `line ${startLine}` : `lines ${startLine}-${endLine}`;
+}
+
 export function renderAnswer(data) {
   const answer = byId("answer");
   clear(answer);
@@ -69,14 +81,17 @@ export function renderAnswer(data) {
   renderList(
     byId("citations"),
     data.citations,
-    (citation) =>
-      element("div", { className: "item" }, [
+    (citation) => {
+      const spanLabel = sourceSpanLabel(citation.source_span);
+      return element("div", { className: "item" }, [
         element("strong", { textContent: citation.title }),
         element("span", { textContent: citation.source_url }),
         element("br"),
         tag(citation.doc_id),
         tag(`score ${citation.score}`),
-      ]),
+        spanLabel ? tag(spanLabel) : null,
+      ].filter(Boolean));
+    },
     "No citations returned."
   );
 

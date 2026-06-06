@@ -137,6 +137,7 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
                 "source_url": hit["source_url"],
                 "version": hit["version"],
                 "score": hit["score"],
+                "source_span": hit.get("source_span", {}),
             }
         )
         if len(citations) >= 3:
@@ -203,6 +204,7 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
                 "rerank_breakdown": hit.get("rerank_breakdown", {}),
                 "embedding_model": hit.get("embedding_model"),
                 "embedding_dimensions": hit.get("embedding_dimensions"),
+                "source_span": hit.get("source_span", {}),
                 "classification": hit["classification"],
                 "security_flags": hit["security_flags"],
                 "preview": hit["text"][:320],

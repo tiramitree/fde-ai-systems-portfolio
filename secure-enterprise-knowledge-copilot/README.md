@@ -12,7 +12,7 @@ This MVP is intentionally dependency-free so it can run on any local Python 3.12
 - Abstention when accessible evidence is missing.
 - Prompt-injection detection inside retrieved documents.
 - Trace logging for retrieval and answer generation.
-- Audit logging for user actions and cited sources.
+- Audit logging for user actions and cited sources with normalized-text span metadata.
 - Golden eval gate for regression testing.
 - Static operational UI for demo and technical review walkthrough.
 
@@ -66,7 +66,7 @@ Browser UI
     -> ingestion.py: admin-only source normalization + chunk creation + audit event
     -> retrieval.py: tokenization + BM25-like scoring + role filter
     -> security.py: retrieved-content prompt-injection detection
-    -> answering.py: grounded extractive answer + citations + abstention
+    -> answering.py: grounded extractive answer + source-span citations + abstention
     -> evals.py: golden regression suite
 ```
 
@@ -80,9 +80,9 @@ Browser UI
 - duplicate document IDs require explicit `replace`
 - supported source types are text, Markdown, CSV, HTML, and JSON
 - ingested document bodies are not returned by `/api/documents`
-- every ingestion writes a `document_ingested` audit event with `source_hash`, `source_mime`, roles, and chunk count
+- every ingestion writes a `document_ingested` audit event with `source_hash`, `source_mime`, roles, chunk count, and normalized-text source span coverage
 
-The API contract gate verifies admin ingestion, non-admin refusal, retrieval with citation from the ingested document, body hiding, and audit evidence.
+The API contract gate verifies admin ingestion, non-admin refusal, retrieval with citation and source span from the ingested document, body hiding, and audit evidence.
 
 ## Deployment Positioning
 

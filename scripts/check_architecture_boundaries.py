@@ -30,7 +30,7 @@ PROJECTS = [
             "app.py": frozenset({"Handler", "main"}),
             "src/copilot/api.py": frozenset({"ApiError", "CopilotApi"}),
             "src/copilot/answering.py": frozenset({"generate_answer"}),
-            "src/copilot/chunking.py": frozenset({"chunk_text"}),
+            "src/copilot/chunking.py": frozenset({"TextChunk", "chunk_text", "chunk_text_with_spans"}),
             "src/copilot/embeddings.py": frozenset(
                 {"TextEmbedding", "EMBEDDING_MODEL", "EMBEDDING_DIMENSIONS", "embed_text", "embed_chunk", "cosine_similarity"}
             ),
