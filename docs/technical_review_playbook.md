@@ -8,7 +8,7 @@ This repository implements three runnable enterprise AI reference systems.
 
 The first system is a secure enterprise knowledge copilot. It enforces identity-aware retrieval and source lifecycle filtering before answer generation, requires chunk-level and sentence-level source-span citations, abstains when accessible evidence is missing, detects prompt injection inside retrieved documents, and records traces, audit events, and eval results.
 
-The second system is a governed customer operations agent for product-recall compliance. It investigates cases, searches policies, inspects listings, creates internal violations, drafts seller notices, and schedules follow-up. External notices and escalations are deterministic side effects that go through a supervisor approval queue with idempotency, audit logs, traces, and unsafe-action evals.
+The second system is a governed customer operations agent for product-recall compliance. It investigates cases, searches policies, inspects listings, creates internal violations, drafts seller notices, and schedules follow-up. External notices and escalations are deterministic side effects that go through a supervisor approval queue with sanitized workflow-run checkpoints, idempotent action-outbox dispatch, action-run receipts, audit logs, traces, and unsafe-action evals.
 
 The third system is an AI reliability incident console. It links canary incidents to failed eval cases, blocks unsafe rollout expansion, produces remediation plans, and records trace and audit evidence for release decisions.
 
@@ -75,7 +75,7 @@ Project 3:
 
 ## Q8: How would a bad answer, unsafe action, or release decision be debugged?
 
-Start from the response or decision `trace_id`, inspect retrieved evidence or tool calls, check linked audit events, and verify eval evidence. For the copilot, inspect retrieval filters, source lifecycle policy, stale filtered counts, citation sets, abstain reasons, and security events. For the operations agent, inspect blocked actions, approvals, and idempotent execution. For the reliability console, inspect the incident, failed eval cases, rollout decision, remediation plan, trace records, and audit events.
+Start from the response or decision `trace_id`, inspect retrieved evidence or tool calls, check linked audit events, and verify eval evidence. For the copilot, inspect retrieval filters, source lifecycle policy, stale filtered counts, citation sets, abstain reasons, and security events. For the operations agent, inspect blocked actions, workflow-run checkpoints, approvals, action-outbox records, action-run receipts, and idempotent execution. For the reliability console, inspect the incident, failed eval cases, rollout decision, remediation plan, trace records, and audit events.
 
 ## Q9: What is the threat model?
 

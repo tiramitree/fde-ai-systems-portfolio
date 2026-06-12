@@ -12,39 +12,73 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
+REPO_ROOT = ROOT.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from copilot.api import ApiError, CopilotApi
-from copilot.storage import init_db
+from copilot.storage import STATE_PATH_ENV, init_db
+from local_http_limits import InvalidContentLength, InvalidJsonBody, RequestBodyTooLarge, read_json_body
+from local_request_governance import LocalRequestGovernor, RateLimitExceeded, headers_with_request_context
 
 
 WEB_DIR = ROOT / "web"
 API = CopilotApi()
+GOVERNOR = LocalRequestGovernor()
 
 
 class Handler(BaseHTTPRequestHandler):
     server_version = "SecureEnterpriseCopilot/0.1"
 
     def do_GET(self) -> None:
+        self._request_context = None
         try:
             parsed = urlparse(self.path)
             if parsed.path.startswith("/api/"):
-                self.send_json(API.get(parsed.path, API.parse_query(parsed.query), self.headers))
+                self._request_context = GOVERNOR.check("GET", parsed.path, self.headers, self.client_address)
+                headers = headers_with_request_context(self.headers, self._request_context)
+                self.send_json(API.get(parsed.path, API.parse_query(parsed.query), headers))
             else:
                 self.serve_static(parsed.path)
+        except RateLimitExceeded as exc:
+            self._request_context = exc.context
+            self.send_json(
+                {
+                    "error": exc.message,
+                    "request_id": exc.context.request_id,
+                    "retry_after_seconds": exc.context.retry_after_seconds,
+                },
+                exc.status,
+            )
         except ApiError as exc:
             self.send_json({"error": exc.message}, exc.status)
         except Exception:
             self.send_json({"error": "Internal server error"}, 500)
 
     def do_POST(self) -> None:
+        self._request_context = None
         try:
             parsed = urlparse(self.path)
-            length = int(self.headers.get("Content-Length", "0"))
-            raw = self.rfile.read(length).decode("utf-8") if length else "{}"
-            body = json.loads(raw or "{}")
-            self.send_json(API.post(parsed.path, body, self.headers))
+            self._request_context = GOVERNOR.check("POST", parsed.path, self.headers, self.client_address)
+            body = read_json_body(self.headers, self.rfile)
+            headers = headers_with_request_context(self.headers, self._request_context)
+            self.send_json(API.post(parsed.path, body, headers))
+        except RateLimitExceeded as exc:
+            self._request_context = exc.context
+            self.send_json(
+                {
+                    "error": exc.message,
+                    "request_id": exc.context.request_id,
+                    "retry_after_seconds": exc.context.retry_after_seconds,
+                },
+                exc.status,
+            )
+        except RequestBodyTooLarge as exc:
+            self.send_json({"error": exc.message}, 413)
+        except (InvalidContentLength, InvalidJsonBody) as exc:
+            self.send_json({"error": exc.message}, 400)
         except json.JSONDecodeError:
             self.send_json({"error": "Invalid JSON body"}, 400)
         except ApiError as exc:
@@ -79,6 +113,10 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(data)))
+        context = getattr(self, "_request_context", None)
+        if context is not None:
+            for key, value in context.response_headers().items():
+                self.send_header(key, value)
         self.send_security_headers()
         self.end_headers()
         self.wfile.write(data)
@@ -101,8 +139,11 @@ def main() -> None:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--reset", action="store_true", help="Recreate the SQLite database from seed data.")
+    parser.add_argument("--state-path", help="Use an isolated JSON runtime state file for this process.")
     args = parser.parse_args()
 
+    if args.state_path:
+        os.environ[STATE_PATH_ENV] = str(Path(args.state_path).resolve())
     repository_provider = os.getenv("COPILOT_REPOSITORY", "json").strip().lower() or "json"
     if repository_provider == "json":
         init_db(reset=args.reset)

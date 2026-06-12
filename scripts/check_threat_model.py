@@ -59,9 +59,10 @@ THREATS = {
         "commands": ["evals", "contracts", "observability"],
     },
     "T06": {
-        "phrases": ["Duplicate side-effect execution", "idempotency keys", "already-processed"],
+        "phrases": ["Duplicate side-effect execution", "idempotency keys", "workflow-run checkpoints", "already-processed"],
         "files": [
             "regulated-customer-operations-agent/src/ops_agent/tools.py",
+            "regulated-customer-operations-agent/src/ops_agent/workflows.py",
             "scripts/smoke_test_demo_flows.py",
             "scripts/check_observability_integrity.py",
         ],
@@ -108,7 +109,12 @@ THREATS = {
         "commands": ["model-gateway-safety"],
     },
     "T11": {
-        "phrases": ["Trace, audit, approval, or release-decision evidence", "persisted trace IDs", "release decisions"],
+        "phrases": [
+            "Trace, audit, workflow-run, approval, action-outbox, or release-decision evidence",
+            "persisted trace IDs",
+            "workflow-run checkpoints",
+            "release decisions",
+        ],
         "files": [
             "scripts/check_observability_integrity.py",
             "scripts/export_traces_otel.py",
@@ -128,16 +134,17 @@ THREATS = {
         "commands": ["ui-contracts"],
     },
     "T13": {
-        "phrases": ["Unauthorized or poisoned document ingestion", "admin-only ingestion", "parser metadata", "source_hash"],
+        "phrases": ["Unauthorized or poisoned document ingestion", "admin-only ingestion", "parser metadata", "source scan metadata", "source_hash"],
         "files": [
             "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py",
             "secure-enterprise-knowledge-copilot/src/copilot/source_bundle_connector.py",
             "secure-enterprise-knowledge-copilot/src/copilot/github_connector.py",
             "secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/source_scanning.py",
             "scripts/check_api_contracts.py",
             "docs/api_contracts.md",
         ],
-        "commands": ["contracts", "api-docs"],
+        "commands": ["contracts", "api-docs", "source-scan"],
     },
 }
 
@@ -166,6 +173,7 @@ SOURCE_MARKERS = {
     "secure-enterprise-knowledge-copilot/src/copilot/github_connector.py": ["Only admin users", "github_connector_synced", "GITHUB_CONNECTOR_TOKEN", "source_payload_sha256"],
     "secure-enterprise-knowledge-copilot/src/copilot/ingestion_jobs.py": ["idempotency_key", "dead_lettered", "ingestion_job_completed", "ingestion_job_dead_lettered"],
     "secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py": ["parse_source_content", "ParsedSource", "parser_name"],
+    "secure-enterprise-knowledge-copilot/src/copilot/source_scanning.py": ["SOURCE_SCAN_SCHEMA_VERSION", "scan_source_content", "raw_matches_returned"],
     "regulated-customer-operations-agent/src/ops_agent/tools.py": [
         "direct_side_effect_blocked",
         "request_approval",

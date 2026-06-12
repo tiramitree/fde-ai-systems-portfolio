@@ -25,6 +25,7 @@ Python standard-library HTTP server
   |   +-- github_connector.py issue/PR read connector boundary
   |   +-- ingestion_jobs.py local worker ledger
   |   +-- source_parsing.py parser normalization
+  |   +-- source_scanning.py local source safety scan metadata
   |   +-- source sync ACL snapshot and drift evidence
   |   +-- source bundle and GitHub connector audit evidence
   |   +-- idempotency replay and dead-letter evidence
@@ -83,7 +84,7 @@ Next.js UI
 
 Permission filtering happens before evidence is assembled. The model should never receive chunks the user cannot access. Source bundle files and GitHub issue or pull request intake are normalized through the same source sync, ACL snapshot, ingestion job, citation, and audit path as local connector data so external-source content does not bypass the production invariants.
 
-Ingestion is an application boundary, not a frontend shortcut. Only admin users can add searchable documents, sync connector sources, sync allowlisted source bundles, or submit ingestion jobs. Each new document passes through a versioned parser boundary before chunking and embedding. Each ingest records source hash, chunk count, parser name, parser warnings, source MIME type, embedding model, roles, and classification in the audit log. The local ingestion job contract runs inline for the dependency-free demo, but records production-style job state: idempotency replay, sanitized input summaries, retry parent links, succeeded jobs, and dead-lettered validation failures.
+Ingestion is an application boundary, not a frontend shortcut. Only admin users can add searchable documents, sync connector sources, sync allowlisted source bundles, or submit ingestion jobs. Each new document passes through a versioned parser boundary before chunking and embedding. Each ingest records source hash, chunk count, parser name, parser warnings, source MIME type, embedding model, roles, and classification in the audit log. The local ingestion job contract runs inline for the dependency-free demo, but records production-style job state: idempotency replay, sanitized input summaries, retry parent links, succeeded jobs, and dead-lettered validation failures. The connector status surface joins those job records with indexed document inventory so operators can compare run counts against active indexed sources, parser warnings, source lifecycle state, and ACL source/version coverage before trusting new knowledge.
 
 The application modules depend on `KnowledgeRepository` rather than direct JSON state. The current `JsonKnowledgeRepository` keeps the local demo zero-dependency. The optional `PostgresKnowledgeRepository` maps the same contract to tenant-scoped PostgreSQL tables, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate retrieval without making answering, retrieval, ingestion, or eval modules import SQL directly.
 

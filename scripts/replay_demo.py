@@ -5,6 +5,7 @@ import json
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -68,16 +69,22 @@ def wait_for_health(base_url: str, seconds: int = 15) -> bool:
     return False
 
 
-def start_service(service: Service, port: int) -> subprocess.Popen:
+def service_state_path(state_root: Path, service: Service) -> Path:
+    return state_root / f"{service.name}-runtime_state.json"
+
+
+def start_service(service: Service, port: int, state_root: Path | None = None) -> subprocess.Popen:
+    command = [
+        sys.executable,
+        "-B",
+        "app.py",
+        "--reset",
+    ]
+    if state_root is not None:
+        command.extend(["--state-path", str(service_state_path(state_root, service))])
+    command.extend(["--port", str(port)])
     return subprocess.Popen(
-        [
-            sys.executable,
-            "-B",
-            "app.py",
-            "--reset",
-            "--port",
-            str(port),
-        ],
+        command,
         cwd=service.path,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.STDOUT,
@@ -347,6 +354,11 @@ def main() -> int:
     parser.add_argument("--project1-port", type=int, default=SERVICES[0].preferred_port)
     parser.add_argument("--project2-port", type=int, default=SERVICES[1].preferred_port)
     parser.add_argument("--project3-port", type=int, default=SERVICES[2].preferred_port)
+    parser.add_argument(
+        "--isolated-state",
+        action="store_true",
+        help="Use temporary runtime state instead of writing canonical local demo state.",
+    )
     args = parser.parse_args()
 
     ports = [
@@ -356,33 +368,41 @@ def main() -> int:
     ]
     urls = [f"http://127.0.0.1:{port}" for port in ports]
     processes: list[subprocess.Popen] = []
+
+    def run_replay(state_root: Path | None) -> int:
+        try:
+            for service, port in zip(SERVICES, ports):
+                process = start_service(service, port, state_root)
+                processes.append(process)
+                print(f"Started {service.name} on port {port} with reset state")
+
+            for service, url in zip(SERVICES, urls):
+                if not wait_for_health(url):
+                    print(f"Service did not become healthy: {service.name} ({url})", file=sys.stderr)
+                    return 1
+
+            evidence = replay_project_1(urls[0])
+            evidence.extend(replay_project_2(urls[1]))
+            evidence.extend(replay_project_3(urls[2]))
+            print_report(urls[0], urls[1], urls[2], evidence)
+            return 0 if all(item.passed for item in evidence) else 1
+        finally:
+            for process in processes:
+                process.terminate()
+            for process in processes:
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+
     try:
-        for service, port in zip(SERVICES, ports):
-            process = start_service(service, port)
-            processes.append(process)
-            print(f"Started {service.name} on port {port} with reset state")
-
-        for service, url in zip(SERVICES, urls):
-            if not wait_for_health(url):
-                print(f"Service did not become healthy: {service.name} ({url})", file=sys.stderr)
-                return 1
-
-        evidence = replay_project_1(urls[0])
-        evidence.extend(replay_project_2(urls[1]))
-        evidence.extend(replay_project_3(urls[2]))
-        print_report(urls[0], urls[1], urls[2], evidence)
-        return 0 if all(item.passed for item in evidence) else 1
+        if args.isolated_state:
+            with tempfile.TemporaryDirectory(prefix="fde-replay-") as temp_dir:
+                return run_replay(Path(temp_dir))
+        return run_replay(None)
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
         print(f"Demo replay failed with exception: {exc}", file=sys.stderr)
         return 1
-    finally:
-        for process in processes:
-            process.terminate()
-        for process in processes:
-            try:
-                process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                process.kill()
 
 
 if __name__ == "__main__":

@@ -14,6 +14,12 @@ from .security import detect_prompt_injection, sanitize_evidence
 SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
 
 
+def _with_request_id(payload: dict, request_id: str) -> dict:
+    if request_id:
+        payload["request_id"] = request_id
+    return payload
+
+
 def _find_sentence_span(text: str, sentence: str) -> tuple[int, int] | None:
     start = text.find(sentence)
     if start >= 0:
@@ -70,7 +76,7 @@ def _select_sentence_records(question: str, text: str, chunk_span: dict, limit: 
     return records
 
 
-def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, record: bool = True) -> dict:
+def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, record: bool = True, request_id: str = "") -> dict:
     start = time.perf_counter()
     user = repo.get_user(user_id)
     if not user:
@@ -90,56 +96,66 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
             "I cannot follow instructions that try to bypass citations, access controls, or security policy. "
             "Ask the policy question without override instructions."
         )
-        result = {
-            "trace_id": trace_id,
-            "user": user,
-            "question": question,
-            "answer": answer,
-            "citations": [],
-            "confidence": 0.05,
-            "missing_evidence": ["User message matched prompt-injection governance patterns."],
-            "abstain_reason": "user_prompt_injection_detected",
-            "security_events": security_events,
-            "model_provider": "local",
-            "openai_gateway_enabled": should_use_openai(),
-            "retrieved": [],
-            "retrieval_profile": not_run_profile("user_prompt_injection_detected"),
-            "permission_blocked_count": 0,
-            "latency_ms": round((time.perf_counter() - start) * 1000, 2),
-        }
+        result = _with_request_id(
+            {
+                "trace_id": trace_id,
+                "user": user,
+                "question": question,
+                "answer": answer,
+                "citations": [],
+                "confidence": 0.05,
+                "missing_evidence": ["User message matched prompt-injection governance patterns."],
+                "abstain_reason": "user_prompt_injection_detected",
+                "security_events": security_events,
+                "model_provider": "local",
+                "openai_gateway_enabled": should_use_openai(),
+                "retrieved": [],
+                "retrieval_profile": not_run_profile("user_prompt_injection_detected"),
+                "permission_blocked_count": 0,
+                "latency_ms": round((time.perf_counter() - start) * 1000, 2),
+            },
+            request_id,
+        )
         if record:
             repo.insert_trace(
                 trace_id,
                 user_id,
                 question,
-                {
-                    "retrieval": {
-                        "query_tokens": tokenize(question),
-                        "hits": [],
-                        "profile": result["retrieval_profile"],
-                        "permission_blocked_count": 0,
+                _with_request_id(
+                    {
+                        "latency_ms": result["latency_ms"],
+                        "retrieval": {
+                            "query_tokens": tokenize(question),
+                            "hits": [],
+                            "profile": result["retrieval_profile"],
+                            "permission_blocked_count": 0,
+                        },
+                        "output": {
+                            "answer": answer,
+                            "citations": [],
+                            "confidence": 0.05,
+                            "abstain_reason": "user_prompt_injection_detected",
+                            "security_events": security_events,
+                            "model_provider": "local",
+                        },
                     },
-                    "output": {
-                        "answer": answer,
-                        "citations": [],
-                        "confidence": 0.05,
-                        "abstain_reason": "user_prompt_injection_detected",
-                        "security_events": security_events,
-                        "model_provider": "local",
-                    },
-                },
+                    request_id,
+                ),
             )
             repo.insert_audit(
                 user_id,
                 "query_answered",
-                {
-                    "trace_id": trace_id,
-                    "question": question,
-                    "citation_doc_ids": [],
-                    "abstained": True,
-                    "permission_blocked_count": 0,
-                    "security_event_count": len(security_events),
-                },
+                _with_request_id(
+                    {
+                        "trace_id": trace_id,
+                        "question": question,
+                        "citation_doc_ids": [],
+                        "abstained": True,
+                        "permission_blocked_count": 0,
+                        "security_event_count": len(security_events),
+                    },
+                    request_id,
+                ),
             )
         return result
 
@@ -226,74 +242,84 @@ def generate_answer(repo: KnowledgeRepository, user_id: str, question: str, reco
             missing_evidence.append("Some potentially relevant sources were not accessible to this user identity.")
         model_provider = "local"
 
-    result = {
-        "trace_id": trace_id,
-        "user": user,
-        "question": question,
-        "answer": answer,
-        "citations": citations,
-        "confidence": confidence,
-        "missing_evidence": missing_evidence,
-        "abstain_reason": abstain_reason,
-        "security_events": security_events,
-        "model_provider": model_provider,
-        "openai_gateway_enabled": should_use_openai(),
-        "retrieved": [
-            {
-                "chunk_id": hit["id"],
-                "doc_id": hit["doc_id"],
-                "title": hit["title"],
-                "score": hit["score"],
-                "score_breakdown": hit["score_breakdown"],
-                "rerank_score": hit.get("rerank_score"),
-                "rerank_breakdown": hit.get("rerank_breakdown", {}),
-                "embedding_model": hit.get("embedding_model"),
-                "embedding_dimensions": hit.get("embedding_dimensions"),
-                "source_span": hit.get("source_span", {}),
-                "classification": hit["classification"],
-                "security_flags": hit["security_flags"],
-                "preview": hit["text"][:320],
-            }
-            for hit in hits
-        ],
-        "retrieval_profile": retrieval["profile"],
-        "permission_blocked_count": retrieval["blocked_count"],
-        "latency_ms": round((time.perf_counter() - start) * 1000, 2),
-    }
+    result = _with_request_id(
+        {
+            "trace_id": trace_id,
+            "user": user,
+            "question": question,
+            "answer": answer,
+            "citations": citations,
+            "confidence": confidence,
+            "missing_evidence": missing_evidence,
+            "abstain_reason": abstain_reason,
+            "security_events": security_events,
+            "model_provider": model_provider,
+            "openai_gateway_enabled": should_use_openai(),
+            "retrieved": [
+                {
+                    "chunk_id": hit["id"],
+                    "doc_id": hit["doc_id"],
+                    "title": hit["title"],
+                    "score": hit["score"],
+                    "score_breakdown": hit["score_breakdown"],
+                    "rerank_score": hit.get("rerank_score"),
+                    "rerank_breakdown": hit.get("rerank_breakdown", {}),
+                    "embedding_model": hit.get("embedding_model"),
+                    "embedding_dimensions": hit.get("embedding_dimensions"),
+                    "source_span": hit.get("source_span", {}),
+                    "classification": hit["classification"],
+                    "security_flags": hit["security_flags"],
+                    "preview": hit["text"][:320],
+                }
+                for hit in hits
+            ],
+            "retrieval_profile": retrieval["profile"],
+            "permission_blocked_count": retrieval["blocked_count"],
+            "latency_ms": round((time.perf_counter() - start) * 1000, 2),
+        },
+        request_id,
+    )
 
     if record:
         repo.insert_trace(
             trace_id,
             user_id,
             question,
-            {
-                "retrieval": {
-                    "query_tokens": retrieval["query_tokens"],
-                    "hits": result["retrieved"],
-                    "profile": retrieval["profile"],
-                    "permission_blocked_count": retrieval["blocked_count"],
+            _with_request_id(
+                {
+                    "latency_ms": result["latency_ms"],
+                    "retrieval": {
+                        "query_tokens": retrieval["query_tokens"],
+                        "hits": result["retrieved"],
+                        "profile": retrieval["profile"],
+                        "permission_blocked_count": retrieval["blocked_count"],
+                    },
+                    "output": {
+                        "answer": answer,
+                        "citations": citations,
+                        "confidence": confidence,
+                        "abstain_reason": abstain_reason,
+                        "security_events": security_events,
+                        "model_provider": model_provider,
+                    },
                 },
-                "output": {
-                    "answer": answer,
-                    "citations": citations,
-                    "confidence": confidence,
-                    "abstain_reason": abstain_reason,
-                    "security_events": security_events,
-                    "model_provider": model_provider,
-                },
-            },
+                request_id,
+            ),
         )
         repo.insert_audit(
             user_id,
             "query_answered",
-            {
-                "trace_id": trace_id,
-                "question": question,
-                "citation_doc_ids": [citation["doc_id"] for citation in citations],
-                "abstained": abstain_reason is not None,
-                "permission_blocked_count": retrieval["blocked_count"],
-                "security_event_count": len(security_events),
-            },
+            _with_request_id(
+                {
+                    "trace_id": trace_id,
+                    "question": question,
+                    "citation_doc_ids": [citation["doc_id"] for citation in citations],
+                    "abstained": abstain_reason is not None,
+                    "permission_blocked_count": retrieval["blocked_count"],
+                    "security_event_count": len(security_events),
+                },
+                request_id,
+            ),
         )
 
     return result

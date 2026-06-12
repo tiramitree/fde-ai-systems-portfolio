@@ -18,10 +18,11 @@ Base URL:
 http://127.0.0.1:8765
 ```
 
-Check health:
+Check health and readiness:
 
 ```powershell
 curl.exe -s http://127.0.0.1:8765/api/health | python -m json.tool
+curl.exe -s http://127.0.0.1:8765/api/ready | python -m json.tool
 ```
 
 Inspect Alice's visible documents. The response should not include document bodies:
@@ -204,16 +205,48 @@ Base URL:
 http://127.0.0.1:8770
 ```
 
+Issue a local signed demo token for investigator `ivy`, then use the token instead of a body `user_id`:
+
+```powershell
+$ivyToken = (curl.exe -s -X POST http://127.0.0.1:8770/api/auth/demo-token -H "Content-Type: application/json" -d '{"user_id":"ivy"}' | ConvertFrom-Json).token
+curl.exe -s -X POST http://127.0.0.1:8770/api/agent -H "Content-Type: application/json" -H "Authorization: Bearer $ivyToken" -d '{"case_id":"case-1001","message":"Check whether Market Blue still has an active listing for the recalled RX-900 product."}' | python -m json.tool
+```
+
 Create the canonical investigation for `case-1001`. The response should include internal tool calls, one approval request, and a blocked side-effect action:
 
 ```powershell
 curl.exe -s -X POST http://127.0.0.1:8770/api/agent -H "Content-Type: application/json" -d '{"user_id":"ivy","case_id":"case-1001","message":"Check whether Market Blue still has an active listing for the recalled RX-900 product."}' | python -m json.tool
 ```
 
+Inspect the governed tool registry. Side-effecting tools should declare approval and dry-run policy before runtime execution:
+
+```powershell
+curl.exe -s http://127.0.0.1:8770/api/tool-registry | python -m json.tool
+```
+
 Approve the generated side effect as supervisor `sam`. If you already approved it in the current reset state, `already_processed` is acceptable:
 
 ```powershell
 curl.exe -s -X POST http://127.0.0.1:8770/api/approval/approve -H "Content-Type: application/json" -d '{"approval_id":"apr-0001","approver_id":"sam"}' | python -m json.tool
+```
+
+You can also issue a local signed supervisor token and omit `approver_id`; the API resolves the subject from `Authorization: Bearer`:
+
+```powershell
+$samToken = (curl.exe -s -X POST http://127.0.0.1:8770/api/auth/demo-token -H "Content-Type: application/json" -d '{"user_id":"sam"}' | ConvertFrom-Json).token
+curl.exe -s -X POST http://127.0.0.1:8770/api/approval/approve -H "Content-Type: application/json" -H "Authorization: Bearer $samToken" -d '{"approval_id":"apr-0001"}' | python -m json.tool
+```
+
+Reject a pending approval as supervisor `sam` when you want to prove the side effect stays closed:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8770/api/approval/reject -H "Content-Type: application/json" -d '{"approval_id":"apr-0001","reviewer_id":"sam","reason":"Needs seller ownership review before sending."}' | python -m json.tool
+```
+
+Expire a pending approval as supervisor `sam` when you want to prove stale approval windows do not execute:
+
+```powershell
+curl.exe -s -X POST http://127.0.0.1:8770/api/approval/expire -H "Content-Type: application/json" -d '{"approval_id":"apr-0001","operator_id":"sam","reason":"Approval window expired."}' | python -m json.tool
 ```
 
 Try the bypass request. It should produce `blocked_actions` and no new approval:
@@ -228,6 +261,8 @@ Useful fields to inspect:
 - `intent`
 - `tool_calls[].tool`
 - `approvals[].id`
+- `approvals[].dry_run_preview`
+- `approvals[].decision_reason_summary`
 - `blocked_actions`
 - `model_router`
 
@@ -237,6 +272,13 @@ Base URL:
 
 ```text
 http://127.0.0.1:8780
+```
+
+Issue a local signed demo token for reliability lead `maya`, then use the token instead of a body `user_id`:
+
+```powershell
+$mayaToken = (curl.exe -s -X POST http://127.0.0.1:8780/api/auth/demo-token -H "Content-Type: application/json" -d '{"user_id":"maya"}' | ConvertFrom-Json).token
+curl.exe -s -X POST http://127.0.0.1:8780/api/triage -H "Content-Type: application/json" -H "Authorization: Bearer $mayaToken" -d '{"release_id":"rel-2026-06-01","incident_id":"inc-2026-014"}' | python -m json.tool
 ```
 
 Triage the unsafe canary incident. The decision should block release and link failed eval cases:

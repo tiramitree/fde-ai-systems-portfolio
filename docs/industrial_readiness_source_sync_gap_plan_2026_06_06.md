@@ -77,10 +77,10 @@ Verification snapshot:
 
 ```text
 python -B scripts/dev.py contracts
-API contract checks: 114/114 passed
+API contract checks: 150/150 passed
 
 python -B scripts/dev.py ui-contracts
-Runtime UI contract checks: 349/349 passed
+Runtime UI contract checks: 427/427 passed
 
 python -B scripts/dev.py quality
 Quality gate passed.
@@ -98,7 +98,7 @@ Quality gate passed.
 | Live database validation | JSON state is not enough for pilot readiness. | Run and document live Postgres/pgvector checks with RLS, migrations, indexes, pool behavior, and rollback. |
 | Retrieval quality metrics | A working answer path does not prove retrieval quality. | Add recall@k, precision@k, citation-span accuracy, conflict/stale-source cases, and reranker comparison. |
 | External observability | Local traces are not enough for operations. | Send SDK-level OpenTelemetry spans to Phoenix or another backend and link trace URLs in the UI. |
-| Online eval loop | Static evals do not capture production drift. | Extend trace-to-eval into reviewed datasets, nightly regression, and human-label workflow. |
+| Online eval loop | Static evals do not capture production drift. | Trace-to-eval candidates now have a checked-in reviewed dataset ledger and read-only nightly regression workflow. Remaining proof: real public-safe failure logs, human-label history, and failure clustering. |
 | Agent durability | Project 2 approval is useful, but real side effects need recovery. | Add workflow state, transactional outbox, idempotency keys, replay, and external connector dry-run mode. |
 | Deployment operations | Production needs more than Docker files. | Add IaC/runbook/SLO/load test/backup/restore/rollback/alerting evidence. |
 
@@ -127,7 +127,7 @@ Quality gate passed.
    - Phoenix or similar self-hosted backend.
    - Trace URL in UI and replay artifacts.
 
-5. Turn trace-to-eval into an operations loop.
+5. Extend the trace-to-eval operations loop with real public-safe failure logs, reviewer label history, and failure clustering.
    - Human-reviewed candidate ledger.
    - Promotion status.
    - Nightly regression command.

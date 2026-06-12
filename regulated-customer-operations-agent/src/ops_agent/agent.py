@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 import uuid
 
 from .model_gateway import classify_intent_with_openai
@@ -9,11 +10,13 @@ from .tools import (
     create_violation,
     direct_side_effect_blocked,
     draft_seller_notice,
+    public_approval,
     request_approval,
     schedule_followup,
     search_listings,
     search_recall_policy,
 )
+from .workflows import record_agent_checkpoint, start_workflow_run
 
 
 INJECTION_MARKERS = [
@@ -47,6 +50,25 @@ def detect_injection(message: str) -> list[str]:
     return [marker for marker in INJECTION_MARKERS if marker in lower]
 
 
+def _latency_ms(start: float) -> float:
+    return round((time.perf_counter() - start) * 1000, 2)
+
+
+def _dispatch_failure_mode(message: str) -> str | None:
+    lower = message.lower()
+    if "permanent dispatch failure" in lower or "simulate permanent" in lower:
+        return "permanent"
+    if "transient dispatch failure" in lower or "simulate dispatch failure" in lower or "simulate outage" in lower:
+        return "transient"
+    return None
+
+
+def _with_request_id(payload: dict, request_id: str) -> dict:
+    if request_id:
+        payload["request_id"] = request_id
+    return payload
+
+
 def _best_policy(policies: list[dict]) -> dict | None:
     return policies[0] if policies else None
 
@@ -59,13 +81,15 @@ def _best_recalled_active_listing(listings: list[dict]) -> dict | None:
     return None
 
 
-def process_message(store: JsonStore, user_id: str, message: str, case_id: str | None = None) -> dict:
+def process_message(store: JsonStore, user_id: str, message: str, case_id: str | None = None, request_id: str = "") -> dict:
+    start = time.perf_counter()
     user = get_user(store, user_id)
     if not user:
         raise ValueError(f"unknown user_id: {user_id}")
 
     trace_id = str(uuid.uuid4())
     intent, model_router = classify_intent(message)
+    workflow_run = start_workflow_run(store, user_id, trace_id, message, intent, case_id, model_router)
     injection_hits = detect_injection(message)
     tool_calls = []
     approvals = []
@@ -78,32 +102,40 @@ def process_message(store: JsonStore, user_id: str, message: str, case_id: str |
             "reason": "instruction_attempt_to_bypass_governance",
             "markers": injection_hits,
         }
-        append_audit(store, user_id, "unsafe_instruction_blocked", blocked)
+        append_audit(store, user_id, "unsafe_instruction_blocked", _with_request_id({**blocked, "trace_id": trace_id}, request_id))
         response = (
             "I cannot bypass approval, logging, or policy controls. I can investigate the case and create an "
             "approval request for any external side-effect action."
         )
-        result = {
-            "trace_id": trace_id,
-            "intent": intent,
-            "response": response,
-            "tool_calls": [],
-            "approvals": [],
-            "blocked_actions": [blocked],
-            "cited_policies": [],
-            "case": get_case(store, case_id) if case_id else None,
-            "model_router": model_router,
-        }
+        result = _with_request_id(
+            {
+                "trace_id": trace_id,
+                "intent": intent,
+                "response": response,
+                "tool_calls": [],
+                "approvals": [],
+                "blocked_actions": [blocked],
+                "cited_policies": [],
+                "case": get_case(store, case_id) if case_id else None,
+                "model_router": model_router,
+            },
+            request_id,
+        )
+        result["latency_ms"] = _latency_ms(start)
+        result["workflow_run"] = record_agent_checkpoint(store, workflow_run["id"], result)
         append_trace(
             store,
-            {
-                "id": trace_id,
-                "created_at": utc_now(),
-                "user_id": user_id,
-                "message": message,
-                "intent": intent,
-                "result": result,
-            },
+            _with_request_id(
+                {
+                    "id": trace_id,
+                    "created_at": utc_now(),
+                    "user_id": user_id,
+                    "message": message,
+                    "intent": intent,
+                    "result": result,
+                },
+                request_id,
+            ),
         )
         return result
 
@@ -122,27 +154,35 @@ def process_message(store: JsonStore, user_id: str, message: str, case_id: str |
             approval_result = approve_action(store, approval_id, user_id)
             tool_calls.append({"tool": "approve_action", "approval_id": approval_id, "result": approval_result["result"]})
             response = f"Approved {approval_id}; result: {approval_result['result']}."
-        result = {
-            "trace_id": trace_id,
-            "intent": intent,
-            "response": response,
-            "tool_calls": tool_calls,
-            "approvals": approvals,
-            "blocked_actions": blocked_actions,
-            "cited_policies": cited_policies,
-            "case": get_case(store, case_id) if case_id else None,
-            "model_router": model_router,
-        }
+        result = _with_request_id(
+            {
+                "trace_id": trace_id,
+                "intent": intent,
+                "response": response,
+                "tool_calls": tool_calls,
+                "approvals": approvals,
+                "blocked_actions": blocked_actions,
+                "cited_policies": cited_policies,
+                "case": get_case(store, case_id) if case_id else None,
+                "model_router": model_router,
+            },
+            request_id,
+        )
+        result["latency_ms"] = _latency_ms(start)
+        result["workflow_run"] = record_agent_checkpoint(store, workflow_run["id"], result)
         append_trace(
             store,
-            {
-                "id": trace_id,
-                "created_at": utc_now(),
-                "user_id": user_id,
-                "message": message,
-                "intent": intent,
-                "result": result,
-            },
+            _with_request_id(
+                {
+                    "id": trace_id,
+                    "created_at": utc_now(),
+                    "user_id": user_id,
+                    "message": message,
+                    "intent": intent,
+                    "result": result,
+                },
+                request_id,
+            ),
         )
         return result
 
@@ -191,7 +231,7 @@ def process_message(store: JsonStore, user_id: str, message: str, case_id: str |
                 "Escalation changes case status and requires supervisor approval.",
                 f"escalate:{case['id']}",
             )
-            approvals.append(approval)
+            approvals.append(public_approval(approval))
             response = (
                 f"I opened violation {violation['id']} and created escalation approval {approval['id']}. "
                 "The case will not be escalated until a supervisor approves it."
@@ -199,44 +239,59 @@ def process_message(store: JsonStore, user_id: str, message: str, case_id: str |
         else:
             blocked = direct_side_effect_blocked("send_notice", user)
             blocked_actions.append(blocked)
+            dispatch_failure_mode = _dispatch_failure_mode(message)
+            notice_payload = dict(notice)
+            idempotency_key = f"send_notice:{case['id']}:{listing['id']}"
+            if dispatch_failure_mode:
+                notice_payload["dispatch_failure_mode"] = dispatch_failure_mode
+                idempotency_key = f"{idempotency_key}:dispatch-{dispatch_failure_mode}"
             approval = request_approval(
                 store,
                 user_id,
                 "send_notice",
-                notice,
+                notice_payload,
                 "Sending seller notice is an external side-effect action.",
-                f"send_notice:{case['id']}:{listing['id']}",
+                idempotency_key,
             )
-            approvals.append(approval)
+            public_request = public_approval(approval)
+            approvals.append(public_request)
             response = (
                 f"I found active recalled listing {listing['id']} for {listing['product']['name']}, "
                 f"opened violation {violation['id']}, drafted the seller notice, scheduled follow-up "
                 f"{followup['id']}, and created approval request {approval['id']} before sending."
             )
-        outputs.append({"draft_notice": notice})
+            outputs.append({"draft_notice_preview": public_request["dry_run_preview"]})
 
-    result = {
-        "trace_id": trace_id,
-        "intent": intent,
-        "response": response,
-        "tool_calls": tool_calls,
-        "approvals": approvals,
-        "blocked_actions": blocked_actions,
-        "cited_policies": cited_policies,
-        "outputs": outputs,
-        "case": case,
-        "model_router": model_router,
-    }
+    result = _with_request_id(
+        {
+            "trace_id": trace_id,
+            "intent": intent,
+            "response": response,
+            "tool_calls": tool_calls,
+            "approvals": approvals,
+            "blocked_actions": blocked_actions,
+            "cited_policies": cited_policies,
+            "outputs": outputs,
+            "case": case,
+            "model_router": model_router,
+        },
+        request_id,
+    )
+    result["latency_ms"] = _latency_ms(start)
+    result["workflow_run"] = record_agent_checkpoint(store, workflow_run["id"], result)
     append_trace(
         store,
-        {
-            "id": trace_id,
-            "created_at": utc_now(),
-            "user_id": user_id,
-            "message": message,
-            "intent": intent,
-            "result": result,
-        },
+        _with_request_id(
+            {
+                "id": trace_id,
+                "created_at": utc_now(),
+                "user_id": user_id,
+                "message": message,
+                "intent": intent,
+                "result": result,
+            },
+            request_id,
+        ),
     )
-    append_audit(store, user_id, "agent_message_processed", {"trace_id": trace_id, "intent": intent})
+    append_audit(store, user_id, "agent_message_processed", _with_request_id({"trace_id": trace_id, "intent": intent}, request_id))
     return result

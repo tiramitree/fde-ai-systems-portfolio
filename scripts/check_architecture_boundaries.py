@@ -47,6 +47,9 @@ PROJECTS = [
             "src/copilot/source_parsing.py": frozenset(
                 {"ParsedSource", "SourceParseError", "SUPPORTED_MIME_TYPES", "parse_source_content"}
             ),
+            "src/copilot/source_scanning.py": frozenset(
+                {"SOURCE_SCAN_SCHEMA_VERSION", "SOURCE_SCAN_POLICY", "scan_source_content", "merge_source_scan_counts"}
+            ),
             "src/copilot/storage.py": frozenset({"JsonStore", "connect", "init_db"}),
             "src/copilot/time_utils.py": frozenset({"utc_now"}),
             "src/copilot/evals.py": frozenset({"run_evals"}),
@@ -72,6 +75,9 @@ PROJECTS = [
                 }
             ),
             "src/ops_agent/storage.py": frozenset({"JsonStore", "connect", "init_state"}),
+            "src/ops_agent/workflows.py": frozenset(
+                {"WORKFLOW_RUN_SCHEMA_VERSION", "start_workflow_run", "record_agent_checkpoint", "record_action_dispatch_checkpoint", "list_workflow_runs"}
+            ),
             "src/ops_agent/evals.py": frozenset({"run_evals"}),
         },
         forbidden_backend_imports=frozenset({"copilot", "scripts", "web", "docs", "app"}),
@@ -178,6 +184,8 @@ def check_backend_import_boundaries(project: ProjectBoundary) -> list[str]:
             allowed_storage_imports = {
                 f"{project.package}.chunking",
                 f"{project.package}.embeddings",
+                f"{project.package}.source_parsing",
+                f"{project.package}.source_scanning",
                 f"{project.package}.time_utils",
             }
             for module in modules:

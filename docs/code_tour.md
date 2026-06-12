@@ -33,6 +33,7 @@ secure-enterprise-knowledge-copilot/app.py
   -> src/copilot/repositories.py
   -> src/copilot/postgres_repositories.py
   -> src/copilot/source_parsing.py
+  -> src/copilot/source_scanning.py
   -> src/copilot/source_lifecycle.py
   -> src/copilot/embeddings.py
   -> src/copilot/retrieval.py
@@ -53,6 +54,7 @@ Key files:
 - `secure-enterprise-knowledge-copilot/src/copilot/api.py`: `CopilotApi` maps browser/API requests to users, visible documents, query handling, traces, audit, scenario snapshots, and eval runs.
 - `secure-enterprise-knowledge-copilot/src/copilot/repositories.py`: `KnowledgeRepository`, `JsonKnowledgeRepository`, `PostgresRepositorySession`, and `connect_repository` define the application-facing storage adapter boundary used by API, retrieval, answering, ingestion, and eval logic; `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, and optional `COPILOT_POSTGRES_POOL` keep the production data-plane path opt-in.
 - `secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py`: parser boundary for admin-ingested plain text, Markdown, CSV, HTML, and JSON sources. It returns normalized searchable text plus parser metadata and warnings so ingestion can audit the data-plane step without mixing parser rules into authorization logic.
+- `secure-enterprise-knowledge-copilot/src/copilot/source_scanning.py`: local source safety scan boundary. It records scan status, severity, finding counts, and review signals without returning raw matches, keeping source review metadata separate from retrieval and answer generation.
 - `secure-enterprise-knowledge-copilot/src/copilot/source_lifecycle.py`: source lifecycle helpers for keeping superseded, deprecated, or deleted sources auditable while filtering them before retrieval scoring and answer assembly.
 - `secure-enterprise-knowledge-copilot/src/copilot/embeddings.py`: local deterministic embedding boundary for seed and ingestion chunks. It gives the pgvector path a concrete vector payload and retrieval profile today while staying replaceable by a production embedding model later.
 - `secure-enterprise-knowledge-copilot/src/copilot/retrieval.py`: asks the repository for retrieval candidates, filters inactive source lifecycle states, applies shared scoring and security checks, and asks for `count_potentially_blocked_chunks` so JSON can count denied local evidence directly while PostgreSQL can preserve RLS and use `project1_denied_relevant_chunk_count` without exposing unauthorized content.
@@ -86,6 +88,7 @@ regulated-customer-operations-agent/app.py
   -> src/ops_agent/api.py: OpsAgentApi
   -> src/ops_agent/agent.py
   -> src/ops_agent/tools.py
+  -> src/ops_agent/workflows.py
   -> src/ops_agent/model_gateway.py
   -> src/ops_agent/storage.py
   -> src/ops_agent/evals.py
@@ -98,8 +101,9 @@ Key files:
 - `regulated-customer-operations-agent/src/ops_agent/api.py`: `OpsAgentApi` maps requests to case lookup, agent messages, approval execution, trace/audit views, scenario snapshots, and eval runs.
 - `regulated-customer-operations-agent/src/ops_agent/agent.py`: intent classification and workflow orchestration.
 - `regulated-customer-operations-agent/src/ops_agent/tools.py`: deterministic tools, side-effect blocking, approval requests, idempotency, notice send, escalation, and supervisor approval.
+- `regulated-customer-operations-agent/src/ops_agent/workflows.py`: sanitized workflow-run checkpoint layer that links agent traces, approvals, action-outbox records, retry/dead-letter states, and action-run receipts without returning raw user messages or notice bodies.
 - `regulated-customer-operations-agent/src/ops_agent/model_gateway.py`: optional model routing with deterministic fallback.
-- `regulated-customer-operations-agent/src/ops_agent/storage.py`: JSON state, users, cases, listings, approvals, traces, and audit events.
+- `regulated-customer-operations-agent/src/ops_agent/storage.py`: JSON state, users, cases, listings, approvals, workflow runs, action outbox, action runs, traces, and audit events.
 - `regulated-customer-operations-agent/src/ops_agent/evals.py`: approval, bypass-refusal, escalation, and side-effect regression cases.
 - `regulated-customer-operations-agent/web/js/api.js`: browser HTTP client.
 - `regulated-customer-operations-agent/web/js/app.js`: case workspace orchestration.
@@ -109,7 +113,7 @@ Key files:
 
 Safe change paths:
 
-- Tool or governance behavior: update `agent.py`, `tools.py`, seed/eval cases, API contracts, and smoke/eval expectations together.
+- Tool or governance behavior: update `agent.py`, `tools.py`, `workflows.py`, seed/eval cases, API contracts, and smoke/eval expectations together.
 - New side-effect connector: keep execution behind approval, idempotency, audit, and trace boundaries; do not execute directly from model text.
 - UI behavior: keep side-effect status inspectable through approvals, blocked actions, and audit traces.
 

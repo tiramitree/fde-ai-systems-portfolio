@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from .ingestion import IngestionError
 from .repositories import KnowledgeRepository
+from .source_lifecycle import ACTIVE_SOURCE_STATE, source_lifecycle_state
 
 
 def _safe_int(value: object, default: int = 0) -> int:
@@ -38,6 +39,64 @@ def _job_counts(job: dict) -> dict:
     }
 
 
+def _strings(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return sorted({str(item).strip() for item in value if str(item).strip()})
+
+
+def _document_inventory(documents: list[dict], latest_counts: dict) -> dict:
+    lifecycle_counts: dict[str, int] = {}
+    classification_counts: dict[str, int] = {}
+    warning_names: set[str] = set()
+    warning_doc_count = 0
+    warning_count = 0
+
+    for document in documents:
+        lifecycle = source_lifecycle_state(document)
+        lifecycle_counts[lifecycle] = lifecycle_counts.get(lifecycle, 0) + 1
+        classification = str(document.get("classification") or "unknown")
+        classification_counts[classification] = classification_counts.get(classification, 0) + 1
+        warnings = _strings(document.get("parser_warnings"))
+        if warnings:
+            warning_doc_count += 1
+            warning_count += len(warnings)
+            warning_names.update(warnings)
+
+    indexed_document_count = len(documents)
+    active_document_count = lifecycle_counts.get(ACTIVE_SOURCE_STATE, 0)
+    return {
+        "indexed_document_count": indexed_document_count,
+        "active_document_count": active_document_count,
+        "filtered_document_count": indexed_document_count - active_document_count,
+        "index_matches_latest_job": indexed_document_count == latest_counts["document_count"],
+        "index_health": _index_health(indexed_document_count, warning_count),
+        "source_lifecycle_counts": lifecycle_counts,
+        "classification_counts": classification_counts,
+        "parser_warning_count": warning_count,
+        "parser_warning_document_count": warning_doc_count,
+        "parser_warnings": sorted(warning_names),
+        "latest_indexed_updated_at": max((str(doc.get("updated_at") or "") for doc in documents), default=""),
+        "source_mime_types": sorted({str(doc.get("source_mime") or "unknown") for doc in documents}),
+        "acl_sources": sorted({str(doc.get("acl_source") or "") for doc in documents if doc.get("acl_source")}),
+        "allowed_roles_sources": sorted(
+            {str(doc.get("allowed_roles_source") or "") for doc in documents if doc.get("allowed_roles_source")}
+        ),
+        "source_acl_versions": sorted(
+            {str(doc.get("source_acl_version") or "") for doc in documents if doc.get("source_acl_version")}
+        ),
+        "document_ids": sorted(str(doc.get("id") or "") for doc in documents if doc.get("id")),
+    }
+
+
+def _index_health(indexed_document_count: int, parser_warning_count: int) -> str:
+    if indexed_document_count == 0:
+        return "empty"
+    if parser_warning_count:
+        return "parser_warnings"
+    return "indexed"
+
+
 def _job_sort_key(job: dict) -> tuple[str, str, str, str]:
     return (
         str(job.get("updated_at") or ""),
@@ -59,7 +118,7 @@ def _health(latest_status: str, dead_letter_count: int) -> str:
     return "unknown"
 
 
-def _connector_row(connector: str, jobs: list[dict]) -> dict:
+def _connector_row(connector: str, jobs: list[dict], documents: list[dict]) -> dict:
     latest = jobs[0]
     latest_status = str(latest.get("status") or "unknown")
     dead_letters = [job for job in jobs if job.get("status") == "dead_lettered"]
@@ -83,6 +142,7 @@ def _connector_row(connector: str, jobs: list[dict]) -> dict:
         "job_count": len(jobs),
         "last_error_status": latest_error.get("status") if latest_error else None,
         "last_error_retryable": latest_error.get("retryable") if latest_error else None,
+        **_document_inventory(documents, latest_counts),
     }
 
 
@@ -105,10 +165,17 @@ def list_connector_status(repo: KnowledgeRepository, user_id: str, limit: int = 
             continue
         grouped.setdefault(_job_connector(job), []).append(job)
 
-    connectors = [_connector_row(connector, items) for connector, items in sorted(grouped.items())]
+    connectors = [
+        _connector_row(
+            connector,
+            items,
+            repo.list_documents_by_connector(actor["tenant_id"], connector),
+        )
+        for connector, items in sorted(grouped.items())
+    ]
     return {
         "connectors": connectors,
         "connector_count": len(connectors),
         "job_window": len(jobs),
-        "status_source": "ingestion_jobs",
+        "status_source": "ingestion_jobs+indexed_documents",
     }
