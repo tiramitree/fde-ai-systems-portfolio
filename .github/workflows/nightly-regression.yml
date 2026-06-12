@@ -1,0 +1,46 @@
+name: nightly-regression
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reviewed-eval-regression:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check reviewed eval ledger
+        run: python -B scripts/dev.py reviewed-eval-ledger
+
+      - name: Generate replay traces
+        run: python -B scripts/dev.py replay
+
+      - name: Export trace-to-eval candidates
+        run: python -B scripts/dev.py trace-to-eval
+
+      - name: Check trace-to-eval candidates
+        run: python -B scripts/dev.py trace-to-eval-check
+
+      - name: Run Project 1 retrieval metrics
+        run: python -B scripts/dev.py retrieval-metrics
+
+      - name: Run golden evals
+        run: python -B scripts/dev.py evals
+
+      - name: Check public metric claims
+        run: python -B scripts/dev.py claims

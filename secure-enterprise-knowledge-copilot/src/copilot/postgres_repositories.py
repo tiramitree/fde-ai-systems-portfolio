@@ -201,6 +201,32 @@ class PostgresKnowledgeRepository:
         )
         return [_public_document(self._row_to_document(row)) for row in rows]
 
+    def list_documents_for_tenant(self, tenant_id: str) -> list[dict]:
+        self._apply_context(self._active_user)
+        rows = self._fetch_all(
+            """
+            select
+              d.id::text,
+              d.external_doc_id,
+              t.slug,
+              d.title,
+              d.sensitivity,
+              d.allowed_roles,
+              coalesce(d.source_uri, ''),
+              coalesce(d.source_mime, ''),
+              d.source_hash,
+              d.version,
+              d.updated_at::text,
+              d.metadata
+            from documents d
+            join tenants t on t.id = d.tenant_id
+            where t.slug = %s
+            order by d.updated_at desc, d.external_doc_id
+            """,
+            (tenant_id,),
+        )
+        return [_public_document(self._row_to_document(row)) for row in rows]
+
     def list_chunks(self, tenant_id: str) -> list[dict]:
         self._apply_context(self._active_user)
         rows = self._fetch_all(
@@ -477,6 +503,7 @@ class PostgresKnowledgeRepository:
                         "parser_name": document.get("parser_name"),
                         "parser_metadata": document.get("parser_metadata", {}),
                         "parser_warnings": document.get("parser_warnings", []),
+                        "source_scan": document.get("source_scan", {}),
                         "source_file": document.get("source_file", {}),
                         "allowed_groups": document.get("allowed_groups", []),
                         "source_acl_principals": document.get("source_acl_principals", []),
@@ -503,6 +530,7 @@ class PostgresKnowledgeRepository:
                 "parser_name": chunk.get("parser_name"),
                 "parser_metadata": chunk.get("parser_metadata", {}),
                 "parser_warnings": chunk.get("parser_warnings", []),
+                "source_scan": chunk.get("source_scan", {}),
                 "source_file": chunk.get("source_file", {}),
                 "allowed_groups": chunk.get("allowed_groups", []),
                 "source_acl_principals": chunk.get("source_acl_principals", []),
@@ -662,6 +690,7 @@ class PostgresKnowledgeRepository:
         trace_uuid = _uuid_or_none(trace_id) or _stable_uuid(user["_tenant_uuid"], trace_id)
         stored_payload = dict(payload)
         stored_payload["question"] = question
+        request_id = str(stored_payload.get("request_id") or trace_id)
         self._execute_write(
             """
             insert into traces (id, tenant_id, user_id, request_id, route, payload)
@@ -673,7 +702,7 @@ class PostgresKnowledgeRepository:
                 trace_uuid,
                 user["_tenant_uuid"],
                 user["_user_uuid"],
-                trace_id,
+                request_id,
                 "query_answered",
                 _json_payload(stored_payload),
             ),
@@ -882,6 +911,7 @@ class PostgresKnowledgeRepository:
             "parser_name": metadata.get("parser_name") if isinstance(metadata, dict) else None,
             "parser_metadata": metadata.get("parser_metadata", {}) if isinstance(metadata, dict) else {},
             "parser_warnings": metadata.get("parser_warnings", []) if isinstance(metadata, dict) else [],
+            "source_scan": metadata.get("source_scan", {}) if isinstance(metadata, dict) else {},
             "source_file": metadata.get("source_file", {}) if isinstance(metadata, dict) else {},
             "source_connector": metadata.get("source_connector", "manual") if isinstance(metadata, dict) else "manual",
             "external_id": metadata.get("external_id", row[1]) if isinstance(metadata, dict) else row[1],
@@ -918,6 +948,7 @@ class PostgresKnowledgeRepository:
             "parser_name": metadata.get("parser_name") if isinstance(metadata, dict) else None,
             "parser_metadata": metadata.get("parser_metadata", {}) if isinstance(metadata, dict) else {},
             "parser_warnings": metadata.get("parser_warnings", []) if isinstance(metadata, dict) else [],
+            "source_scan": metadata.get("source_scan", {}) if isinstance(metadata, dict) else {},
             "source_file": metadata.get("source_file", {}) if isinstance(metadata, dict) else {},
             "source_connector": metadata.get("source_connector", "manual") if isinstance(metadata, dict) else "manual",
             "external_id": metadata.get("external_id", row[2]) if isinstance(metadata, dict) else row[2],

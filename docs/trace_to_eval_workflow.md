@@ -7,6 +7,7 @@ runtime trace
   -> audit / approval / release evidence
   -> trace-to-eval candidate artifact
   -> human review
+  -> reviewed dataset ledger
   -> checked-in golden eval
   -> CI quality gate
 ```
@@ -32,6 +33,7 @@ Validate the candidate exporter and expected coverage:
 
 ```bash
 python -B scripts/dev.py trace-to-eval-check
+python -B scripts/dev.py reviewed-eval-ledger
 ```
 
 Generated files:
@@ -49,6 +51,14 @@ Each JSON candidate carries review metadata:
 - `review.promotion_target`: the checked-in eval fixture path to edit after review.
 - `review.regression_schedule`: `nightly` for high/critical risks and `release-gate` for medium risks.
 - `review.promotion_requirements`: the checks that must pass before promotion.
+
+The checked-in reviewed dataset ledger lives at `docs/reviewed_eval_dataset_ledger.json`. It records the active golden fixture for each project, reviewer role, candidate categories, current case count, regression schedule, and commands that must pass before a trace candidate is promoted. The ledger is verified by:
+
+```bash
+python -B scripts/dev.py reviewed-eval-ledger
+```
+
+Nightly regression is scheduled in `.github/workflows/nightly-regression.yml` with read-only repository permissions. The workflow checks the ledger, regenerates replay traces, exports trace-to-eval candidates, validates those candidates, runs Project 1 retrieval metrics, runs all golden evals, and verifies public metric claims.
 
 ## Candidate Types
 
@@ -77,8 +87,9 @@ Before promoting a candidate into a checked-in eval fixture:
 - preserve existing unsafe counters at zero
 - copy only the suggested input and expected behavior, not generated trace IDs
 - set a human disposition before changing source fixtures
+- update `docs/reviewed_eval_dataset_ledger.json` if the target fixture, case count, owner, candidate category, or regression schedule changes
 - route Project 1 candidates to the knowledge-safety reviewer, Project 2 candidates to the agent-governance reviewer, and Project 3 candidates to the release-reliability reviewer
-- rerun `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`
+- rerun `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py reviewed-eval-ledger`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py retrieval-metrics`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`
 
 Do not promote runtime-only IDs, local paths, generated logs, private endpoints, tokens, or environment dumps into source files.
 

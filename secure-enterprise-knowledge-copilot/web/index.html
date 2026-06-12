@@ -80,6 +80,7 @@ Employees must submit travel expense receipts within five business days after ea
             <span>Replace matching source</span>
           </label>
           <div class="sectionActions ingestionActions">
+            <button id="previewParse" class="secondaryButton" type="button">Preview parse</button>
             <button id="ingestDocument" type="button">Ingest document</button>
             <button id="syncSampleSource" class="secondaryButton" type="button">Sync connector</button>
             <button id="previewSourceBundle" class="secondaryButton" type="button">Preview bundle</button>
@@ -87,8 +88,10 @@ Employees must submit travel expense receipts within five business days after ea
             <button id="syncGitHubConnector" class="secondaryButton" type="button">Sync GitHub</button>
           </div>
           <div id="ingestionStatus" class="scenarioStatus muted">No ingestion run yet.</div>
+          <div id="parsePreview" class="list compact"></div>
           <div id="sourceBundleCatalog" class="list compact"></div>
           <div id="connectorStatus" class="list compact"></div>
+          <div id="sourceQuality" class="list compact"></div>
           <div id="ingestionJobs" class="list compact"></div>
 
           <h2>Visible Documents</h2>

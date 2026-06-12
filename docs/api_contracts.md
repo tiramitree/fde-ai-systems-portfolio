@@ -15,6 +15,28 @@ The demos expose small HTTP APIs so the browser remains a thin client over expli
 - Errors use `{"error": "message"}` with an HTTP status code.
 - Runtime route contracts are checked separately by `python -B scripts/dev.py ui-contracts`.
 - The model is not the API authorization boundary; permission and approval checks happen in application code before responses are returned.
+- `/api/health` is the liveness endpoint. `/api/ready` is the readiness endpoint and verifies local storage, seed_data, eval_state, and scenario_snapshot availability before a service is treated as ready for review traffic.
+- POST JSON request bodies are bounded before route handling by `local_http_limits.py`. The default limit is 1 MiB and can be adjusted for local verification with `FDE_MAX_JSON_BODY_BYTES`.
+- Oversized JSON requests return `413` with `{"error": "Request body too large."}`. Non-object JSON payloads return `400` with `{"error": "JSON body must be an object."}`.
+- The request-body boundary is verified by `python -B scripts/dev.py request-body-limits`.
+- API routes pass through `local_request_governance.py` before route handling. Successful API responses include `X-Request-ID`, `X-RateLimit-Remaining`, `X-RateLimit-Window-Seconds`, and `X-RateLimit-Budget-Remaining` headers.
+- Callers may provide a safe `X-Request-ID`; unsafe or missing values are replaced with a generated request id so user input is not blindly reflected.
+- Local request-count and cost-budget limits can be adjusted with `FDE_RATE_LIMIT_REQUESTS_PER_WINDOW`, `FDE_RATE_LIMIT_BUDGET_PER_WINDOW`, and `FDE_RATE_LIMIT_WINDOW_SECONDS`.
+- Requests over either local limit return `429` with `{"error": "Rate limit exceeded.", "request_id": "...", "retry_after_seconds": ...}` plus `Retry-After`.
+- The request-governance boundary is verified by `python -B scripts/dev.py request-governance`.
+- Core business POST routes propagate the governed `request_id` into the response, persisted trace, and linked audit event so a reviewer can correlate one HTTP request with durable evidence after the response has returned.
+- Request correlation is verified by `python -B scripts/dev.py request-correlation`.
+
+### Readiness Response Shape
+
+`GET /api/ready` returns:
+
+- `status`
+- `app`
+- `ready`
+- `checks`
+
+The `checks` object includes service-specific counts plus common `storage`, `seed_data`, `eval_state`, `scenario_snapshot`, and `scenario_files` fields.
 
 ## Secure Enterprise Knowledge Copilot
 
@@ -28,18 +50,21 @@ Source:
 | Method | Path | Purpose |
 | --- | --- | --- |
 | GET | `/api/health` | Service health and app name. |
+| GET | `/api/ready` | Readiness check for storage, seed users, eval state, and scenario snapshot. |
 | GET | `/api/users` | Demo users with `id`, `name`, `role`, `tenant_id`, `group_ids`, and `source_principals`. |
 | GET | `/api/documents?user_id=alice` | Visible document metadata for the requester. Document `body` is never returned. |
 | GET | `/api/traces?limit=25` | Recent trace records. |
 | GET | `/api/audit?limit=50` | Recent audit events. |
 | GET | `/api/ingestion/jobs?user_id=avery&limit=25` | Admin-only ingestion job ledger with sanitized input summaries, status, retry links, and dead-letter evidence. |
 | GET | `/api/connectors/status?user_id=avery&limit=100` | Admin-only connector lifecycle summary derived from ingestion jobs, including health, cursors, counts, and dead-letter state. |
+| GET | `/api/sources/quality?user_id=avery&limit=100` | Admin-only source quality inventory for indexed tenant documents, including parser quality schema coverage, source scan coverage, parser warnings, ACL metadata, lifecycle state, and per-source risk flags without raw bodies. |
 | GET | `/api/connectors/source-bundle/catalog?user_id=avery&bundle=operations-handbook` | Admin-only source bundle manifest preview with ACL summaries, hashes, and file metadata but no raw source bodies. |
 | GET | `/api/eval/latest` | Latest eval run record. |
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
 | POST | `/api/auth/demo-token` | Local signed demo token issuer for exercising bearer-auth identity context without external SSO. |
 | POST | `/api/query` | Permission-aware answer generation with citations or abstention. |
 | POST | `/api/documents/ingest` | Admin-only local ingestion of searchable text, Markdown, CSV, HTML, or JSON content into the permission-aware document store. |
+| POST | `/api/documents/parse-preview` | Admin-only dry-run parser preview for local source content or file-like payloads, returning parser contract, source hash, warnings, and chunk spans without indexing the source. |
 | POST | `/api/sources/sync` | Admin-only connector-style batch source sync with external IDs, sync cursor, optional source ACL snapshot, permission drift evidence, parser normalization, chunking, and audit evidence. |
 | POST | `/api/ingestion/jobs` | Admin-only local ingestion worker contract for source sync jobs with idempotency, inline execution, retry parent links, completion audit, and dead-letter audit. |
 | POST | `/api/connectors/github/sync` | Admin-only GitHub read connector that normalizes issue/PR records into source sync jobs with source URLs, permission snapshots, idempotency, citation-ready chunks, and audit evidence. |
@@ -48,22 +73,24 @@ Source:
 
 ### Local Auth Contract
 
-The default browser demo can still pass `user_id` in the query string or JSON body so the local walkthrough stays simple. For production-shaped review, the API also supports a local signed bearer-token boundary:
+The default browser demo can still pass `user_id` in the query string or JSON body so the local walkthrough stays simple. For production-shaped review, all three APIs also support a local signed bearer-token boundary implemented by `local_auth_tokens.py`:
 
 - `POST /api/auth/demo-token` accepts `{"user_id": "riley"}` and returns `token_type`, `expires_in`, `auth_policy`, `token`, and `auth_context`
 - `auth_policy` is `local_signed_demo_token_v1`
-- callers can send `Authorization: Bearer <token>` on Project 1 API requests
+- callers can send `Authorization: Bearer <token>` on Project 1, Project 2, and Project 3 API requests
 - bearer-auth identity is resolved before route behavior, so `/api/documents` without `user_id` returns the token subject's visible documents
 - if a bearer token subject conflicts with a query/body `user_id`, the API returns `403` with `Request user_id does not match authenticated subject.`
-- the local token secret defaults to a public demo value and can be overridden with `COPILOT_DEMO_AUTH_SECRET`; it is not a production SSO replacement
+- Project 2 and Project 3 use the same identity boundary for `POST /api/agent`, supervisor approval actions, action-outbox retry, and `POST /api/triage`; if the token subject conflicts with request identity fields, the API returns `403` with `Request identity does not match authenticated subject.`
+- the local token secret defaults to a public demo value and can be overridden globally with `FDE_DEMO_AUTH_SECRET` or per service with `COPILOT_DEMO_AUTH_SECRET`, `OPS_AGENT_DEMO_AUTH_SECRET`, or `RELIABILITY_CONSOLE_DEMO_AUTH_SECRET`; it is not a production SSO replacement
 
-Runtime contracts verify local token issuance, bearer-auth group document visibility, bearer-auth retrieval for group-scoped evidence, and subject-mismatch rejection.
+Runtime contracts verify local token issuance, bearer-auth group document visibility, bearer-auth retrieval for group-scoped evidence, Project 2 bearer-auth agent routing and supervisor approval, Project 3 bearer-auth triage, and subject-mismatch rejection.
 
 ### Query Response Shape
 
 `POST /api/query` returns:
 
 - `trace_id`
+- `request_id`
 - `user`
 - `question`
 - `answer`
@@ -142,10 +169,14 @@ The route returns:
 - `ingestion.actor_user_id`
 - `ingestion.replace`
 - `ingestion.source_hash`
+- `ingestion.source_scan`
 - `ingestion.supported_mime_types`
 - `ingestion.parser.name`
+- `ingestion.parser.contract_version`
+- `ingestion.parser.quality_schema_version`
 - `ingestion.parser.normalized_characters`
 - `ingestion.parser.metadata`
+- `ingestion.parser.quality`
 - `ingestion.parser.warnings`
 - `ingestion.source.file`
 - `ingestion.source.connector`
@@ -171,10 +202,54 @@ Ingestion contract:
 - the raw document body is never returned
 - file-like ingestion accepts UTF-8 text files through `document.file.content_base64`; returned public metadata includes `source_file.file_name`, `source_file.file_size_bytes`, `source_file.file_content_encoding`, and inferred MIME provenance without returning file contents
 - ingestion normalizes supported source formats through parser versions such as `plain-text-v1`, `markdown-v1`, `csv-v1`, `html-v1`, and `json-v1`
+- parser quality metadata is returned through `ingestion.parser.quality` and embedded in `ingestion.parser.metadata.quality`; it records `parser.quality.schema_version`, parser name, raw and normalized character counts, line counts, non-empty line counts, section counts, table-like line counts, and format details such as Markdown heading/link/code-block counts, CSV row/column/header/ragged-row counts, HTML tag/script-style counts, and JSON root/field/depth counts
+- source scan metadata is returned through `ingestion.source_scan`; it records `source_scan.schema_version`, local scan policy, scan status, severity, finding counts, finding categories, `review_required`, and `source_scan.raw_matches_returned=false`
 - ingestion records chunk source spans over parser `normalized_text`; `chunk_source_span_unit` is `normalized_text` and `chunk_source_span_count` matches `chunk_count`
 - ingestion creates local deterministic chunk embeddings with model `local-hashing-v1` and dimension `1536`; raw vectors are stored for retrieval/indexing but not returned by the public API
 - CSV parser metadata includes `row_count`, `column_count`, and `has_header`; parser warnings are surfaced as `parser_warnings`
 - ingestion writes a `document_ingested` audit event with `source_hash`, `chunk_count`, `source_mime`, `source_file`, `parser_warnings`, source span metadata, embedding metadata, role metadata, and source-group ACL metadata
+
+### Parser Preview Response Shape
+
+`POST /api/documents/parse-preview` accepts the same admin `user_id` and `document` source payload as local ingestion, but it does not write the document, chunks, embeddings, traces, or audit records.
+
+The route returns:
+
+- `preview.actor_user_id`
+- `preview.title`
+- `preview.source_hash`
+- `preview.source_mime`
+- `preview.source_file`
+- `preview.source_scan`
+- `preview.parser.contract_version`
+- `preview.parser.quality_schema_version`
+- `preview.parser.name`
+- `preview.parser.normalized_characters`
+- `preview.parser.metadata`
+- `preview.parser.quality`
+- `preview.parser.warnings`
+- `preview.parser.warning_count`
+- `preview.validation_warnings`
+- `preview.would_index`
+- `preview.chunk_count`
+- `preview.chunk_source_span_unit`
+- `preview.chunks[].chunk_index`
+- `preview.chunks[].character_count`
+- `preview.chunks[].source_span`
+- `preview.chunks[].text_excerpt`
+- `preview.raw_body_returned`
+- `supported_mime_types`
+
+Parser preview contract:
+
+- only admin users can preview parsing
+- the same MIME detection, file decoding, parser normalization, and chunk-span code path is used before ingestion
+- `preview.parser.contract_version` is `source_parser_contract_v1`
+- `preview.parser.quality_schema_version` and `preview.parser.quality.schema_version` are `source_parser_quality_v1`
+- `preview.source_scan.schema_version` is `source_scan_v1`; `preview.source_scan.raw_matches_returned` is `false`
+- `preview.chunk_source_span_unit` is `normalized_text`
+- `preview.raw_body_returned` is `false`; the response includes short chunk excerpts for operator review, not the full raw source body
+- `preview.would_index` is `false` when validation warnings such as `searchable_body_too_short` would prevent ingestion
 
 ### Source Sync Response Shape
 
@@ -211,6 +286,8 @@ The route returns:
 - `sync.chunk_count`
 - `sync.replaced_count`
 - `sync.parser_warnings`
+- `sync.source_scan_review_required_count`
+- `sync.source_scan_finding_counts`
 - `documents`
 - `documents[].source_connector`
 - `documents[].external_id`
@@ -229,6 +306,7 @@ Source sync contract:
 
 - only admin users can sync connector sources
 - synced documents are normalized through the same parser, chunking, embedding, permission, and body-hiding path as local ingestion
+- synced documents are scanned through `source_scan_v1`; batch source scan review counts and finding categories are summarized without returning raw matches
 - the API accepts at most ten documents per local sync request so demo state remains reviewable
 - connector `name`, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, allowed groups, source ACL principals, sync cursor, and source lifecycle metadata are persisted on documents and chunks
 - when `connector.acl_snapshot` is present, each synced document must have a matching ACL record; missing ACL records fail closed before searchable chunks are written
@@ -280,12 +358,12 @@ Ingestion job contract:
 
 ### Connector Status Response Shape
 
-`GET /api/connectors/status` returns an admin-only operator summary derived from the ingestion job ledger:
+`GET /api/connectors/status` returns an admin-only operator summary derived from the ingestion job ledger plus the current indexed document inventory:
 
 - `connectors`
 - `connector_count`
 - `job_window`
-- `status_source`, currently `ingestion_jobs`
+- `status_source`, currently `ingestion_jobs+indexed_documents`
 
 Each `connectors[]` item returns:
 
@@ -305,6 +383,22 @@ Each `connectors[]` item returns:
 - `job_count`
 - `last_error_status`
 - `last_error_retryable`
+- `indexed_document_count`
+- `active_document_count`
+- `filtered_document_count`
+- `index_matches_latest_job`
+- `index_health`: `indexed`, `parser_warnings`, or `empty`
+- `source_lifecycle_counts`
+- `classification_counts`
+- `parser_warning_count`
+- `parser_warning_document_count`
+- `parser_warnings`
+- `latest_indexed_updated_at`
+- `source_mime_types`
+- `acl_sources`
+- `allowed_roles_sources`
+- `source_acl_versions`
+- `document_ids`
 
 Connector status contract:
 
@@ -312,7 +406,79 @@ Connector status contract:
 - the response summarizes source sync jobs without returning raw document, issue, or pull request bodies
 - `dead_letter_count` remains visible after a later successful retry, so recovered connectors still show prior failed work
 - `latest_cursor`, document/chunk counts, ACL drift count, prune count, and job status are surfaced for operator review before trusting new source data
+- indexed document counts, active/filtered lifecycle counts, parser warning totals, ACL sources, and source ACL versions are surfaced so operators can compare the latest connector run against the searchable index
 - the endpoint is a local operator contract; a production deployment would attach real connector registry records, queue state, schedule metadata, and alert links
+
+### Source Quality Response Shape
+
+`GET /api/sources/quality` returns an admin-only source quality inventory across the current tenant. It is separate from connector status: connector status summarizes sync jobs, while source quality summarizes the indexed source inventory that operators review before trusting retrieval.
+
+The route returns:
+
+- `source_quality.schema_version`, currently `source_quality_report_v1`
+- `source_quality.actor_user_id`
+- `source_quality.tenant_id`
+- `source_quality.document_count`
+- `source_quality.active_document_count`
+- `source_quality.filtered_document_count`
+- `source_quality.attention_required_count`
+- `source_quality.parser_warning_count`
+- `source_quality.parser_warning_document_count`
+- `source_quality.parser_quality_schema_counts`
+- `source_quality.source_scan_schema_counts`
+- `source_quality.source_scan_review_required_count`
+- `source_quality.source_scan_finding_counts`
+- `source_quality.source_mime_counts`
+- `source_quality.connector_counts`
+- `source_quality.lifecycle_counts`
+- `source_quality.classification_counts`
+- `source_quality.acl_snapshot_coverage_count`
+- `source_quality.raw_bodies_returned`
+- `source_quality.documents`
+- `source_quality.documents[].risk_flags`
+- `source_quality.documents[].source_scan_status`
+
+Each `source_quality.documents[]` item returns:
+
+- `id`
+- `title`
+- `source_connector`
+- `source_mime`
+- `classification`
+- `source_lifecycle_state`
+- `parser_name`
+- `parser_quality_schema`
+- `normalized_characters`
+- `normalized_non_empty_line_count`
+- `section_count`
+- `table_like_line_count`
+- `parser_warning_count`
+- `parser_warnings`
+- `source_scan_schema`
+- `source_scan_status`
+- `source_scan_severity`
+- `source_scan_review_required`
+- `source_scan_finding_categories`
+- `acl_source`
+- `allowed_roles_source`
+- `allowed_groups`
+- `source_acl_version`
+- `source_acl_principal_count`
+- `source_hash_prefix`
+- `updated_at`
+- `attention_required`
+- `risk_flags`
+
+Source quality contract:
+
+- only admin users can view source quality
+- raw document bodies, file contents, issue bodies, and pull request bodies are never returned
+- every returned document carries `parser_quality_schema`; missing or unexpected parser quality metadata is surfaced through `risk_flags`
+- every returned document carries `source_scan_schema`; missing scan metadata or review-required scan findings are surfaced through `risk_flags`
+- checked-in Project 1 seed documents are parsed during `storage.seed()` so default JSON runtime state and generated PostgreSQL seed rows carry parser quality metadata before retrieval starts
+- checked-in Project 1 seed documents, admin-ingested documents, source-sync documents, and generated PostgreSQL seed rows carry `source_scan_v1` metadata before retrieval starts
+- parser warnings, source scan review signals, non-active lifecycle state, missing source hashes, missing connector ACL snapshot versions, and empty normalized text are visible as operator attention signals
+- production deployments would attach source-owner routing, alert IDs, ingestion worker links, malware-scan state, DLP findings, and parser-worker retry history to the same operator surface
 
 ### GitHub Connector Response Shape
 
@@ -461,22 +627,46 @@ Source:
 | Method | Path | Purpose |
 | --- | --- | --- |
 | GET | `/api/health` | Service health and app name. |
+| GET | `/api/ready` | Readiness check for storage, seed cases, approval state, eval state, and scenario snapshot. |
 | GET | `/api/users` | Demo users with `id`, `name`, and `role`. |
 | GET | `/api/cases` | Demo operational cases. |
 | GET | `/api/approvals` | Approval queue state. |
+| GET | `/api/tool-registry` | Governed tool registry with risk, approval, and dry-run policy metadata. |
+| GET | `/api/action-outbox?limit=25` | Sanitized side-effect dispatch queue created by approval requests and drained by supervisor approval. |
+| GET | `/api/action-runs?limit=25` | Side-effect execution receipts written after supervisor approval. |
+| GET | `/api/workflow-runs?limit=25` | Sanitized agent workflow checkpoints linking traces, approvals, outbox dispatch, retries, and execution receipts. |
 | GET | `/api/traces?limit=25` | Recent trace records. |
 | GET | `/api/audit?limit=50` | Recent audit events. |
 | GET | `/api/eval/latest` | Latest eval run record. |
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
+| POST | `/api/auth/demo-token` | Local signed demo token issuer for exercising bearer-auth identity context without external SSO. |
 | POST | `/api/agent` | Process an investigator/supervisor workflow message. |
 | POST | `/api/approval/approve` | Supervisor-only approval execution. |
+| POST | `/api/approval/reject` | Supervisor-only approval rejection without executing side effects. |
+| POST | `/api/approval/expire` | Supervisor-only approval expiry without executing side effects. |
+| POST | `/api/action-outbox/retry` | Supervisor-only retry for retryable side-effect dispatch failures. |
 | POST | `/api/eval/run` | Reset state and run the project eval suite. |
+
+### Tool Registry Response Shape
+
+`GET /api/tool-registry` returns:
+
+- `schema_version`
+- `tools`
+
+Registry contract:
+
+- `schema_version` is `tool_registry_v1`
+- each `tool_registry` item includes `name`, `category`, `required_role`, `approval_required`, `dry_run_required`, `side_effect`, `credential_scope`, `risk_level`, and `description`
+- side-effecting tools are declared in the registry before runtime use
+- approval-gated tools can be inspected by the browser before any side effect is executed
 
 ### Agent Response Shape
 
 `POST /api/agent` returns:
 
 - `trace_id`
+- `request_id`
 - `intent`
 - `response`
 - `tool_calls`
@@ -486,14 +676,242 @@ Source:
 - `outputs`
 - `case`
 - `model_router`
+- `latency_ms`
+- `workflow_run`
 
 Security contract:
 
 - investigator side effects create approval requests instead of executing directly
 - non-supervisors receive `403` when approving actions
-- supervisor approval is idempotent
+- approval requests include `approval_policy=approval_policy_v1`, `expires_at`, `approval_expires_at`, `owner_role`, `review_status`, `payload_sha256`, `payload_summary`, `decision_reason_summary`, `dry_run_preview`, and `raw_decision_reason_returned=false`
+- `dry_run_preview` uses `dry_run_preview_v1` and shows the intended action without returning raw seller notice bodies or raw escalation reasons
+- approval requests enqueue an `action_outbox` item with payload hashes, dry-run previews, review metadata, and summaries, not raw seller notice bodies
+- supervisor approval is idempotent, drains the outbox item, and returns both an `outbox_item` and `execution` receipt after the side effect is applied
+- supervisor rejection returns `approval_rejected`, marks the approval and outbox item as `review_status=rejected`, and does not execute a side effect
+- supervisor expiry returns `approval_expired`, marks the approval and outbox item as `review_status=expired`, and does not execute a side effect
+- supervisor approval can also leave an outbox item in `retryable_failure` or `dead_lettered` when dispatch fails before the side effect is applied
+- retrying a `retryable_failure` outbox item uses the same idempotency key, never creates duplicate side effects, and returns the recovered `execution` receipt on success
+- action run receipts expose `payload_sha256`, output references, actor IDs, action type, status, and result without returning raw seller notice bodies
+- agent responses include a `workflow_run` checkpoint with `schema_version=workflow_run_v1`, `trace_id`, `status`, `stage`, approval/outbox/action-run references, a message hash, and `raw_message_returned=false`
 - bypass instructions create blocked-action evidence instead of side effects
 - `model_router` reports the actual routing source for the intent classification path, not just whether OpenAI mode was configured
+
+### Workflow Run Response Shape
+
+`GET /api/workflow-runs` returns:
+
+- `workflow_runs`
+
+Each `workflow_runs[]` item returns:
+
+- `id`
+- `schema_version`
+- `created_at`
+- `updated_at`
+- `user_id`
+- `trace_id`
+- `case_id`
+- `intent`
+- `model_router`
+- `status`
+- `stage`
+- `message_sha256`
+- `message_characters`
+- `raw_message_returned`
+- `tool_call_count`
+- `approval_ids`
+- `outbox_ids`
+- `action_run_ids`
+- `blocked_action_count`
+- `cited_policy_ids`
+- `waiting_on`
+- `retryable_outbox_ids`
+- `dead_lettered_outbox_ids`
+- `last_result`
+
+Workflow run contract:
+
+- workflow runs are checkpoints for the agent orchestration layer, not the side-effect executor itself
+- raw user messages, raw seller notice bodies, and raw escalation reasons are not returned through workflow runs
+- an approval-gated side effect starts as `waiting_for_approval` at stage `approval_requested`
+- successful supervisor dispatch updates the same workflow run to `succeeded` at stage `side_effect_executed`
+- pre-side-effect transient dispatch failure updates it to `dispatch_retryable_failure` at stage `waiting_for_retry`
+- recovered retry clears `retryable_outbox_ids` and returns the run to `succeeded`
+- repeated pre-side-effect failure updates it to `dispatch_dead_lettered` at stage `dead_lettered`
+- rejected approvals update it to `approval_rejected`
+- expired approvals update it to `approval_expired`
+
+### Approval Response Shape
+
+`GET /api/approvals` returns:
+
+- `approvals`
+
+Each `approvals[]` item returns:
+
+- `id`
+- `created_at`
+- `updated_at`
+- `expires_at`
+- `approval_policy`
+- `tool_registry_version`
+- `requested_by`
+- `owner_role`
+- `case_id`
+- `action_type`
+- `status`
+- `review_status`
+- `payload_sha256`
+- `payload_summary`
+- `decision_reason_summary`
+- `dry_run_preview`
+- `raw_payload_returned`
+- `raw_decision_reason_returned`
+- `approved_by`
+- `approved_at`
+- `rejected_by`
+- `rejected_at`
+- `expired_by`
+- `expired_at`
+
+`POST /api/approval/reject` accepts:
+
+- `approval_id`
+- `reviewer_id`
+- `reason`
+
+It returns:
+
+- `approval`
+- `result`
+- `execution`
+- `outbox_item`
+
+`POST /api/approval/expire` accepts:
+
+- `approval_id`
+- `operator_id`
+- `reason`
+
+It returns:
+
+- `approval`
+- `result`
+- `execution`
+- `outbox_item`
+
+### Action Outbox Response Shape
+
+`GET /api/action-outbox` returns:
+
+- `action_outbox`
+
+Each `action_outbox[]` item returns:
+
+- `id`
+- `created_at`
+- `updated_at`
+- `approval_id`
+- `requested_by`
+- `action_type`
+- `status`
+- `result`
+- `approval_policy`
+- `tool_registry_version`
+- `approval_expires_at`
+- `review_status`
+- `idempotency_key`
+- `approval_idempotency_key`
+- `payload_sha256`
+- `payload_summary`
+- `dry_run_preview`
+- `attempt_count`
+- `next_attempt_at`
+- `last_error`
+- `dead_lettered_at`
+- `dead_letter_reason`
+- `lease_id`
+- `leased_by`
+- `lease_acquired_at`
+- `lease_expires_at`
+- `lease_released_at`
+- `lease_count`
+- `last_lease_id`
+- `last_leased_by`
+- `approved_by`
+- `approved_at`
+- `rejected_by`
+- `rejected_at`
+- `expired_by`
+- `expired_at`
+- `execution_id`
+- `output_refs`
+- `raw_payload_returned`
+
+Outbox `status` values:
+
+- `awaiting_approval`
+- `dispatching`
+- `succeeded`
+- `approval_rejected`
+- `approval_expired`
+- `retryable_failure`
+- `dead_lettered`
+
+`POST /api/action-outbox/retry` accepts:
+
+- `outbox_id`
+- `operator_id`
+
+It returns:
+
+- `approval`
+- `result`
+- `execution`
+- `outbox_item`
+
+Retry contract:
+
+- only supervisors can retry action outbox dispatch
+- retryable failures keep the original `approval_id`, `payload_sha256`, and idempotency key
+- every dispatch attempt records a local worker lease with `last_lease_id`, `last_leased_by`, `lease_count`, and `lease_released_at`
+- dead-lettered items remain visible in the outbox ledger and are not retried by default
+- retry responses do not expose raw seller notice bodies
+
+The action outbox contract:
+
+- new approval requests start as `awaiting_approval`
+- supervisor approval moves the item through dispatch and records `succeeded` after the action receipt is written
+- supervisor rejection and expiry close the item as `approval_rejected` or `approval_expired` without execution
+- repeated approval calls return the existing execution rather than creating a second side effect
+- outbox records expose stable hashes, action type, approval ID, status, attempts, and output refs without returning raw notice bodies
+
+### Action Run Response Shape
+
+`GET /api/action-runs` returns:
+
+- `action_runs`
+
+Each `action_runs[]` item returns:
+
+- `id`
+- `created_at`
+- `executed_at`
+- `approval_id`
+- `requested_by`
+- `executed_by`
+- `action_type`
+- `status`
+- `result`
+- `idempotency_key`
+- `approval_idempotency_key`
+- `payload_sha256`
+- `payload_summary`
+- `approval_policy`
+- `tool_registry_version`
+- `dry_run_preview`
+- `raw_payload_returned`
+- `output_refs`
 
 ### Scenario Snapshot Shape
 
@@ -527,6 +945,7 @@ Source:
 | Method | Path | Purpose |
 | --- | --- | --- |
 | GET | `/api/health` | Service health and app name. |
+| GET | `/api/ready` | Readiness check for storage, seed releases/incidents/runbooks, eval state, and scenario snapshot. |
 | GET | `/api/users` | Demo users with `id`, `name`, and `role`. |
 | GET | `/api/releases` | Release records and canary rollout state. |
 | GET | `/api/incidents` | Release incident records with severity, category, signals, linked eval cases, and runbooks. |
@@ -536,6 +955,7 @@ Source:
 | GET | `/api/audit?limit=50` | Recent audit events. |
 | GET | `/api/eval/latest` | Latest release reliability eval run record. |
 | GET | `/api/scenario` | Fictional seed/eval snapshot for the browser-local scenario draft editor. |
+| POST | `/api/auth/demo-token` | Local signed demo token issuer for exercising bearer-auth identity context without external SSO. |
 | POST | `/api/triage` | Triage an incident against a release and produce rollout decision evidence. |
 | POST | `/api/eval/run` | Reset state and run the project eval suite. |
 
@@ -544,16 +964,19 @@ Source:
 `POST /api/triage` returns:
 
 - `trace_id`
+- `request_id`
 - `release`
 - `incident`
 - `decision`
 - `failed_evals`
 - `remediation_steps`
 - `evidence`
+- `latency_ms`
 
 The `decision` object includes:
 
 - `trace_id`
+- `request_id`
 - `user_id`
 - `release_id`
 - `incident_id`
@@ -562,6 +985,7 @@ The `decision` object includes:
 - `release_blocked`
 - `root_cause`
 - `confidence`
+- `latency_ms`
 
 Release reliability contract:
 
@@ -569,7 +993,7 @@ Release reliability contract:
 - latency-only incidents can return `monitor`
 - failed eval cases are returned as `failed_evals`
 - evidence includes linked eval case IDs, runbook IDs, and incident signals
-- trace and audit records are created for triage decisions
+- trace and audit records are created for triage decisions, and latency evidence is present in both the API response and trace result
 
 ### Scenario Snapshot Shape
 

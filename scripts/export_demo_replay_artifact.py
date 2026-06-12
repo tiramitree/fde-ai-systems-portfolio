@@ -4,6 +4,7 @@ import argparse
 import json
 import subprocess
 import sys
+import tempfile
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -124,22 +125,24 @@ def main() -> int:
     evidence: list[Evidence] = []
     created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
-    try:
-        for service, port in zip(SERVICES, ports):
-            print(f"Starting {service.name} on port {port} with reset state")
-            processes.append(start_service(service, port))
+    with tempfile.TemporaryDirectory(prefix="fde-replay-artifact-") as temp_dir:
+        state_root = Path(temp_dir)
+        try:
+            for service, port in zip(SERVICES, ports):
+                print(f"Starting {service.name} on port {port} with reset state")
+                processes.append(start_service(service, port, state_root))
 
-        for service, url in zip(SERVICES, urls):
-            if not wait_for_health(url):
-                print(f"Service did not become healthy: {service.name} ({url})", file=sys.stderr)
-                return 1
+            for service, url in zip(SERVICES, urls):
+                if not wait_for_health(url):
+                    print(f"Service did not become healthy: {service.name} ({url})", file=sys.stderr)
+                    return 1
 
-        evidence.extend(replay_project_1(urls[0]))
-        evidence.extend(replay_project_2(urls[1]))
-        evidence.extend(replay_project_3(urls[2]))
-        write_artifacts(args.out_dir, created_at, urls, evidence)
-    finally:
-        stop_processes(processes)
+            evidence.extend(replay_project_1(urls[0]))
+            evidence.extend(replay_project_2(urls[1]))
+            evidence.extend(replay_project_3(urls[2]))
+            write_artifacts(args.out_dir, created_at, urls, evidence)
+        finally:
+            stop_processes(processes)
 
     passed = sum(1 for item in evidence if item.passed)
     print(f"Replay artifact checks: {passed}/{len(evidence)} passed")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
@@ -9,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
 STATE_PATH = DATA_DIR / "runtime_state.json"
+STATE_PATH_ENV = "RELIABILITY_CONSOLE_STATE_PATH"
 SEED_PATH = DATA_DIR / "seed_state.json"
 EVAL_CASES_PATH = DATA_DIR / "eval_cases.json"
 STORE_LOCK = threading.RLock()
@@ -31,9 +33,14 @@ def empty_state() -> dict:
     }
 
 
+def state_path() -> Path:
+    override = os.getenv(STATE_PATH_ENV, "").strip()
+    return Path(override) if override else STATE_PATH
+
+
 class JsonStore:
-    def __init__(self, path: Path = STATE_PATH):
-        self.path = path
+    def __init__(self, path: Path | None = None):
+        self.path = path if path is not None else state_path()
         self.state = empty_state()
         self.load()
 
@@ -48,7 +55,7 @@ class JsonStore:
         STORE_LOCK.release()
 
     def load(self) -> None:
-        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
         if self.path.exists():
             try:
                 self.state = json.loads(self.path.read_text(encoding="utf-8"))
@@ -56,15 +63,15 @@ class JsonStore:
                 self.state = empty_state()
 
     def save(self) -> None:
-        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(json.dumps(self.state, indent=2), encoding="utf-8")
 
 
-def connect(path: Path = STATE_PATH) -> JsonStore:
+def connect(path: Path | None = None) -> JsonStore:
     return JsonStore(path)
 
 
-def init_state(reset: bool = False, state_path: Path = STATE_PATH, seed_path: Path = SEED_PATH) -> None:
+def init_state(reset: bool = False, state_path: Path | None = None, seed_path: Path = SEED_PATH) -> None:
     with STORE_LOCK:
         store = JsonStore(state_path)
         if reset or not store.state["users"]:

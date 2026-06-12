@@ -14,9 +14,8 @@ This backlog is designed for public GitHub issues after launch. It keeps the rep
 
 1. Add production reranking and retrieval-quality metrics for the existing keyword/vector candidate path.
 2. Validate OTLP HTTP export against a real OpenTelemetry Collector or hosted observability backend in a documented target environment.
-3. Add a reviewed-dataset promotion ledger and nightly regression scheduling automation for trace-to-eval candidates.
-4. Add per-case eval reports with failure diffs.
-5. Add Docker Compose runtime screenshots after testing on a Docker-enabled machine.
+3. Add per-case eval reports with failure diffs.
+4. Add Docker Compose runtime screenshots after testing on a Docker-enabled machine.
 
 ## Advanced Issues
 
@@ -41,6 +40,7 @@ Contributions should preserve these invariants:
 
 - Added optional OTLP/HTTP JSON collector handoff in `scripts/export_traces_otel.py`, plus `python -B scripts/dev.py otel-collector-handoff` to verify endpoint construction, JSON POST behavior, content type, user agent, and safe header handling against a local collector stub.
 - Added local trace-to-eval candidate export with `python -B scripts/dev.py trace-to-eval` and `python -B scripts/dev.py trace-to-eval-check`, keeping generated candidates under ignored `out/` until a maintainer promotes a reviewed case. Candidate artifacts now include owner roles, allowed dispositions, promotion targets, and regression schedules.
+- Added `docs/reviewed_eval_dataset_ledger.json`, `python -B scripts/dev.py reviewed-eval-ledger`, and `.github/workflows/nightly-regression.yml` so trace-to-eval promotion targets, reviewer roles, fixture case counts, and nightly regression commands are checked in and verified.
 
 - Add keyboard-friendly trace navigation for recent trace lists.
 - Add copyable scenario-draft import/export snippets for local demos.

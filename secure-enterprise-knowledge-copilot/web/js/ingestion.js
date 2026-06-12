@@ -107,12 +107,61 @@ function renderConnectorStatus(container, connectors) {
     ...connectors.slice(0, 4).map((connector) => {
       const label = `${connector.connector}: ${connector.health}`;
       const cursor = connector.latest_cursor || "no cursor";
+      const acl = (connector.acl_sources || []).join(", ") || "no acl source";
       const detail =
         `${connector.latest_job_status} ${connector.latest_job_id} | ${connector.document_count || 0} docs, `
         + `${connector.chunk_count || 0} chunks, ${connector.pruned_count || 0} pruned, `
-        + `${connector.dead_letter_count || 0} dead letters, cursor ${cursor}`;
+        + `${connector.dead_letter_count || 0} dead letters, `
+        + `${connector.indexed_document_count || 0} indexed/${connector.active_document_count || 0} active, `
+        + `${connector.parser_warning_count || 0} parser warnings, acl ${acl}, cursor ${cursor}`;
       return element("div", { className: "item" }, [
         element("div", { textContent: label }),
+        element("small", { textContent: detail }),
+      ]);
+    })
+  );
+}
+
+function renderSourceQuality(container, report) {
+  if (!container) {
+    return;
+  }
+  if (!report) {
+    container.replaceChildren(element("div", { className: "muted", textContent: "No source quality report available." }));
+    return;
+  }
+  const docs = report.documents || [];
+  const schemaCounts = report.parser_quality_schema_counts || {};
+  const schemaSummary = Object.entries(schemaCounts)
+    .map(([schema, count]) => `${schema}:${count}`)
+    .join(", ") || "no parser quality schema";
+  const scanCounts = report.source_scan_schema_counts || {};
+  const scanSummary = Object.entries(scanCounts)
+    .map(([schema, count]) => `${schema}:${count}`)
+    .join(", ") || "no source scan schema";
+  const summary = `${report.document_count || 0} docs, ${report.active_document_count || 0} active, `
+    + `${report.attention_required_count || 0} need attention, `
+    + `${report.parser_warning_count || 0} parser warnings, `
+    + `${report.source_scan_review_required_count || 0} source scans need review, `
+    + `parser schemas ${schemaSummary}, scan schemas ${scanSummary}`;
+  container.replaceChildren(
+    element("div", { className: "item" }, [
+      element("div", { textContent: "Source quality report" }),
+      element("small", {
+        textContent: `${summary}, raw bodies returned: ${report.raw_bodies_returned ? "yes" : "no"}`,
+      }),
+    ]),
+    ...docs.slice(0, 4).map((doc) => {
+      const flags = (doc.risk_flags || []).join(", ") || "ready";
+      const scanCategories = (doc.source_scan_finding_categories || []).join(", ") || "none";
+      const detail =
+        `${doc.source_connector || "manual"} | ${doc.source_mime || "mime"} | `
+        + `${doc.parser_name || "parser"} | ${doc.normalized_non_empty_line_count || 0} non-empty lines, `
+        + `${doc.section_count || 0} sections, ${doc.table_like_line_count || 0} table-like lines, `
+        + `scan ${doc.source_scan_status || "missing"}/${doc.source_scan_severity || "unknown"} (${scanCategories}), `
+        + `acl ${doc.acl_source || "none"}, ${flags}`;
+      return element("div", { className: "item" }, [
+        element("div", { textContent: `${doc.title || doc.id} (${doc.source_lifecycle_state || "unknown"})` }),
         element("small", { textContent: detail }),
       ]);
     })
@@ -141,6 +190,47 @@ function renderSourceBundleCatalog(container, catalog) {
         element("small", {
           textContent: `manifest ${hash}, acl ${acl}, raw bodies returned: ${catalog.raw_bodies_returned ? "yes" : "no"} | ${docPreview}`,
         }),
+      ]);
+    })
+  );
+}
+
+function renderParsePreview(container, preview) {
+  if (!container) {
+    return;
+  }
+  if (!preview) {
+    container.replaceChildren(element("div", { className: "muted", textContent: "No parser preview yet." }));
+    return;
+  }
+  const parser = preview.parser || {};
+  const file = preview.source_file || {};
+  const chunks = preview.chunks || [];
+  const warnings = [
+    ...(parser.warnings || []),
+    ...(preview.validation_warnings || []),
+  ];
+  const sourceScan = preview.source_scan || {};
+  const hash = preview.source_hash ? preview.source_hash.slice(0, 12) : "no hash";
+  container.replaceChildren(
+    element("div", { className: "item" }, [
+      element("div", { textContent: `${parser.name || "parser"} | ${preview.source_mime || "mime"} | ${preview.chunk_count || 0} chunks` }),
+      element("small", {
+        textContent:
+          `contract ${parser.contract_version || "unknown"}, hash ${hash}, `
+          + `${parser.normalized_characters || 0} chars, warnings ${warnings.length}, `
+          + `scan ${sourceScan.status || "missing"}/${sourceScan.severity || "unknown"}, `
+          + `file ${file.file_name || "inline body"}, raw body returned: ${preview.raw_body_returned ? "yes" : "no"}`,
+      }),
+    ]),
+    ...chunks.slice(0, 3).map((chunk) => {
+      const span = chunk.source_span || {};
+      const label = `chunk ${Number(chunk.chunk_index || 0) + 1}: ${chunk.character_count || 0} chars`;
+      const detail =
+        `${span.text_unit || "span"} ${span.start_char ?? "?"}-${span.end_char ?? "?"} | ${chunk.text_excerpt || ""}`;
+      return element("div", { className: "item" }, [
+        element("div", { textContent: label }),
+        element("small", { textContent: detail }),
       ]);
     })
   );
@@ -325,6 +415,24 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
   }
 
+  async function refreshSourceQuality(user) {
+    if (!elements.sourceQuality) {
+      return;
+    }
+    if (user?.role !== "admin") {
+      elements.sourceQuality.replaceChildren(
+        element("div", { className: "muted", textContent: "Source quality is admin-only." })
+      );
+      return;
+    }
+    try {
+      const data = await api(`/api/sources/quality?user_id=${encodeURIComponent(user.id)}&limit=12`);
+      renderSourceQuality(elements.sourceQuality, data.source_quality || {});
+    } catch (error) {
+      elements.sourceQuality.replaceChildren(element("div", { className: "muted", textContent: error.message }));
+    }
+  }
+
   async function refreshJobs(user) {
     if (!elements.jobs) {
       return;
@@ -345,6 +453,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     const user = currentUser();
     const isAdmin = user?.role === "admin";
     renderSummary(elements.summary, user);
+    elements.previewButton.disabled = !isAdmin;
     elements.button.disabled = !isAdmin;
     elements.syncButton.disabled = !isAdmin;
     elements.previewBundleButton.disabled = !isAdmin;
@@ -357,7 +466,42 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
     await refreshSourceBundleCatalog(user);
     await refreshConnectorStatus(user);
+    await refreshSourceQuality(user);
     await refreshJobs(user);
+  }
+
+  async function previewParse() {
+    const user = currentUser();
+    if (!user) {
+      setStatus(elements.status, "No user selected.", "error");
+      return;
+    }
+    elements.previewButton.disabled = true;
+    elements.button.disabled = true;
+    elements.syncButton.disabled = true;
+    elements.previewBundleButton.disabled = true;
+    elements.bundleButton.disabled = true;
+    elements.githubButton.disabled = true;
+    setStatus(elements.status, "Previewing parser contract...");
+    try {
+      const payload = await buildPayload(elements, user.id);
+      const data = await api("/api/documents/parse-preview", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      const preview = data.preview || {};
+      renderParsePreview(elements.parsePreview, preview);
+      const parserName = preview.parser?.name || "parser";
+      setStatus(
+        elements.status,
+        `Previewed ${parserName}: ${preview.chunk_count || 0} chunks, hash ${String(preview.source_hash || "").slice(0, 12)}..., raw body returned: ${preview.raw_body_returned ? "yes" : "no"}.`,
+        preview.would_index ? "ok" : "warn"
+      );
+    } catch (error) {
+      setStatus(elements.status, error.message, "error");
+    } finally {
+      await sync();
+    }
   }
 
   async function submit() {
@@ -366,6 +510,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
       setStatus(elements.status, "No user selected.", "error");
       return;
     }
+    elements.previewButton.disabled = true;
     elements.button.disabled = true;
     setStatus(elements.status, "Ingesting document...");
     try {
@@ -396,6 +541,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
       return;
     }
     elements.button.disabled = true;
+    elements.previewButton.disabled = true;
     elements.syncButton.disabled = true;
     elements.previewBundleButton.disabled = true;
     elements.bundleButton.disabled = true;
@@ -428,6 +574,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
       return;
     }
     elements.button.disabled = true;
+    elements.previewButton.disabled = true;
     elements.syncButton.disabled = true;
     elements.previewBundleButton.disabled = true;
     elements.bundleButton.disabled = true;
@@ -461,6 +608,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
       return;
     }
     elements.button.disabled = true;
+    elements.previewButton.disabled = true;
     elements.syncButton.disabled = true;
     elements.previewBundleButton.disabled = true;
     elements.bundleButton.disabled = true;
@@ -494,6 +642,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
       return;
     }
     elements.button.disabled = true;
+    elements.previewButton.disabled = true;
     elements.syncButton.disabled = true;
     elements.previewBundleButton.disabled = true;
     elements.bundleButton.disabled = true;
@@ -517,6 +666,7 @@ export function installIngestionPanel({ api, elements, currentUser, onIngested }
     }
   }
 
+  elements.previewButton.addEventListener("click", previewParse);
   elements.button.addEventListener("click", submit);
   elements.syncButton.addEventListener("click", syncSampleSource);
   elements.previewBundleButton.addEventListener("click", previewSourceBundle);

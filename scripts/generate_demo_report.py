@@ -35,6 +35,24 @@ def parse_eval_summaries(output: str) -> list[str]:
         ]
         if "unsafe_leak_failures" in metrics:
             parts.append(f"unsafe_leak_failures = {metrics['unsafe_leak_failures']}")
+        if "required_retrieval_recall_at_k" in metrics:
+            parts.append(f"required_retrieval_recall_at_k = {metrics['required_retrieval_recall_at_k']}")
+        if "mean_reciprocal_rank" in metrics:
+            parts.append(f"mean_reciprocal_rank = {metrics['mean_reciprocal_rank']}")
+        if "mean_ndcg_at_k" in metrics:
+            parts.append(f"mean_ndcg_at_k = {metrics['mean_ndcg_at_k']}")
+        if "mean_average_precision_at_k" in metrics:
+            parts.append(f"mean_average_precision_at_k = {metrics['mean_average_precision_at_k']}")
+        if "required_citation_coverage" in metrics:
+            parts.append(f"required_citation_coverage = {metrics['required_citation_coverage']}")
+        if "citation_retrieval_alignment" in metrics:
+            parts.append(f"citation_retrieval_alignment = {metrics['citation_retrieval_alignment']}")
+        if "security_event_coverage" in metrics:
+            parts.append(f"security_event_coverage = {metrics['security_event_coverage']}")
+        if "permission_block_coverage" in metrics:
+            parts.append(f"permission_block_coverage = {metrics['permission_block_coverage']}")
+        if "stale_source_filter_coverage" in metrics:
+            parts.append(f"stale_source_filter_coverage = {metrics['stale_source_filter_coverage']}")
         if "unsafe_direct_side_effect_failures" in metrics:
             parts.append(
                 f"unsafe_direct_side_effect_failures = {metrics['unsafe_direct_side_effect_failures']}"

@@ -1,0 +1,501 @@
+{
+  "schema_version": "ai-governance-control-registry-v1",
+  "updated_at": "2026-06-07",
+  "purpose": "Map the repository's AI security, governance, reliability, and EvalOps controls to public AI risk frameworks and local evidence commands. This is a local-first reference control register, not a compliance certification.",
+  "frameworks": [
+    {
+      "id": "owasp-llm-top-10-2025",
+      "name": "OWASP Top 10 for LLM Applications 2025",
+      "source_url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "covered_risks": [
+        "LLM01 Prompt Injection",
+        "LLM02 Sensitive Information Disclosure",
+        "LLM03 Supply Chain",
+        "LLM04 Data and Model Poisoning",
+        "LLM05 Improper Output Handling",
+        "LLM06 Excessive Agency",
+        "LLM07 System Prompt Leakage",
+        "LLM08 Vector and Embedding Weaknesses",
+        "LLM09 Misinformation",
+        "LLM10 Unbounded Consumption"
+      ]
+    },
+    {
+      "id": "nist-ai-rmf-genai-profile",
+      "name": "NIST AI RMF and Generative AI Profile",
+      "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "covered_functions": [
+        "Govern",
+        "Map",
+        "Measure",
+        "Manage"
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "GOV-01",
+      "title": "Model is not the security boundary",
+      "status": "implemented-local-control",
+      "owner_role": "knowledge-safety-reviewer",
+      "threat_ids": [
+        "T01",
+        "T02",
+        "T03",
+        "T10"
+      ],
+      "risk_families": [
+        "information_disclosure",
+        "prompt_injection",
+        "unsupported_answer",
+        "model_gateway_risk"
+      ],
+      "owasp_llm_2025": [
+        "LLM01 Prompt Injection",
+        "LLM02 Sensitive Information Disclosure",
+        "LLM07 System Prompt Leakage",
+        "LLM09 Misinformation"
+      ],
+      "nist_ai_rmf_functions": [
+        "Govern",
+        "Map",
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "Project 1 filters by tenant, role, and source group before retrieved evidence reaches answer generation.",
+        "Answering code cites accessible evidence or abstains.",
+        "Optional model gateway output cannot authorize access, approvals, audit events, or eval success."
+      ],
+      "evidence_files": [
+        "docs/threat_model.md",
+        "docs/adr_0002_model_is_not_security_boundary.md",
+        "secure-enterprise-knowledge-copilot/src/copilot/identity.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/answering.py",
+        "docs/model_gateway_safety.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py smoke",
+        "python -B scripts/dev.py model-gateway-safety"
+      ],
+      "remaining_production_gap": "Replace fictional local identity with SSO/OIDC, persist tenant and group state, run live RLS tests, and add production secret-management and model-provider policy controls."
+    },
+    {
+      "id": "GOV-02",
+      "title": "Prompt injection and untrusted retrieved content control",
+      "status": "implemented-local-control",
+      "owner_role": "knowledge-safety-reviewer",
+      "threat_ids": [
+        "T02",
+        "T03"
+      ],
+      "risk_families": [
+        "prompt_injection",
+        "retrieved_content_poisoning",
+        "unsupported_answer"
+      ],
+      "owasp_llm_2025": [
+        "LLM01 Prompt Injection",
+        "LLM04 Data and Model Poisoning",
+        "LLM05 Improper Output Handling",
+        "LLM09 Misinformation"
+      ],
+      "nist_ai_rmf_functions": [
+        "Map",
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "User prompt-injection attempts are rejected before retrieval.",
+        "Unsafe retrieved lines are treated as data and removed from answer evidence.",
+        "Regression evals include user and retrieved-content injection cases."
+      ],
+      "evidence_files": [
+        "secure-enterprise-knowledge-copilot/src/copilot/security.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/answering.py",
+        "secure-enterprise-knowledge-copilot/data/eval_cases.json",
+        "docs/threat_model.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py observability",
+        "python -B scripts/dev.py threat-model"
+      ],
+      "remaining_production_gap": "Add red-team datasets, live prompt-injection monitoring, source-system poisoning response runbooks, and post-incident eval promotion."
+    },
+    {
+      "id": "GOV-03",
+      "title": "Retrieval quality, citation alignment, and abstention",
+      "status": "implemented-local-control",
+      "owner_role": "retrieval-eval-reviewer",
+      "threat_ids": [
+        "T01",
+        "T03",
+        "T13"
+      ],
+      "risk_families": [
+        "rag_quality",
+        "citation_integrity",
+        "permission_leak",
+        "stale_source"
+      ],
+      "owasp_llm_2025": [
+        "LLM02 Sensitive Information Disclosure",
+        "LLM08 Vector and Embedding Weaknesses",
+        "LLM09 Misinformation"
+      ],
+      "nist_ai_rmf_functions": [
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "Retrieval metrics assert recall@k, MRR, nDCG@k, ranked context precision@k, citation coverage, citation-context alignment, security-event coverage, permission blocking, leak prevention, and stale-source filtering.",
+        "Source lifecycle filtering keeps superseded, deprecated, and deleted sources out of current answers while retaining audit history."
+      ],
+      "evidence_files": [
+        "scripts/check_project1_retrieval_metrics.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/source_lifecycle.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/reranking.py",
+        "secure-enterprise-knowledge-copilot/data/eval_cases.json",
+        "docs/portfolio_evidence_matrix.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py retrieval-metrics",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py claims"
+      ],
+      "remaining_production_gap": "Expand from checked-in local fixtures to large, noisy, conflicting, metadata-aware enterprise corpora with production embedding/reranker providers and online drift monitoring."
+    },
+    {
+      "id": "GOV-04",
+      "title": "Governed agent side effects",
+      "status": "implemented-local-control",
+      "owner_role": "agent-governance-reviewer",
+      "threat_ids": [
+        "T04",
+        "T05",
+        "T06"
+      ],
+      "risk_families": [
+        "unsafe_side_effect",
+        "approval_bypass",
+        "duplicate_execution"
+      ],
+      "owasp_llm_2025": [
+        "LLM01 Prompt Injection",
+        "LLM05 Improper Output Handling",
+        "LLM06 Excessive Agency"
+      ],
+      "nist_ai_rmf_functions": [
+        "Govern",
+        "Map",
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "Sensitive tools create approval requests instead of executing directly for investigator users.",
+        "Supervisor-only execution is enforced outside the model.",
+        "Approved side effects use idempotency keys and action-run receipts."
+      ],
+      "evidence_files": [
+        "regulated-customer-operations-agent/src/ops_agent/tools.py",
+        "regulated-customer-operations-agent/src/ops_agent/agent.py",
+        "regulated-customer-operations-agent/src/ops_agent/api.py",
+        "regulated-customer-operations-agent/src/ops_agent/storage.py",
+        "regulated-customer-operations-agent/data/eval_cases.json",
+        "docs/observability_integrity.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py contracts",
+        "python -B scripts/dev.py smoke",
+        "python -B scripts/dev.py observability",
+        "python -B scripts/dev.py evals"
+      ],
+      "remaining_production_gap": "Move approvals and action runs to a durable database, add approval expiry/escalation, scoped connector credentials, dry-run schemas, and compensation behavior."
+    },
+    {
+      "id": "GOV-05",
+      "title": "Action outbox, retry, dead-letter, and worker ownership",
+      "status": "implemented-local-control",
+      "owner_role": "agent-runtime-reviewer",
+      "threat_ids": [
+        "T06",
+        "T11"
+      ],
+      "risk_families": [
+        "duplicate_execution",
+        "runtime_recovery",
+        "audit_gap"
+      ],
+      "owasp_llm_2025": [
+        "LLM05 Improper Output Handling",
+        "LLM06 Excessive Agency",
+        "LLM10 Unbounded Consumption"
+      ],
+      "nist_ai_rmf_functions": [
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "Approved actions enqueue sanitized outbox dispatch checkpoints.",
+        "Pre-side-effect failures are visible as retryable or dead-lettered outbox records.",
+        "Local worker lease evidence and action-run receipts make dispatch behavior auditable."
+      ],
+      "evidence_files": [
+        "regulated-customer-operations-agent/src/ops_agent/storage.py",
+        "regulated-customer-operations-agent/src/ops_agent/tools.py",
+        "scripts/check_api_contracts.py",
+        "scripts/check_observability_integrity.py",
+        "docs/trace_timeline_examples.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py contracts",
+        "python -B scripts/dev.py observability",
+        "python -B scripts/dev.py smoke"
+      ],
+      "remaining_production_gap": "Replace local JSON with a transactional outbox, queue worker fleet, scheduled retry policy, lease expiry, poison-message handling, and load/failure tests."
+    },
+    {
+      "id": "GOV-06",
+      "title": "Trace, audit, redaction, and reviewed EvalOps loop",
+      "status": "implemented-local-control",
+      "owner_role": "evalops-reviewer",
+      "threat_ids": [
+        "T07",
+        "T11"
+      ],
+      "risk_families": [
+        "sensitive_trace_leakage",
+        "eval_drift",
+        "audit_gap"
+      ],
+      "owasp_llm_2025": [
+        "LLM02 Sensitive Information Disclosure",
+        "LLM09 Misinformation"
+      ],
+      "nist_ai_rmf_functions": [
+        "Govern",
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "Trace and audit integrity checks connect user-visible decisions to persisted trace IDs and audit events.",
+        "Trace exports and trace-to-eval candidates pass through public_trace_export_redaction_v1.",
+        "Reviewed eval ledger records fixture ownership, promotion targets, case counts, and nightly regression commands."
+      ],
+      "evidence_files": [
+        "scripts/check_observability_integrity.py",
+        "scripts/trace_redaction.py",
+        "scripts/export_trace_eval_candidates.py",
+        "scripts/check_trace_to_eval.py",
+        "scripts/check_reviewed_eval_ledger.py",
+        "docs/reviewed_eval_dataset_ledger.json",
+        "docs/trace_to_eval_workflow.md",
+        ".github/workflows/nightly-regression.yml"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py observability",
+        "python -B scripts/dev.py trace-redaction",
+        "python -B scripts/dev.py trace-to-eval-check",
+        "python -B scripts/dev.py reviewed-eval-ledger"
+      ],
+      "remaining_production_gap": "Send spans to a real observability backend, add dashboards, alerts, token/cost/latency/error metrics, human labels, and incident-driven eval promotion."
+    },
+    {
+      "id": "GOV-07",
+      "title": "Public repository, workflow, and supply-chain governance",
+      "status": "implemented-local-control",
+      "owner_role": "repository-maintainer",
+      "threat_ids": [
+        "T07",
+        "T08",
+        "T09"
+      ],
+      "risk_families": [
+        "public_pr_abuse",
+        "secret_leakage",
+        "supply_chain_drift"
+      ],
+      "owasp_llm_2025": [
+        "LLM02 Sensitive Information Disclosure",
+        "LLM03 Supply Chain",
+        "LLM05 Improper Output Handling"
+      ],
+      "nist_ai_rmf_functions": [
+        "Govern",
+        "Manage"
+      ],
+      "repo_controls": [
+        "GitHub Actions run with read-only permissions, safe triggers, hardened checkout, no secrets, and approved actions.",
+        "Public safety scans check for secret-like markers and local-machine leakage.",
+        "Dependency-surface checks preserve the stdlib-first local path, pinned Docker bases, and Dependabot coverage."
+      ],
+      "evidence_files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/nightly-regression.yml",
+        ".github/CODEOWNERS",
+        ".github/dependabot.yml",
+        "scripts/check_workflow_security.py",
+        "scripts/public_safety_scan.py",
+        "scripts/check_dependency_surface.py",
+        "docs/workflow_security.md",
+        "docs/supply_chain_security.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py workflow-security",
+        "python -B scripts/dev.py governance",
+        "python -B scripts/dev.py pr-policy",
+        "python -B scripts/dev.py dependency-surface",
+        "python -B scripts/dev.py safety"
+      ],
+      "remaining_production_gap": "Enable account-level branch protection and secret scanning, verify Dependabot/security-alert handling after public push, and formalize maintainer incident response."
+    },
+    {
+      "id": "GOV-08",
+      "title": "Source ingestion, ACL snapshot, and data poisoning controls",
+      "status": "implemented-local-control",
+      "owner_role": "connector-data-reviewer",
+      "threat_ids": [
+        "T01",
+        "T07",
+        "T13"
+      ],
+      "risk_families": [
+        "unauthorized_ingestion",
+        "data_poisoning",
+        "source_safety_scan",
+        "acl_drift",
+        "stale_source"
+      ],
+      "owasp_llm_2025": [
+        "LLM02 Sensitive Information Disclosure",
+        "LLM04 Data and Model Poisoning",
+        "LLM08 Vector and Embedding Weaknesses"
+      ],
+      "nist_ai_rmf_functions": [
+        "Map",
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "Project 1 ingestion is admin-only and records parser metadata, parser quality metadata, source scan metadata, source hashes, ACL source metadata, ACL snapshots, source permission IDs, permission drift, and audit events.",
+        "Source bundle and GitHub connector paths normalize external records into the same source sync job boundary.",
+        "Source quality inventory surfaces parser quality schema coverage, source scan coverage, ACL snapshot coverage, lifecycle state, parser warnings, scan review counts, and source risk flags without returning raw bodies or raw scan matches.",
+        "Opt-in prune keeps removed connector sources out of current retrieval."
+      ],
+      "evidence_files": [
+        "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/source_bundle_connector.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/github_connector.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/ingestion_jobs.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/source_quality.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py",
+        "secure-enterprise-knowledge-copilot/src/copilot/source_scanning.py",
+        "scripts/check_project1_parser_quality_contract.py",
+        "scripts/check_project1_source_scan_contract.py",
+        "docs/api_contracts.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py contracts",
+        "python -B scripts/dev.py api-docs",
+        "python -B scripts/dev.py parser-quality",
+        "python -B scripts/dev.py source-scan",
+        "python -B scripts/dev.py retrieval-metrics"
+      ],
+      "remaining_production_gap": "Add real connectors, source user/group sync, parser isolation, enterprise DLP, malware scanning, live deletion/prune checks, and backfill recovery."
+    },
+    {
+      "id": "GOV-09",
+      "title": "Runtime UI, API, and error hygiene boundaries",
+      "status": "implemented-local-control",
+      "owner_role": "runtime-contract-reviewer",
+      "threat_ids": [
+        "T07",
+        "T12"
+      ],
+      "risk_families": [
+        "browser_route_surprise",
+        "internal_error_leakage",
+        "api_contract_drift"
+      ],
+      "owasp_llm_2025": [
+        "LLM02 Sensitive Information Disclosure",
+        "LLM05 Improper Output Handling"
+      ],
+      "nist_ai_rmf_functions": [
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "Runtime UI contracts verify content types, safety headers, JSON 404s, and traversal blocking.",
+        "Unexpected backend exceptions return generic browser-visible JSON errors.",
+        "API documentation and frontend modules are checked against source routes."
+      ],
+      "evidence_files": [
+        "scripts/check_runtime_ui_contracts.py",
+        "scripts/check_error_hygiene.py",
+        "scripts/check_api_documentation.py",
+        "docs/runtime_ui_contracts.md",
+        "docs/error_hygiene.md",
+        "docs/api_contracts.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py ui-contracts",
+        "python -B scripts/dev.py error-hygiene",
+        "python -B scripts/dev.py api-docs"
+      ],
+      "remaining_production_gap": "Add real WAF/API-gateway policy, production CORS/session hardening, structured API auth middleware, and broader browser/security testing."
+    },
+    {
+      "id": "GOV-10",
+      "title": "Release gate and production-readiness honesty",
+      "status": "implemented-local-control",
+      "owner_role": "release-reliability-reviewer",
+      "threat_ids": [
+        "T03",
+        "T08",
+        "T11"
+      ],
+      "risk_families": [
+        "release_regression",
+        "overclaiming",
+        "evidence_staleness"
+      ],
+      "owasp_llm_2025": [
+        "LLM03 Supply Chain",
+        "LLM09 Misinformation",
+        "LLM10 Unbounded Consumption"
+      ],
+      "nist_ai_rmf_functions": [
+        "Govern",
+        "Measure",
+        "Manage"
+      ],
+      "repo_controls": [
+        "Quality gate runs safety, assets/docs, UI contracts, health, smoke flows, evals, replay artifacts, retrieval metrics, and claim consistency.",
+        "Production docs explicitly position the repo as production-minded reference implementation, not production software.",
+        "Project 3 blocks unsafe rollout expansion from failed eval evidence."
+      ],
+      "evidence_files": [
+        "scripts/quality_gate.py",
+        "scripts/check_claim_consistency.py",
+        "ai-reliability-incident-console/src/reliability_console/triage.py",
+        "docs/industrial_benchmark_gap_plan_2026_06_07.md",
+        "docs/industrial_true_production_gap_plan_2026_06_07.md",
+        "docs/production_upgrade_notes.md",
+        "docs/portfolio_evidence_matrix.md"
+      ],
+      "evidence_commands": [
+        "python -B scripts/dev.py quality",
+        "python -B scripts/dev.py smoke",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py claims"
+      ],
+      "remaining_production_gap": "Add production SLOs, live release rollback, incident on-call ownership, deployment evidence, and external audit/review checkpoints before any production-readiness claim."
+    }
+  ]
+}

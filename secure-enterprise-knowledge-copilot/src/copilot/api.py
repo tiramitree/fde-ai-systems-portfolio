@@ -13,10 +13,11 @@ from .auth_tokens import (
 from .connector_status import list_connector_status
 from .evals import latest_eval_run, run_evals
 from .github_connector import sync_github_repository
-from .ingestion import IngestionError, ingest_document, sync_source_batch
+from .ingestion import IngestionError, ingest_document, preview_document_parse, sync_source_batch
 from .ingestion_jobs import list_ingestion_jobs, submit_ingestion_job
 from .repositories import connect_repository
 from .source_bundle_connector import list_source_bundle_catalog, sync_source_bundle
+from .source_quality import list_source_quality
 
 
 class ApiError(Exception):
@@ -33,6 +34,8 @@ class CopilotApi:
         with connect_repository() as repo:
             if path == "/api/health":
                 return {"status": "ok", "app": self.app_name}
+            if path == "/api/ready":
+                return self._readiness(repo)
             if path == "/api/users":
                 return {"users": repo.list_users()}
             if path == "/api/documents":
@@ -63,6 +66,15 @@ class CopilotApi:
                     )
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc
+            if path == "/api/sources/quality":
+                try:
+                    return list_source_quality(
+                        repo,
+                        user_id=self._resolve_user_id(repo, headers, self._first_or_none(query, "user_id"), "avery"),
+                        limit=self._int(query, "limit", 100),
+                    )
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
             if path == "/api/connectors/source-bundle/catalog":
                 try:
                     payload = {
@@ -84,6 +96,24 @@ class CopilotApi:
                 return {"scenario": snapshot}
         raise ApiError(404, f"Unknown endpoint: {path}")
 
+    def _readiness(self, repo: object) -> dict:
+        snapshot = repo.load_scenario_snapshot()
+        eval_run = latest_eval_run(repo)
+        users = repo.list_users()
+        return {
+            "status": "ready",
+            "app": self.app_name,
+            "ready": True,
+            "checks": {
+                "storage": "ok",
+                "seed_data": "ok" if users else "missing",
+                "eval_state": "ok" if isinstance(eval_run, dict) else "missing",
+                "scenario_snapshot": "ok" if isinstance(snapshot.get("files"), list) else "missing",
+                "users": len(users),
+                "scenario_files": len(snapshot.get("files", [])) if isinstance(snapshot.get("files"), list) else 0,
+            },
+        }
+
     def post(self, path: str, body: dict, headers: object | None = None) -> dict:
         with connect_repository() as repo:
             if path == "/api/auth/demo-token":
@@ -100,10 +130,15 @@ class CopilotApi:
                 }
             if path == "/api/query":
                 user_id = self._resolve_user_id(repo, headers, str(body.get("user_id", "")).strip(), "")
-                return generate_answer(repo, user_id, body.get("question", ""))
+                return generate_answer(repo, user_id, body.get("question", ""), request_id=self._header(headers, "X-Request-ID"))
             if path == "/api/documents/ingest":
                 try:
                     return ingest_document(repo, self._body_with_resolved_user(repo, body, headers))
+                except IngestionError as exc:
+                    raise ApiError(exc.status, exc.message) from exc
+            if path == "/api/documents/parse-preview":
+                try:
+                    return preview_document_parse(repo, self._body_with_resolved_user(repo, body, headers))
                 except IngestionError as exc:
                     raise ApiError(exc.status, exc.message) from exc
             if path == "/api/sources/sync":

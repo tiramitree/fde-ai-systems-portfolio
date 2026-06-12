@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 import uuid
 
 from .storage import (
@@ -39,6 +40,16 @@ def severity_rank(severity: str) -> int:
     return {"low": 1, "medium": 2, "high": 3, "critical": 4}.get(severity, 0)
 
 
+def _latency_ms(start: float) -> float:
+    return round((time.perf_counter() - start) * 1000, 2)
+
+
+def _with_request_id(payload: dict, request_id: str) -> dict:
+    if request_id:
+        payload["request_id"] = request_id
+    return payload
+
+
 def root_cause_for(incident: dict, failures: list[dict]) -> str:
     categories = {incident.get("category", "")}
     categories.update(str(case.get("category", "")) for case in failures)
@@ -74,7 +85,8 @@ def remediation_steps(incident: dict, failures: list[dict], release_blocked: boo
     return steps
 
 
-def triage_incident(store: JsonStore, user_id: str, release_id: str, incident_id: str) -> dict:
+def triage_incident(store: JsonStore, user_id: str, release_id: str, incident_id: str, request_id: str = "") -> dict:
+    start = time.perf_counter()
     user = get_user(store, user_id)
     if not user:
         raise ValueError(f"Unknown user_id: {user_id}")
@@ -98,57 +110,74 @@ def triage_incident(store: JsonStore, user_id: str, release_id: str, incident_id
     severity = "critical" if high_risk and severity_rank(incident.get("severity", "")) >= 3 else incident.get("severity", "medium")
     recommendation = "block_release" if release_blocked else "monitor"
     trace_id = str(uuid.uuid4())
-    decision = {
-        "trace_id": trace_id,
-        "created_at": utc_now(),
-        "user_id": user_id,
-        "release_id": release_id,
-        "incident_id": incident_id,
-        "severity": severity,
-        "recommendation": recommendation,
-        "release_blocked": release_blocked,
-        "root_cause": root_cause_for(incident, failures),
-        "confidence": 0.91 if failures else 0.72,
-    }
-    response = {
-        "trace_id": trace_id,
-        "release": release,
-        "incident": incident,
-        "decision": decision,
-        "failed_evals": failures,
-        "remediation_steps": remediation_steps(incident, failures, release_blocked),
-        "evidence": {
-            "eval_run_id": eval_run.get("id") if eval_run else None,
-            "linked_eval_case_ids": [case["id"] for case in failures],
-            "runbook_ids": incident.get("runbook_ids", []),
-            "signals": incident.get("signals", []),
-        },
-    }
-    append_triage_decision(store, decision)
-    append_trace(
-        store,
+    decision = _with_request_id(
         {
-            "id": trace_id,
-            "created_at": decision["created_at"],
+            "trace_id": trace_id,
+            "created_at": utc_now(),
             "user_id": user_id,
             "release_id": release_id,
             "incident_id": incident_id,
-            "result": {
-                "recommendation": recommendation,
-                "release_blocked": release_blocked,
-                "failed_eval_count": len(failures),
+            "severity": severity,
+            "recommendation": recommendation,
+            "release_blocked": release_blocked,
+            "root_cause": root_cause_for(incident, failures),
+            "confidence": 0.91 if failures else 0.72,
+        },
+        request_id,
+    )
+    response = _with_request_id(
+        {
+            "trace_id": trace_id,
+            "release": release,
+            "incident": incident,
+            "decision": decision,
+            "failed_evals": failures,
+            "remediation_steps": remediation_steps(incident, failures, release_blocked),
+            "evidence": {
+                "eval_run_id": eval_run.get("id") if eval_run else None,
+                "linked_eval_case_ids": [case["id"] for case in failures],
+                "runbook_ids": incident.get("runbook_ids", []),
+                "signals": incident.get("signals", []),
             },
         },
+        request_id,
+    )
+    latency_ms = _latency_ms(start)
+    decision["latency_ms"] = latency_ms
+    response["latency_ms"] = latency_ms
+    append_triage_decision(store, decision)
+    append_trace(
+        store,
+        _with_request_id(
+            {
+                "id": trace_id,
+                "created_at": decision["created_at"],
+                "user_id": user_id,
+                "release_id": release_id,
+                "incident_id": incident_id,
+                "result": {
+                    "recommendation": recommendation,
+                    "release_blocked": release_blocked,
+                    "failed_eval_count": len(failures),
+                    "latency_ms": latency_ms,
+                    **({"request_id": request_id} if request_id else {}),
+                },
+            },
+            request_id,
+        ),
     )
     append_audit(
         store,
         user_id,
         "incident_triaged",
-        {
-            "trace_id": trace_id,
-            "release_id": release_id,
-            "incident_id": incident_id,
-            "recommendation": recommendation,
-        },
+        _with_request_id(
+            {
+                "trace_id": trace_id,
+                "release_id": release_id,
+                "incident_id": incident_id,
+                "recommendation": recommendation,
+            },
+            request_id,
+        ),
     )
     return response

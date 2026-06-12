@@ -6,6 +6,7 @@ import json
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -97,7 +98,11 @@ def wait_for_health(url: str, seconds: int = 15) -> bool:
     return False
 
 
-def start_service(service: dict) -> subprocess.Popen:
+def service_state_path(state_root: Path, service: dict) -> Path:
+    return state_root / f"{service['name']}-runtime_state.json"
+
+
+def start_service(service: dict, state_root: Path) -> subprocess.Popen:
     print(f"Starting {service['name']} on port {service['port']}")
     return subprocess.Popen(
         [
@@ -105,6 +110,8 @@ def start_service(service: dict) -> subprocess.Popen:
             "-B",
             "app.py",
             "--reset",
+            "--state-path",
+            str(service_state_path(state_root, service)),
             "--port",
             str(service["port"]),
         ],
@@ -227,11 +234,34 @@ def scenario_contract(base_url: str, label: str, expected_app: str) -> list[Chec
     return checks
 
 
+def readiness_contract(base_url: str, label: str, expected_app: str, expected_checks: set[str]) -> Check:
+    status, readiness = get_json(f"{base_url}/api/ready")
+    checks = readiness.get("checks")
+    actual_checks = set(checks.keys()) if isinstance(checks, dict) else set()
+    return check(
+        status == 200
+        and readiness.get("status") == "ready"
+        and readiness.get("app") == expected_app
+        and readiness.get("ready") is True
+        and expected_checks.issubset(actual_checks),
+        f"{label} readiness contract",
+        f"status={status}; checks={sorted(actual_checks)}",
+    )
+
+
 def project_1_contracts(base_url: str) -> list[Check]:
     checks: list[Check] = []
 
     status, health = get_json(f"{base_url}/api/health")
     checks.append(check(status == 200 and health == {"status": "ok", "app": "secure-enterprise-knowledge-copilot"}, "P1 health contract", json.dumps(health)))
+    checks.append(
+        readiness_contract(
+            base_url,
+            "P1",
+            "secure-enterprise-knowledge-copilot",
+            {"storage", "seed_data", "eval_state", "scenario_snapshot", "users", "scenario_files"},
+        )
+    )
 
     status, users = get_json(f"{base_url}/api/users")
     checks.append(check(status == 200 and isinstance(users.get("users"), list) and users["users"], "P1 users list contract", f"users={len(users.get('users', []))}"))
@@ -370,6 +400,15 @@ def project_1_contracts(base_url: str) -> list[Check]:
     status, forbidden = post_json(f"{base_url}/api/documents/ingest", forbidden_payload)
     checks.append(check(status == 403 and "Only admin users" in forbidden.get("error", ""), "P1 ingestion rejects non-admin users", json.dumps(forbidden)))
 
+    status, forbidden_preview = post_json(f"{base_url}/api/documents/parse-preview", forbidden_payload)
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_preview.get("error", ""),
+            "P1 parse preview rejects non-admin users",
+            json.dumps(forbidden_preview),
+        )
+    )
+
     ingest_payload = {
         "user_id": "avery",
         "replace": True,
@@ -388,10 +427,41 @@ def project_1_contracts(base_url: str) -> list[Check]:
             "updated_at": "2026-06-06",
         },
     }
+    status, parse_preview = post_json(f"{base_url}/api/documents/parse-preview", ingest_payload)
+    preview = parse_preview.get("preview", {})
+    preview_parser = preview.get("parser", {})
+    preview_quality = preview_parser.get("quality", {})
+    preview_scan = preview.get("source_scan", {})
+    preview_chunks = preview.get("chunks", [])
+    checks.append(
+        check(
+            status == 200
+            and preview.get("raw_body_returned") is False
+            and preview.get("would_index") is True
+            and len(preview.get("source_hash", "")) == 64
+            and preview_parser.get("contract_version") == "source_parser_contract_v1"
+            and preview_parser.get("quality_schema_version") == "source_parser_quality_v1"
+            and preview_parser.get("name") == "markdown-v1"
+            and preview_quality.get("schema_version") == "source_parser_quality_v1"
+            and preview_quality.get("parser_name") == "markdown-v1"
+            and preview_quality.get("normalized_character_count") == preview_parser.get("normalized_characters")
+            and preview_scan.get("schema_version") == "source_scan_v1"
+            and preview_scan.get("raw_matches_returned") is False
+            and preview.get("chunk_count", 0) >= 1
+            and preview.get("chunk_source_span_unit") == "normalized_text"
+            and isinstance(preview_chunks, list)
+            and preview_chunks
+            and valid_source_span(preview_chunks[0].get("source_span")),
+            "P1 parse preview contract",
+            f"status={status}; parser={preview_parser.get('name')}; chunks={preview.get('chunk_count')}; raw_body_returned={preview.get('raw_body_returned')}",
+        )
+    )
+
     status, ingestion = post_json(f"{base_url}/api/documents/ingest", ingest_payload)
     ingested_doc = ingestion.get("document", {})
     parser = ingestion.get("ingestion", {}).get("parser", {})
     ingestion_metadata = ingestion.get("ingestion", {})
+    ingestion_scan = ingestion_metadata.get("source_scan", {})
     checks.append(
         check(
             status == 200
@@ -399,6 +469,8 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and "body" not in ingested_doc
             and ingestion.get("chunk_count", 0) >= 1
             and len(ingestion_metadata.get("source_hash", "")) == 64
+            and ingestion_scan.get("schema_version") == "source_scan_v1"
+            and ingestion_scan.get("raw_matches_returned") is False
             and ingestion_metadata.get("chunk_source_span_unit") == "normalized_text"
             and ingestion_metadata.get("chunk_source_span_count") == ingestion.get("chunk_count"),
             "P1 admin ingestion contract",
@@ -408,10 +480,14 @@ def project_1_contracts(base_url: str) -> list[Check]:
     checks.append(
         check(
             isinstance(parser, dict)
+            and parser.get("contract_version") == "source_parser_contract_v1"
+            and parser.get("quality_schema_version") == "source_parser_quality_v1"
             and parser.get("name") == "markdown-v1"
             and isinstance(parser.get("normalized_characters"), int)
             and parser.get("normalized_characters", 0) >= 20
             and isinstance(parser.get("metadata"), dict)
+            and parser.get("quality", {}).get("schema_version") == "source_parser_quality_v1"
+            and parser.get("quality", {}).get("normalized_character_count") == parser.get("normalized_characters")
             and isinstance(parser.get("warnings"), list),
             "P1 ingestion parser metadata contract",
             f"parser={parser.get('name')}; chars={parser.get('normalized_characters')}",
@@ -455,7 +531,8 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and csv_parser.get("name") == "csv-v1"
             and csv_parser.get("metadata", {}).get("row_count") == 2
             and csv_parser.get("metadata", {}).get("column_count") == 3
-            and csv_parser.get("metadata", {}).get("has_header") is True,
+            and csv_parser.get("metadata", {}).get("has_header") is True
+            and csv_parser.get("quality", {}).get("csv_data_row_count") == 2,
             "P1 CSV ingestion parser contract",
             f"status={status}; parser={csv_parser.get('name')}; metadata={csv_parser.get('metadata')}",
         )
@@ -599,8 +676,11 @@ def project_1_contracts(base_url: str) -> list[Check]:
             and sync_metadata.get("acl_snapshot_version") == "fixture-acl-v1"
             and sync_metadata.get("document_count") == 3
             and sync_metadata.get("chunk_count", 0) >= 3
+            and isinstance(sync_metadata.get("source_scan_review_required_count"), int)
+            and isinstance(sync_metadata.get("source_scan_finding_counts"), dict)
             and len(synced_documents) == 3
             and all("body" not in doc for doc in synced_documents)
+            and all(doc.get("source_scan", {}).get("schema_version") == "source_scan_v1" for doc in synced_documents)
             and synced_documents[0].get("source_connector") == "local-drive-demo"
             and synced_documents[0].get("external_id") == "drive-doc-source-sync-playbook-2026"
             and synced_documents[0].get("acl_source") == "fixture-acl-v1"
@@ -1417,28 +1497,85 @@ def project_1_contracts(base_url: str) -> list[Check]:
     checks.append(
         check(
             status == 200
-            and connector_status.get("status_source") == "ingestion_jobs"
+            and connector_status.get("status_source") == "ingestion_jobs+indexed_documents"
             and connector_status.get("connector_count") >= 3
             and github_status.get("health") == "healthy"
             and github_status.get("latest_job_id") == github_job.get("id")
             and github_status.get("latest_cursor") == "2026-06-06T04:00:00Z"
             and github_status.get("document_count") == 2
             and github_status.get("chunk_count", 0) >= 2
+            and github_status.get("indexed_document_count") == 2
+            and github_status.get("active_document_count") == 2
+            and github_status.get("filtered_document_count") == 0
+            and github_status.get("index_matches_latest_job") is True
+            and github_status.get("index_health") == "indexed"
+            and github_status.get("parser_warning_count") == 0
+            and any(str(source).startswith("github:") for source in github_status.get("acl_sources", []))
             and source_bundle_status.get("health") == "healthy"
             and source_bundle_status.get("latest_job_id") == source_bundle_job.get("id")
             and source_bundle_status.get("latest_cursor") == "2026-06-07T00:00:00Z"
             and source_bundle_status.get("document_count") == 3
             and source_bundle_status.get("chunk_count", 0) >= 3
+            and source_bundle_status.get("indexed_document_count") == 3
+            and source_bundle_status.get("active_document_count") == 3
+            and source_bundle_status.get("source_lifecycle_counts", {}).get("active") == 3
+            and "source-bundle:operations-handbook:v1" in source_bundle_status.get("source_acl_versions", [])
             and local_status.get("health") == "recovered"
             and local_status.get("latest_job_status") == "succeeded"
             and local_status.get("latest_cursor") == "2026-06-06T03:05:00Z"
             and local_status.get("dead_letter_count", 0) >= 1
             and local_status.get("success_count", 0) >= 1
+            and local_status.get("indexed_document_count", 0) >= local_status.get("document_count", 0)
+            and local_status.get("active_document_count", 0) >= 1
+            and local_status.get("index_health") == "indexed"
             and "eval summary exports must include" not in serialized_connector_status
             and "Sev2 incidents from the source bundle" not in serialized_connector_status
             and "Durable ingestion jobs must record queued" not in serialized_connector_status,
-            "P1 connector status summarizes job health without raw bodies",
+            "P1 connector status summarizes job and indexed-source health without raw bodies",
             f"connectors={len(connectors)}; github={github_status.get('health')}; source_bundle={source_bundle_status.get('health')}; local={local_status.get('health')}",
+        )
+    )
+
+    status, forbidden_source_quality = get_json(f"{base_url}/api/sources/quality?user_id=alice")
+    checks.append(
+        check(
+            status == 403 and "Only admin users" in forbidden_source_quality.get("error", ""),
+            "P1 source quality rejects non-admin users",
+            json.dumps(forbidden_source_quality),
+        )
+    )
+
+    status, source_quality_payload = get_json(f"{base_url}/api/sources/quality?user_id=avery&limit=30")
+    source_quality = source_quality_payload.get("source_quality", {})
+    quality_docs = source_quality.get("documents", [])
+    ingested_quality_doc = next((item for item in quality_docs if item.get("id") == ingested_doc.get("id")), {})
+    serialized_source_quality = json.dumps(source_quality_payload)
+    checks.append(
+        check(
+            status == 200
+            and source_quality.get("schema_version") == "source_quality_report_v1"
+            and source_quality.get("actor_user_id") == "avery"
+            and source_quality.get("document_count", 0) >= len(quality_docs)
+            and source_quality.get("active_document_count", 0) >= 1
+            and isinstance(source_quality.get("attention_required_count"), int)
+            and source_quality.get("raw_bodies_returned") is False
+            and source_quality.get("parser_quality_schema_counts", {}).get("source_parser_quality_v1", 0) >= 1
+            and source_quality.get("source_scan_schema_counts", {}).get("source_scan_v1", 0) >= 1
+            and isinstance(source_quality.get("source_scan_review_required_count"), int)
+            and isinstance(source_quality.get("source_scan_finding_counts"), dict)
+            and isinstance(quality_docs, list)
+            and quality_docs
+            and ingested_quality_doc.get("parser_quality_schema") == "source_parser_quality_v1"
+            and ingested_quality_doc.get("source_scan_schema") == "source_scan_v1"
+            and ingested_quality_doc.get("source_scan_status") in {"passed", "review_required"}
+            and isinstance(ingested_quality_doc.get("source_scan_finding_categories"), list)
+            and ingested_quality_doc.get("normalized_non_empty_line_count", 0) >= 1
+            and isinstance(ingested_quality_doc.get("risk_flags"), list)
+            and "Employee Travel Expense Policy 2026\n\nEmployees" not in serialized_source_quality
+            and "eval summary exports must include" not in serialized_source_quality
+            and "Sev2 incidents from the source bundle" not in serialized_source_quality,
+            "P1 source quality summarizes parser, source scan, ACL, lifecycle, and risk flags without raw bodies",
+            f"docs={source_quality.get('document_count')}; attention={source_quality.get('attention_required_count')}; schemas={source_quality.get('parser_quality_schema_counts')}; scans={source_quality.get('source_scan_schema_counts')}",
         )
     )
 
@@ -1691,6 +1828,14 @@ def project_2_contracts(base_url: str) -> list[Check]:
 
     status, health = get_json(f"{base_url}/api/health")
     checks.append(check(status == 200 and health == {"status": "ok", "app": "regulated-customer-operations-agent"}, "P2 health contract", json.dumps(health)))
+    checks.append(
+        readiness_contract(
+            base_url,
+            "P2",
+            "regulated-customer-operations-agent",
+            {"storage", "seed_data", "eval_state", "scenario_snapshot", "users", "cases", "approvals", "scenario_files"},
+        )
+    )
 
     status, users = get_json(f"{base_url}/api/users")
     checks.append(check(status == 200 and isinstance(users.get("users"), list) and users["users"], "P2 users list contract", f"users={len(users.get('users', []))}"))
@@ -1698,11 +1843,82 @@ def project_2_contracts(base_url: str) -> list[Check]:
         ok, detail = expect_types(users["users"][0], {"id": str, "name": str, "role": str})
         checks.append(check(ok, "P2 user shape contract", detail))
 
+    status, ivy_token = post_json(f"{base_url}/api/auth/demo-token", {"user_id": "ivy"})
+    ivy_bearer = {"Authorization": f"Bearer {ivy_token.get('token', '')}"}
+    checks.append(
+        check(
+            status == 200
+            and ivy_token.get("token_type") == "Bearer"
+            and ivy_token.get("auth_policy") == "local_signed_demo_token_v1"
+            and ivy_token.get("auth_context", {}).get("user_id") == "ivy"
+            and ivy_token.get("auth_context", {}).get("role") == "investigator",
+            "P2 local signed demo auth token contract",
+            f"status={status}; policy={ivy_token.get('auth_policy')}; subject={ivy_token.get('auth_context', {}).get('user_id')}",
+        )
+    )
+    status, sam_token = post_json(f"{base_url}/api/auth/demo-token", {"user_id": "sam"})
+    sam_bearer = {"Authorization": f"Bearer {sam_token.get('token', '')}"}
+    checks.append(
+        check(
+            status == 200
+            and sam_token.get("auth_context", {}).get("user_id") == "sam"
+            and sam_token.get("auth_context", {}).get("role") == "supervisor",
+            "P2 supervisor demo auth token contract",
+            f"status={status}; subject={sam_token.get('auth_context', {}).get('user_id')}",
+        )
+    )
+    status, token_general = post_json(
+        f"{base_url}/api/agent",
+        {"message": "What time is it?"},
+        headers=ivy_bearer,
+    )
+    checks.append(
+        check(
+            status == 200
+            and token_general.get("intent") == "general"
+            and token_general.get("approvals") == []
+            and isinstance(token_general.get("trace_id"), str),
+            "P2 bearer auth resolves agent subject",
+            f"status={status}; trace={token_general.get('trace_id')}",
+        )
+    )
+    status, token_mismatch = post_json(
+        f"{base_url}/api/agent",
+        {"user_id": "sam", "message": "What can you do?"},
+        headers=ivy_bearer,
+    )
+    checks.append(
+        check(
+            status == 403 and "authenticated subject" in token_mismatch.get("error", ""),
+            "P2 bearer auth rejects identity mismatch",
+            f"status={status}; error={token_mismatch.get('error')}",
+        )
+    )
+
     status, cases = get_json(f"{base_url}/api/cases")
     checks.append(check(status == 200 and isinstance(cases.get("cases"), list) and cases["cases"], "P2 cases list contract", f"cases={len(cases.get('cases', []))}"))
     if cases.get("cases"):
         ok, detail = expect_types(cases["cases"][0], {"id": str, "seller_id": str, "product_id": str, "status": str})
         checks.append(check(ok, "P2 case shape contract", detail))
+
+    status, tool_registry = get_json(f"{base_url}/api/tool-registry")
+    tools = tool_registry.get("tools", [])
+    send_notice_tool = next((tool for tool in tools if tool.get("name") == "send_notice"), {})
+    checks.append(
+        check(
+            status == 200
+            and tool_registry.get("schema_version") == "tool_registry_v1"
+            and isinstance(tools, list)
+            and len(tools) >= 8
+            and send_notice_tool.get("side_effect") is True
+            and send_notice_tool.get("approval_required") is True
+            and send_notice_tool.get("dry_run_required") is True
+            and send_notice_tool.get("raw_payload_returned") is False
+            and "supervisor" in send_notice_tool.get("allowed_roles", []),
+            "P2 tool registry exposes governed side-effect tools",
+            f"tools={len(tools)}; send_notice={send_notice_tool.get('credential_scope')}",
+        )
+    )
 
     status, investigation = post_json(
         f"{base_url}/api/agent",
@@ -1723,6 +1939,8 @@ def project_2_contracts(base_url: str) -> list[Check]:
         "outputs",
         "case",
         "model_router",
+        "latency_ms",
+        "workflow_run",
     }
     ok, detail = expect_types(
         investigation,
@@ -1734,12 +1952,91 @@ def project_2_contracts(base_url: str) -> list[Check]:
             "approvals": list,
             "blocked_actions": list,
             "cited_policies": list,
+            "latency_ms": (int, float),
+            "workflow_run": dict,
         },
     )
     checks.append(check(status == 200 and has_keys(investigation, agent_keys) and ok, "P2 agent response contract", detail))
     checks.append(check(investigation.get("model_router") == "local", "P2 default router source contract", f"model_router={investigation.get('model_router')}"))
     approval_id = investigation["approvals"][0]["id"] if investigation.get("approvals") else ""
     checks.append(check(bool(approval_id) and investigation.get("blocked_actions"), "P2 approval plus blocked-side-effect contract", f"approval={approval_id}"))
+    approval_preview = investigation["approvals"][0] if investigation.get("approvals") else {}
+    serialized_investigation = json.dumps(investigation)
+    checks.append(
+        check(
+            approval_preview.get("approval_policy") == "approval_policy_v1"
+            and approval_preview.get("tool_registry_version") == "tool_registry_v1"
+            and approval_preview.get("owner_role") == "supervisor"
+            and approval_preview.get("review_status") == "pending"
+            and approval_preview.get("raw_payload_returned") is False
+            and "payload" not in approval_preview
+            and len(approval_preview.get("payload_sha256", "")) == 64
+            and approval_preview.get("dry_run_preview", {}).get("schema_version") == "dry_run_preview_v1"
+            and approval_preview.get("dry_run_preview", {}).get("raw_body_returned") is False
+            and "Seller Market Blue" not in serialized_investigation
+            and "Please remove the listing" not in serialized_investigation,
+            "P2 agent response exposes sanitized approval dry-run preview",
+            f"approval={approval_id}; expires={approval_preview.get('expires_at')}",
+        )
+    )
+    workflow_run = investigation.get("workflow_run", {})
+    checks.append(
+        check(
+            workflow_run.get("schema_version") == "workflow_run_v1"
+            and workflow_run.get("status") == "waiting_for_approval"
+            and workflow_run.get("stage") == "approval_requested"
+            and workflow_run.get("trace_id") == investigation.get("trace_id")
+            and approval_id in workflow_run.get("approval_ids", [])
+            and workflow_run.get("raw_message_returned") is False
+            and len(workflow_run.get("message_sha256", "")) == 64,
+            "P2 agent workflow checkpoint waits on approval",
+            f"workflow={workflow_run.get('id')}; status={workflow_run.get('status')}; approvals={workflow_run.get('approval_ids')}",
+        )
+    )
+
+    status, pending_outbox = get_json(f"{base_url}/api/action-outbox?limit=5")
+    pending_outbox_items = pending_outbox.get("action_outbox", [])
+    pending_outbox_item = next((item for item in pending_outbox_items if item.get("approval_id") == approval_id), {})
+    serialized_pending_outbox = json.dumps(pending_outbox)
+    checks.append(
+        check(
+            status == 200
+            and pending_outbox_item.get("status") == "awaiting_approval"
+            and pending_outbox_item.get("action_type") == "send_notice"
+            and pending_outbox_item.get("attempt_count") == 0
+            and pending_outbox_item.get("lease_count") == 0
+            and pending_outbox_item.get("lease_id") is None
+            and pending_outbox_item.get("last_leased_by") is None
+            and pending_outbox_item.get("raw_payload_returned") is False
+            and pending_outbox_item.get("approval_policy") == "approval_policy_v1"
+            and pending_outbox_item.get("tool_registry_version") == "tool_registry_v1"
+            and pending_outbox_item.get("approval_expires_at") == approval_preview.get("expires_at")
+            and pending_outbox_item.get("dry_run_preview", {}).get("schema_version") == "dry_run_preview_v1"
+            and pending_outbox_item.get("dry_run_preview", {}).get("raw_body_returned") is False
+            and len(pending_outbox_item.get("payload_sha256", "")) == 64
+            and "Seller Market Blue" not in serialized_pending_outbox
+            and "Please remove the listing" not in serialized_pending_outbox,
+            "P2 approval request enqueues sanitized action outbox item",
+            f"outbox={pending_outbox_item.get('id')}; approval={approval_id}",
+        )
+    )
+    status, pending_workflows = get_json(f"{base_url}/api/workflow-runs?limit=5")
+    pending_workflow_items = pending_workflows.get("workflow_runs", [])
+    pending_workflow = next((item for item in pending_workflow_items if approval_id in item.get("approval_ids", [])), {})
+    serialized_pending_workflows = json.dumps(pending_workflows)
+    checks.append(
+        check(
+            status == 200
+            and pending_workflow.get("status") == "waiting_for_approval"
+            and pending_workflow.get("stage") == "approval_requested"
+            and pending_outbox_item.get("id") in pending_workflow.get("outbox_ids", [])
+            and pending_workflow.get("raw_message_returned") is False
+            and "Seller Market Blue" not in serialized_pending_workflows
+            and "Please remove the listing" not in serialized_pending_workflows,
+            "P2 workflow run ledger exposes sanitized approval checkpoint",
+            f"workflow={pending_workflow.get('id')}; outbox={pending_outbox_item.get('id')}",
+        )
+    )
 
     status, forbidden = post_json(
         f"{base_url}/api/approval/approve",
@@ -1754,8 +2051,8 @@ def project_2_contracts(base_url: str) -> list[Check]:
         f"{base_url}/api/approval/approve",
         {
             "approval_id": approval_id,
-            "approver_id": "sam",
         },
+        headers=sam_bearer,
     )
     checks.append(
         check(
@@ -1766,9 +2063,380 @@ def project_2_contracts(base_url: str) -> list[Check]:
             f"approval={approval_id}; result={approval.get('result')}",
         )
     )
-
+    execution = approval.get("execution", {})
+    outbox_item = approval.get("outbox_item", {})
+    checks.append(
+        check(
+            isinstance(execution, dict)
+            and execution.get("approval_id") == approval_id
+            and execution.get("action_type") == "send_notice"
+            and execution.get("status") == "succeeded"
+            and execution.get("result") == "notice_sent"
+            and isinstance(execution.get("payload_sha256"), str)
+            and len(execution.get("payload_sha256", "")) == 64
+            and execution.get("payload_summary", {}).get("raw_body_returned") is False,
+            "P2 supervisor approval writes side-effect execution receipt",
+            f"execution={execution.get('id')}; result={execution.get('result')}",
+        )
+    )
+    checks.append(
+        check(
+            isinstance(outbox_item, dict)
+            and outbox_item.get("approval_id") == approval_id
+            and outbox_item.get("status") == "succeeded"
+            and outbox_item.get("execution_id") == execution.get("id")
+            and outbox_item.get("attempt_count") == 1
+            and outbox_item.get("lease_count") == 1
+            and outbox_item.get("last_leased_by") == "sam"
+            and str(outbox_item.get("last_lease_id", "")).startswith(f"{outbox_item.get('id')}:lease:")
+            and outbox_item.get("lease_id") is None
+            and outbox_item.get("leased_by") is None
+            and outbox_item.get("lease_released_at")
+            and outbox_item.get("raw_payload_returned") is False
+            and outbox_item.get("payload_summary", {}).get("raw_body_returned") is False,
+            "P2 supervisor approval drains outbox item into execution receipt",
+            f"outbox={outbox_item.get('id')}; execution={execution.get('id')}",
+        )
+    )
+    status, approved_workflows = get_json(f"{base_url}/api/workflow-runs?limit=5")
+    approved_workflow = next((item for item in approved_workflows.get("workflow_runs", []) if approval_id in item.get("approval_ids", [])), {})
+    checks.append(
+        check(
+            status == 200
+            and approved_workflow.get("status") == "succeeded"
+            and approved_workflow.get("stage") == "side_effect_executed"
+            and execution.get("id") in approved_workflow.get("action_run_ids", [])
+            and outbox_item.get("id") in approved_workflow.get("outbox_ids", [])
+            and approved_workflow.get("waiting_on") is None,
+            "P2 workflow checkpoint records approved side-effect execution",
+            f"workflow={approved_workflow.get('id')}; execution={execution.get('id')}",
+        )
+    )
+    status, replayed_approval = post_json(
+        f"{base_url}/api/approval/approve",
+        {
+            "approval_id": approval_id,
+            "approver_id": "sam",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and replayed_approval.get("result") == "already_processed"
+            and replayed_approval.get("execution", {}).get("id") == execution.get("id"),
+            "P2 approval execution is idempotent",
+            f"execution={replayed_approval.get('execution', {}).get('id')}; result={replayed_approval.get('result')}",
+        )
+    )
     status, approvals = get_json(f"{base_url}/api/approvals")
     checks.append(check(status == 200 and isinstance(approvals.get("approvals"), list), "P2 approvals list contract", f"approvals={len(approvals.get('approvals', []))}"))
+    approval_list_item = next((item for item in approvals.get("approvals", []) if item.get("id") == approval_id), {})
+    serialized_approvals = json.dumps(approvals)
+    checks.append(
+        check(
+            approval_list_item.get("status") == "approved"
+            and approval_list_item.get("approved_by") == "sam"
+            and "payload" not in approval_list_item
+            and approval_list_item.get("raw_payload_returned") is False
+            and approval_list_item.get("payload_summary", {}).get("raw_body_returned") is False
+            and approval_list_item.get("dry_run_preview", {}).get("raw_body_returned") is False
+            and "Seller Market Blue" not in serialized_approvals
+            and "Please remove the listing" not in serialized_approvals,
+            "P2 approvals endpoint exposes sanitized governance records",
+            f"approval={approval_list_item.get('id')}; status={approval_list_item.get('status')}",
+        )
+    )
+
+    status, action_runs = get_json(f"{base_url}/api/action-runs?limit=5")
+    serialized_action_runs = json.dumps(action_runs)
+    checks.append(
+        check(
+            status == 200
+            and isinstance(action_runs.get("action_runs"), list)
+            and any(run.get("id") == execution.get("id") for run in action_runs.get("action_runs", []))
+            and "Seller Market Blue" not in serialized_action_runs
+            and "Please remove the listing" not in serialized_action_runs,
+            "P2 action run ledger exposes execution receipts without raw notice bodies",
+            f"runs={len(action_runs.get('action_runs', []))}; execution={execution.get('id')}",
+        )
+    )
+    status, final_outbox = get_json(f"{base_url}/api/action-outbox?limit=5")
+    final_outbox_items = final_outbox.get("action_outbox", [])
+    final_outbox_item = next((item for item in final_outbox_items if item.get("approval_id") == approval_id), {})
+    serialized_final_outbox = json.dumps(final_outbox)
+    checks.append(
+        check(
+            status == 200
+            and isinstance(final_outbox_items, list)
+            and final_outbox_item.get("status") == "succeeded"
+            and final_outbox_item.get("execution_id") == execution.get("id")
+            and final_outbox_item.get("result") == "notice_sent"
+            and "Seller Market Blue" not in serialized_final_outbox
+            and "Please remove the listing" not in serialized_final_outbox,
+            "P2 action outbox ledger exposes dispatch state without raw notice bodies",
+            f"outbox={final_outbox_item.get('id')}; status={final_outbox_item.get('status')}",
+        )
+    )
+
+    status, reject_case = post_json(
+        f"{base_url}/api/agent",
+        {
+            "user_id": "ivy",
+            "case_id": "case-1001",
+            "message": "Escalate the Market Blue recalled product case.",
+        },
+    )
+    reject_approval_id = reject_case["approvals"][0]["id"] if reject_case.get("approvals") else ""
+    status, forbidden_reject = post_json(
+        f"{base_url}/api/approval/reject",
+        {
+            "approval_id": reject_approval_id,
+            "reviewer_id": "ivy",
+            "reason": "operator should not be able to reject this action",
+        },
+    )
+    checks.append(check(status == 403 and isinstance(forbidden_reject.get("error"), str), "P2 non-supervisor rejection error contract", json.dumps(forbidden_reject)))
+    status, rejected = post_json(
+        f"{base_url}/api/approval/reject",
+        {
+            "approval_id": reject_approval_id,
+            "reviewer_id": "sam",
+            "reason": "supervisor rejected controlled demo escalation",
+        },
+    )
+    rejected_approval = rejected.get("approval", {})
+    rejected_outbox = rejected.get("outbox_item", {})
+    checks.append(
+        check(
+            status == 200
+            and rejected.get("result") == "approval_rejected"
+            and rejected.get("execution") is None
+            and rejected_approval.get("status") == "rejected"
+            and rejected_approval.get("review_status") == "rejected"
+            and rejected_approval.get("rejected_by") == "sam"
+            and rejected_approval.get("decision_reason_summary", {}).get("raw_decision_reason_returned") is False
+            and "payload" not in rejected_approval
+            and rejected_outbox.get("status") == "approval_rejected"
+            and rejected_outbox.get("result") == "approval_rejected"
+            and rejected_outbox.get("attempt_count") == 0,
+            "P2 supervisor rejection closes approval without dispatch",
+            f"approval={reject_approval_id}; outbox={rejected_outbox.get('id')}",
+        )
+    )
+    status, rejected_workflows = get_json(f"{base_url}/api/workflow-runs?limit=10")
+    rejected_workflow = next((item for item in rejected_workflows.get("workflow_runs", []) if reject_approval_id in item.get("approval_ids", [])), {})
+    checks.append(
+        check(
+            status == 200
+            and rejected_workflow.get("status") == "approval_rejected"
+            and rejected_workflow.get("stage") == "approval_rejected"
+            and rejected_outbox.get("id") in rejected_workflow.get("outbox_ids", [])
+            and rejected_workflow.get("waiting_on") is None,
+            "P2 workflow checkpoint records approval rejection",
+            f"workflow={rejected_workflow.get('id')}; status={rejected_workflow.get('status')}",
+        )
+    )
+
+    status, expire_case = post_json(
+        f"{base_url}/api/agent",
+        {
+            "user_id": "ivy",
+            "case_id": "case-1002",
+            "message": "Send the seller notice for Market Blue RX-900.",
+        },
+    )
+    expire_approval_id = expire_case["approvals"][0]["id"] if expire_case.get("approvals") else ""
+    status, expired = post_json(
+        f"{base_url}/api/approval/expire",
+        {
+            "approval_id": expire_approval_id,
+            "operator_id": "sam",
+            "reason": "approval window expired in controlled demo",
+        },
+    )
+    expired_approval = expired.get("approval", {})
+    expired_outbox = expired.get("outbox_item", {})
+    checks.append(
+        check(
+            status == 200
+            and expired.get("result") == "approval_expired"
+            and expired.get("execution") is None
+            and expired_approval.get("status") == "expired"
+            and expired_approval.get("review_status") == "expired"
+            and expired_approval.get("expired_by") == "sam"
+            and expired_approval.get("decision_reason_summary", {}).get("raw_decision_reason_returned") is False
+            and expired_outbox.get("status") == "approval_expired"
+            and expired_outbox.get("result") == "approval_expired"
+            and expired_outbox.get("attempt_count") == 0,
+            "P2 supervisor expiry closes approval without dispatch",
+            f"approval={expire_approval_id}; outbox={expired_outbox.get('id')}",
+        )
+    )
+
+    status, transient_case = post_json(
+        f"{base_url}/api/agent",
+        {
+            "user_id": "ivy",
+            "case_id": "case-1001",
+            "message": "Send notice for Market Blue recalled product and simulate transient dispatch failure.",
+        },
+    )
+    transient_approval_id = transient_case["approvals"][0]["id"] if transient_case.get("approvals") else ""
+    status, transient_failure = post_json(
+        f"{base_url}/api/approval/approve",
+        {
+            "approval_id": transient_approval_id,
+            "approver_id": "sam",
+        },
+    )
+    transient_outbox = transient_failure.get("outbox_item", {})
+    checks.append(
+        check(
+            status == 200
+            and transient_failure.get("result") == "dispatch_failed"
+            and transient_failure.get("execution") is None
+            and transient_outbox.get("status") == "retryable_failure"
+            and transient_outbox.get("attempt_count") == 1
+            and transient_outbox.get("lease_count") == 1
+            and transient_outbox.get("last_leased_by") == "sam"
+            and transient_outbox.get("lease_id") is None
+            and transient_outbox.get("lease_released_at")
+            and transient_outbox.get("last_error", {}).get("retryable") is True
+            and transient_outbox.get("last_error", {}).get("code") == "simulated_transient_tool_outage"
+            and transient_outbox.get("next_attempt_at"),
+            "P2 action outbox records retryable dispatch failure without side effect",
+            f"outbox={transient_outbox.get('id')}; status={transient_outbox.get('status')}",
+        )
+    )
+    transient_workflow = transient_case.get("workflow_run", {})
+    status, failed_workflows = get_json(f"{base_url}/api/workflow-runs?limit=10")
+    failed_workflow = next((item for item in failed_workflows.get("workflow_runs", []) if item.get("id") == transient_workflow.get("id")), {})
+    checks.append(
+        check(
+            status == 200
+            and failed_workflow.get("status") == "dispatch_retryable_failure"
+            and failed_workflow.get("stage") == "waiting_for_retry"
+            and transient_outbox.get("id") in failed_workflow.get("retryable_outbox_ids", [])
+            and failed_workflow.get("waiting_on", {}).get("operator_action") == "retry_dispatch",
+            "P2 workflow checkpoint records retryable dispatch failure",
+            f"workflow={failed_workflow.get('id')}; retryable={failed_workflow.get('retryable_outbox_ids')}",
+        )
+    )
+
+    status, transient_retry = post_json(
+        f"{base_url}/api/action-outbox/retry",
+        {
+            "outbox_id": transient_outbox.get("id"),
+            "operator_id": "sam",
+        },
+    )
+    retry_outbox = transient_retry.get("outbox_item", {})
+    retry_execution = transient_retry.get("execution", {})
+    checks.append(
+        check(
+            status == 200
+            and transient_retry.get("result") == "notice_sent"
+            and isinstance(retry_execution, dict)
+            and retry_execution.get("approval_id") == transient_approval_id
+            and retry_outbox.get("status") == "succeeded"
+            and retry_outbox.get("attempt_count") == 2
+            and retry_outbox.get("lease_count") == 2
+            and retry_outbox.get("last_leased_by") == "sam"
+            and retry_outbox.get("lease_id") is None
+            and retry_outbox.get("lease_released_at")
+            and retry_outbox.get("last_error") is None
+            and retry_outbox.get("execution_id") == retry_execution.get("id"),
+            "P2 action outbox retry recovers a transient dispatch failure idempotently",
+            f"outbox={retry_outbox.get('id')}; execution={retry_execution.get('id')}",
+        )
+    )
+    status, retried_workflows = get_json(f"{base_url}/api/workflow-runs?limit=10")
+    retried_workflow = next((item for item in retried_workflows.get("workflow_runs", []) if item.get("id") == transient_workflow.get("id")), {})
+    checks.append(
+        check(
+            status == 200
+            and retried_workflow.get("status") == "succeeded"
+            and retried_workflow.get("stage") == "side_effect_executed"
+            and retry_execution.get("id") in retried_workflow.get("action_run_ids", [])
+            and not retried_workflow.get("retryable_outbox_ids")
+            and retried_workflow.get("waiting_on") is None,
+            "P2 workflow checkpoint records retry recovery",
+            f"workflow={retried_workflow.get('id')}; execution={retry_execution.get('id')}",
+        )
+    )
+
+    status, forbidden_retry = post_json(
+        f"{base_url}/api/action-outbox/retry",
+        {
+            "outbox_id": transient_outbox.get("id"),
+            "operator_id": "ivy",
+        },
+    )
+    checks.append(check(status == 403 and isinstance(forbidden_retry.get("error"), str), "P2 non-supervisor outbox retry error contract", json.dumps(forbidden_retry)))
+
+    status, permanent_case = post_json(
+        f"{base_url}/api/agent",
+        {
+            "user_id": "ivy",
+            "case_id": "case-1001",
+            "message": "Send notice for Market Blue recalled product and simulate permanent dispatch failure.",
+        },
+    )
+    permanent_approval_id = permanent_case["approvals"][0]["id"] if permanent_case.get("approvals") else ""
+    status, permanent_first = post_json(
+        f"{base_url}/api/approval/approve",
+        {
+            "approval_id": permanent_approval_id,
+            "approver_id": "sam",
+        },
+    )
+    permanent_outbox_id = permanent_first.get("outbox_item", {}).get("id")
+    post_json(
+        f"{base_url}/api/action-outbox/retry",
+        {
+            "outbox_id": permanent_outbox_id,
+            "operator_id": "sam",
+        },
+    )
+    status, permanent_dead_letter = post_json(
+        f"{base_url}/api/action-outbox/retry",
+        {
+            "outbox_id": permanent_outbox_id,
+            "operator_id": "sam",
+        },
+    )
+    dead_letter_outbox = permanent_dead_letter.get("outbox_item", {})
+    checks.append(
+        check(
+            status == 200
+            and permanent_dead_letter.get("result") == "dispatch_dead_lettered"
+            and permanent_dead_letter.get("execution") is None
+            and dead_letter_outbox.get("status") == "dead_lettered"
+            and dead_letter_outbox.get("attempt_count") == 3
+            and dead_letter_outbox.get("lease_count") == 3
+            and dead_letter_outbox.get("last_leased_by") == "sam"
+            and dead_letter_outbox.get("lease_id") is None
+            and dead_letter_outbox.get("lease_released_at")
+            and dead_letter_outbox.get("last_error", {}).get("retryable") is False
+            and dead_letter_outbox.get("dead_lettered_at")
+            and dead_letter_outbox.get("dead_letter_reason") == "simulated_permanent_tool_outage",
+            "P2 action outbox dead-letters repeated dispatch failures without side effect",
+            f"outbox={dead_letter_outbox.get('id')}; status={dead_letter_outbox.get('status')}",
+        )
+    )
+    permanent_workflow = permanent_case.get("workflow_run", {})
+    status, dead_letter_workflows = get_json(f"{base_url}/api/workflow-runs?limit=10")
+    dead_letter_workflow = next((item for item in dead_letter_workflows.get("workflow_runs", []) if item.get("id") == permanent_workflow.get("id")), {})
+    checks.append(
+        check(
+            status == 200
+            and dead_letter_workflow.get("status") == "dispatch_dead_lettered"
+            and dead_letter_workflow.get("stage") == "dead_lettered"
+            and dead_letter_outbox.get("id") in dead_letter_workflow.get("dead_lettered_outbox_ids", []),
+            "P2 workflow checkpoint records dead-lettered dispatch",
+            f"workflow={dead_letter_workflow.get('id')}; dead_lettered={dead_letter_workflow.get('dead_lettered_outbox_ids')}",
+        )
+    )
 
     status, traces = get_json(f"{base_url}/api/traces?limit=2")
     checks.append(check(status == 200 and isinstance(traces.get("traces"), list) and len(traces["traces"]) <= 2, "P2 traces list contract", f"traces={len(traces.get('traces', []))}"))
@@ -1785,12 +2453,60 @@ def project_3_contracts(base_url: str) -> list[Check]:
 
     status, health = get_json(f"{base_url}/api/health")
     checks.append(check(status == 200 and health == {"status": "ok", "app": "ai-reliability-incident-console"}, "P3 health contract", json.dumps(health)))
+    checks.append(
+        readiness_contract(
+            base_url,
+            "P3",
+            "ai-reliability-incident-console",
+            {
+                "storage",
+                "seed_data",
+                "eval_state",
+                "scenario_snapshot",
+                "users",
+                "releases",
+                "incidents",
+                "runbooks",
+                "scenario_files",
+            },
+        )
+    )
 
     status, users = get_json(f"{base_url}/api/users")
     checks.append(check(status == 200 and isinstance(users.get("users"), list) and users["users"], "P3 users list contract", f"users={len(users.get('users', []))}"))
     if users.get("users"):
         ok, detail = expect_types(users["users"][0], {"id": str, "name": str, "role": str})
         checks.append(check(ok, "P3 user shape contract", detail))
+
+    status, maya_token = post_json(f"{base_url}/api/auth/demo-token", {"user_id": "maya"})
+    maya_bearer = {"Authorization": f"Bearer {maya_token.get('token', '')}"}
+    checks.append(
+        check(
+            status == 200
+            and maya_token.get("token_type") == "Bearer"
+            and maya_token.get("auth_policy") == "local_signed_demo_token_v1"
+            and maya_token.get("auth_context", {}).get("user_id") == "maya"
+            and maya_token.get("auth_context", {}).get("role") == "reliability_lead",
+            "P3 local signed demo auth token contract",
+            f"status={status}; policy={maya_token.get('auth_policy')}; subject={maya_token.get('auth_context', {}).get('user_id')}",
+        )
+    )
+    status, triage_mismatch = post_json(
+        f"{base_url}/api/triage",
+        {
+            "user_id": "nolan",
+            "release_id": "rel-2026-06-01",
+            "incident_id": "inc-2026-014",
+        },
+        headers=maya_bearer,
+    )
+    checks.append(
+        check(
+            status == 403 and "authenticated subject" in triage_mismatch.get("error", ""),
+            "P3 bearer auth rejects identity mismatch",
+            f"status={status}; error={triage_mismatch.get('error')}",
+        )
+    )
 
     status, releases = get_json(f"{base_url}/api/releases")
     checks.append(check(status == 200 and isinstance(releases.get("releases"), list) and releases["releases"], "P3 releases list contract", f"releases={len(releases.get('releases', []))}"))
@@ -1839,12 +2555,12 @@ def project_3_contracts(base_url: str) -> list[Check]:
     status, unsafe = post_json(
         f"{base_url}/api/triage",
         {
-            "user_id": "maya",
             "release_id": "rel-2026-06-01",
             "incident_id": "inc-2026-014",
         },
+        headers=maya_bearer,
     )
-    triage_keys = {"trace_id", "release", "incident", "decision", "failed_evals", "remediation_steps", "evidence"}
+    triage_keys = {"trace_id", "release", "incident", "decision", "failed_evals", "remediation_steps", "evidence", "latency_ms"}
     ok, detail = expect_types(
         unsafe,
         {
@@ -1855,6 +2571,7 @@ def project_3_contracts(base_url: str) -> list[Check]:
             "failed_evals": list,
             "remediation_steps": list,
             "evidence": dict,
+            "latency_ms": (int, float),
         },
     )
     checks.append(check(status == 200 and has_keys(unsafe, triage_keys) and ok, "P3 triage response contract", detail))
@@ -1947,27 +2664,30 @@ def main() -> int:
     checks: list[Check] = []
     started: list[subprocess.Popen] = []
     try:
-        for service in service_list:
-            started.append(start_service(service))
-        for service in service_list:
-            if not wait_for_health(service["health"]):
-                print(f"Service did not become healthy: {service['name']}", file=sys.stderr)
-                return 1
+        with tempfile.TemporaryDirectory(prefix="fde-api-contracts-") as temp_dir:
+            state_root = Path(temp_dir)
+            try:
+                for service in service_list:
+                    started.append(start_service(service, state_root))
+                for service in service_list:
+                    if not wait_for_health(service["health"]):
+                        print(f"Service did not become healthy: {service['name']}", file=sys.stderr)
+                        return 1
 
-        checks.extend(project_1_contracts(project_1_url))
-        checks.extend(project_2_contracts(project_2_url))
-        checks.extend(project_3_contracts(project_3_url))
+                checks.extend(project_1_contracts(project_1_url))
+                checks.extend(project_2_contracts(project_2_url))
+                checks.extend(project_3_contracts(project_3_url))
+            finally:
+                for process in started:
+                    process.terminate()
+                for process in started:
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
         print(f"API contract check failed with exception: {exc}", file=sys.stderr)
         return 1
-    finally:
-        for process in started:
-            process.terminate()
-        for process in started:
-            try:
-                process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                process.kill()
 
     for item in checks:
         status = "PASS" if item.passed else "FAIL"

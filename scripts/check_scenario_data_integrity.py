@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +18,13 @@ SEED_FIXTURE_DATA_FLOW = ROOT / "docs" / "seed_fixture_data_flow.md"
 P1_ROOT = ROOT / "secure-enterprise-knowledge-copilot"
 P2_ROOT = ROOT / "regulated-customer-operations-agent"
 P3_ROOT = ROOT / "ai-reliability-incident-console"
+P1_SRC_PATH = P1_ROOT / "src"
+
+sys.path.insert(0, str(P1_SRC_PATH))
+
+from copilot.source_parsing import PARSER_CONTRACT_VERSION, PARSER_QUALITY_SCHEMA_VERSION  # noqa: E402
+from copilot.source_scanning import SOURCE_SCAN_SCHEMA_VERSION  # noqa: E402
+from copilot.storage import JsonStore, seed as seed_runtime  # noqa: E402
 
 P1_ROLES = {"employee", "manager", "admin"}
 P2_ROLES = {"investigator", "supervisor"}
@@ -99,12 +108,67 @@ def check_eval_ids(cases: list[dict[str, Any]], source: str, failures: list[str]
     require(len(seen) == len(cases), failures, f"{source}: eval ids must be unique")
 
 
+def check_p1_seed_runtime_quality(seed_path: Path, failures: list[str]) -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        store = JsonStore(Path(temp_dir) / "runtime_state.json")
+        seed_runtime(store, seed_path)
+
+    documents = store.state.get("documents", [])
+    chunks = store.state.get("chunks", [])
+    require(bool(documents), failures, "P1 runtime seed: documents must be initialized")
+    require(bool(chunks), failures, "P1 runtime seed: chunks must be initialized")
+
+    for doc in documents:
+        doc_id = doc.get("id")
+        metadata = doc.get("parser_metadata")
+        quality = metadata.get("quality") if isinstance(metadata, dict) else {}
+        require(doc.get("parser_contract_version") == PARSER_CONTRACT_VERSION, failures, f"P1 runtime document {doc_id}: missing parser contract")
+        require(
+            isinstance(quality, dict) and quality.get("schema_version") == PARSER_QUALITY_SCHEMA_VERSION,
+            failures,
+            f"P1 runtime document {doc_id}: missing parser quality schema",
+        )
+        require(len(str(doc.get("source_hash") or "")) == 64, failures, f"P1 runtime document {doc_id}: missing source hash")
+        require(bool(doc.get("source_mime")), failures, f"P1 runtime document {doc_id}: missing source mime")
+        require(bool(doc.get("source_connector")), failures, f"P1 runtime document {doc_id}: missing source connector")
+        require(bool(doc.get("acl_source")), failures, f"P1 runtime document {doc_id}: missing ACL source")
+        source_scan = doc.get("source_scan")
+        require(
+            isinstance(source_scan, dict) and source_scan.get("schema_version") == SOURCE_SCAN_SCHEMA_VERSION,
+            failures,
+            f"P1 runtime document {doc_id}: missing source scan schema",
+        )
+        require(source_scan.get("raw_matches_returned") is False, failures, f"P1 runtime document {doc_id}: source scan must not return raw matches")
+
+    for chunk in chunks:
+        chunk_id = chunk.get("id")
+        metadata = chunk.get("parser_metadata")
+        quality = metadata.get("quality") if isinstance(metadata, dict) else {}
+        require(chunk.get("parser_contract_version") == PARSER_CONTRACT_VERSION, failures, f"P1 runtime chunk {chunk_id}: missing parser contract")
+        require(
+            isinstance(quality, dict) and quality.get("schema_version") == PARSER_QUALITY_SCHEMA_VERSION,
+            failures,
+            f"P1 runtime chunk {chunk_id}: missing parser quality schema",
+        )
+        require(len(str(chunk.get("source_hash") or "")) == 64, failures, f"P1 runtime chunk {chunk_id}: missing source hash")
+        require(bool(chunk.get("source_mime")), failures, f"P1 runtime chunk {chunk_id}: missing source mime")
+        require(bool(chunk.get("source_span")), failures, f"P1 runtime chunk {chunk_id}: missing source span")
+        require(bool(chunk.get("chunk_source_span_unit")), failures, f"P1 runtime chunk {chunk_id}: missing source span unit")
+        source_scan = chunk.get("source_scan")
+        require(
+            isinstance(source_scan, dict) and source_scan.get("schema_version") == SOURCE_SCAN_SCHEMA_VERSION,
+            failures,
+            f"P1 runtime chunk {chunk_id}: missing source scan schema",
+        )
+
+
 def check_p1() -> list[str]:
     failures: list[str] = []
     seed = read_json(P1_ROOT / "data" / "seed_documents.json")
     eval_cases = read_json(P1_ROOT / "data" / "eval_cases.json")
     check_text_safety(seed, "P1 seed_documents.json", failures)
     check_text_safety(eval_cases, "P1 eval_cases.json", failures)
+    check_p1_seed_runtime_quality(P1_ROOT / "data" / "seed_documents.json", failures)
 
     users = seed.get("users", [])
     documents = seed.get("documents", [])

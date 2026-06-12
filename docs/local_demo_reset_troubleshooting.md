@@ -46,6 +46,22 @@ The three scenario draft keys are:
 
 Browser theme preferences also use `localStorage`, but they do not affect seed data, eval data, traces, approvals, or release decisions.
 
+## Isolated Verification Runs
+
+The app entrypoints accept `--state-path` when a command needs a disposable JSON state file:
+
+```bash
+python -B app.py --reset --state-path .tmp/runtime_state.json --port 8765
+```
+
+Most self-starting verification commands use temporary state paths automatically, including API contracts, runtime UI contracts, observability checks, visual asset refresh, and replay artifact generation. Keep the default `*/data/runtime_state.json` path for interactive demos and trace-export commands that intentionally read canonical local demo state.
+
+Verify the isolation contract after changing app startup, storage paths, or self-starting verification scripts:
+
+```bash
+python -B scripts/dev.py runtime-state-isolation
+```
+
 ## Canonical Reset Presets
 
 `docs/demo_state_presets.json` is the shareable reset map for the three canonical local paths:

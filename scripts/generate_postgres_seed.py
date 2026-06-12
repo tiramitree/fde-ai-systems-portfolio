@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 import uuid
@@ -18,8 +17,7 @@ UUID_NAMESPACE = uuid.UUID("9f83868a-75f0-4c18-9c6d-4e0ea87f0a41")
 
 sys.path.insert(0, str(SRC_PATH))
 
-from copilot.chunking import SOURCE_SPAN_UNIT, chunk_text_with_spans  # noqa: E402
-from copilot.embeddings import embed_chunk  # noqa: E402
+from copilot.storage import build_seed_chunks, prepare_seed_document  # noqa: E402
 
 
 def stable_uuid(kind: str, value: str) -> str:
@@ -46,10 +44,6 @@ def jsonb_literal(payload: dict) -> str:
 def vector_literal(values: list[float]) -> str:
     vector_text = "[" + ",".join(str(float(value)) for value in values) + "]"
     return f"{sql_literal(vector_text)}::vector"
-
-
-def source_hash(body: str) -> str:
-    return hashlib.sha256(body.encode("utf-8")).hexdigest()
 
 
 def tenant_display_name(slug: str) -> str:
@@ -94,11 +88,10 @@ def emit_users(seed: dict) -> list[str]:
 
 def emit_documents_and_chunks(seed: dict) -> list[str]:
     lines: list[str] = []
-    for doc in sorted(seed["documents"], key=lambda item: (item["tenant_id"], item["id"])):
+    prepared_documents = [prepare_seed_document(doc) for doc in seed["documents"]]
+    for doc in sorted(prepared_documents, key=lambda item: (item["tenant_id"], item["id"])):
         tenant_uuid = stable_uuid("tenant", doc["tenant_id"])
         doc_uuid = stable_uuid("document", f"{tenant_uuid}:{doc['id']}")
-        doc_hash = source_hash(doc["body"])
-        source_mime = doc.get("source_mime", "text/plain")
         document_metadata = {
             "allowed_groups": doc.get("allowed_groups", []),
             "source_acl_principals": doc.get("source_acl_principals", []),
@@ -107,6 +100,17 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
             "source_acl_principal_count": doc.get("source_acl_principal_count", 0),
             "source_lifecycle_state": doc.get("source_lifecycle_state", "active"),
             "superseded_by": doc.get("superseded_by", ""),
+            "parser_name": doc["parser_name"],
+            "parser_contract_version": doc["parser_contract_version"],
+            "parser_metadata": doc["parser_metadata"],
+            "parser_warnings": doc["parser_warnings"],
+            "parser_warning_count": doc["parser_warning_count"],
+            "source_scan": doc["source_scan"],
+            "source_connector": doc["source_connector"],
+            "external_id": doc["external_id"],
+            "acl_source": doc["acl_source"],
+            "sync_cursor": doc["sync_cursor"],
+            "allowed_roles_source": doc["allowed_roles_source"],
         }
         lines.append(
             "insert into documents (\n"
@@ -119,8 +123,8 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
             f"{sql_literal(doc['id'])}, "
             f"{sql_literal(doc['title'])}, "
             f"{sql_literal(doc['source_url'])}, "
-            f"{sql_literal(source_mime)}, "
-            f"{sql_literal(doc_hash)}, "
+            f"{sql_literal(doc['source_mime'])}, "
+            f"{sql_literal(doc['source_hash'])}, "
             f"{sql_literal(doc['classification'])}, "
             f"{text_array(doc['allowed_roles'])}, "
             f"{sql_literal(doc['version'])}, "
@@ -139,24 +143,38 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
             "  metadata = excluded.metadata;"
         )
         lines.append(f"delete from document_chunks where document_id = {sql_literal(doc_uuid)}::uuid;")
-        for index, chunk in enumerate(chunk_text_with_spans(doc["body"])):
-            external_chunk_id = f"{doc['id']}::chunk-{index + 1}"
+        for chunk in build_seed_chunks(doc):
+            index = int(chunk["chunk_index"])
+            external_chunk_id = chunk["id"]
             chunk_uuid = stable_uuid("chunk", f"{doc_uuid}:{external_chunk_id}")
-            embedding = embed_chunk(doc["title"], chunk.text)
             metadata = {
                 "external_chunk_id": external_chunk_id,
-                "allowed_groups": doc.get("allowed_groups", []),
-                "source_acl_principals": doc.get("source_acl_principals", []),
-                "source_acl_version": doc.get("source_acl_version", ""),
-                "source_acl_permission_id": doc.get("source_acl_permission_id", ""),
-                "source_acl_principal_count": doc.get("source_acl_principal_count", 0),
-                "source_lifecycle_state": doc.get("source_lifecycle_state", "active"),
-                "superseded_by": doc.get("superseded_by", ""),
-                "source_hash": doc_hash,
-                "updated_at": doc["updated_at"],
-                "source_span": chunk.source_span,
-                "chunk_source_span_unit": SOURCE_SPAN_UNIT,
-                **embedding.metadata(),
+                "allowed_groups": chunk.get("allowed_groups", []),
+                "source_acl_principals": chunk.get("source_acl_principals", []),
+                "source_acl_version": chunk.get("source_acl_version", ""),
+                "source_acl_permission_id": chunk.get("source_acl_permission_id", ""),
+                "source_acl_principal_count": chunk.get("source_acl_principal_count", 0),
+                "source_lifecycle_state": chunk.get("source_lifecycle_state", "active"),
+                "superseded_by": chunk.get("superseded_by", ""),
+                "source_mime": chunk["source_mime"],
+                "source_hash": chunk["source_hash"],
+                "parser_name": chunk["parser_name"],
+                "parser_contract_version": chunk["parser_contract_version"],
+                "parser_metadata": chunk["parser_metadata"],
+                "parser_warnings": chunk["parser_warnings"],
+                "parser_warning_count": chunk["parser_warning_count"],
+                "source_scan": chunk["source_scan"],
+                "source_connector": chunk["source_connector"],
+                "external_id": chunk["external_id"],
+                "acl_source": chunk["acl_source"],
+                "sync_cursor": chunk["sync_cursor"],
+                "allowed_roles_source": chunk["allowed_roles_source"],
+                "updated_at": chunk["updated_at"],
+                "source_span": chunk["source_span"],
+                "chunk_source_span_unit": chunk["chunk_source_span_unit"],
+                "embedding_model": chunk["embedding_model"],
+                "embedding_dimensions": chunk["embedding_dimensions"],
+                "embedding_norm": chunk["embedding_norm"],
             }
             lines.append(
                 "insert into document_chunks (\n"
@@ -167,8 +185,8 @@ def emit_documents_and_chunks(seed: dict) -> list[str]:
                 f"{sql_literal(tenant_uuid)}::uuid, "
                 f"{sql_literal(doc_uuid)}::uuid, "
                 f"{index}, "
-                f"{sql_literal(chunk.text)}, "
-                f"{vector_literal(embedding.vector)}, "
+                f"{sql_literal(chunk['text'])}, "
+                f"{vector_literal(chunk['embedding'])}, "
                 f"{jsonb_literal(metadata)}"
                 ");"
             )

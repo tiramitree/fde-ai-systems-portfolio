@@ -19,6 +19,7 @@ class KnowledgeRepository(Protocol):
     def get_user(self, user_id: str) -> dict | None: ...
     def list_users(self) -> list[dict]: ...
     def list_visible_documents(self, user: dict) -> list[dict]: ...
+    def list_documents_for_tenant(self, tenant_id: str) -> list[dict]: ...
     def list_chunks(self, tenant_id: str) -> list[dict]: ...
     def list_retrieval_candidates(
         self,
@@ -69,6 +70,13 @@ class JsonKnowledgeRepository:
             if has_identity_access(doc, user):
                 docs.append(_public_document(doc))
         return docs
+
+    def list_documents_for_tenant(self, tenant_id: str) -> list[dict]:
+        return [
+            _public_document(doc)
+            for doc in self.store.state["documents"]
+            if doc.get("tenant_id") == tenant_id
+        ]
 
     def list_chunks(self, tenant_id: str) -> list[dict]:
         return [chunk for chunk in self.store.state["chunks"] if chunk["tenant_id"] == tenant_id]
@@ -178,15 +186,16 @@ class JsonKnowledgeRepository:
         return jobs[:limit]
 
     def insert_trace(self, trace_id: str, user_id: str, question: str, payload: dict) -> None:
-        self.store.state["traces"].append(
-            {
-                "id": trace_id,
-                "created_at": utc_now(),
-                "user_id": user_id,
-                "question": question,
-                "payload": payload,
-            }
-        )
+        trace = {
+            "id": trace_id,
+            "created_at": utc_now(),
+            "user_id": user_id,
+            "question": question,
+            "payload": payload,
+        }
+        if payload.get("request_id"):
+            trace["request_id"] = payload["request_id"]
+        self.store.state["traces"].append(trace)
 
     def insert_audit(self, user_id: str, action: str, details: dict) -> None:
         next_id = len(self.store.state["audit_events"]) + 1

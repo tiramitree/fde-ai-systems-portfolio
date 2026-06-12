@@ -10,7 +10,14 @@ from .identity import string_list
 from .repositories import KnowledgeRepository
 from .source_files import SourceFileError, decode_source_file
 from .source_lifecycle import ACTIVE_SOURCE_STATE, VALID_SOURCE_STATES
-from .source_parsing import SUPPORTED_MIME_TYPES, SourceParseError, parse_source_content
+from .source_parsing import (
+    PARSER_CONTRACT_VERSION,
+    PARSER_QUALITY_SCHEMA_VERSION,
+    SUPPORTED_MIME_TYPES,
+    SourceParseError,
+    parse_source_content,
+)
+from .source_scanning import merge_source_scan_counts, scan_source_content
 
 
 VALID_CLASSIFICATIONS = {"public", "internal", "confidential"}
@@ -122,6 +129,52 @@ def _source_lifecycle_state(document: dict) -> str:
     return value
 
 
+def _decode_document_source(document: dict) -> tuple[str, str, dict]:
+    source_file: dict = {}
+    if document.get("file") is not None:
+        try:
+            decoded_file = decode_source_file(document.get("file"), document.get("source_mime"))
+        except SourceFileError as exc:
+            raise IngestionError(400, str(exc)) from exc
+        raw_body = _as_string(decoded_file.text, "document.file decoded text")
+        source_mime = decoded_file.mime_type
+        source_file = decoded_file.metadata
+    else:
+        raw_body = _as_string(document.get("body") or document.get("content"), "body")
+        source_mime = str(document.get("source_mime", "text/plain")).strip().lower()
+        if source_mime not in SUPPORTED_MIME_TYPES:
+            raise IngestionError(415, f"Unsupported source_mime: {source_mime}")
+    return raw_body, source_mime, source_file
+
+
+def _parser_contract(parsed_source: object) -> dict:
+    warnings = list(parsed_source.warnings)
+    return {
+        "contract_version": PARSER_CONTRACT_VERSION,
+        "quality_schema_version": PARSER_QUALITY_SCHEMA_VERSION,
+        "name": parsed_source.parser_name,
+        "normalized_characters": parsed_source.normalized_characters,
+        "metadata": parsed_source.metadata,
+        "quality": parsed_source.metadata.get("quality", {}),
+        "warnings": warnings,
+        "warning_count": len(warnings),
+    }
+
+
+def _chunk_preview(chunks: list[object], limit: int = 3) -> list[dict]:
+    preview = []
+    for index, chunk in enumerate(chunks[:limit]):
+        preview.append(
+            {
+                "chunk_index": index,
+                "character_count": len(chunk.text),
+                "source_span": chunk.source_span,
+                "text_excerpt": chunk.text[:220],
+            }
+        )
+    return preview
+
+
 def _acl_role_drift(previous_document: dict | None, current_allowed_roles: list[str]) -> dict:
     current = sorted(current_allowed_roles)
     if not previous_document:
@@ -187,20 +240,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         raise IngestionError(400, "document must be an object")
 
     title = _as_string(document.get("title"), "title", max_length=180)
-    source_file: dict = {}
-    if document.get("file") is not None:
-        try:
-            decoded_file = decode_source_file(document.get("file"), document.get("source_mime"))
-        except SourceFileError as exc:
-            raise IngestionError(400, str(exc)) from exc
-        raw_body = _as_string(decoded_file.text, "document.file decoded text")
-        source_mime = decoded_file.mime_type
-        source_file = decoded_file.metadata
-    else:
-        raw_body = _as_string(document.get("body") or document.get("content"), "body")
-        source_mime = str(document.get("source_mime", "text/plain")).strip().lower()
-        if source_mime not in SUPPORTED_MIME_TYPES:
-            raise IngestionError(415, f"Unsupported source_mime: {source_mime}")
+    raw_body, source_mime, source_file = _decode_document_source(document)
 
     try:
         parsed_source = parse_source_content(raw_body, source_mime)
@@ -210,6 +250,7 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
     body = parsed_source.text
     if len(body) < 20:
         raise IngestionError(400, "body must contain at least 20 searchable characters")
+    source_scan = scan_source_content(raw_body, body)
 
     tenant_id = str(document.get("tenant_id") or actor["tenant_id"]).strip()
     if tenant_id != actor["tenant_id"]:
@@ -270,8 +311,11 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
         "version": version,
         "updated_at": updated_at,
         "parser_name": parsed_source.parser_name,
+        "parser_contract_version": PARSER_CONTRACT_VERSION,
         "parser_metadata": parsed_source.metadata,
         "parser_warnings": list(parsed_source.warnings),
+        "parser_warning_count": len(parsed_source.warnings),
+        "source_scan": source_scan,
         "source_file": source_file,
         "source_connector": source_connector,
         "external_id": external_id,
@@ -308,8 +352,11 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "version": version,
                 "updated_at": updated_at,
                 "parser_name": parsed_source.parser_name,
+                "parser_contract_version": PARSER_CONTRACT_VERSION,
                 "parser_metadata": parsed_source.metadata,
                 "parser_warnings": list(parsed_source.warnings),
+                "parser_warning_count": len(parsed_source.warnings),
+                "source_scan": source_scan,
                 "source_file": source_file,
                 "source_connector": source_connector,
                 "external_id": external_id,
@@ -342,8 +389,11 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "source_url": source_url,
             "source_mime": source_mime,
             "source_hash": source_hash,
+            "parser_contract_version": PARSER_CONTRACT_VERSION,
             "parser_name": parsed_source.parser_name,
             "parser_warnings": list(parsed_source.warnings),
+            "parser_warning_count": len(parsed_source.warnings),
+            "source_scan": source_scan,
             "source_file": source_file,
             "source_connector": source_connector,
             "external_id": external_id,
@@ -374,12 +424,10 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
             "replace": replace,
             "replaced_existing": replaced_existing,
             "source_hash": source_hash,
+            "source_scan": source_scan,
             "supported_mime_types": sorted(SUPPORTED_MIME_TYPES),
             "parser": {
-                "name": parsed_source.parser_name,
-                "normalized_characters": parsed_source.normalized_characters,
-                "metadata": parsed_source.metadata,
-                "warnings": list(parsed_source.warnings),
+                **_parser_contract(parsed_source),
             },
             "source": {
                 "file": source_file,
@@ -405,6 +453,52 @@ def ingest_document(repo: KnowledgeRepository, payload: dict) -> dict:
                 "chunk_embedding_count": len(chunks),
             },
         },
+    }
+
+
+def preview_document_parse(repo: KnowledgeRepository, payload: dict) -> dict:
+    actor_id = _as_string(payload.get("user_id"), "user_id", max_length=80)
+    actor = repo.get_user(actor_id)
+    if not actor:
+        raise IngestionError(404, f"Unknown user_id: {actor_id}")
+    if actor["role"] != "admin":
+        raise IngestionError(403, "Only admin users can preview document parsing.")
+
+    document = payload.get("document", payload)
+    if not isinstance(document, dict):
+        raise IngestionError(400, "document must be an object")
+
+    title = _as_string(document.get("title"), "title", max_length=180)
+    raw_body, source_mime, source_file = _decode_document_source(document)
+    try:
+        parsed_source = parse_source_content(raw_body, source_mime)
+    except SourceParseError as exc:
+        raise IngestionError(400, str(exc)) from exc
+
+    source_hash = hashlib.sha256(raw_body.encode("utf-8")).hexdigest()
+    source_scan = scan_source_content(raw_body, parsed_source.text)
+    chunks = list(chunk_text_with_spans(parsed_source.text)) if parsed_source.text else []
+    validation_warnings = []
+    if len(parsed_source.text) < 20:
+        validation_warnings.append("searchable_body_too_short")
+
+    return {
+        "preview": {
+            "actor_user_id": actor_id,
+            "title": title,
+            "source_hash": source_hash,
+            "source_mime": source_mime,
+            "source_file": source_file,
+            "source_scan": source_scan,
+            "parser": _parser_contract(parsed_source),
+            "validation_warnings": validation_warnings,
+            "would_index": not validation_warnings,
+            "chunk_count": len(chunks),
+            "chunk_source_span_unit": SOURCE_SPAN_UNIT,
+            "chunks": _chunk_preview(chunks),
+            "raw_body_returned": False,
+        },
+        "supported_mime_types": sorted(SUPPORTED_MIME_TYPES),
     }
 
 
@@ -439,6 +533,7 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
     replace = bool(payload.get("replace", True))
     ingested = []
     parser_warnings: list[str] = []
+    source_scans: list[dict] = []
     replaced_count = 0
     chunk_count = 0
     acl_drift_count = 0
@@ -503,6 +598,7 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
         replaced_count += 1 if result["ingestion"].get("replaced_existing") else 0
         chunk_count += int(result.get("chunk_count", 0))
         parser_warnings.extend(result["ingestion"]["parser"].get("warnings", []))
+        source_scans.append(result["ingestion"].get("source_scan", {}))
         drift = result["ingestion"]["source"].get("acl_role_drift", {})
         if drift.get("changed"):
             acl_drift_count += 1
@@ -537,6 +633,8 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             "pruned_doc_ids": pruned_doc_ids,
             "doc_ids": [item["id"] for item in ingested],
             "parser_warnings": sorted(set(parser_warnings)),
+            "source_scan_review_required_count": sum(1 for scan in source_scans if scan.get("review_required")),
+            "source_scan_finding_counts": merge_source_scan_counts(source_scans),
         },
     )
 
@@ -556,6 +654,8 @@ def sync_source_batch(repo: KnowledgeRepository, payload: dict) -> dict:
             "pruned_count": len(pruned_doc_ids),
             "pruned_doc_ids": pruned_doc_ids,
             "parser_warnings": sorted(set(parser_warnings)),
+            "source_scan_review_required_count": sum(1 for scan in source_scans if scan.get("review_required")),
+            "source_scan_finding_counts": merge_source_scan_counts(source_scans),
         },
         "documents": ingested,
     }
