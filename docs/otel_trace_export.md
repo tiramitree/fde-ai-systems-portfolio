@@ -10,7 +10,13 @@ resourceSpans
   -> span attributes and events
 ```
 
-The exporter is deterministic and local-first. It does not require an OpenTelemetry collector, network access, or an API key. For optional collector handoff notes, see `docs/opentelemetry_collector_handoff_troubleshooting.md`.
+The exporter is deterministic and local-first. It does not require an OpenTelemetry collector, network access, or an API key for the default path. When a collector is available, the same script can optionally POST OTLP/HTTP JSON to a traces endpoint without adding runtime dependencies. For collector handoff notes, see `docs/opentelemetry_collector_handoff_troubleshooting.md`.
+
+Before writing JSON or sending the optional collector handoff, span and event attributes pass through `public_trace_export_redaction_v1` in `scripts/trace_redaction.py`. The policy removes common email, phone, secret-like, private ID, and local path markers from exported values while leaving deterministic IDs, counts, statuses, and citation metadata available for review. Verify this boundary with:
+
+```bash
+python -B scripts/dev.py trace-redaction
+```
 
 ## Command
 
@@ -29,6 +35,21 @@ otel_traces.json
 
 That file is generated output and ignored by git.
 
+Validate the optional collector handoff path without a real collector:
+
+```bash
+python -B scripts/dev.py otel-collector-handoff
+```
+
+Send the generated payload to a local OTLP HTTP collector:
+
+```bash
+python -B scripts/dev.py replay
+python -B scripts/export_traces_otel.py --send-otlp-http --otlp-http-endpoint http://127.0.0.1:4318
+```
+
+The exporter appends `/v1/traces` to `--otlp-http-endpoint`, matching the OTLP/HTTP traces path. If `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` or `--otlp-http-traces-endpoint` is provided, that signal-specific endpoint is used as-is. This handoff intentionally uses OTLP/HTTP JSON; if `OTEL_EXPORTER_OTLP_PROTOCOL` is set, use `http/json`.
+
 ## Mapping
 
 Project 1 traces become `copilot.query` spans.
@@ -36,6 +57,7 @@ Project 1 traces become `copilot.query` spans.
 Important attributes:
 
 - `app.project`
+- `app.redaction_policy`
 - `app.trace_type`
 - `app.user_id`
 - `app.question`
@@ -44,13 +66,16 @@ Important attributes:
 - `app.model_provider`
 - `app.retrieval.hit_count`
 - `app.permission_blocked_count`
+- `app.source_lifecycle_policy`
+- `app.stale_filtered_count`
 - `app.citation_count`
 - `app.security_event_count`
 
 Important events:
 
 - `retrieval.completed`
-- `evidence.cited`
+- `evidence.cited`, including citation chunk source-span line metadata and sentence-level `evidence_span_count`
+- `evidence.sentence_span`, including the cited answer-support sentence and its parser-normalized source-span line metadata
 - `security.event`
 
 Project 2 traces become `ops_agent.process_message` spans.
@@ -58,6 +83,7 @@ Project 2 traces become `ops_agent.process_message` spans.
 Important attributes:
 
 - `app.project`
+- `app.redaction_policy`
 - `app.trace_type`
 - `app.user_id`
 - `app.message`
@@ -80,6 +106,7 @@ Project 3 traces become `reliability.release_triage` spans.
 Important attributes:
 
 - `app.project`
+- `app.redaction_policy`
 - `app.trace_type`
 - `app.user_id`
 - `app.release_id`
@@ -110,15 +137,17 @@ Important events:
 
 ## Production Path
 
-In production, this local exporter would become one of two paths:
+In production, this local exporter would become one of three paths:
 
 1. Native OpenTelemetry SDK instrumentation around API handlers, retrieval, model calls, tool calls, approval writes, release decisions, eval gates, and audit writes.
 2. A batch bridge that converts persisted trace records into OTLP JSON and sends them to an OpenTelemetry Collector.
+3. A backend-specific exporter adapter for hosted observability platforms when they require authentication, tenancy headers, or vendor-specific ingest URLs.
 
 The production design should preserve the same invariants:
 
 - permission checks happen before evidence reaches the model
 - approval gates happen before external side effects
+- trace export boundaries redact common sensitive markers before generated observability payloads leave local runtime state
 - blocked actions are observable events, not hidden failures
 - release rollout decisions link incidents, failed eval cases, runbooks, and audit events
 - trace IDs connect UI output, audit events, eval cases, and logs
@@ -128,3 +157,4 @@ The production design should preserve the same invariants:
 
 - OpenTelemetry Protocol File Exporter: https://opentelemetry.io/docs/specs/otel/protocol/file-exporter/
 - OpenTelemetry Protocol Exporter: https://opentelemetry.io/docs/specs/otel/protocol/exporter/
+- OTLP Specification: https://opentelemetry.io/docs/specs/otlp/

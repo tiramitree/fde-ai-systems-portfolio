@@ -30,6 +30,27 @@ PROJECTS = [
             "userSelect",
             "userMeta",
             "documents",
+            "ingestionSummary",
+            "ingestTitle",
+            "ingestClassification",
+            "ingestRoles",
+            "ingestMime",
+            "ingestFileName",
+            "ingestFile",
+            "ingestBody",
+            "ingestReplace",
+            "previewParse",
+            "ingestDocument",
+            "syncSampleSource",
+            "previewSourceBundle",
+            "syncSourceBundle",
+            "syncGitHubConnector",
+            "ingestionStatus",
+            "parsePreview",
+            "sourceBundleCatalog",
+            "connectorStatus",
+            "sourceQuality",
+            "ingestionJobs",
             "runEval",
             "evalOutput",
             "question",
@@ -69,6 +90,9 @@ PROJECTS = [
             "runAgent",
             "decision",
             "approvals",
+            "toolRegistry",
+            "actionOutbox",
+            "actionRuns",
             "trace",
             "copyTraceId",
             "copyTraceLink",
@@ -333,8 +357,71 @@ def check_javascript(project: FrontendProject, html_ids: set[str]) -> list[str]:
     for marker in ["traceHash(trace.id)", "selectedTrace"]:
         if marker not in renderers_text:
             failures.append(f"{project.name}: renderers.js missing trace deep-link marker: {marker}")
+    if project.name == "secure-enterprise-knowledge-copilot" and "retrieval_profile: data.retrieval_profile" not in renderers_text:
+        failures.append(f"{project.name}: renderers.js missing retrieval profile trace detail")
+    if project.name == "secure-enterprise-knowledge-copilot":
+        for marker in ("sourceSpanLabel", "citation.source_span", "citation.evidence_excerpt", "citation.evidence_spans", "normalized_text"):
+            if marker not in renderers_text:
+                failures.append(f"{project.name}: renderers.js missing source-span citation marker: {marker}")
     if "data-trace-id" not in renderers_text and "dataset: { traceId: trace.id }" not in renderers_text:
         failures.append(f"{project.name}: renderers.js missing trace id data marker")
+    if project.name == "regulated-customer-operations-agent":
+        for marker in ("renderActionOutbox", "actionOutbox", "No action outbox items.", "attempt_count", "lease_count", "last_leased_by", "retryable_failure", "last_error", "Retry dispatch"):
+            if marker not in renderers_text and marker not in app_text:
+                failures.append(f"{project.name}: action outbox UI missing marker: {marker}")
+        for marker in ("renderToolRegistry", "toolRegistry", "No tools registered.", "dry_run_required", "approval_required"):
+            if marker not in renderers_text and marker not in app_text:
+                failures.append(f"{project.name}: tool registry UI missing marker: {marker}")
+        for marker in ("dry_run_preview", "decision_reason_summary", "Reject"):
+            if marker not in renderers_text and marker not in app_text:
+                failures.append(f"{project.name}: approval UI missing governance marker: {marker}")
+        if "/api/action-outbox" not in app_text or "/api/action-outbox/retry" not in app_text:
+            failures.append(f"{project.name}: app.js missing action outbox API path")
+        if "/api/tool-registry" not in app_text or "/api/approval/reject" not in app_text:
+            failures.append(f"{project.name}: app.js missing tool registry or approval reject API path")
+        for marker in ("renderWorkflowRuns", "workflowRuns", "No workflow runs.", "workflow_run", "retryable_outbox_ids", "dead_lettered_outbox_ids"):
+            if marker not in renderers_text and marker not in app_text:
+                failures.append(f"{project.name}: workflow run UI missing marker: {marker}")
+        if "/api/workflow-runs" not in app_text:
+            failures.append(f"{project.name}: app.js missing workflow run API path")
+
+    if project.name == "secure-enterprise-knowledge-copilot":
+        ingestion_text = (js_dir / "ingestion.js").read_text(encoding="utf-8")
+        required_ingestion_markers = [
+            "export function installIngestionPanel",
+            "/api/documents/ingest",
+            "/api/documents/parse-preview",
+            "/api/ingestion/jobs",
+            "/api/connectors/status",
+            "/api/sources/quality",
+            "/api/connectors/source-bundle/catalog",
+            "/api/connectors/source-bundle/sync",
+            "/api/connectors/github/sync",
+            "acl_snapshot",
+            "idempotency_key",
+            "admin required",
+            "source_hash",
+            "source_scan",
+            "previewButton",
+            "renderParsePreview",
+            "syncButton",
+            "previewBundleButton",
+            "bundleButton",
+            "githubButton",
+            "renderJobList",
+            "renderSourceBundleCatalog",
+            "renderConnectorStatus",
+            "renderSourceQuality",
+            "sourceBundleCatalog",
+            "connectorStatus",
+            "sourceQuality",
+            "pruned_count",
+            "onIngested",
+            "currentUser",
+        ]
+        for marker in required_ingestion_markers:
+            if marker not in ingestion_text and marker not in app_text:
+                failures.append(f"{project.name}: ingestion.js missing marker: {marker}")
 
     scenario_text = (js_dir / "scenarioEditor.js").read_text(encoding="utf-8")
     required_scenario_markers = [
@@ -409,6 +496,10 @@ def check_project(project: FrontendProject) -> list[str]:
     ]:
         if marker not in styles:
             failures.append(f"{project.name}: styles.css missing trace-copy style marker: {marker}")
+    if project.name == "secure-enterprise-knowledge-copilot":
+        for marker in [".ingestionBody", ".inlineCheck", ".ingestionGrid", ".ingestionWide", ".ingestionActions"]:
+            if marker not in styles:
+                failures.append(f"{project.name}: styles.css missing ingestion style marker: {marker}")
     return failures
 
 

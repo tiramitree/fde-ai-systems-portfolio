@@ -97,7 +97,7 @@ Initial public-ready reference release.
 ### Verified
 
 - Local Python runtime health checks pass for the initial services.
-- Secure Enterprise Knowledge Copilot evals pass 11/11 with unsafe leaks 0.
+- Secure Enterprise Knowledge Copilot evals pass 13/13 with unsafe leaks 0.
 - Regulated Customer Operations Agent evals pass 8/8 with unsafe direct side-effect failures 0.
 - Smoke tests pass 9/9.
 - Quality gate passes.

@@ -24,7 +24,8 @@ export function renderUser(users, selectedUser) {
     element("strong", { textContent: user.name }),
     element("br"),
     tag(user.role),
-    tag(user.tenant_id)
+    tag(user.tenant_id),
+    ...Array.from(user.group_ids || []).map((groupId) => tag(groupId))
   );
 }
 
@@ -39,9 +40,22 @@ export function renderDocuments(documents) {
         element("br"),
         tag(doc.classification),
         tag(doc.version),
+        ...(doc.allowed_groups || []).map((groupId) => tag(groupId)),
       ]),
     "No visible documents."
   );
+}
+
+function sourceSpanLabel(sourceSpan) {
+  if (!sourceSpan || sourceSpan.text_unit !== "normalized_text") {
+    return "";
+  }
+  const startLine = Number(sourceSpan.start_line);
+  const endLine = Number(sourceSpan.end_line);
+  if (!Number.isFinite(startLine) || !Number.isFinite(endLine)) {
+    return "";
+  }
+  return startLine === endLine ? `line ${startLine}` : `lines ${startLine}-${endLine}`;
 }
 
 export function renderAnswer(data) {
@@ -69,14 +83,22 @@ export function renderAnswer(data) {
   renderList(
     byId("citations"),
     data.citations,
-    (citation) =>
-      element("div", { className: "item" }, [
+    (citation) => {
+      const spanLabel = sourceSpanLabel(citation.source_span);
+      const evidenceLabels = (citation.evidence_spans || [])
+        .map((item) => sourceSpanLabel(item.source_span))
+        .filter(Boolean);
+      return element("div", { className: "item" }, [
         element("strong", { textContent: citation.title }),
         element("span", { textContent: citation.source_url }),
+        citation.evidence_excerpt ? element("span", { textContent: citation.evidence_excerpt }) : null,
         element("br"),
         tag(citation.doc_id),
         tag(`score ${citation.score}`),
-      ]),
+        spanLabel ? tag(spanLabel) : null,
+        evidenceLabels.length ? tag(`evidence ${evidenceLabels.join(", ")}`) : null,
+      ].filter(Boolean));
+    },
     "No citations returned."
   );
 
@@ -84,6 +106,7 @@ export function renderAnswer(data) {
     {
       trace_id: data.trace_id,
       permission_blocked_count: data.permission_blocked_count,
+      retrieval_profile: data.retrieval_profile,
       retrieved: data.retrieved,
       missing_evidence: data.missing_evidence,
       security_events: data.security_events,
@@ -94,6 +117,13 @@ export function renderAnswer(data) {
 }
 
 export function renderAudit(events) {
+  const auditTag = (event) => {
+    if (event.action === "document_ingested") {
+      return tag("ingested");
+    }
+    return tag(event.details.abstained ? "abstained" : "answered");
+  };
+
   renderList(
     byId("audit"),
     events,
@@ -103,7 +133,7 @@ export function renderAudit(events) {
         element("span", { textContent: event.created_at }),
         element("br"),
         tag(event.user_id),
-        tag(event.details.abstained ? "abstained" : "answered"),
+        auditTag(event),
       ]),
     "No audit events."
   );

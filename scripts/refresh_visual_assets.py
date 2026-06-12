@@ -223,9 +223,22 @@ def wait_for_health(port: int, seconds: int = 20) -> bool:
     return False
 
 
-def start_service(project: dict, port: int) -> subprocess.Popen:
+def service_state_path(state_root: Path, project: dict) -> Path:
+    return state_root / f"{project['name']}-runtime_state.json"
+
+
+def start_service(project: dict, port: int, state_root: Path) -> subprocess.Popen:
     return subprocess.Popen(
-        [sys.executable, "-B", "app.py", "--reset", "--port", str(port)],
+        [
+            sys.executable,
+            "-B",
+            "app.py",
+            "--reset",
+            "--state-path",
+            str(service_state_path(state_root, project)),
+            "--port",
+            str(port),
+        ],
         cwd=project["path"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.STDOUT,
@@ -345,7 +358,7 @@ def render_manifest() -> dict:
                 "desktop": DESKTOP_VIEWPORT,
                 "mobile": MOBILE_VIEWPORT,
             },
-            "method": "scripts/refresh_visual_assets.py after local demo services reached /api/health",
+            "method": "scripts/refresh_visual_assets.py after isolated local demo services reached /api/health",
         },
         "assets": assets,
     }
@@ -373,7 +386,7 @@ def main() -> int:
             try:
                 for project, port in zip(PROJECTS, ports):
                     print(f"Starting {project['name']} on port {port}")
-                    processes.append(start_service(project, port))
+                    processes.append(start_service(project, port, temp_root))
                 for project, port in zip(PROJECTS, ports):
                     if not wait_for_health(port):
                         raise RuntimeError(f"{project['name']} did not become healthy on port {port}")

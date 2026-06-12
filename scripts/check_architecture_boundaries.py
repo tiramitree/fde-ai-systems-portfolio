@@ -30,9 +30,28 @@ PROJECTS = [
             "app.py": frozenset({"Handler", "main"}),
             "src/copilot/api.py": frozenset({"ApiError", "CopilotApi"}),
             "src/copilot/answering.py": frozenset({"generate_answer"}),
+            "src/copilot/chunking.py": frozenset({"TextChunk", "chunk_text", "chunk_text_with_spans"}),
+            "src/copilot/embeddings.py": frozenset(
+                {"TextEmbedding", "EMBEDDING_MODEL", "EMBEDDING_DIMENSIONS", "embed_text", "embed_chunk", "cosine_similarity"}
+            ),
+            "src/copilot/postgres_repositories.py": frozenset({"PostgresKnowledgeRepository", "SqlConnection"}),
             "src/copilot/retrieval.py": frozenset({"retrieve", "tokenize"}),
+            "src/copilot/retrieval_scoring.py": frozenset(
+                {"RetrievalScore", "SCORE_COMPONENTS", "SEMANTIC_FAMILIES", "score_chunk", "retrieval_profile"}
+            ),
+            "src/copilot/reranking.py": frozenset({"RERANKER_NAME", "RERANK_FEATURES", "RerankDecision", "rerank_hits", "rerank_hit"}),
+            "src/copilot/repositories.py": frozenset(
+                {"KnowledgeRepository", "JsonKnowledgeRepository", "PostgresRepositorySession", "connect_repository"}
+            ),
             "src/copilot/security.py": frozenset({"detect_prompt_injection", "sanitize_evidence"}),
+            "src/copilot/source_parsing.py": frozenset(
+                {"ParsedSource", "SourceParseError", "SUPPORTED_MIME_TYPES", "parse_source_content"}
+            ),
+            "src/copilot/source_scanning.py": frozenset(
+                {"SOURCE_SCAN_SCHEMA_VERSION", "SOURCE_SCAN_POLICY", "scan_source_content", "merge_source_scan_counts"}
+            ),
             "src/copilot/storage.py": frozenset({"JsonStore", "connect", "init_db"}),
+            "src/copilot/time_utils.py": frozenset({"utc_now"}),
             "src/copilot/evals.py": frozenset({"run_evals"}),
         },
         forbidden_backend_imports=frozenset({"ops_agent", "scripts", "web", "docs", "app"}),
@@ -56,6 +75,9 @@ PROJECTS = [
                 }
             ),
             "src/ops_agent/storage.py": frozenset({"JsonStore", "connect", "init_state"}),
+            "src/ops_agent/workflows.py": frozenset(
+                {"WORKFLOW_RUN_SCHEMA_VERSION", "start_workflow_run", "record_agent_checkpoint", "record_action_dispatch_checkpoint", "list_workflow_runs"}
+            ),
             "src/ops_agent/evals.py": frozenset({"run_evals"}),
         },
         forbidden_backend_imports=frozenset({"copilot", "scripts", "web", "docs", "app"}),
@@ -159,8 +181,19 @@ def check_backend_import_boundaries(project: ProjectBoundary) -> list[str]:
             if path.name != "api.py" and module == f"{project.package}.api":
                 failures.append(f"{project.name}: {rel_path} imports API layer")
         if path.name == "storage.py":
+            allowed_storage_imports = {
+                f"{project.package}.chunking",
+                f"{project.package}.embeddings",
+                f"{project.package}.source_parsing",
+                f"{project.package}.source_scanning",
+                f"{project.package}.time_utils",
+            }
             for module in modules:
-                if module.startswith(f"{project.package}.") and module != project.package:
+                if (
+                    module.startswith(f"{project.package}.")
+                    and module != project.package
+                    and module not in allowed_storage_imports
+                ):
                     failures.append(f"{project.name}: {rel_path} should not import higher package modules")
     return failures
 
@@ -211,6 +244,42 @@ def check_project_isolation() -> list[str]:
     return failures
 
 
+def check_copilot_storage_adapter_boundary() -> list[str]:
+    project = PROJECTS[0]
+    package_root = project.root / "src" / project.package
+    direct_storage_forbidden = {
+        "api.py",
+        "answering.py",
+        "retrieval.py",
+        "ingestion.py",
+        "evals.py",
+    }
+    failures: list[str] = []
+    for filename in sorted(direct_storage_forbidden):
+        path = package_root / filename
+        text = path.read_text(encoding="utf-8")
+        if "from .storage" in text or "from copilot.storage" in text:
+            failures.append(
+                f"{project.name}: src/copilot/{filename} must use repositories.py instead of storage.py"
+            )
+
+    repositories = (package_root / "repositories.py").read_text(encoding="utf-8")
+    required_repository_markers = [
+        "class KnowledgeRepository",
+        "class JsonKnowledgeRepository",
+        "class PostgresRepositorySession",
+        "def connect_repository",
+        "def repository_provider",
+        "count_potentially_blocked_chunks",
+        "replace_document_with_chunks",
+        "load_scenario_snapshot",
+    ]
+    for marker in required_repository_markers:
+        if marker not in repositories:
+            failures.append(f"{project.name}: repositories.py missing storage adapter marker {marker}")
+    return failures
+
+
 def require_text(text: str, needle: str, label: str) -> list[str]:
     if needle not in text:
         return [f"{label}: missing `{needle}`"]
@@ -227,9 +296,15 @@ def check_code_tour() -> list[str]:
         "no generated runtime files, external accounts, paid services, secrets, or private paths",
         "secure-enterprise-knowledge-copilot/app.py",
         "src/copilot/api.py: CopilotApi",
+        "src/copilot/repositories.py",
+        "src/copilot/source_parsing.py",
+        "src/copilot/embeddings.py",
         "src/copilot/retrieval.py",
+        "src/copilot/retrieval_scoring.py",
+        "src/copilot/reranking.py",
         "src/copilot/security.py",
         "src/copilot/answering.py",
+        "src/copilot/chunking.py",
         "regulated-customer-operations-agent/app.py",
         "src/ops_agent/api.py: OpsAgentApi",
         "src/ops_agent/agent.py",
@@ -266,6 +341,7 @@ def main() -> int:
         failures.extend(check_backend_import_boundaries(project))
         failures.extend(check_frontend_module_boundaries(project))
     failures.extend(check_project_isolation())
+    failures.extend(check_copilot_storage_adapter_boundary())
     failures.extend(check_code_tour())
 
     if failures:
@@ -278,6 +354,7 @@ def main() -> int:
     print("- app.py files stay as HTTP/static shells over API classes")
     print("- backend src packages do not import sibling projects, web assets, docs, scripts, or app.py")
     print("- non-API backend modules do not import the API layer")
+    print("- Project 1 application modules use repositories.py instead of direct JSON storage access")
     print("- frontend JavaScript modules stay local to their web boundary")
     return 0
 

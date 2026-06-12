@@ -151,11 +151,18 @@ def check_error_examples_doc() -> list[str]:
         "Forbidden",
         "Not found",
         "Invalid JSON body",
+        "JSON body must be an object.",
+        "Request body too large.",
+        "Rate Limit Exceeded",
+        "Rate limit exceeded.",
+        "Retry-After",
         "Internal server error",
         "Only supervisors can approve actions.",
         "Unknown user_id: missing-user",
         "Unknown incident_id: missing-incident",
         "python -B scripts/dev.py error-hygiene",
+        "python -B scripts/dev.py request-body-limits",
+        "python -B scripts/dev.py request-governance",
         "Do not use real user data, local machine paths, tokens, or external service identifiers",
     ]
     failures: list[str] = []

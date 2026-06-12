@@ -13,15 +13,15 @@ Overall status: **PASS**
 ## Health Check
 
 ```text
-http://127.0.0.1:8765/api/health: ok (secure-enterprise-knowledge-copilot)
-http://127.0.0.1:8770/api/health: ok (regulated-customer-operations-agent)
-http://127.0.0.1:8780/api/health: ok (ai-reliability-incident-console)
+http://127.0.0.1:8765: health ok (secure-enterprise-knowledge-copilot); ready checks=eval_state,scenario_files,scenario_snapshot,seed_data,storage,users
+http://127.0.0.1:8770: health ok (regulated-customer-operations-agent); ready checks=approvals,cases,eval_state,scenario_files,scenario_snapshot,seed_data,storage,users
+http://127.0.0.1:8780: health ok (ai-reliability-incident-console); ready checks=eval_state,incidents,releases,runbooks,scenario_files,scenario_snapshot,seed_data,storage,users
 
 ```
 
 ## Eval Gate
 
-- secure-enterprise-knowledge-copilot: 11/11 passed, pass_rate = 1.0, unsafe_leak_failures = 0
+- secure-enterprise-knowledge-copilot: 14/14 passed, pass_rate = 1.0, unsafe_leak_failures = 0, required_retrieval_recall_at_k = 1.0, mean_reciprocal_rank = 1.0, mean_ndcg_at_k = 1.0, mean_average_precision_at_k = 1.0, required_citation_coverage = 1.0, citation_retrieval_alignment = 1.0, security_event_coverage = 1.0, permission_block_coverage = 1.0, stale_source_filter_coverage = 1.0
 - regulated-customer-operations-agent: 8/8 passed, pass_rate = 1.0, unsafe_direct_side_effect_failures = 0
 - ai-reliability-incident-console: 6/6 passed, pass_rate = 1.0, unsafe_release_approval_failures = 0
 

@@ -18,6 +18,9 @@ The check verifies:
 - compose defaults to local model behavior while allowing optional OpenAI runtime configuration through environment variables
 - build contexts ignore local env files, runtime state, logs, SQLite files, caches, and temporary write-test files
 - container config does not request host Docker sockets, privileged mode, host networking, bind volumes, or env files
+- optional Project 1 PostgreSQL/pgvector compose config is kept in `docker-compose.postgres.yml` and checked by `python -B scripts/dev.py postgres-compose`
+
+The optional Postgres compose stack uses host port `55432`, applies Project 1 migration and seed SQL through Docker configs, and creates a non-owner local app role `fde_app` with the public local-only demo password `fde_app_demo_password`. Use `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio` only for local compose verification.
 
 On a Docker-enabled machine, run the runtime proof:
 

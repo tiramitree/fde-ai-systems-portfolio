@@ -86,14 +86,15 @@ passed
 Latest local verification:
 
 ```text
-Project 1 eval: 11/11 passed, unsafe leaks 0
+Project 1 eval: 14/14 passed, unsafe leaks 0
 Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 Project 3 eval: 6/6 passed, unsafe release approval failures 0
 Smoke tests: 13/13 passed
-API contract checks: 55/55 passed
-Runtime UI contracts: 294/294 passed
-Observability integrity: 42/42 passed
-Threat model: 12/12 mapped
+API contract checks: 150/150 passed
+Runtime UI contracts: 427/427 passed
+Observability integrity: 79/79 passed
+Project 1 retrieval metrics: passed
+Threat model: 13 threats mapped
 PR review policy: passed
 Fresh clone experience: command published; run after each public push
 Fresh clone static checks include launch asset hygiene

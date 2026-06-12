@@ -29,6 +29,71 @@
           <select id="userSelect"></select>
           <div class="userMeta" id="userMeta"></div>
 
+          <h2>Admin Ingestion</h2>
+          <div id="ingestionSummary" class="box">Select Avery Admin to ingest a local source.</div>
+          <div class="ingestionGrid">
+            <div class="ingestionWide">
+              <label for="ingestTitle">Title</label>
+              <input id="ingestTitle" type="text" value="Travel Expense Policy 2026" />
+            </div>
+            <div>
+              <label for="ingestClassification">Class</label>
+              <select id="ingestClassification">
+                <option value="internal">internal</option>
+                <option value="public">public</option>
+                <option value="confidential">confidential</option>
+              </select>
+            </div>
+            <div>
+              <label for="ingestMime">Type</label>
+              <select id="ingestMime">
+                <option value="text/plain">text/plain</option>
+                <option value="text/markdown" selected>markdown</option>
+                <option value="text/csv">csv</option>
+                <option value="text/html">html</option>
+                <option value="application/json">json</option>
+              </select>
+            </div>
+            <div class="ingestionWide">
+              <label for="ingestRoles">Allowed roles</label>
+              <select id="ingestRoles" multiple size="2">
+                <option value="employee" selected>employee</option>
+                <option value="manager" selected>manager</option>
+                <option value="admin" selected>admin</option>
+              </select>
+            </div>
+            <div class="ingestionWide">
+              <label for="ingestFileName">File name</label>
+              <input id="ingestFileName" type="text" value="travel-expense-policy-2026.md" />
+            </div>
+            <div class="ingestionWide">
+              <label for="ingestFile">File</label>
+              <input id="ingestFile" type="file" accept=".txt,.md,.markdown,.csv,.html,.json,text/plain,text/markdown,text/csv,text/html,application/json" />
+            </div>
+          </div>
+          <label for="ingestBody">Source body</label>
+          <textarea id="ingestBody" class="ingestionBody" rows="3" spellcheck="false">Travel Expense Policy 2026
+
+Employees must submit travel expense receipts within five business days after each approved trip. Expense reports must include the trip purpose, manager approval, and original receipt evidence.</textarea>
+          <label class="inlineCheck" for="ingestReplace">
+            <input id="ingestReplace" type="checkbox" checked />
+            <span>Replace matching source</span>
+          </label>
+          <div class="sectionActions ingestionActions">
+            <button id="previewParse" class="secondaryButton" type="button">Preview parse</button>
+            <button id="ingestDocument" type="button">Ingest document</button>
+            <button id="syncSampleSource" class="secondaryButton" type="button">Sync connector</button>
+            <button id="previewSourceBundle" class="secondaryButton" type="button">Preview bundle</button>
+            <button id="syncSourceBundle" class="secondaryButton" type="button">Sync bundle</button>
+            <button id="syncGitHubConnector" class="secondaryButton" type="button">Sync GitHub</button>
+          </div>
+          <div id="ingestionStatus" class="scenarioStatus muted">No ingestion run yet.</div>
+          <div id="parsePreview" class="list compact"></div>
+          <div id="sourceBundleCatalog" class="list compact"></div>
+          <div id="connectorStatus" class="list compact"></div>
+          <div id="sourceQuality" class="list compact"></div>
+          <div id="ingestionJobs" class="list compact"></div>
+
           <h2>Visible Documents</h2>
           <div id="documents" class="list"></div>
 

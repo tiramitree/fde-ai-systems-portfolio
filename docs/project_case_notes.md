@@ -16,7 +16,7 @@ The knowledge copilot demonstrates role-based retrieval, citation enforcement, a
 
 ## Project 2 Impact
 
-The operations agent demonstrates governed tool calling for product-recall workflows. It can investigate cases, cite policies, create internal records, draft seller notices, and schedule follow-up, while external side effects remain blocked until supervisor approval and idempotent execution.
+The operations agent demonstrates governed tool calling for product-recall workflows. It can investigate cases, cite policies, create internal records, draft seller notices, and schedule follow-up, while external side effects remain blocked behind tool-registry policy, dry-run preview, supervisor approval, rejection/expiry terminal states, sanitized action-outbox dispatch, idempotent execution, and an action-run receipt with payload hash and output references.
 
 ## Project 3 Impact
 

@@ -2,7 +2,7 @@
   "version": 1,
   "purpose": "Keep desktop and mobile demo screenshots tied to the frontend source files they were captured from.",
   "capture": {
-    "date": "2026-06-04",
+    "date": "2026-06-07",
     "viewports": {
       "desktop": [
         1400,
@@ -23,15 +23,15 @@
         1400,
         900
       ],
-      "sha256": "f0fc147835c313439ab7d0691cd897ec3bd3bb8102c541da9ccba636c13d03c0",
+      "sha256": "27347172be0050f6da8e17d5023aed16ddd552cd79ce4e477f086e1ada8854d7",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "4c93f58f75fb5ef41af78f965453c0af24b4e4d20068aa2dc4958f9dddaa721b"
+          "sha256": "3345b2c6583e994eac485fbea10cb0e13a71f8dda7328831a5fb36b7d388fef2"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "62fbfe97b253e5302476657d66a1123878084c02f3d245fae4f79d158aa41cb4"
+          "sha256": "dc637497c5720f1bd9ea6e01fb83f89be8ec92738e0a4fd17f0ee4fc6eb63d60"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -39,7 +39,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "fd8470f82f8594acf4b9bbbb62c346e747c113127fda609021c7de176669e945"
+          "sha256": "6dceda90813c21ad9d74fdce7dcd9a922da3a78f4f13a3c590a0f77ce1e656e0"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -50,8 +50,12 @@
           "sha256": "d778c3e77a18bb562f59ba1d1a41de168d01116415c7566e40730a6014a1ae67"
         },
         {
+          "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
+          "sha256": "3ff1df691aa90f2d28d1a2cd4aa6d157d2f42564771307a46181cff71677ea45"
+        },
+        {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
-          "sha256": "ccd4fbac121b1be6ab940d45f6bd4c54171e05b0f61f58e7740b66836fe6f525"
+          "sha256": "02984613301034c5eb8ffa2300b7759ddfa1f47eaa10fdabf19e80348976e9ac"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/scenarioEditor.js",
@@ -117,15 +121,15 @@
         500,
         844
       ],
-      "sha256": "8f3c25b1729ddb01d5737cde46eede05d30bb06e66dfebe06dcd379f1e02d758",
+      "sha256": "b88b04cc87f78a67d0de6ce95154d75f25992be953d40e5e0314143ccc3c5674",
       "source_files": [
         {
           "path": "secure-enterprise-knowledge-copilot/web/index.html",
-          "sha256": "4c93f58f75fb5ef41af78f965453c0af24b4e4d20068aa2dc4958f9dddaa721b"
+          "sha256": "3345b2c6583e994eac485fbea10cb0e13a71f8dda7328831a5fb36b7d388fef2"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/styles.css",
-          "sha256": "62fbfe97b253e5302476657d66a1123878084c02f3d245fae4f79d158aa41cb4"
+          "sha256": "dc637497c5720f1bd9ea6e01fb83f89be8ec92738e0a4fd17f0ee4fc6eb63d60"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/api.js",
@@ -133,7 +137,7 @@
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/app.js",
-          "sha256": "fd8470f82f8594acf4b9bbbb62c346e747c113127fda609021c7de176669e945"
+          "sha256": "6dceda90813c21ad9d74fdce7dcd9a922da3a78f4f13a3c590a0f77ce1e656e0"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/clipboard.js",
@@ -144,8 +148,12 @@
           "sha256": "d778c3e77a18bb562f59ba1d1a41de168d01116415c7566e40730a6014a1ae67"
         },
         {
+          "path": "secure-enterprise-knowledge-copilot/web/js/ingestion.js",
+          "sha256": "3ff1df691aa90f2d28d1a2cd4aa6d157d2f42564771307a46181cff71677ea45"
+        },
+        {
           "path": "secure-enterprise-knowledge-copilot/web/js/renderers.js",
-          "sha256": "ccd4fbac121b1be6ab940d45f6bd4c54171e05b0f61f58e7740b66836fe6f525"
+          "sha256": "02984613301034c5eb8ffa2300b7759ddfa1f47eaa10fdabf19e80348976e9ac"
         },
         {
           "path": "secure-enterprise-knowledge-copilot/web/js/scenarioEditor.js",
@@ -200,11 +208,11 @@
         1400,
         900
       ],
-      "sha256": "85977d836b8675a60a54bcf9f49ef203e8d48d858021b06cb8ed422d6159fe0c",
+      "sha256": "7c2b2dd9a2887a156daac842fd279b8200884245f3f2d99e07a2a89567066c67",
       "source_files": [
         {
           "path": "regulated-customer-operations-agent/web/index.html",
-          "sha256": "088b8010342bdfbbf6d298378a8f383b62e89f82ec0d3c600dbd66433b2311fe"
+          "sha256": "cdb8b7a21cee20cb118a48f80d4d5a65f46c378e2239210e32a67dfb32971974"
         },
         {
           "path": "regulated-customer-operations-agent/web/styles.css",
@@ -216,7 +224,7 @@
         },
         {
           "path": "regulated-customer-operations-agent/web/js/app.js",
-          "sha256": "3387775a34a5c532c3a122fe3e9bab4c5168f081052fde5623d16ae23cbe88b8"
+          "sha256": "71fca1c25e62904e2de7bfc95ec2b7533c61bf0482337a1fb5943f55d9c4b4ec"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/clipboard.js",
@@ -228,7 +236,7 @@
         },
         {
           "path": "regulated-customer-operations-agent/web/js/renderers.js",
-          "sha256": "1d54c464ce823f6e074abb7e249c884a19af10205ffbb00b9d63df204511972e"
+          "sha256": "49fd1825e539c9b9bfa0aa3c985cba6921914c5968ae6e6db22ceae3ac2cd53c"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/scenarioEditor.js",
@@ -294,11 +302,11 @@
         500,
         844
       ],
-      "sha256": "c0e2ecfe237d4dcaa325f42a6a46f334ecb500cc10c840001d3c54d1cfed1e23",
+      "sha256": "15d2522491a7398688b19e1ca7de6abdaf4a25240460751e700db3e8002fff7c",
       "source_files": [
         {
           "path": "regulated-customer-operations-agent/web/index.html",
-          "sha256": "088b8010342bdfbbf6d298378a8f383b62e89f82ec0d3c600dbd66433b2311fe"
+          "sha256": "cdb8b7a21cee20cb118a48f80d4d5a65f46c378e2239210e32a67dfb32971974"
         },
         {
           "path": "regulated-customer-operations-agent/web/styles.css",
@@ -310,7 +318,7 @@
         },
         {
           "path": "regulated-customer-operations-agent/web/js/app.js",
-          "sha256": "3387775a34a5c532c3a122fe3e9bab4c5168f081052fde5623d16ae23cbe88b8"
+          "sha256": "71fca1c25e62904e2de7bfc95ec2b7533c61bf0482337a1fb5943f55d9c4b4ec"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/clipboard.js",
@@ -322,7 +330,7 @@
         },
         {
           "path": "regulated-customer-operations-agent/web/js/renderers.js",
-          "sha256": "1d54c464ce823f6e074abb7e249c884a19af10205ffbb00b9d63df204511972e"
+          "sha256": "49fd1825e539c9b9bfa0aa3c985cba6921914c5968ae6e6db22ceae3ac2cd53c"
         },
         {
           "path": "regulated-customer-operations-agent/web/js/scenarioEditor.js",

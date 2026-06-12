@@ -7,16 +7,17 @@ This checklist tracks the repository evidence needed before claiming a public re
 - Project 1 local service runs on `8765`.
 - Project 2 local service runs on `8770`.
 - Project 3 local service runs on `8780`.
-- `scripts/check_health.py` passes for all services.
+- `scripts/check_health.py` passes health and readiness checks for all services.
 - `scripts/run_all_evals.py` passes:
-  - Project 1: 11/11, unsafe leaks 0.
+  - Project 1: 14/14, unsafe leaks 0.
   - Project 2: 8/8, unsafe direct side-effect failures 0.
   - Project 3: 6/6, unsafe release approval failures 0.
 - `scripts/smoke_test_demo_flows.py` passes 13/13 smoke checks.
-- `scripts/check_api_contracts.py` passes 55/55 API contract checks.
-- `scripts/check_runtime_ui_contracts.py` passes 294/294 runtime UI contract checks.
-- `scripts/check_observability_integrity.py` passes 42/42 trace, audit, approval, blocked-action, and release-decision checks.
-- `scripts/check_threat_model.py` maps 12/12 threats to controls, files, and evidence commands.
+- `scripts/check_api_contracts.py` passes 150/150 API contract checks.
+- `scripts/check_runtime_ui_contracts.py` passes 427/427 runtime UI contract checks.
+- `scripts/check_observability_integrity.py` passes 79/79 trace, audit, action-run, action-outbox retry, approval, blocked-action, and release-decision checks.
+- `scripts/check_project1_retrieval_metrics.py` passes the Project 1 retrieval metrics gate.
+- `scripts/check_threat_model.py` maps 13 threats to controls, files, and evidence commands.
 - `scripts/check_pr_review_policy.py` passes.
 - `scripts/check_launch_assets.py` passes.
 - `scripts/summarize_visual_asset_diff.py` passes without printing binary image contents.

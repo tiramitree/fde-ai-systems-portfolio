@@ -1,18 +1,22 @@
 from __future__ import annotations
 
-import math
 import re
 from collections import Counter
 
+from .embeddings import embed_chunk, embed_text
+from .identity import has_identity_access
+from .reranking import RERANK_FEATURES, RERANKER_NAME, rerank_hits
+from .repositories import KnowledgeRepository
+from .retrieval_scoring import not_run_profile, retrieval_profile, score_chunk
 from .security import detect_prompt_injection
-from .storage import JsonStore, list_chunks
+from .source_lifecycle import SOURCE_LIFECYCLE_POLICY, is_active_source
 
 
 TOKEN_RE = re.compile(r"[a-z0-9_]+|[\u4e00-\u9fff]", re.IGNORECASE)
 STOPWORDS = {
-    "a", "an", "and", "are", "as", "at", "be", "by", "can", "do", "for", "from",
+    "a", "an", "and", "are", "as", "at", "be", "by", "can", "current", "do", "for", "from",
     "how", "i", "in", "is", "it", "of", "on", "or", "our", "should", "the",
-    "to", "we", "what", "when", "where", "who", "why", "with", "you",
+    "to", "must", "we", "what", "when", "where", "who", "why", "with", "you",
 }
 
 SYNONYMS = {
@@ -37,66 +41,95 @@ def tokenize(text: str) -> list[str]:
 
 
 def _allowed(row: dict, user: dict) -> bool:
-    roles = row["allowed_roles"]
-    return row["tenant_id"] == user["tenant_id"] and user["role"] in roles
+    return has_identity_access(row, user)
 
 
-def retrieve(conn: JsonStore, user: dict, question: str, k: int = 5) -> dict:
-    all_chunks = list_chunks(conn, user["tenant_id"])
-    visible_chunks = [chunk for chunk in all_chunks if _allowed(chunk, user)]
-
+def retrieve(repo: KnowledgeRepository, user: dict, question: str, k: int = 5) -> dict:
     query_tokens = tokenize(question)
     if not query_tokens:
-        return {"hits": [], "blocked_count": 0, "query_tokens": []}
+        return {
+            "hits": [],
+            "blocked_count": 0,
+            "query_tokens": [],
+            "profile": not_run_profile("empty_query"),
+        }
+
+    query_embedding = embed_text(question)
+    candidate_limit = max(k * 4, 20)
+    candidate_payload = repo.list_retrieval_candidates(
+        user=user,
+        question=question,
+        query_tokens=query_tokens,
+        query_embedding=query_embedding.vector,
+        limit=candidate_limit,
+    )
+    visible_chunks = [chunk for chunk in candidate_payload.get("chunks", []) if _allowed(chunk, user)]
+    active_visible_chunks = [chunk for chunk in visible_chunks if is_active_source(chunk)]
+    stale_filtered_count = len(visible_chunks) - len(active_visible_chunks)
+    visible_chunk_count = int(candidate_payload.get("visible_chunk_count", len(visible_chunks)))
+    candidate_source_count = int(candidate_payload.get("candidate_count", len(visible_chunks)))
+    candidate_strategy = str(candidate_payload.get("candidate_strategy", "local_full_scan"))
 
     doc_freq: Counter[str] = Counter()
     tokenized_chunks: dict[str, list[str]] = {}
-    for chunk in visible_chunks:
+    for chunk in active_visible_chunks:
         tokens = tokenize(chunk["title"] + " " + chunk["text"])
         tokenized_chunks[chunk["id"]] = tokens
         for token in set(tokens):
             doc_freq[token] += 1
 
-    n_docs = max(len(visible_chunks), 1)
-    query_counter = Counter(query_tokens)
+    n_docs = max(visible_chunk_count, 1)
     scored = []
 
-    for chunk in visible_chunks:
-        chunk_tokens = tokenized_chunks[chunk["id"]]
-        counts = Counter(chunk_tokens)
-        length_norm = 1 + math.log(max(len(chunk_tokens), 1))
-        bm25_like = 0.0
-        for token, q_count in query_counter.items():
-            if counts[token] == 0:
-                continue
-            idf = math.log((n_docs + 1) / (doc_freq[token] + 0.5)) + 1
-            tf = counts[token] / (counts[token] + 1.2)
-            bm25_like += q_count * idf * tf
-
-        title_tokens = set(tokenize(chunk["title"]))
-        title_boost = 0.35 * len(set(query_tokens) & title_tokens)
-        phrase_boost = 0.5 if question.lower() in chunk["text"].lower() else 0.0
-        score = (bm25_like / length_norm) + title_boost + phrase_boost
-        if score <= 0:
+    for chunk in active_visible_chunks:
+        chunk_embedding = chunk.get("embedding")
+        embedding_model = chunk.get("embedding_model")
+        embedding_dimensions = chunk.get("embedding_dimensions")
+        if not chunk_embedding:
+            generated_embedding = embed_chunk(chunk["title"], chunk["text"])
+            chunk_embedding = generated_embedding.vector
+            embedding_model = generated_embedding.model
+            embedding_dimensions = generated_embedding.dimensions
+        scoring = score_chunk(
+            question=question,
+            query_tokens=query_tokens,
+            chunk_text=chunk["text"],
+            title_tokens=tokenize(chunk["title"]),
+            chunk_tokens=tokenized_chunks[chunk["id"]],
+            doc_freq=doc_freq,
+            n_docs=n_docs,
+            query_embedding=query_embedding.vector,
+            chunk_embedding=chunk_embedding,
+        )
+        if scoring.total <= 0:
             continue
 
         hit = dict(chunk)
-        hit["score"] = round(score, 4)
+        hit["score"] = round(scoring.total, 4)
+        hit["score_breakdown"] = scoring.as_breakdown()
+        hit["embedding_model"] = embedding_model
+        hit["embedding_dimensions"] = embedding_dimensions
         hit["security_flags"] = detect_prompt_injection(hit["text"])
         scored.append(hit)
 
     scored.sort(key=lambda item: item["score"], reverse=True)
+    reranked = rerank_hits(scored, query_tokens)
 
-    blocked_count = 0
-    for chunk in all_chunks:
-        if _allowed(chunk, user):
-            continue
-        inaccessible_tokens = tokenize(chunk["title"] + " " + chunk["text"])
-        if set(query_tokens) & set(inaccessible_tokens):
-            blocked_count += 1
+    blocked_count = repo.count_potentially_blocked_chunks(user, query_tokens)
 
     return {
-        "hits": scored[:k],
+        "hits": reranked[:k],
         "blocked_count": blocked_count,
         "query_tokens": query_tokens,
+        "profile": retrieval_profile(
+            visible_chunk_count=visible_chunk_count,
+            candidate_count=len(scored),
+            top_k=k,
+            candidate_strategy=candidate_strategy,
+            candidate_source_count=candidate_source_count,
+            reranker=RERANKER_NAME,
+            rerank_features=RERANK_FEATURES,
+            source_lifecycle_policy=SOURCE_LIFECYCLE_POLICY,
+            stale_filtered_count=stale_filtered_count,
+        ),
     }

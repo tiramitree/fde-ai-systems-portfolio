@@ -5,6 +5,7 @@ import json
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -96,7 +97,11 @@ def post_json(url: str, payload: dict) -> tuple[int, dict]:
     return request_json("POST", url, payload)
 
 
-def start_service(service: Service) -> subprocess.Popen:
+def service_state_path(state_root: Path, service: Service) -> Path:
+    return state_root / f"{service.name}-runtime_state.json"
+
+
+def start_service(service: Service, state_root: Path) -> subprocess.Popen:
     print(f"Starting {service.name} on port {service.port}")
     return subprocess.Popen(
         [
@@ -104,6 +109,8 @@ def start_service(service: Service) -> subprocess.Popen:
             "-B",
             "app.py",
             "--reset",
+            "--state-path",
+            str(service_state_path(state_root, service)),
             "--port",
             str(service.port),
         ],
@@ -176,6 +183,24 @@ def trace_timeline_doc_checks() -> list[Check]:
                 rel_path,
             )
         )
+    docs_to_markers = {
+        "README.md": ["python -B scripts/dev.py otel-collector-handoff"],
+        "PROJECT_CONTENT_INDEX.md": ["scripts/check_otel_collector_handoff.py"],
+        "docs/observability_integrity.md": ["python -B scripts/dev.py otel-collector-handoff"],
+        "docs/otel_trace_export.md": [
+            "--send-otlp-http",
+            "OTEL_EXPORTER_OTLP_PROTOCOL",
+            "python -B scripts/dev.py otel-collector-handoff",
+        ],
+        "docs/opentelemetry_collector_handoff_troubleshooting.md": [
+            "scripts/check_otel_collector_handoff.py",
+            "OTEL_EXPORTER_OTLP_PROTOCOL=http/json",
+        ],
+    }
+    for rel_path, markers in docs_to_markers.items():
+        text = (ROOT / rel_path).read_text(encoding="utf-8")
+        for marker in markers:
+            checks.append(require_text(text, marker, rel_path))
     return checks
 
 
@@ -422,6 +447,59 @@ def project_2_checks(base_url: str) -> list[Check]:
         )
     )
 
+    status, transient_case = post_json(
+        f"{base_url}/api/agent",
+        {
+            "user_id": "ivy",
+            "case_id": "case-1001",
+            "message": "Send notice for Market Blue recalled product and simulate transient dispatch failure.",
+        },
+    )
+    transient_approval_id = transient_case.get("approvals", [{}])[0].get("id", "")
+    status, transient_failure = post_json(
+        f"{base_url}/api/approval/approve",
+        {
+            "approval_id": transient_approval_id,
+            "approver_id": "sam",
+        },
+    )
+    transient_outbox_id = transient_failure.get("outbox_item", {}).get("id", "")
+    checks.append(
+        check(
+            status == 200
+            and transient_failure.get("result") == "dispatch_failed"
+            and transient_failure.get("execution") is None
+            and transient_failure.get("outbox_item", {}).get("status") == "retryable_failure"
+            and transient_failure.get("outbox_item", {}).get("lease_count") == 1
+            and transient_failure.get("outbox_item", {}).get("last_leased_by") == "sam"
+            and transient_failure.get("outbox_item", {}).get("lease_id") is None
+            and transient_failure.get("outbox_item", {}).get("lease_released_at"),
+            "P2 transient outbox failure is recorded before retry",
+            f"outbox={transient_outbox_id}",
+        )
+    )
+    status, transient_retry = post_json(
+        f"{base_url}/api/action-outbox/retry",
+        {
+            "outbox_id": transient_outbox_id,
+            "operator_id": "sam",
+        },
+    )
+    checks.append(
+        check(
+            status == 200
+            and transient_retry.get("result") == "notice_sent"
+            and transient_retry.get("outbox_item", {}).get("status") == "succeeded"
+            and transient_retry.get("outbox_item", {}).get("attempt_count") == 2
+            and transient_retry.get("outbox_item", {}).get("lease_count") == 2
+            and transient_retry.get("outbox_item", {}).get("last_leased_by") == "sam"
+            and transient_retry.get("outbox_item", {}).get("lease_id") is None
+            and transient_retry.get("outbox_item", {}).get("lease_released_at"),
+            "P2 transient outbox retry is observable as recovered dispatch",
+            f"outbox={transient_outbox_id}; execution={transient_retry.get('execution', {}).get('id')}",
+        )
+    )
+
     status, traces_payload = get_json(f"{base_url}/api/traces?limit=20")
     traces = traces_payload.get("traces", []) if status == 200 else []
     checks.append(check(status == 200 and isinstance(traces, list), "P2 trace endpoint returns list", f"traces={len(traces)}"))
@@ -433,6 +511,18 @@ def project_2_checks(base_url: str) -> list[Check]:
     status, approvals_payload = get_json(f"{base_url}/api/approvals")
     approvals = approvals_payload.get("approvals", []) if status == 200 else []
     checks.append(check(status == 200 and isinstance(approvals, list), "P2 approval endpoint returns list", f"approvals={len(approvals)}"))
+
+    status, action_runs_payload = get_json(f"{base_url}/api/action-runs?limit=20")
+    action_runs = action_runs_payload.get("action_runs", []) if status == 200 else []
+    checks.append(check(status == 200 and isinstance(action_runs, list), "P2 action-run endpoint returns list", f"action_runs={len(action_runs)}"))
+
+    status, workflow_runs_payload = get_json(f"{base_url}/api/workflow-runs?limit=20")
+    workflow_runs = workflow_runs_payload.get("workflow_runs", []) if status == 200 else []
+    checks.append(check(status == 200 and isinstance(workflow_runs, list), "P2 workflow-run endpoint returns list", f"workflow_runs={len(workflow_runs)}"))
+
+    status, outbox_payload = get_json(f"{base_url}/api/action-outbox?limit=20")
+    outbox_items = outbox_payload.get("action_outbox", []) if status == 200 else []
+    checks.append(check(status == 200 and isinstance(outbox_items, list), "P2 action-outbox endpoint returns list", f"outbox={len(outbox_items)}"))
 
     investigation_trace = find_by_id(traces, investigation.get("trace_id", "")) or {}
     investigation_result = investigation_trace.get("result", {})
@@ -470,6 +560,83 @@ def project_2_checks(base_url: str) -> list[Check]:
         )
     )
 
+    approval_execution = approval.get("execution", {})
+    action_run_record = find_by_id(action_runs, approval_execution.get("id", "")) or {}
+    outbox_record = next((item for item in outbox_items if item.get("approval_id") == approval_id), {})
+    transient_outbox_record = next((item for item in outbox_items if item.get("approval_id") == transient_approval_id), {})
+    investigation_workflow = find_by_id(workflow_runs, investigation.get("workflow_run", {}).get("id", "")) or {}
+    transient_workflow = find_by_id(workflow_runs, transient_case.get("workflow_run", {}).get("id", "")) or {}
+    serialized_action_runs = json.dumps(action_runs_payload)
+    serialized_outbox = json.dumps(outbox_payload)
+    serialized_workflows = json.dumps(workflow_runs_payload)
+    checks.append(
+        check(
+            action_run_record.get("approval_id") == approval_id
+            and action_run_record.get("status") == "succeeded"
+            and action_run_record.get("result") == "notice_sent"
+            and len(action_run_record.get("payload_sha256", "")) == 64
+            and "Seller Market Blue" not in serialized_action_runs
+            and "Please remove the listing" not in serialized_action_runs,
+            "P2 action-run receipt persists idempotent side-effect evidence",
+            f"execution={action_run_record.get('id')}; approval={approval_id}",
+        )
+    )
+    checks.append(
+        check(
+            outbox_record.get("status") == "succeeded"
+            and outbox_record.get("execution_id") == action_run_record.get("id")
+            and outbox_record.get("attempt_count") == 1
+            and outbox_record.get("lease_count") == 1
+            and outbox_record.get("last_leased_by") == "sam"
+            and outbox_record.get("lease_id") is None
+            and outbox_record.get("lease_released_at")
+            and len(outbox_record.get("payload_sha256", "")) == 64
+            and "Seller Market Blue" not in serialized_outbox
+            and "Please remove the listing" not in serialized_outbox,
+            "P2 action-outbox record persists dispatch state without raw notice body",
+            f"outbox={outbox_record.get('id')}; execution={outbox_record.get('execution_id')}",
+        )
+    )
+    checks.append(
+        check(
+            transient_outbox_record.get("status") == "succeeded"
+            and transient_outbox_record.get("attempt_count") == 2
+            and transient_outbox_record.get("lease_count") == 2
+            and transient_outbox_record.get("last_leased_by") == "sam"
+            and transient_outbox_record.get("lease_id") is None
+            and transient_outbox_record.get("lease_released_at")
+            and transient_outbox_record.get("execution_id")
+            and transient_outbox_record.get("last_error") is None,
+            "P2 recovered action-outbox record persists retry attempt and lease evidence",
+            f"outbox={transient_outbox_record.get('id')}; attempts={transient_outbox_record.get('attempt_count')}",
+        )
+    )
+    checks.append(
+        check(
+            investigation_workflow.get("status") == "succeeded"
+            and investigation_workflow.get("stage") == "side_effect_executed"
+            and approval_id in investigation_workflow.get("approval_ids", [])
+            and outbox_record.get("id") in investigation_workflow.get("outbox_ids", [])
+            and action_run_record.get("id") in investigation_workflow.get("action_run_ids", [])
+            and investigation_workflow.get("raw_message_returned") is False
+            and "Seller Market Blue" not in serialized_workflows
+            and "Please remove the listing" not in serialized_workflows,
+            "P2 workflow run persists approved execution checkpoint without raw message/body",
+            f"workflow={investigation_workflow.get('id')}; status={investigation_workflow.get('status')}",
+        )
+    )
+    checks.append(
+        check(
+            transient_workflow.get("status") == "succeeded"
+            and transient_workflow.get("stage") == "side_effect_executed"
+            and transient_outbox_record.get("id") in transient_workflow.get("outbox_ids", [])
+            and transient_workflow.get("retryable_outbox_ids") == []
+            and transient_workflow.get("waiting_on") is None,
+            "P2 workflow run persists retry recovery checkpoint",
+            f"workflow={transient_workflow.get('id')}; outbox={transient_outbox_record.get('id')}",
+        )
+    )
+
     names = action_names(events)
     required_actions = {
         "violation_created",
@@ -477,6 +644,10 @@ def project_2_checks(base_url: str) -> list[Check]:
         "approval_requested",
         "agent_message_processed",
         "unsafe_instruction_blocked",
+        "action_outbox_enqueued",
+        "action_outbox_retryable_failure",
+        "action_outbox_succeeded",
+        "tool_action_executed",
         "notice_sent",
     }
     checks.append(
@@ -635,28 +806,31 @@ def main() -> int:
     started: list[subprocess.Popen] = []
     checks: list[Check] = []
     try:
-        for service in service_list:
-            started.append(start_service(service))
-        for service in service_list:
-            if not wait_for_health(service):
-                print(f"Service did not become healthy: {service.name}", file=sys.stderr)
-                return 1
+        with tempfile.TemporaryDirectory(prefix="fde-observability-") as temp_dir:
+            state_root = Path(temp_dir)
+            try:
+                for service in service_list:
+                    started.append(start_service(service, state_root))
+                for service in service_list:
+                    if not wait_for_health(service):
+                        print(f"Service did not become healthy: {service.name}", file=sys.stderr)
+                        return 1
 
-        checks.extend(trace_timeline_doc_checks())
-        checks.extend(project_1_checks(service_list[0].base_url))
-        checks.extend(project_2_checks(service_list[1].base_url))
-        checks.extend(project_3_checks(service_list[2].base_url))
+                checks.extend(trace_timeline_doc_checks())
+                checks.extend(project_1_checks(service_list[0].base_url))
+                checks.extend(project_2_checks(service_list[1].base_url))
+                checks.extend(project_3_checks(service_list[2].base_url))
+            finally:
+                for process in started:
+                    process.terminate()
+                for process in started:
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError, IndexError) as exc:
         print(f"Observability integrity check failed with exception: {exc}", file=sys.stderr)
         return 1
-    finally:
-        for process in started:
-            process.terminate()
-        for process in started:
-            try:
-                process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                process.kill()
 
     for item in checks:
         status = "PASS" if item.passed else "FAIL"

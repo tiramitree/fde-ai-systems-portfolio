@@ -10,9 +10,11 @@ THREAT_MODEL = ROOT / "docs" / "threat_model.md"
 
 THREATS = {
     "T01": {
-        "phrases": ["Unauthorized document disclosure", "tenant and role", "before answer generation"],
+        "phrases": ["Unauthorized document disclosure", "tenant, role, and source group", "before retrieval scoring"],
         "files": [
+            "secure-enterprise-knowledge-copilot/src/copilot/identity.py",
             "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py",
             "secure-enterprise-knowledge-copilot/src/copilot/answering.py",
             "secure-enterprise-knowledge-copilot/data/eval_cases.json",
             "scripts/check_observability_integrity.py",
@@ -29,9 +31,10 @@ THREATS = {
         "commands": ["evals", "smoke", "observability"],
     },
     "T03": {
-        "phrases": ["Unsupported or fabricated answers", "abstains", "citation requirements"],
+        "phrases": ["Unsupported or fabricated answers", "abstains", "citation requirements", "retrieval evals"],
         "files": [
             "secure-enterprise-knowledge-copilot/src/copilot/answering.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py",
             "secure-enterprise-knowledge-copilot/src/copilot/evals.py",
             "scripts/check_claim_consistency.py",
         ],
@@ -56,9 +59,10 @@ THREATS = {
         "commands": ["evals", "contracts", "observability"],
     },
     "T06": {
-        "phrases": ["Duplicate side-effect execution", "idempotency keys", "already-processed"],
+        "phrases": ["Duplicate side-effect execution", "idempotency keys", "workflow-run checkpoints", "already-processed"],
         "files": [
             "regulated-customer-operations-agent/src/ops_agent/tools.py",
+            "regulated-customer-operations-agent/src/ops_agent/workflows.py",
             "scripts/smoke_test_demo_flows.py",
             "scripts/check_observability_integrity.py",
         ],
@@ -105,7 +109,12 @@ THREATS = {
         "commands": ["model-gateway-safety"],
     },
     "T11": {
-        "phrases": ["Trace, audit, approval, or release-decision evidence", "persisted trace IDs", "release decisions"],
+        "phrases": [
+            "Trace, audit, workflow-run, approval, action-outbox, or release-decision evidence",
+            "persisted trace IDs",
+            "workflow-run checkpoints",
+            "release decisions",
+        ],
         "files": [
             "scripts/check_observability_integrity.py",
             "scripts/export_traces_otel.py",
@@ -124,6 +133,19 @@ THREATS = {
         ],
         "commands": ["ui-contracts"],
     },
+    "T13": {
+        "phrases": ["Unauthorized or poisoned document ingestion", "admin-only ingestion", "parser metadata", "source scan metadata", "source_hash"],
+        "files": [
+            "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/source_bundle_connector.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/github_connector.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py",
+            "secure-enterprise-knowledge-copilot/src/copilot/source_scanning.py",
+            "scripts/check_api_contracts.py",
+            "docs/api_contracts.md",
+        ],
+        "commands": ["contracts", "api-docs", "source-scan"],
+    },
 }
 
 
@@ -141,9 +163,17 @@ SUPPORTING_DOCS = [
 
 
 SOURCE_MARKERS = {
-    "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py": ["tenant_id", "allowed_roles", "_allowed"],
+    "secure-enterprise-knowledge-copilot/src/copilot/identity.py": ["tenant_id", "allowed_roles", "allowed_groups", "has_identity_access"],
+    "secure-enterprise-knowledge-copilot/src/copilot/retrieval.py": ["has_identity_access", "_allowed"],
+    "secure-enterprise-knowledge-copilot/src/copilot/retrieval_scoring.py": ["local-hybrid-v1", "score_chunk", "semantic_family"],
     "secure-enterprise-knowledge-copilot/src/copilot/answering.py": ["abstain_reason", "insert_trace", "insert_audit"],
     "secure-enterprise-knowledge-copilot/src/copilot/security.py": ["INJECTION_PATTERNS", "detect_prompt_injection"],
+    "secure-enterprise-knowledge-copilot/src/copilot/ingestion.py": ["Only admin users", "source_hash", "document_ingested", "source_sync_completed", "acl_role_drift"],
+    "secure-enterprise-knowledge-copilot/src/copilot/source_bundle_connector.py": ["Only admin users", "source_bundle_synced", "manifest_sha256", "bundle document path must stay inside"],
+    "secure-enterprise-knowledge-copilot/src/copilot/github_connector.py": ["Only admin users", "github_connector_synced", "GITHUB_CONNECTOR_TOKEN", "source_payload_sha256"],
+    "secure-enterprise-knowledge-copilot/src/copilot/ingestion_jobs.py": ["idempotency_key", "dead_lettered", "ingestion_job_completed", "ingestion_job_dead_lettered"],
+    "secure-enterprise-knowledge-copilot/src/copilot/source_parsing.py": ["parse_source_content", "ParsedSource", "parser_name"],
+    "secure-enterprise-knowledge-copilot/src/copilot/source_scanning.py": ["SOURCE_SCAN_SCHEMA_VERSION", "scan_source_content", "raw_matches_returned"],
     "regulated-customer-operations-agent/src/ops_agent/tools.py": [
         "direct_side_effect_blocked",
         "request_approval",
