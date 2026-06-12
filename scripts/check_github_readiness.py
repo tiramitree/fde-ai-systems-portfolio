@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 import re
@@ -79,6 +80,8 @@ def api_get(repo: str, endpoint: str) -> tuple[int, dict | list | None, str]:
         return exc.code, None, body or str(exc)
     except urllib.error.URLError as exc:
         return 0, None, str(exc.reason)
+    except (http.client.IncompleteRead, json.JSONDecodeError) as exc:
+        return 0, None, str(exc)
 
 
 def check(ok: bool, name: str, detail: str = "", warn: bool = False) -> Check:
@@ -103,6 +106,7 @@ def is_network_unavailable(error: str) -> bool:
         "temporary failure",
         "timed out",
         "winerror 10061",
+        "incompleteread",
     ]
     return any(marker in normalized for marker in markers)
 
