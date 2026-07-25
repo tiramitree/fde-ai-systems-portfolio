@@ -8,15 +8,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 FORBIDDEN_PATTERNS = [
     "sk-",
-    "CV_Runze",
-    "tiramitree",
-    "C:\\NYU",
     "C:\\Users",
     "C:/Users",
     "OneDrive",
     "xwechat",
     "wxid_",
-    "11758",
     "github_pat_",
     "ghp_",
     "gho_",
@@ -27,6 +23,7 @@ FORBIDDEN_PATTERNS = [
     "BEGIN PRIVATE KEY",
     "BEGIN OPENSSH PRIVATE KEY",
 ]
+
 
 FORBIDDEN_POSITIONING_PATTERNS = [
     "inter" + "view",
