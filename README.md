@@ -5,11 +5,20 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Local First](https://img.shields.io/badge/local--first-no_paid_API_required-2f855a)
 
-Three runnable enterprise AI systems demonstrating secure RAG, governed agents, AI release reliability, evals, traces, audit logs, and approval gates.
+> [!IMPORTANT]
+> **Scope and authorship.** These are AI-assisted rapid reference prototypes
+> built with fictional data for learning, review, and controlled local demos.
+> AI coding agents materially assisted with code, tests, documentation, and
+> maintenance. This repository is not evidence of customer or employer
+> deployment, production traffic, independent enterprise consulting, external
+> adoption, or independent authorship inferred from file or commit volume. See
+> [AI Assistance and Ownership](AI_ASSISTANCE_AND_OWNERSHIP.md).
+
+Three runnable, local-first reference prototypes demonstrating secure RAG, governed agents, AI release reliability, evals, traces, audit logs, and approval gates.
 
 ![FDE AI Systems Reference Implementations](docs/assets/github-preview.png)
 
-Most AI app demos stop at chat. Real enterprise deployments need permission boundaries, evidence, human approval, release reliability, debugging surfaces, and regression tests. This repo implements those patterns in three local-first systems that run without paid APIs, while leaving clean upgrade paths to OpenAI Responses API, Agents SDK, PostgreSQL/pgvector, OpenTelemetry, and enterprise connectors.
+Most AI app demos stop at chat. These prototypes model permission boundaries, evidence, human approval, release reliability, debugging surfaces, and regression tests in three local-first demos that run without paid APIs. The upgrade notes are design directions, not verified production deployments; the repository does not claim customers, production traffic, or external adoption.
 
 ## Projects
 
@@ -39,7 +48,7 @@ Risk badges:
 
 ## Why This Exists
 
-FDE and AI application systems need more than a model call. These reference implementations focus on the controls that usually separate production-oriented AI systems from chatbot demos:
+FDE and AI application prototypes need more than a model call. These reference implementations explore controls that are useful to study before production work:
 
 - permissions before model generation
 - citations and abstention instead of unsupported answers
@@ -695,9 +704,9 @@ repository/
 
 ## System Narrative
 
-The first project handles enterprise knowledge access with permissions, citations, abstention, traces, audit logs, and evals. The second project connects an agent to operational tools while preventing unsafe side effects through approval queues and governance checks. The third project handles AI release reliability after deployment by linking eval regressions, incidents, rollout blocking, traces, audit logs, and remediation plans. The browser demos expose trace IDs, keyboard-friendly local trace links, visible focus states, reduced-motion CSS, browser-local light/dark theme controls, and copyable browser-local scenario drafts with local diffs so a specific run and its fictional seed context can be inspected again without relying on screenshots.
+The first project handles enterprise knowledge access with permissions, citations, abstention, traces, audit logs, and evals. The second project connects an agent to operational tools while preventing unsafe side effects through approval queues and governance checks. The third project models an AI release-reliability scenario by linking eval regressions, incidents, rollout blocking, traces, audit logs, and remediation plans. The browser demos expose trace IDs, keyboard-friendly local trace links, visible focus states, reduced-motion CSS, browser-local light/dark theme controls, and copyable browser-local scenario drafts with local diffs so a specific run and its fictional seed context can be inspected again without relying on screenshots.
 
-Together they form a compact reference architecture for AI systems that are useful, inspectable, and safe enough to reason about before enterprise deployment.
+Together they form a compact, fictional-data reference architecture for inspecting application controls in local demos. They do not establish production readiness, deployment, or external use.
 
 ## License
 
