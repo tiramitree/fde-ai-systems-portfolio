@@ -7,11 +7,17 @@ This MVP is intentionally dependency-free so it can run on any local Python 3.12
 ## What It Demonstrates
 
 - Role-aware retrieval across internal enterprise documents.
+- Admin-only ingestion of local text, Markdown, CSV, HTML, or JSON content.
+- Admin-only connector-style batch source sync with external IDs, source ACL snapshots, sync cursor, permission drift, and audit evidence.
+- Source lifecycle filtering that keeps superseded sources auditable but out of current answer generation.
+- Admin-only source bundle connector that reads checked-in synthetic files through manifest ACL snapshots and the ingestion job ledger.
+- Admin-only GitHub read connector that normalizes issue/PR records through the source sync and ingestion job boundaries.
+- Admin-only ingestion job ledger with idempotency, sanitized input summaries, retry parent links, and dead-letter evidence.
 - Citation-required answers.
 - Abstention when accessible evidence is missing.
 - Prompt-injection detection inside retrieved documents.
 - Trace logging for retrieval and answer generation.
-- Audit logging for user actions and cited sources.
+- Audit logging for user actions and cited sources with normalized-text span metadata.
 - Golden eval gate for regression testing.
 - Static operational UI for demo and technical review walkthrough.
 
@@ -62,11 +68,34 @@ Expected behaviors:
 Browser UI
   -> Python HTTP API
     -> JSON runtime state for users/documents/chunks/traces/audit/eval runs
-    -> retrieval.py: tokenization + BM25-like scoring + role filter
+    -> ingestion.py: admin-only source normalization + chunk creation + audit event
+    -> source_bundle_connector.py: allowlisted checked-in bundle connector
+    -> retrieval.py: tokenization + BM25-like scoring + role filter + source lifecycle filter
     -> security.py: retrieved-content prompt-injection detection
-    -> answering.py: grounded extractive answer + citations + abstention
+    -> answering.py: grounded extractive answer + chunk and sentence source-span citations + abstention
     -> evals.py: golden regression suite
 ```
+
+## Admin Ingestion And Source Sync Contract
+
+`POST /api/documents/ingest`, `POST /api/sources/sync`, `POST /api/connectors/source-bundle/sync`, `POST /api/connectors/github/sync`, and `POST /api/ingestion/jobs` are the first production-data-plane steps. They keep the local-first demo simple while proving the control boundary for future connectors and workers:
+
+- only admin users can ingest documents
+- admins can ingest only into their own tenant
+- confidential documents cannot include the `employee` role
+- duplicate document IDs require explicit `replace`
+- supported source types are text, Markdown, CSV, HTML, and JSON
+- source sync persists connector name, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, sync cursor, and source lifecycle metadata
+- source bundle sync reads only checked-in synthetic files under `data/source_bundles/<bundle>`, rejects unsafe bundle names, and maps manifest ACL snapshots into the same source sync path
+- GitHub connector sync persists issue/PR source URLs, external IDs, connector ACL snapshots, and `github_connector_synced` audit evidence without returning raw GitHub bodies through job summaries
+- source ACL snapshots override document payload roles and fail closed when a synced document lacks a matching source permission record
+- ingested document bodies are not returned by `/api/documents`
+- every ingestion writes a `document_ingested` audit event with `source_hash`, `source_mime`, roles, chunk count, and normalized-text source span coverage
+- every batch source sync writes a `source_sync_completed` audit event with connector, cursor, document count, chunk count, replacement count, parser warnings, `acl_drift_count`, and affected document IDs
+- ingestion jobs require `idempotency_key`, record sanitized input summaries with `body_sha256` instead of raw bodies, and expose `succeeded` or `dead_lettered` status
+- failed worker validation writes `ingestion_job_dead_lettered`; successful jobs write `ingestion_job_completed`
+
+The API contract gate verifies admin ingestion, non-admin refusal, source sync refusal for non-admins, source bundle refusal for non-admins and unsafe bundle names, GitHub connector refusal for non-admins, source ACL snapshot enforcement, permission drift visibility changes, job idempotency replay, dead-letter handling, retry recovery, retrieval with chunk-level and sentence-level citation spans from ingested, synced, source bundle, and GitHub connector documents, active-only source lifecycle filtering, body hiding, and audit evidence.
 
 ## Deployment Positioning
 
@@ -86,7 +115,7 @@ Next iterations:
 1. Replace Python HTTP server with FastAPI.
 2. Replace JSON runtime state with PostgreSQL and pgvector.
 3. Replace local extractive answerer with OpenAI Responses API structured output.
-4. Add file upload and background ingestion queue.
+4. Extend the current admin ingestion, ACL-snapshot source sync, source bundle connector, GitHub read connector, and local ingestion job contracts into broader external connectors, source user/group sync, and a background worker queue.
 5. Add OpenTelemetry trace export.
 6. Add Docker Compose with app, database, and worker.
 7. Add screenshot/demo video and deployment runbook.

@@ -1,0 +1,3 @@
+window,owner,rule
+Quarter close,Release Operations,Managers must approve production changes during quarter close before deployment.
+Security audit week,Security Operations,Only admin-approved security fixes can bypass the audit-week change freeze.

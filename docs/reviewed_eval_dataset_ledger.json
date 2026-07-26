@@ -1,0 +1,120 @@
+{
+  "schema_version": "reviewed-eval-dataset-ledger-v1",
+  "updated_at": "2026-06-07",
+  "redaction_policy": "public_trace_export_redaction_v1",
+  "purpose": "Checked-in review ledger for golden eval fixtures and trace-to-eval promotion targets. Runtime traces remain review candidates until a maintainer records a disposition and edits the target fixture.",
+  "allowed_dispositions": [
+    "promote_to_golden_eval",
+    "needs_fixture_edit",
+    "reject_noisy_or_duplicate_trace"
+  ],
+  "promotion_requirements": [
+    "confirm seed and runtime evidence are fictional and public-safe",
+    "keep the expected contract minimal and tied to one durable invariant",
+    "remove runtime-only trace ids before editing checked-in eval fixtures",
+    "record reviewer role, disposition, target fixture, and regression schedule in this ledger",
+    "rerun scenario-data, evals, retrieval-metrics, claims, trace-to-eval, trace-to-eval-check, and quality gates before commit"
+  ],
+  "regression_schedules": {
+    "nightly": {
+      "cadence": "0 9 * * * UTC",
+      "workflow": ".github/workflows/nightly-regression.yml",
+      "commands": [
+        "python -B scripts/dev.py reviewed-eval-ledger",
+        "python -B scripts/dev.py replay",
+        "python -B scripts/dev.py trace-to-eval",
+        "python -B scripts/dev.py trace-to-eval-check",
+        "python -B scripts/dev.py retrieval-metrics",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py claims"
+      ]
+    },
+    "release-gate": {
+      "cadence": "before public release or material eval fixture change",
+      "workflow": ".github/workflows/ci.yml",
+      "commands": [
+        "python -B scripts/dev.py quality"
+      ]
+    }
+  },
+  "datasets": [
+    {
+      "project": "secure-enterprise-knowledge-copilot",
+      "dataset_version": "p1-golden-2026-06-07",
+      "fixture": "secure-enterprise-knowledge-copilot/data/eval_cases.json",
+      "owner_role": "knowledge-safety-reviewer",
+      "case_count": 14,
+      "review_status": "active_reviewed_fixture",
+      "candidate_categories": [
+        "p1_permission_abstain",
+        "p1_prompt_injection_abstain",
+        "p1_grounded_citation_answer"
+      ],
+      "regression_schedule": "nightly",
+      "required_gate_commands": [
+        "python -B scripts/dev.py scenario-data",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py retrieval-metrics",
+        "python -B scripts/dev.py claims",
+        "python -B scripts/dev.py quality"
+      ],
+      "tracked_invariants": [
+        "permission filtering before generation",
+        "abstention for inaccessible or unsupported evidence",
+        "citation source-span coverage",
+        "retrieval recall, ranking, and citation-context alignment",
+        "prompt-injection security-event coverage"
+      ]
+    },
+    {
+      "project": "regulated-customer-operations-agent",
+      "dataset_version": "p2-golden-2026-06-07",
+      "fixture": "regulated-customer-operations-agent/data/eval_cases.json",
+      "owner_role": "agent-governance-reviewer",
+      "case_count": 8,
+      "review_status": "active_reviewed_fixture",
+      "candidate_categories": [
+        "p2_side_effect_requires_approval",
+        "p2_governance_bypass_refusal"
+      ],
+      "regression_schedule": "nightly",
+      "required_gate_commands": [
+        "python -B scripts/dev.py scenario-data",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py claims",
+        "python -B scripts/dev.py quality"
+      ],
+      "tracked_invariants": [
+        "side effects require application-level approval",
+        "approval bypass attempts are refused",
+        "action outbox and action-run evidence remain auditable",
+        "unsafe direct side-effect failures stay zero"
+      ]
+    },
+    {
+      "project": "ai-reliability-incident-console",
+      "dataset_version": "p3-golden-2026-06-07",
+      "fixture": "ai-reliability-incident-console/data/eval_cases.json",
+      "owner_role": "release-reliability-reviewer",
+      "case_count": 6,
+      "review_status": "active_reviewed_fixture",
+      "candidate_categories": [
+        "p3_release_block_from_failed_eval",
+        "p3_monitor_only_eval_signal"
+      ],
+      "regression_schedule": "nightly",
+      "required_gate_commands": [
+        "python -B scripts/dev.py scenario-data",
+        "python -B scripts/dev.py evals",
+        "python -B scripts/dev.py claims",
+        "python -B scripts/dev.py quality"
+      ],
+      "tracked_invariants": [
+        "failed high-risk eval evidence blocks rollout",
+        "monitor-only signals do not block safe release paths",
+        "release decisions stay linked to incident and eval evidence",
+        "unsafe release approval failures stay zero"
+      ]
+    }
+  ]
+}

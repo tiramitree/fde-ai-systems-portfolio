@@ -138,7 +138,7 @@ python -B scripts/dev.py verify
 
 Show final lines:
 
-- Project 1 eval 11/11
+- Project 1 eval 14/14
 - Project 2 eval 8/8
 - Project 3 eval 6/6
 - smoke tests 13/13

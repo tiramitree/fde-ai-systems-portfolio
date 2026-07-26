@@ -11,6 +11,7 @@ The local repository uses dependency-free Python and static frontend assets so t
 - side-effect approval gates
 - audit and trace records
 - golden eval gates
+- threat and governance controls mapped to OWASP LLM Top 10 and NIST AI RMF
 
 Production hardening should upgrade infrastructure without changing these core control boundaries.
 
@@ -41,15 +42,18 @@ The model should not enforce security by itself.
 
 Project 1 still performs:
 
+- admin-only ingestion before document chunks are added to searchable state
 - tenant and role filtering before generation
 - unsafe retrieved-content removal before generation
+- source lifecycle filtering before retrieval scoring so superseded, deprecated, or deleted sources stay auditable but cannot answer current questions
 - citation and abstention decisions in application logic
+- normalized-text source spans attached to retrieved chunks, cited chunks, and sentence-level answer evidence
 
 Project 2 still performs:
 
 - tool permission checks in application logic
 - approval gate enforcement in application logic
-- side-effect execution only after supervisor approval
+- side-effect execution only after supervisor approval, with tool-registry policy metadata, sanitized dry-run previews, owner/expiry review fields, rejection/expiry terminal states, sanitized workflow-run checkpoints, action-outbox dispatch checkpoints, local worker lease proof, retry/dead-letter states for pre-side-effect dispatch failures, and action-run receipts for idempotency and post-approval audit evidence
 
 ## Recommended Production Architecture
 
@@ -67,28 +71,87 @@ Next.js frontend
 
 ## Project 1 Upgrade Path
 
-1. Add file upload.
-2. Add document parser pipeline.
-3. Add embedding model and vector retrieval.
-4. Add BM25 + vector hybrid ranking.
-5. Add reranker.
-6. Add PostgreSQL row-level security.
-7. Add eval cases from real failure logs.
+Current production-path artifacts:
+
+- `infra/postgres/migrations/001_core.sql`
+- `infra/postgres/migrations/002_project1_denied_evidence_count.sql`
+- `infra/postgres/migrations/003_project1_group_acl.sql`
+- `infra/postgres/seeds/001_project1_demo.sql`
+- `docker-compose.postgres.yml`
+- `secure-enterprise-knowledge-copilot/src/copilot/embeddings.py`
+- `secure-enterprise-knowledge-copilot/src/copilot/ingestion.py`
+- `secure-enterprise-knowledge-copilot/src/copilot/source_files.py`
+- `secure-enterprise-knowledge-copilot/src/copilot/source_lifecycle.py`
+- `secure-enterprise-knowledge-copilot/web/js/ingestion.js`
+- `secure-enterprise-knowledge-copilot/src/copilot/postgres_repositories.py`
+- `python -B scripts/dev.py postgres-migrations`
+- `python -B scripts/dev.py postgres-compose`
+- `python -B scripts/dev.py postgres-runtime`
+- `python -B scripts/dev.py postgres-seed`
+
+Project 1 runtime switch:
+
+- `COPILOT_REPOSITORY=json` keeps the verified local JSON path.
+- `COPILOT_REPOSITORY=postgres` switches `connect_repository()` to `PostgresRepositorySession`.
+- `COPILOT_POSTGRES_DSN` points the optional runtime at a PostgreSQL/pgvector deployment that has applied `infra/postgres/migrations/001_core.sql` and `infra/postgres/seeds/001_project1_demo.sql`.
+- `COPILOT_POSTGRES_POOL=1` opts into a dynamically loaded `psycopg_pool` connection pool lease when the deployment environment provides that package.
+- `python -B scripts/dev.py postgres-runtime` verifies the offline runtime switch contract; `python -B scripts/check_project1_postgres_runtime.py --live` verifies a real seeded database when `COPILOT_POSTGRES_DSN` is available.
+- `python -B scripts/dev.py postgres-compose` verifies the optional local pgvector compose file, digest-pinned image, init order, seed wiring, healthcheck, and local role separation.
+- `docker-compose.postgres.yml` runs Project 1 local production-mode Postgres on host port `55432`; its public local-only app role is `fde_app` with demo password `fde_app_demo_password`.
+- `project1_denied_relevant_chunk_count` preserves denied-evidence audit counts under RLS without exposing unauthorized document IDs, titles, or chunk bodies; the group ACL migration also counts documents denied by source-group membership rather than role alone.
+- `local-hashing-v1` provides a deterministic 1536-dimensional embedding boundary for seed data and admin ingestion so pgvector storage and vector score reporting are now concrete, while a production embedding model remains a later replacement.
+- `PostgresKnowledgeRepository.list_retrieval_candidates` adds `postgres_hybrid_sql_v1`, a SQL-backed keyword/vector candidate selection path that applies tenant, role, and source-group filters before `websearch_to_tsquery` and pgvector nearest-neighbor retrieval.
+- `local-evidence-reranker-v1` provides a deterministic reranker boundary with feature-level rerank scores so production rerankers can be added without changing the permission or citation invariants.
+- `scripts/check_project1_retrieval_metrics.py` adds a retrieval-quality gate over the checked-in Project 1 eval slice. It asserts behavior accuracy, required retrieval recall@k, mean reciprocal rank, required citation coverage, permission-block coverage, forbidden retrieval leak failures, and stale-source filter coverage.
+- Project 1 chunk metadata now carries normalized-text `source_span` values through JSON seed state, admin ingestion, citation output, traces, and the optional PostgreSQL adapter.
+- Project 1 documents and chunks now carry `source_lifecycle_state` and `superseded_by` metadata. Retrieval uses the `active_sources_only` lifecycle policy, records `stale_filtered_count`, and keeps superseded/deprecated/deleted sources out of scoring and answer assembly while retaining them for audit history.
+- `scripts/export_traces_otel.py --send-otlp-http` adds an optional OTLP/HTTP JSON collector handoff path, while `scripts/check_otel_collector_handoff.py` verifies the POST behavior with a local collector stub so hosted observability remains opt-in.
+- `scripts/trace_redaction.py` adds `public_trace_export_redaction_v1`, a shared export-boundary redaction policy for OTLP payloads and trace-to-eval candidates. `python -B scripts/dev.py trace-redaction` verifies that common email, phone, secret-like, private ID, and local path markers are removed before generated observability artifacts leave local runtime state.
+- `scripts/export_trace_eval_candidates.py` adds a local trace-to-eval candidate workflow so permission abstentions, prompt-injection refusals, approval gates, bypass refusals, release blocks, and monitor-only eval signals can be reviewed before promotion into checked-in golden evals. Candidate artifacts include owner roles, allowed dispositions, promotion targets, redaction policy metadata, and regression schedules so review remains explicit.
+- `docs/reviewed_eval_dataset_ledger.json`, `scripts/check_reviewed_eval_ledger.py`, and `.github/workflows/nightly-regression.yml` add a checked-in reviewed-dataset ledger and read-only nightly regression schedule. The ledger ties each golden eval fixture to an owner role, candidate categories, current case count, promotion requirements, and required regression commands.
+- `docs/ai_governance_control_registry.json` and `scripts/check_ai_governance_controls.py` add a checked AI governance control registry. The registry maps local controls to OWASP LLM Top 10 risk families, NIST AI RMF Govern/Map/Measure/Manage functions, T01-T13 threat IDs, owner roles, evidence files, evidence commands, and remaining production gaps. Verify it with `python -B scripts/dev.py governance-controls`.
+- `--state-path` on each local app isolates JSON runtime state for self-starting verification commands. API contracts, runtime UI contracts, observability checks, visual asset refresh, isolated replay runs, and replay artifact generation can now create traces, audit events, approvals, workflow runs, and outbox records without mutating canonical demo state.
+- `scripts/check_runtime_latency_budget.py` adds a local latency evidence gate for all three services. It starts isolated services, runs repeated core requests, and verifies that API responses and persisted traces both carry bounded `latency_ms` values, so latency instrumentation is checked before external observability backends are added.
+- `POST /api/documents/ingest` now accepts either direct text/Markdown/CSV/HTML/JSON body content or a UTF-8 file-like JSON payload with `document.file.filename` and `document.file.content_base64`. The file boundary records safe `source_file` metadata, rejects path-like filenames and unsupported MIME types, infers supported MIME types from filenames when needed, and routes decoded content through the same parser, chunking, embedding, citation, audit, and retrieval path.
+- `source_parser_quality_v1` adds checked parser quality metadata for Project 1 ingestion and parse preview. The contract records raw and normalized character counts, line counts, non-empty line counts, section counts, table-like line counts, and format details for Markdown, CSV, HTML, and JSON. Verify it with `python -B scripts/dev.py parser-quality`.
+- `source_scan_v1` adds a local source safety scan before Project 1 content becomes searchable. It records scan policy, status, severity, review requirement, finding counts, and finding categories for instruction-override text, secret-like assignments, token-like strings, private path or identifier patterns, personal identifiers, and external links without returning raw matches.
+- `GET /api/sources/quality` adds an admin-only source quality inventory. It summarizes parser quality schema coverage, source scan coverage, MIME distribution, connector distribution, lifecycle counts, classification counts, ACL snapshot coverage, parser warnings, scan review counts, and per-source risk flags without returning raw source bodies or raw scan matches. This is a local operator surface for reviewing indexed sources before trusting retrieval.
+- Project 1 seed initialization now routes checked-in seed documents through the same parser contract before generating local JSON documents/chunks. The deterministic PostgreSQL seed generator reuses that path, so default demo state and the optional pgvector path both carry source hashes, MIME type, parser metadata, parser warnings, source connector metadata, and normalized-text span evidence.
+- `POST /api/sources/sync` adds an admin-only connector-style source sync contract. It persists connector name, external document ID, ACL source, ACL snapshot version, source permission ID, allowed-role source, allowed source groups, source ACL principals, sync cursor metadata, and source lifecycle metadata on documents and chunks. It reuses parser/chunking/embedding boundaries, fails closed when a provided ACL snapshot lacks a document permission record, supports opt-in `prune_missing` for full-snapshot removal of stale connector documents, writes per-document `document_ingested` events, and writes a batch `source_sync_completed` audit event with `acl_drift_count`, `pruned_count`, and affected document IDs. The frontend includes a sample connector sync button so reviewers can exercise the data-plane contract without external accounts.
+- `GET /api/connectors/source-bundle/catalog` and `POST /api/connectors/source-bundle/sync` add an allowlisted checked-in source bundle connector. The catalog route validates bundle manifests and referenced files before sync, returns ACL/file/hash previews without raw bodies, and rejects non-admin users or unsafe bundle names. The sync route reads only public synthetic files under `data/source_bundles/<bundle>`, maps manifest ACL snapshots into source sync ingestion jobs, supports opt-in prune, records manifest and payload hashes, and writes `source_bundle_synced` audit evidence without exposing raw file bodies through status or job summaries.
+- `POST /api/ingestion/jobs` and `GET /api/ingestion/jobs` add a local ingestion worker contract. The local demo still executes inline, but it records job lifecycle state, `idempotency_key` replay, sanitized input summaries with `body_sha256`, `dead_lettered` validation failures, retry parent links, `ingestion_job_completed`, and `ingestion_job_dead_lettered` audit evidence.
+- `POST /api/connectors/github/sync` adds the first read connector boundary. Fixture mode keeps CI deterministic while live mode can call the GitHub REST issues and pull requests APIs with an optional scoped `GITHUB_CONNECTOR_TOKEN`. Issue and PR records are normalized into source sync ingestion jobs with GitHub source URLs, external IDs, connector ACL snapshots, idempotency replay, citation-ready chunks, and `github_connector_synced` audit evidence without returning or auditing raw issue bodies.
+- `GET /api/connectors/status` adds an admin-only operator status boundary derived from ingestion jobs plus the indexed document inventory. It reports connector health, latest cursor, document/chunk counts, indexed/active lifecycle counts, parser warning totals, ACL source/version coverage, ACL drift, prune counts, prior dead letters, and recovered status without exposing raw source bodies.
+
+Next steps:
+
+1. Run `python -B scripts/check_project1_postgres_runtime.py --live` on a Docker-enabled machine after starting `docker-compose.postgres.yml`; verify Alice finance denial, Morgan finance access, SQL hybrid candidate retrieval, and denied-evidence count behavior.
+2. Extend the current admin-only text/file-like ingestion, parser quality metadata, ACL-snapshot source sync, source bundle connector, source-group permission checks, and GitHub read connector contracts into multipart uploads, broader external connectors, source user/group membership sync, connector checkpoint recovery, and live deletion/prune verification against external source APIs.
+3. Move the local inline ingestion job contract behind a real background parser pipeline with external worker processes, durable queue storage, retry scheduling, and sync checkpoint recovery.
+4. Replace the deterministic local hashing embedding with a production embedding model.
+5. Extend the current checked-in retrieval metrics gate beyond local recall, MRR, nDCG, ranked context precision, citation-to-context alignment, security-event coverage, and stale-source filtering into SQL candidate recall, lexical/vector balance, rerank quality, broader citation span accuracy, larger stale/conflict fixtures, and source lifecycle drift over time.
+6. Replace the deterministic reranker with a production reranker provider behind the existing boundary.
+7. Send OTLP traces to a real collector or hosted backend in a documented target environment, preserving the local collector-stub check as the default CI proof.
+8. Add PostgreSQL row-level security tests against a running database.
+9. Add reviewed eval cases from real failure logs or public-safe synthetic traces.
+10. Extend source quality from local parser and source scan inventory into production source-owner routing, alert IDs, ingestion worker links, malware-scan state, enterprise DLP findings, parser-worker retry history, and approval workflows for risky indexed sources.
+11. Extend the AI governance registry with production incident runbooks, data retention/deletion controls, DLP/PII rules, secret-manager integration, and residual-risk signoff before making any enterprise production claim.
 
 ## Project 2 Upgrade Path
 
 1. Replace deterministic routing with Responses API or Agents SDK planning.
-2. Keep side-effect tools behind deterministic approval middleware.
+2. Keep side-effect tools behind deterministic approval middleware, with registry-defined credential scopes, dry-run previews, owner roles, expiry windows, and rejection/expiry outcomes.
 3. Add external connectors for CRM/ticketing/email/calendar.
-4. Add workflow state machine.
-5. Add idempotency and retry policies per connector.
-6. Add trace grading for routing, tool choice, and approval compliance.
+4. Move local `workflow_run_v1` checkpoints into durable database-backed workflow state with restart-safe recovery.
+5. Move the local action-outbox checkpoint, worker lease proof, and retry/dead-letter proof into a transactional database outbox with real worker leases, scheduled retry policies, and connector-specific dead-letter handling.
+6. Replace local registry constants with policy-as-code and secret-manager-backed connector credentials.
+7. Add trace grading for routing, tool choice, approval compliance, dry-run accuracy, and stale approval handling.
 
 ## Deployment Decision Gate
 
 Do not deploy a change unless:
 
-- health check passes
+- health and readiness checks pass
 - all evals pass or approved exceptions are documented
 - unsafe leak/direct-side-effect failures remain zero
 - trace/audit schema compatibility is preserved

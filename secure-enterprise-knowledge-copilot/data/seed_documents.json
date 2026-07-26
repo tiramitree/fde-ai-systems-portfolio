@@ -4,19 +4,33 @@
       "id": "alice",
       "name": "Alice Employee",
       "role": "employee",
-      "tenant_id": "acme"
+      "tenant_id": "acme",
+      "group_ids": ["all-employees"],
+      "source_principals": ["user:alice", "group:all-employees"]
+    },
+    {
+      "id": "riley",
+      "name": "Riley On-Call Engineer",
+      "role": "employee",
+      "tenant_id": "acme",
+      "group_ids": ["all-employees", "engineering-oncall"],
+      "source_principals": ["user:riley", "group:all-employees", "group:engineering-oncall"]
     },
     {
       "id": "morgan",
       "name": "Morgan Manager",
       "role": "manager",
-      "tenant_id": "acme"
+      "tenant_id": "acme",
+      "group_ids": ["all-employees", "managers", "finance-leadership"],
+      "source_principals": ["user:morgan", "group:all-employees", "group:managers", "group:finance-leadership"]
     },
     {
       "id": "avery",
       "name": "Avery Admin",
       "role": "admin",
-      "tenant_id": "acme"
+      "tenant_id": "acme",
+      "group_ids": ["admins"],
+      "source_principals": ["user:avery", "group:admins"]
     }
   ],
   "documents": [
@@ -30,6 +44,19 @@
       "version": "2026.04",
       "updated_at": "2026-04-15",
       "body": "Remote Work Policy 2026\n\nEmployees in eligible roles may work remotely up to two days per week with manager approval. Remote work days must be recorded in the workforce planning system by Friday of the previous week.\n\nEmployees handling customer PII must use company-managed devices, VPN, and approved document storage. Sensitive customer data cannot be downloaded to personal devices.\n\nManagers may approve temporary exceptions for medical, travel, or office-capacity reasons. Exceptions longer than four weeks require People Operations review."
+    },
+    {
+      "id": "hr-remote-work-2025-superseded",
+      "title": "Remote Work Policy 2025 Superseded",
+      "tenant_id": "acme",
+      "classification": "internal",
+      "allowed_roles": ["employee", "manager", "admin"],
+      "source_url": "internal://hr/remote-work-policy-2025-superseded",
+      "version": "2025.11",
+      "updated_at": "2025-11-10",
+      "source_lifecycle_state": "superseded",
+      "superseded_by": "hr-remote-work-2026",
+      "body": "Remote Work Policy 2025 Superseded\n\nThis superseded policy previously allowed eligible employees to work remotely up to four days per week with manager approval. It has been replaced by Remote Work Policy 2026 and must not be used for current answers.\n\nPeople Operations retains this copy only for audit history and change review."
     },
     {
       "id": "security-data-handling-2026",
@@ -65,6 +92,22 @@
       "body": "Engineering Incident Response Runbook\n\nThe first step in a production incident is to assign an incident commander, open the incident channel, and record the start time. The incident commander owns coordination until the incident is resolved or handed off.\n\nSeverity is based on customer impact, data risk, and duration. Sev1 incidents require executive notification within fifteen minutes and customer communications review.\n\nEvery incident must produce a postmortem with timeline, contributing factors, corrective actions, and owners."
     },
     {
+      "id": "engineering-oncall-escalation-2026",
+      "title": "Engineering On-Call Escalation Matrix 2026",
+      "tenant_id": "acme",
+      "classification": "internal",
+      "allowed_roles": ["admin"],
+      "allowed_groups": ["engineering-oncall"],
+      "source_acl_principals": ["group:engineering-oncall"],
+      "source_acl_version": "fixture-source-acl-groups-v1",
+      "source_acl_permission_id": "github-team-engineering-oncall-v1",
+      "source_acl_principal_count": 1,
+      "source_url": "internal://engineering/oncall-escalation-matrix-2026",
+      "version": "2026.06",
+      "updated_at": "2026-06-07",
+      "body": "Engineering On-Call Escalation Matrix 2026\n\nOnly members of the engineering-oncall source group may view this escalation matrix. Sev2 pages must be acknowledged by the primary on-call engineer within ten minutes, then escalated to the secondary on-call engineer if no acknowledgement is recorded.\n\nCustomer-impacting incidents require an incident commander, status page draft, and owner handoff notes before the next shift transition."
+    },
+    {
       "id": "ai-auditability-standard-2026",
       "title": "AI System Auditability Standard",
       "tenant_id": "acme",
@@ -88,4 +131,3 @@
     }
   ]
 }
-

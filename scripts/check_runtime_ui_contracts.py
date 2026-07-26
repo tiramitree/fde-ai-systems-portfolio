@@ -5,6 +5,7 @@ import json
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -81,7 +82,11 @@ def projects(project_1_port: int, project_2_port: int, project_3_port: int) -> l
     ]
 
 
-def start_service(project: Project) -> subprocess.Popen:
+def service_state_path(state_root: Path, project: Project) -> Path:
+    return state_root / f"{project.path.name}-runtime_state.json"
+
+
+def start_service(project: Project, state_root: Path) -> subprocess.Popen:
     print(f"Starting {project.path.name} on port {project.port}")
     return subprocess.Popen(
         [
@@ -89,6 +94,8 @@ def start_service(project: Project) -> subprocess.Popen:
             "-B",
             "app.py",
             "--reset",
+            "--state-path",
+            str(service_state_path(state_root, project)),
             "--port",
             str(project.port),
         ],
@@ -196,6 +203,55 @@ def project_checks(project: Project) -> list[Check]:
             ],
         )
     )
+    if project.name == "P1":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/",
+                "text/html",
+                [
+                    'id="ingestionSummary"',
+                    'id="ingestTitle"',
+                    'id="ingestClassification"',
+                    'id="ingestRoles"',
+                    'id="ingestMime"',
+                    'id="ingestFileName"',
+                    'id="ingestFile"',
+                    'id="ingestBody"',
+                    'id="ingestReplace"',
+                    'id="previewParse"',
+                    'id="ingestDocument"',
+                    'id="syncSampleSource"',
+                    'id="previewSourceBundle"',
+                    'id="syncSourceBundle"',
+                    'id="syncGitHubConnector"',
+                    'id="ingestionStatus"',
+                    'id="parsePreview"',
+                    'id="sourceBundleCatalog"',
+                    'id="connectorStatus"',
+                    'id="sourceQuality"',
+                    'id="ingestionJobs"',
+                ],
+            )
+        )
+    if project.name == "P2":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/",
+                "text/html",
+                [
+                    'id="workflowRuns"',
+                    'id="toolRegistry"',
+                    'id="actionOutbox"',
+                    'id="actionRuns"',
+                    "Workflow Runs",
+                    "Tool Registry",
+                    "Action Outbox",
+                    "Action Runs",
+                ],
+            )
+        )
     checks.extend(
         check_text_asset(
             project,
@@ -221,6 +277,22 @@ def project_checks(project: Project) -> list[Check]:
             ],
         )
     )
+    if project.name == "P1":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/styles.css",
+                "text/css",
+                    [
+                        ".ingestionBody",
+                        ".inlineCheck",
+                        ".ingestionGrid",
+                        ".ingestionWide",
+                        ".ingestionActions",
+                        'input[type="text"]',
+                    ],
+            )
+        )
     checks.extend(
         check_text_asset(
             project,
@@ -235,6 +307,44 @@ def project_checks(project: Project) -> list[Check]:
             ],
         )
     )
+    if project.name == "P1":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/js/ingestion.js",
+                "text/javascript",
+                [
+                    "installIngestionPanel",
+                    "/api/documents/ingest",
+                    "/api/documents/parse-preview",
+                    "/api/ingestion/jobs",
+                    "/api/connectors/status",
+                    "/api/sources/quality",
+                    "/api/connectors/source-bundle/catalog",
+                    "/api/connectors/source-bundle/sync",
+                    "/api/connectors/github/sync",
+                    "acl_snapshot",
+                    "idempotency_key",
+                    "source_hash",
+                    "source_scan",
+                    "admin required",
+                    "previewButton",
+                    "renderParsePreview",
+                    "previewBundleButton",
+                    "bundleButton",
+                    "githubButton",
+                    "renderJobList",
+                    "renderSourceBundleCatalog",
+                    "renderConnectorStatus",
+                    "renderSourceQuality",
+                    "sourceBundleCatalog",
+                    "connectorStatus",
+                    "sourceQuality",
+                    "pruned_count",
+                    "onIngested",
+                ],
+            )
+        )
     checks.extend(
         check_text_asset(
             project,
@@ -249,6 +359,77 @@ def project_checks(project: Project) -> list[Check]:
             ],
         )
     )
+    if project.name == "P1":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/js/app.js",
+                "text/javascript",
+                [
+                    'from "./ingestion.js"',
+                    "installIngestionPanel",
+                    "ingestionPanel.sync",
+                ],
+            )
+        )
+    if project.name == "P2":
+        checks.extend(
+            check_text_asset(
+                project,
+                "/js/app.js",
+                "text/javascript",
+                [
+                    "renderWorkflowRuns",
+                    "/api/workflow-runs",
+                    "loadWorkflowRuns",
+                    "renderToolRegistry",
+                    "/api/tool-registry",
+                    "loadToolRegistry",
+                    "renderActionOutbox",
+                    "/api/action-outbox",
+                    "/api/action-outbox/retry",
+                    "retryOutbox",
+                    "/api/approval/reject",
+                    "rejectApproval",
+                    "loadActionOutbox",
+                    "renderActionRuns",
+                    "/api/action-runs",
+                    "loadActionRuns",
+                    "data.execution",
+                ],
+            )
+        )
+        checks.extend(
+            check_text_asset(
+                project,
+                "/js/renderers.js",
+                "text/javascript",
+                [
+                    "renderWorkflowRuns",
+                    "No workflow runs.",
+                    "retryable_outbox_ids",
+                    "dead_lettered_outbox_ids",
+                    "renderToolRegistry",
+                    "No tools registered.",
+                    "dry_run_required",
+                    "approval_required",
+                    "renderActionOutbox",
+                    "No action outbox items.",
+                    "attempt_count",
+                    "lease_count",
+                    "last_leased_by",
+                    "retryable_failure",
+                    "last_error",
+                    "Retry dispatch",
+                    "dry_run_preview",
+                    "decision_reason_summary",
+                    "Reject",
+                    "renderActionRuns",
+                    "payload_sha256",
+                    "No action runs.",
+                ],
+            )
+        )
     checks.extend(
         check_text_asset(
             project,
@@ -325,23 +506,25 @@ def main() -> int:
 
     started: list[subprocess.Popen] = []
     checks: list[Check] = []
-    try:
-        for project in project_list:
-            started.append(start_service(project))
-        for project in project_list:
-            if not wait_for_health(project):
-                print(f"Service did not become healthy: {project.path.name}", file=sys.stderr)
-                return 1
-        for project in project_list:
-            checks.extend(project_checks(project))
-    finally:
-        for process in started:
-            process.terminate()
-        for process in started:
-            try:
-                process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                process.kill()
+    with tempfile.TemporaryDirectory(prefix="fde-ui-contracts-") as temp_dir:
+        state_root = Path(temp_dir)
+        try:
+            for project in project_list:
+                started.append(start_service(project, state_root))
+            for project in project_list:
+                if not wait_for_health(project):
+                    print(f"Service did not become healthy: {project.path.name}", file=sys.stderr)
+                    return 1
+            for project in project_list:
+                checks.extend(project_checks(project))
+        finally:
+            for process in started:
+                process.terminate()
+            for process in started:
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
 
     for item in checks:
         status = "PASS" if item.passed else "FAIL"

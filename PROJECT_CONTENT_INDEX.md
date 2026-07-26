@@ -8,12 +8,12 @@ The repository contains three runnable FDE-style AI reference systems:
 
 1. `secure-enterprise-knowledge-copilot`
    - Demonstrates permission-aware enterprise RAG.
-   - Core behaviors: retrieval filtering, citations, abstention, prompt-injection detection, traces, audit logs, golden evals.
+   - Core behaviors: admin-only ingestion, connector-style source sync, GitHub read connector intake, ingestion job ledger, source ACL snapshot enforcement, permission drift evidence, retrieval filtering, citations, abstention, prompt-injection detection, traces, audit logs, golden evals.
    - Local URL: `http://127.0.0.1:8765`
 
 2. `regulated-customer-operations-agent`
    - Demonstrates governed tool-calling workflow automation.
-   - Core behaviors: intent routing, operational tools, approval queue, side-effect blocking, supervisor approval, traces, audit logs, golden evals.
+   - Core behaviors: intent routing, operational tools, workflow-run checkpoints, approval queue, side-effect blocking, action outbox, supervisor approval, traces, audit logs, golden evals.
    - Local URL: `http://127.0.0.1:8770`
 
 3. `ai-reliability-incident-console`
@@ -31,6 +31,10 @@ From the repository root:
 python -B scripts/dev.py verify
 python -B scripts/dev.py start
 python -B scripts/dev.py api-docs
+python -B scripts/dev.py auth-boundary
+python -B scripts/dev.py request-body-limits
+python -B scripts/dev.py request-correlation
+python -B scripts/dev.py request-governance
 python -B scripts/dev.py assets
 python -B scripts/dev.py architecture
 python -B scripts/dev.py claims
@@ -52,22 +56,35 @@ python -B scripts/dev.py github-launch-setup
 python -B scripts/dev.py github-maintenance
 python -B scripts/dev.py github-readiness
 python -B scripts/dev.py governance
+python -B scripts/dev.py governance-controls
 python -B scripts/dev.py launch-assets
 python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
 python -B scripts/dev.py openai-live
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py parser-quality
+python -B scripts/dev.py source-scan
+python -B scripts/dev.py postgres-compose
+python -B scripts/dev.py postgres-migrations
+python -B scripts/dev.py postgres-runtime
+python -B scripts/dev.py postgres-seed
 python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py refresh-visual-assets
 python -B scripts/dev.py replay
 python -B scripts/dev.py replay-artifact
+python -B scripts/dev.py reviewed-eval-ledger
+python -B scripts/dev.py runtime-latency-budget
+python -B scripts/dev.py runtime-state-isolation
 python -B scripts/dev.py scenario-data
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
 python -B scripts/dev.py safety
 python -B scripts/dev.py threat-model
+python -B scripts/dev.py trace-redaction
+python -B scripts/dev.py trace-to-eval
+python -B scripts/dev.py trace-to-eval-check
 python -B scripts/dev.py ui-contracts
 python -B scripts/dev.py visual-assets
 python -B scripts/dev.py visual-asset-diff
@@ -92,7 +109,7 @@ python -B scripts/dev.py verify
 Result:
 
 - all services healthy
-- Project 1 eval: 11/11 passed, unsafe leaks 0
+- Project 1 eval: 14/14 passed, unsafe leaks 0
 - Project 2 eval: 8/8 passed, unsafe direct side-effect failures 0
 - Project 3 eval: 6/6 passed, unsafe release approval failures 0
 - smoke tests: 13/13 passed
@@ -115,6 +132,7 @@ Local Git state:
 - `CHANGELOG.md`: public release history and verification notes.
 - `.gitattributes`: keeps text files LF-normalized across platforms.
 - `docker-compose.yml`: Docker entrypoint for Docker-enabled machines.
+- `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack on port `55432` with migration/seed initialization, local role `fde_app`, and local-only demo password `fde_app_demo_password`; verify static alignment with `python -B scripts/dev.py postgres-compose` before using `COPILOT_POSTGRES_DSN`.
 - project-level `.dockerignore` files: keep runtime state, logs, caches, and local env files out of Docker build contexts.
 - `.env.example`: optional OpenAI mode environment template.
 - `LICENSE`: MIT license.
@@ -126,31 +144,47 @@ Local Git state:
 
 ## Automation And Quality Scripts
 
-- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, launch-assets, model-gateway-safety, observability, openai-live, otel-traces, pr-policy, pr-triage, readiness-report, refresh-visual-assets, replay, replay-artifact, scenario-data, smoke, report, safety, quality, threat-model, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
+- `scripts/dev.py`: single developer entrypoint for start, api-docs, architecture, auth-boundary, request-body-limits, request-correlation, request-governance, assets, claims, community-issues, container-release, docker-runtime, dependency-surface, demo-presets, contracts, error-hygiene, health, evals, eval-csv, frontend, fresh-clone-local, fresh-clone, github-community, github-launch-setup, github-maintenance, github-readiness, governance, governance-controls, launch-assets, model-gateway-safety, observability, openai-live, otel-collector-handoff, otel-traces, parser-quality, source-scan, postgres-compose, postgres-migrations, postgres-runtime, postgres-seed, pr-policy, pr-triage, retrieval-metrics, readiness-report, refresh-visual-assets, replay, replay-artifact, reviewed-eval-ledger, runtime-latency-budget, runtime-state-isolation, scenario-data, smoke, report, safety, quality, threat-model, trace-redaction, trace-to-eval, trace-to-eval-check, ui-contracts, visual-assets, visual-asset-diff, workflow-security, verify.
 - `scripts/start_demo_servers.py`: starts all local demos.
+- `local_auth_tokens.py`: shared local signed demo-token helper used by all services for bearer-auth review flows without external SSO.
+- `local_http_limits.py`: shared POST JSON request-body boundary for all local app shells; caps request bodies with `FDE_MAX_JSON_BODY_BYTES`, returns safe typed errors, and prevents unbounded JSON reads before route handling.
+- `local_request_governance.py`: shared API request-governance boundary for all local app shells; emits request ids and rate-limit budget headers, validates caller-provided `X-Request-ID`, and returns safe `429` responses under local request-count or cost-budget pressure.
+- `scripts/check_auth_boundary.py`: verifies shared token helper wiring, service header plumbing, auth runtime-contract coverage, and public docs without production SSO overclaims.
+- `scripts/check_request_body_limits.py`: starts isolated services with a tiny request-body limit and verifies oversized JSON returns `413`, non-object JSON returns `400`, docs stay aligned, and app shells avoid raw exception-string exposure.
+- `scripts/check_request_correlation.py`: starts isolated services, sends governed core business requests with explicit `X-Request-ID`, and verifies the same request id appears in the response payload, persisted trace, and linked audit event for all three projects.
+- `scripts/check_request_governance.py`: starts isolated services with tiny request-count and budget windows, then verifies `X-Request-ID`, rate-limit headers, safe `429` payloads, `Retry-After`, docs, and app-shell wiring across all three services.
 - `scripts/check_architecture_boundaries.py`: verifies app shells, API classes, backend packages, and frontend modules preserve separation of concerns.
 - `scripts/check_workflow_security.py`: verifies GitHub Actions keep safe PR triggers, read-only token permissions, hardened checkout, and approved actions.
 - `scripts/check_model_gateway_safety.py`: verifies optional OpenAI gateways stay opt-in, key references remain constrained, structured outputs are required, and failures fall back locally.
 - `scripts/check_openai_live_mode.py`: optionally proves live OpenAI mode with a real API key while preserving citations, approval requests, and side-effect blocking.
-- `scripts/check_observability_integrity.py`: starts isolated services and verifies trace, audit, approval, blocked-action, unauthorized-query, and release-decision evidence stay consistent with demo outcomes.
+- `scripts/check_observability_integrity.py`: starts isolated services and verifies trace, audit, workflow-run, approval, blocked-action, unauthorized-query, and release-decision evidence stay consistent with demo outcomes.
 - `scripts/check_threat_model.py`: verifies repository threat IDs map to deterministic controls, source files, supporting docs, and evidence commands.
+- `scripts/check_ai_governance_controls.py`: verifies `docs/ai_governance_control_registry.json` covers OWASP LLM Top 10, NIST AI RMF functions, T01-T13 threat IDs, owner roles, evidence files, evidence commands, and remaining production gaps.
 - `scripts/check_scenario_data_integrity.py`: verifies fictional seed data, roles, cross-references, and eval expectations remain internally consistent for the local scenario draft surface.
 - `scripts/check_demo_state_presets.py`: verifies shareable demo reset presets in `docs/demo_state_presets.json` still reference valid fictional seed and eval data.
 - `scripts/check_error_hygiene.py`: verifies unexpected backend exceptions return generic JSON errors without leaking internals.
 - `scripts/check_public_assets.py`: verifies local Markdown links and public image assets.
 - `scripts/check_visual_asset_manifest.py`: verifies desktop and mobile demo screenshots match recorded asset hashes, dimensions, contrast samples, and frontend source hashes.
 - `scripts/summarize_visual_asset_diff.py`: summarizes changed visual asset paths, dimensions, hash prefixes, source-hash changes, and contrast ratios without printing binary image contents.
-- `scripts/refresh_visual_assets.py`: starts live local apps, captures desktop and mobile demo screenshots with a local browser, and rewrites the visual asset manifest.
+- `scripts/refresh_visual_assets.py`: starts isolated live local apps, captures desktop and mobile demo screenshots with a local browser, and rewrites the visual asset manifest.
 - `scripts/check_claim_consistency.py`: verifies public metric claims match eval case counts, smoke checks, and generated demo report evidence.
 - `scripts/check_container_release.py`: verifies Dockerfiles, Compose ports, health checks, startup commands, env handling, and build-context ignores stay aligned.
 - `scripts/check_docker_runtime.py`: optionally builds the Compose stack, waits for container health, runs smoke flows, and tears the stack down on Docker-enabled machines.
 - `scripts/check_frontend_integrity.py`: verifies project HTML, labels, local ES modules, DOM wiring, trace-copy controls, keyboard trace deep links, copyable scenario-draft controls, local draft diffs, and quick-action controls.
 - `scripts/check_fresh_clone_experience.py`: clones the repository into a temporary directory, runs release-facing static checks, starts all demos on isolated ports, and runs health/smoke flows.
 - `scripts/check_runtime_ui_contracts.py`: starts isolated services and verifies static UI routes, scenario editor modules, content types, security headers, 404s, and traversal blocking.
+- `scripts/check_runtime_state_isolation.py`: starts isolated services, runs one trace-writing flow per project, and verifies temporary state receives the trace while canonical demo state stays unchanged.
+- `scripts/check_runtime_latency_budget.py`: starts isolated services, runs repeated core requests, and verifies API and trace `latency_ms` evidence stays within the local demo budget.
 - `scripts/check_api_documentation.py`: verifies API source routes, public API contract documentation, README, index, and evidence matrix stay aligned.
 - `scripts/check_dependency_surface.py`: verifies stdlib-only Python imports, first-party frontend assets, digest-pinned Docker bases, and Dependabot coverage.
-- `scripts/check_api_contracts.py`: verifies stable response shapes for UI-facing API endpoints.
-- `scripts/check_health.py`: verifies all service health endpoints.
+- `scripts/check_postgres_compose.py`: verifies optional Project 1 PostgreSQL/pgvector compose image pinning, init order, role separation, seed wiring, healthcheck, docs, and local app role `fde_app`.
+- `scripts/check_project1_postgres_runtime.py`: verifies the Project 1 runtime provider switch, optional PostgreSQL pool wiring, reset guard, docs, and optional live PostgreSQL/pgvector connectivity.
+- `scripts/check_project1_retrieval_metrics.py`: verifies Project 1 checked-in eval retrieval metrics for behavior accuracy, recall@k, MRR, nDCG@k, ranked context precision@k, citation coverage/alignment, security-event coverage, permission blocking, leak prevention, and stale-source filtering.
+- `scripts/check_project1_parser_quality_contract.py`: verifies Project 1 parser quality metadata for plain text, Markdown, CSV, HTML, JSON, and ragged CSV warning behavior.
+- `scripts/check_project1_source_scan_contract.py`: verifies Project 1 local source scan metadata for clean sources, instruction-override text, secret-like assignments, token-like strings, private identifiers, personal identifiers, external links, merged finding counts, and raw-match suppression.
+- `scripts/generate_postgres_seed.py`: generates and checks deterministic Project 1 PostgreSQL seed SQL against `secure-enterprise-knowledge-copilot/data/seed_documents.json`, reusing the seed parser quality and chunk metadata path.
+- `scripts/check_api_contracts.py`: starts isolated services and verifies stable response shapes for UI-facing API endpoints.
+- `scripts/check_health.py`: verifies all service health and readiness endpoints.
 - `scripts/configure_github_launch.py`: dry-runs or applies GitHub repo metadata, topics, merge policy, best-effort security settings, branch protection, first-release setup, and replay artifact uploads through `gh`.
 - `scripts/maintain_github_state.py`: dry-runs or applies authenticated GitHub repository maintenance and guarded Dependabot runtime-bump PR closure.
 - `scripts/check_github_readiness.py`: reports public repository metadata, release, CI, issue, and PR readiness.
@@ -164,9 +198,15 @@ Local Git state:
 - `scripts/review_open_prs.py`: inspects open public PRs and flags risky diffs before running contributor code.
 - `scripts/run_all_evals.py`: runs all project eval suites.
 - `scripts/export_eval_csv.py`: exports repository eval summary rows to `eval_summaries.csv`.
-- `scripts/export_traces_otel.py`: exports local trace records to an OTLP/JSON-compatible payload.
-- `scripts/replay_demo.py`: starts clean reset demo services, runs the release validation path, and prints trace/approval evidence.
-- `scripts/export_demo_replay_artifact.py`: writes release-attachable Markdown and JSON replay evidence under ignored `out/`.
+- `scripts/check_trace_to_eval.py`: verifies trace-to-eval candidate coverage, safety, review metadata, promotion targets, and suggested expected-contract shapes.
+- `scripts/check_reviewed_eval_ledger.py`: verifies the checked-in reviewed eval dataset ledger, fixture case counts, owner roles, promotion targets, redaction policy, and nightly regression workflow alignment.
+- `scripts/trace_redaction.py`: shared redaction policy for generated trace export and trace-to-eval artifacts.
+- `scripts/check_trace_redaction.py`: verifies that synthetic sensitive markers are removed from OTLP payloads and trace-to-eval candidates before generated artifacts leave local runtime state.
+- `scripts/export_trace_eval_candidates.py`: converts local trace, audit, approval, and release evidence into review-only eval-candidate artifacts under ignored `out/`, including owner roles, dispositions, promotion targets, redaction policy metadata, and regression schedules.
+- `scripts/check_otel_collector_handoff.py`: verifies optional OTLP/HTTP JSON collector handoff behavior with a local in-process collector stub.
+- `scripts/export_traces_otel.py`: exports redacted local trace records to an OTLP/JSON-compatible payload and can optionally POST OTLP/HTTP JSON to a configured traces endpoint.
+- `scripts/replay_demo.py`: starts clean reset demo services, runs the release validation path, and prints trace/approval evidence for the trace-to-eval loop; `--isolated-state` is available for disposable local runs.
+- `scripts/export_demo_replay_artifact.py`: writes release-attachable Markdown and JSON replay evidence under ignored `out/` from isolated local services.
 - `scripts/smoke_test_demo_flows.py`: exercises the critical demo paths end to end.
 - `scripts/generate_demo_report.py`: writes `docs/demo_report.md`.
 - `scripts/public_safety_scan.py`: scans public files for secret-like tokens, personal identifiers, local paths, and tracked runtime artifacts.
@@ -176,7 +216,8 @@ Local Git state:
 
 ## GitHub Assets
 
-- `.github/workflows/ci.yml`: GitHub Actions workflow.
+- `.github/workflows/ci.yml`: GitHub Actions quality-gate workflow.
+- `.github/workflows/nightly-regression.yml`: read-only scheduled regression workflow for reviewed eval ledger, replay traces, trace-to-eval export/checks, retrieval metrics, golden evals, and public claims.
 - `.github/CODEOWNERS`: code-owner review coverage for public contributions and safety-critical files.
 - `.github/dependabot.yml`: weekly updates for GitHub Actions and Docker base images.
 - `.github/pull_request_template.md`: PR checklist.
@@ -203,8 +244,36 @@ Design Review Docs:
 - `docs/project_case_notes.md`: project impact notes and review framing.
 - `docs/technical_review_playbook.md`: difficult system-design questions and answers.
 - `docs/system_design_deep_dive.md`: architecture reasoning and tradeoffs.
+- `docs/industrialization_gap_plan.md`: gap analysis between this portfolio and production-grade industrial AI systems, with an upgrade plan.
+- `docs/industrial_readiness_field_scan.md`: current external benchmark scan, industrial-readiness distance estimate, and prioritized upgrade plan.
+- `docs/industrial_grade_gap_assessment_2026_06_06.md`: web-refreshed industrial-grade gap assessment and concrete upgrade sequence for the eight major production-readiness gaps.
+- `docs/industrial_readiness_plan_cn_2026_06_06.md`: Chinese industrial-readiness judgment, external project baseline, current gap matrix, and FDE-oriented upgrade plan.
+- `docs/industrial_readiness_source_sync_gap_plan_2026_06_06.md`: source-sync-focused industrial readiness gap plan, external baseline scan, current maturity estimate, and prioritized upgrade sequence.
+- `docs/current_industrial_readiness_assessment_2026_06_06.md`: latest external scan decision record, current distance estimate, gap matrix, and next engineering sequence.
+- `docs/industrial_benchmark_gap_plan_2026_06_07.md`: current external benchmark scan, industrial-readiness distance estimate, eight-gap matrix, and concrete upgrade sequence toward a production-shaped Enterprise AI Control Plane.
+- `docs/industrial_reality_check_2026_06_07_cn.md`: Chinese strict reality check for how far the repository is from true industrial use, with external benchmark notes and the shortest upgrade route.
+- `docs/industrial_distance_upgrade_plan_2026_06_07_cn.md`: Chinese external scan, distance estimate, eight-gap matrix, and prioritized upgrade plan for turning the repo into an Enterprise AI Control Plane.
+- `docs/industrial_production_gap_plan_2026_06_07_cn.md`: Chinese production-use distance judgment, external industrial baseline scan, eight-gap matrix, and build plan for moving the portfolio toward a truly industrial Enterprise AI Control Plane.
+- `docs/industrial_true_production_gap_plan_2026_06_07.md`: latest strict external benchmark scan, distance estimate, eight production gaps, and upgrade sequence from reference implementation toward true industrial production.
+- `docs/industrial_real_usability_gap_plan_2026_06_07_cn.md`: Chinese strict real-usability assessment after the 2026-06-07 external scan, with current quality-gate snapshot, external source baseline, distance estimate, and prioritized upgrade route.
+- `docs/industrial_gap_research_update_2026_06_07_cn.md`: Chinese consolidated industrial-usability distance judgment, external benchmark links, current strengths, eight-gap matrix, and prioritized engineering plan.
+- `docs/ai_governance_control_registry.json`: checked AI governance registry mapping local controls to OWASP LLM Top 10, NIST AI RMF functions, T01-T13 threat IDs, owner roles, evidence files, evidence commands, and remaining production gaps.
+- `secure-enterprise-knowledge-copilot/src/copilot/source_files.py`: Project 1 UTF-8 file-like ingestion decoder for base64 JSON payloads, safe filenames, MIME inference, size limits, and file metadata before parser/chunk/embed indexing.
+- `secure-enterprise-knowledge-copilot/src/copilot/source_lifecycle.py`: Project 1 source lifecycle policy helpers for active-only retrieval and stale source filtering.
+- `secure-enterprise-knowledge-copilot/src/copilot/source_scanning.py`: Project 1 local source scan contract for instruction-override text, secret-like assignments, token-like strings, private identifiers, personal identifiers, and external links without returning raw matches.
+- `secure-enterprise-knowledge-copilot/src/copilot/source_quality.py`: Project 1 admin source quality inventory for parser quality schema coverage, source scan coverage, parser warnings, ACL metadata, lifecycle state, and source risk flags without returning raw bodies or raw scan matches.
+- `secure-enterprise-knowledge-copilot/src/copilot/identity.py`: Project 1 identity helper for tenant, role, group, and source-principal access checks before retrieval evidence reaches the model.
 - `docs/postgres_pgvector_adapter_design.md`: PostgreSQL, pgvector, RLS, migrations, indexing, and eval-isolation adapter design.
-- `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping and production collector path.
+- `docker-compose.postgres.yml`: optional Project 1 PostgreSQL/pgvector compose stack for live local data-plane verification with `COPILOT_POSTGRES_DSN=postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio`.
+- `infra/postgres/migrations/001_core.sql`: first reviewable PostgreSQL/pgvector production-path migration artifact with RLS, indexes, eval isolation, and idempotent tool-action keys.
+- `infra/postgres/migrations/002_project1_denied_evidence_count.sql`: security-definer helper that returns only denied relevant evidence counts for Project 1 RLS audit semantics.
+- `infra/postgres/migrations/003_project1_group_acl.sql`: source-group ACL migration path with `users.group_ids`, group-aware RLS policies, and group-aware denied-evidence counting.
+- `infra/postgres/seeds/001_project1_demo.sql`: deterministic Project 1 demo seed SQL generated from `secure-enterprise-knowledge-copilot/data/seed_documents.json` with source hashes, parser metadata, source scan metadata, source connector metadata, and chunk span evidence.
+- `infra/postgres/init/000_project1_runtime_roles.sql`: local compose role initializer for the non-owner `fde_app` runtime role.
+- `infra/postgres/init/003_project1_runtime_grants.sql`: local compose grants for Project 1 runtime access while preserving RLS.
+- `scripts/check_postgres_migrations.py`: static migration guard for pgvector, tenant/role RLS, approval visibility, eval isolation, and unsafe migration markers.
+- `scripts/check_project1_postgres_runtime.py`: runtime guard for `COPILOT_REPOSITORY=postgres`, `COPILOT_POSTGRES_DSN`, optional `COPILOT_POSTGRES_POOL`, reset behavior, docs, and optional live checks.
+- `docs/otel_trace_export.md`: local trace to OpenTelemetry-compatible JSON mapping, shared redaction policy, optional OTLP/HTTP JSON handoff command, and production collector path.
 - `docs/opentelemetry_collector_handoff_troubleshooting.md`: optional collector handoff troubleshooting, endpoint boundaries, failure modes, rollback, and claim wording.
 - `docs/model_runtime_configuration.md`: optional OpenAI model, reasoning effort, verbosity, and structured-output configuration.
 - `docs/openai_live_mode_troubleshooting.md`: optional OpenAI live-mode setup, safe failure modes, rollback, and review guardrails.
@@ -215,11 +284,13 @@ Design Review Docs:
 - `docs/scenario_data_integrity.md`: fictional seed/eval data consistency and review framing.
 - `docs/seed_fixture_data_flow.md`: source-to-runtime data-flow map for checked-in seed fixtures, runtime state, eval state, scenario drafts, traces, audit, approvals, and release decisions.
 - `docs/local_artifact_glossary.md`: local glossary for seed, runtime, eval, replay, trace, audit, approval, release evidence, and generated artifacts.
-- `docs/local_demo_reset_troubleshooting.md`: local reset troubleshooting for runtime state, eval runtime state, browser scenario drafts, and canonical demo presets.
+- `docs/local_demo_reset_troubleshooting.md`: local reset troubleshooting for runtime state, eval runtime state, browser scenario drafts, canonical demo presets, and disposable verification state paths.
 - `docs/command_output_troubleshooting_map.md`: local troubleshooting map from common gate output to first files, narrower commands, and safe follow-up checks.
 - `docs/readme_navigation_audit.md`: README-to-docs navigation audit for release-facing pointers, supporting docs, owner gates, and drift risks.
 - `docs/readme_navigation_drift_examples.md`: examples for fixing stale README links, unsupported claims, missing source docs, and manual-evidence drift.
 - `docs/eval_authoring_guide.md`: contributor workflow for adding retrieval, approval, refusal, release-blocking, and monitor-only eval cases safely.
+- `docs/trace_to_eval_workflow.md`: review-first workflow for converting redacted local trace evidence into eval candidates without mutating checked-in golden fixtures.
+- `docs/reviewed_eval_dataset_ledger.json`: checked-in ledger for reviewed golden eval fixtures, owner roles, candidate categories, case counts, promotion requirements, and nightly regression commands.
 - `docs/eval_gate_troubleshooting_examples.md`: local troubleshooting map for unsafe retrieval, direct side-effect, and release-blocking eval failures.
 - `docs/eval_csv_troubleshooting_examples.md`: examples for missing eval CSV output, stale eval state, changed case ids, unsafe failure counts, and generated artifact handling.
 - `docs/seed_data_extension_examples.md`: copyable fictional seed extension examples for one knowledge document, one operations case, and one incident signal.
@@ -326,6 +397,7 @@ Architecture decisions:
 - `docs/adr_0001_local_first_portfolio.md`: local-first reference runtime decision.
 - `docs/adr_0002_model_is_not_security_boundary.md`: security boundaries live outside the model.
 - `docs/adr_0003_eval_state_isolated_from_demo_state.md`: evals do not mutate live demo state.
+- `docs/adr_0004_verification_runtime_state_isolation.md`: self-starting verification runs use disposable service runtime state.
 
 Visual assets:
 
@@ -347,16 +419,31 @@ Important files:
 
 - `app.py`: Python HTTP server and API routes.
 - `src/copilot/api.py`: application API layer for HTTP-facing use cases.
-- `src/copilot/retrieval.py`: role-aware retrieval and evidence selection.
+- `src/copilot/repositories.py`: application-facing storage adapter boundary over the local JSON provider.
+- `src/copilot/postgres_repositories.py`: optional PostgreSQL-backed repository contract for the production data-plane path; keeps SQL, tenant context, group identity context, document/chunk writes, traces, audit events, eval runs, denied-evidence counts, and SQL-backed keyword/vector candidate selection outside application modules.
+- `src/copilot/repositories.py` and `src/copilot/postgres_repositories.py`: both expose `count_potentially_blocked_chunks`; the PostgreSQL path uses `project1_denied_relevant_chunk_count` so RLS can hide unauthorized rows while audit evidence still records denied relevant evidence counts across role and source-group ACLs.
+- `src/copilot/ingestion.py`: admin-only document ingestion and connector-style source sync; validates tenant, classification, roles, source groups, duplicate policy, parser output, source hash, external IDs, ACL source metadata, source ACL snapshots, sync cursor, permission drift, opt-in missing-source prune, chunk counts, and audit events before adding searchable content.
+- `src/copilot/source_bundle_connector.py`: admin-only allowlisted source bundle connector; reads checked-in synthetic files from `data/source_bundles`, rejects unsafe bundle names and path traversal, maps manifest ACL snapshots into source sync jobs, and writes `source_bundle_synced` audit evidence without returning raw bodies.
+- `src/copilot/github_connector.py`: admin-only GitHub read connector; normalizes fixture or live issue/PR records into source sync jobs with source URLs, external IDs, connector ACL snapshots, job idempotency, sanitized job summaries, and `github_connector_synced` audit evidence.
+- `src/copilot/ingestion_jobs.py`: local ingestion worker contract for source sync jobs; records sanitized input summaries, `idempotency_key` replay, `dead_lettered` failures, retry parent links, completion audit, and dead-letter audit without exposing raw document bodies through the job list.
+- `src/copilot/connector_status.py`: admin-only connector lifecycle summary derived from ingestion jobs; reports connector health, latest cursor, document/chunk counts, ACL drift, retry recovery, and dead-letter state for the operator surface.
+- `src/copilot/source_parsing.py`: admin-ingestion parser boundary for plain text, Markdown, CSV, HTML, and JSON sources; returns normalized searchable text plus parser metadata and warnings before chunking.
+- `src/copilot/source_scanning.py`: local source safety scan boundary that records source review signals and finding counts without returning raw matches.
+- `src/copilot/chunking.py`: shared text chunking for seed and admin-ingested documents.
+- `src/copilot/embeddings.py`: local deterministic chunk embedding boundary with 1536-dimensional vectors, metadata, and cosine scoring helpers for the pgvector/hybrid retrieval path.
+- `src/copilot/retrieval.py`: identity-aware candidate retrieval and evidence selection with source lifecycle filtering and shared final scoring across JSON and PostgreSQL providers.
+- `src/copilot/retrieval_scoring.py`: local hybrid retrieval scoring profile with lexical, title, phrase, semantic-family, vector, candidate-strategy, and stale-filter metadata for traceable first-stage retrieval evidence.
+- `src/copilot/reranking.py`: deterministic local evidence reranker boundary with feature-level rerank metadata.
 - `src/copilot/security.py`: unsafe retrieved-content detection.
 - `src/copilot/answering.py`: answer shaping, citation behavior, abstention.
-- `src/copilot/storage.py`: thread-safe JSON state, traces, audit log.
+- `src/copilot/storage.py`: thread-safe local JSON state implementation used through the repository adapter; Project 1 seed initialization also routes checked-in seed documents through parser quality, source scan, source hash, and chunk span generation before runtime state is built.
 - `src/copilot/evals.py`: golden eval definitions and assertions.
 - `src/copilot/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.
 - `web/index.html`, `web/styles.css`, `web/js/*`: modular browser demo UI split into API client, DOM helpers, clipboard helper, scenario draft helper, renderers, and app orchestration.
 - `data/seed_documents.json`: seed knowledge base.
 - `data/eval_cases.json`: eval cases.
+- `data/source_bundles/operations-handbook`: checked-in synthetic source bundle used by the source bundle connector contract.
 - `docs/architecture.md`: project architecture.
 - `docs/threat_model.md`: threat model and security assumptions.
 - `docs/demo_script.md`: exact project demo script.
@@ -367,6 +454,7 @@ Key demo claims:
 
 - Users only retrieve evidence they are authorized to see.
 - The model is never treated as the permission boundary.
+- Admin-only source intake includes local ingestion, source bundle sync, and sample connector sync contracts with audit evidence.
 - Unsupported or unsafe answers abstain instead of guessing.
 - Eval cases prove normal answers, denied access, injection handling, and unknown-question abstention.
 
@@ -379,8 +467,9 @@ Important files:
 - `app.py`: Python HTTP server and API routes.
 - `src/ops_agent/api.py`: application API layer for HTTP-facing use cases.
 - `src/ops_agent/agent.py`: workflow planning and response assembly.
-- `src/ops_agent/tools.py`: deterministic business tools and side-effect guards.
-- `src/ops_agent/storage.py`: thread-safe JSON state, traces, audit log, approvals.
+- `src/ops_agent/tools.py`: deterministic business tools, side-effect guards, action-outbox dispatch checkpoints, and idempotent action-run receipts.
+- `src/ops_agent/workflows.py`: sanitized workflow-run checkpoints linking trace IDs, approvals, outbox IDs, retry/dead-letter state, and action-run receipts without returning raw messages or notice bodies.
+- `src/ops_agent/storage.py`: thread-safe JSON state, traces, audit log, workflow runs, approvals, action outbox, and action runs.
 - `src/ops_agent/evals.py`: golden eval definitions and assertions.
 - `src/ops_agent/model_gateway.py`: optional OpenAI Responses API path.
 - `scripts/run_eval.py`: project-level eval runner using isolated eval state.
@@ -397,7 +486,7 @@ Key demo claims:
 
 - The agent can propose operational actions.
 - Direct side effects are blocked unless the application authorization layer allows them.
-- Investigator role creates approval requests; supervisor role executes approved actions.
+- Investigator role creates approval requests, sanitized workflow-run checkpoints, and sanitized action-outbox dispatch records; supervisor role executes approved actions once and writes action-run receipts.
 - Eval cases prove investigation flow, approval requirement, bypass refusal, escalation approval, and irrelevant-query no-op behavior.
 
 ## Project 3 Contents

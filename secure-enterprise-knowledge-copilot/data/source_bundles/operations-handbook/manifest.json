@@ -1,0 +1,49 @@
+{
+  "bundle": "operations-handbook",
+  "connector_name": "source-bundle",
+  "cursor": "2026-06-07T00:00:00Z",
+  "acl_source": "source-bundle:operations-handbook:manifest-acl",
+  "acl_snapshot_version": "source-bundle:operations-handbook:v1",
+  "prune_missing": true,
+  "documents": [
+    {
+      "id": "source-bundle-operations-handbook-incident-escalation",
+      "external_id": "source-bundle:operations-handbook:incident-escalation.md",
+      "title": "Operations Incident Escalation Matrix 2026",
+      "path": "incident-escalation.md",
+      "classification": "internal",
+      "allowed_roles": ["manager", "admin"],
+      "allowed_groups": ["engineering-oncall"],
+      "source_mime": "text/markdown",
+      "updated_at": "2026-06-07",
+      "version": "operations-handbook-v1",
+      "permission_id": "source-bundle-ops-incident-escalation-v1"
+    },
+    {
+      "id": "source-bundle-operations-handbook-change-freeze",
+      "external_id": "source-bundle:operations-handbook:change-freeze.csv",
+      "title": "Operations Change Freeze Windows 2026",
+      "path": "change-freeze.csv",
+      "classification": "internal",
+      "allowed_roles": ["manager", "admin"],
+      "allowed_groups": [],
+      "source_mime": "text/csv",
+      "updated_at": "2026-06-07",
+      "version": "operations-handbook-v1",
+      "permission_id": "source-bundle-ops-change-freeze-v1"
+    },
+    {
+      "id": "source-bundle-operations-handbook-audit-review",
+      "external_id": "source-bundle:operations-handbook:audit-review.html",
+      "title": "Operations Audit Review Checklist 2026",
+      "path": "audit-review.html",
+      "classification": "confidential",
+      "allowed_roles": ["admin"],
+      "allowed_groups": [],
+      "source_mime": "text/html",
+      "updated_at": "2026-06-07",
+      "version": "operations-handbook-v1",
+      "permission_id": "source-bundle-ops-audit-review-v1"
+    }
+  ]
+}

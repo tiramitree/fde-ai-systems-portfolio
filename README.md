@@ -15,8 +15,8 @@ Most AI app demos stop at chat. Real enterprise deployments need permission boun
 
 | Project | What It Demonstrates | Local URL |
 | --- | --- | --- |
-| Secure Enterprise Knowledge Copilot | Permission-aware RAG, citations, abstention, prompt-injection handling, traces, audit logs, evals | `http://127.0.0.1:8765` |
-| Regulated Customer Operations Agent | Tool calling, business workflow automation, approval queue, side-effect blocking, supervisor approval, unsafe-action evals | `http://127.0.0.1:8770` |
+| Secure Enterprise Knowledge Copilot | Permission-aware RAG, admin-only document ingestion, source sync, source bundle connector, GitHub read connector, ingestion job ledger, citations, abstention, prompt-injection handling, traces, audit logs, evals | `http://127.0.0.1:8765` |
+| Regulated Customer Operations Agent | Tool calling, business workflow automation, tool registry, dry-run previews, approval queue, rejection/expiry handling, action outbox, side-effect blocking, supervisor approval, unsafe-action evals | `http://127.0.0.1:8770` |
 | AI Reliability Incident Console | Canary release triage, eval regression evidence, rollout blocking, remediation plans, traces, audit logs | `http://127.0.0.1:8780` |
 
 Architecture cards:
@@ -25,16 +25,16 @@ Read these with [Architecture Boundaries](docs/architecture_boundaries.md), [API
 
 | Project | Backend Boundary | Browser Boundary | Core Safety Controls | Fast Evidence |
 | --- | --- | --- | --- | --- |
-| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, and scenario drafts. | Permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py smoke` and inspect the Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |
-| [Regulated Customer Operations Agent](regulated-customer-operations-agent/docs/architecture.md) | `regulated-customer-operations-agent/src/ops_agent` owns workflow routing, governed tools, storage, evals, and the opt-in model gateway. | `regulated-customer-operations-agent/web/js` keeps local ES modules for case investigation, approvals, trace links, theme, clipboard, and scenario drafts. | Side-effect tools require application approval, bypass attempts are refused, supervisor execution is auditable. | Run `python -B scripts/dev.py smoke` and inspect the Ivy `case-1001` approval path in the [Demo Path Map](#demo-path-map). |
+| [Secure Enterprise Knowledge Copilot](secure-enterprise-knowledge-copilot/docs/architecture.md) | `secure-enterprise-knowledge-copilot/src/copilot` owns ingestion, source sync, source bundle connector intake, GitHub connector intake, ingestion jobs, retrieval, answering, storage, security, evals, and the opt-in model gateway. | `secure-enterprise-knowledge-copilot/web/js` keeps local ES modules for API calls, rendering, trace links, theme, clipboard, source intake controls, and scenario drafts. | Admin-only ingestion, source sync, source bundle connector sync, GitHub connector sync, job idempotency/dead-letter evidence, permission filtering before generation, citation-required answers, abstention, prompt-injection handling, traces, audit logs. | Run `python -B scripts/dev.py contracts` and inspect the ingestion/source-sync/source-bundle/GitHub connector/job contract plus Alice/Morgan finance path in the [Demo Path Map](#demo-path-map). |
+| [Regulated Customer Operations Agent](regulated-customer-operations-agent/docs/architecture.md) | `regulated-customer-operations-agent/src/ops_agent` owns workflow routing, governed tools, storage, evals, and the opt-in model gateway. | `regulated-customer-operations-agent/web/js` keeps local ES modules for case investigation, tool registry review, approvals, trace links, theme, clipboard, and scenario drafts. | Side-effect tools require application approval, dry-run previews, owner/expiry metadata, rejection/expiry handling, sanitized action outbox dispatch, and auditable supervisor execution. | Run `python -B scripts/dev.py contracts` and inspect the Ivy `case-1001` approval path in the [Demo Path Map](#demo-path-map). |
 | [AI Reliability Incident Console](ai-reliability-incident-console/docs/architecture.md) | `ai-reliability-incident-console/src/reliability_console` owns release state, incident triage, eval evidence, storage, and audit records. | `ai-reliability-incident-console/web/js` keeps local ES modules for incident selection, triage rendering, trace links, theme, clipboard, and scenario drafts. | Failed eval evidence blocks unsafe rollout, remediation stays traceable, audit events link release decisions to incidents. | Run `python -B scripts/dev.py smoke` and inspect the unsafe canary release path in the [Demo Path Map](#demo-path-map). |
 
 Risk badges:
 
 | Project | Control Badges | Primary Evidence |
 | --- | --- | --- |
-| Secure Enterprise Knowledge Copilot | `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
-| Regulated Customer Operations Agent | `tool governance` `approvals` `side-effect blocking` `supervisor review` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
+| Secure Enterprise Knowledge Copilot | `admin ingestion` `source sync` `GitHub connector` `ingestion jobs` `permissions` `citations` `abstention` `prompt-injection handling` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [API Contracts](docs/api_contracts.md), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
+| Regulated Customer Operations Agent | `tool registry` `dry-run preview` `approvals` `rejection/expiry` `action outbox` `side-effect blocking` `supervisor review` `evals` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
 | AI Reliability Incident Console | `eval-regression evidence` `release blocking` `remediation planning` `incident triage` `traces` `audit logs` | [Evidence Matrix](#evidence-matrix), [Threat Model](docs/threat_model.md), [Observability Integrity](docs/observability_integrity.md) |
 
 ## Why This Exists
@@ -42,6 +42,7 @@ Risk badges:
 FDE and AI application systems need more than a model call. These reference implementations focus on the controls that usually separate production-oriented AI systems from chatbot demos:
 
 - permissions before model generation
+- admin-controlled document ingestion, source sync, GitHub connector intake, and ingestion job handling before retrieval
 - citations and abstention instead of unsupported answers
 - retrieved-content prompt-injection handling
 - tool permissions and approval gates
@@ -85,11 +86,11 @@ Command quick-reference:
 | Workflow | Commands |
 | --- | --- |
 | Local run | `python -B scripts/dev.py start` |
-| Verification | `python -B scripts/dev.py verify`, `python -B scripts/dev.py quality`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py safety` |
+| Verification | `python -B scripts/dev.py verify`, `python -B scripts/dev.py quality`, `python -B scripts/dev.py smoke`, `python -B scripts/dev.py demo-presets`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py retrieval-metrics`, `python -B scripts/dev.py contracts`, `python -B scripts/dev.py auth-boundary`, `python -B scripts/dev.py request-body-limits`, `python -B scripts/dev.py request-correlation`, `python -B scripts/dev.py request-governance`, `python -B scripts/dev.py runtime-latency-budget`, `python -B scripts/dev.py safety` |
 | Release evidence | `python -B scripts/dev.py replay-artifact`, `python -B scripts/dev.py report`, `python -B scripts/dev.py readiness-report`, `python -B scripts/dev.py fresh-clone`, `python -B scripts/post_publish_check.py` |
 | Visual assets | `python -B scripts/dev.py visual-assets`, `python -B scripts/dev.py visual-asset-diff`, `python -B scripts/dev.py refresh-visual-assets` |
 | GitHub maintenance | `python -B scripts/dev.py github-readiness`, `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py github-maintenance`, `python -B scripts/dev.py github-community` |
-| Optional environment checks | `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live` |
+| Optional environment checks | `python -B scripts/dev.py container-release`, `python -B scripts/dev.py docker-runtime`, `python -B scripts/dev.py openai-live`, `python -B scripts/dev.py postgres-compose`, `python -B scripts/dev.py postgres-runtime` |
 
 Command decision tree:
 
@@ -132,12 +133,21 @@ python -B scripts/dev.py model-gateway-safety
 python -B scripts/dev.py observability
 python -B scripts/dev.py openai-live
 python -B scripts/dev.py otel-traces
+python -B scripts/dev.py postgres-compose
+python -B scripts/dev.py postgres-migrations
+python -B scripts/dev.py postgres-runtime
+python -B scripts/dev.py postgres-seed
 python -B scripts/dev.py pr-policy
 python -B scripts/dev.py pr-triage
+python -B scripts/dev.py request-body-limits
+python -B scripts/dev.py request-correlation
+python -B scripts/dev.py request-governance
 python -B scripts/dev.py readiness-report
 python -B scripts/dev.py refresh-visual-assets
 python -B scripts/dev.py replay
 python -B scripts/dev.py replay-artifact
+python -B scripts/dev.py runtime-latency-budget
+python -B scripts/dev.py runtime-state-isolation
 python -B scripts/dev.py scenario-data
 python -B scripts/dev.py smoke
 python -B scripts/dev.py report
@@ -158,6 +168,10 @@ Command output expectations:
 | `python -B scripts/dev.py verify` | Starts or reuses the three local services, runs the CI-quality gate, and ends with `Quality gate passed.` | Use before local release review when the demo services should be exercised. |
 | `python -B scripts/dev.py quality` | Runs repository safety, docs/assets, UI contracts, service health, smoke flows, evals, replay artifacts, and claim checks; ends with `Quality gate passed.` | This is the main local quality gate. |
 | `python -B scripts/dev.py demo-presets` | Validates `docs/demo_state_presets.json` against seed and eval data; ends with `Demo state presets check passed.` | Use before recording, reviewing, or sharing canonical local demo paths. |
+| `python -B scripts/dev.py request-correlation` | Starts disposable services and ends with `Request correlation check passed.` | Use after changing request ids, response builders, trace writers, or audit event details. |
+| `python -B scripts/dev.py request-governance` | Starts disposable services and ends with `Request governance check passed.` | Use after changing app shells, API headers, rate limits, or request-cost budgeting. |
+| `python -B scripts/dev.py runtime-latency-budget` | Starts disposable services and ends with `Runtime latency budget checks: ... passed.` | Use after changing response paths, trace payloads, or runtime instrumentation. |
+| `python -B scripts/dev.py runtime-state-isolation` | Starts disposable services and ends with `Runtime state isolation checks: ... passed.` | Use after changing app startup, local JSON storage, or self-starting verification scripts. |
 | `python -B scripts/dev.py fresh-clone-local` | Clones the current checkout into `out/fresh-clone-tmp/`, runs release-facing checks, starts isolated demo ports, and ends with `Fresh clone experience check passed.` | Use before push when the remote branch may not include the current commit yet. |
 | `python -B scripts/dev.py fresh-clone` | Clones `origin`, runs the same fresh-clone checks, starts isolated demo ports, and ends with `Fresh clone experience check passed.` | Requires network access and a pushed commit. |
 | `python -B scripts/post_publish_check.py` | Prints `[PASS]` rows for the GitHub page, raw README/workflow, and required published files; ends with `Post-publish check passed.` | Use after push to confirm public GitHub assets are reachable. |
@@ -201,9 +215,9 @@ Ignored outputs under `out/` are local evidence by default. Do not claim Docker 
 Current verified status:
 
 ```text
-health check: all services ok
+health check: all services ok; readiness checks: all services ok
 smoke tests: 13/13 passed
-Project 1 eval: 11/11 passed, unsafe_leak_failures = 0
+Project 1 eval: 14/14 passed, unsafe_leak_failures = 0
 Project 2 eval: 8/8 passed, unsafe_direct_side_effect_failures = 0
 Project 3 eval: 6/6 passed, unsafe_release_approval_failures = 0
 ```
@@ -246,11 +260,11 @@ Use [Production Upgrade Notes](docs/production_upgrade_notes.md), [Project Case 
 
 Eval regression readiness:
 
-Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), [Eval CSV Troubleshooting Examples](docs/eval_csv_troubleshooting_examples.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py evals`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.
+Use [Demo Report](docs/demo_report.md), [Demo Replay Artifact](docs/demo_replay_artifact.md), [Trace-To-Eval Workflow](docs/trace_to_eval_workflow.md), [Reviewed Eval Dataset Ledger](docs/reviewed_eval_dataset_ledger.json), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), [Eval CSV Troubleshooting Examples](docs/eval_csv_troubleshooting_examples.md), and the [Evidence Legend](#evidence-legend) before changing eval or regression evidence. Run `python -B scripts/dev.py replay`, `python -B scripts/dev.py trace-to-eval`, `python -B scripts/dev.py trace-to-eval-check`, `python -B scripts/dev.py reviewed-eval-ledger`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py retrieval-metrics`, `python -B scripts/dev.py eval-csv`, `python -B scripts/dev.py claims`, and `python -B scripts/dev.py quality`; trace-to-eval artifacts are review candidates only, and unsafe leak, unsafe direct side-effect, and unsafe release approval failure counts must remain zero.
 
 Storage adapter readiness:
 
-Use [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Evidence Matrix](#evidence-matrix) before adding persistent storage prototypes. Storage adapters must preserve permission checks before retrieval or side effects, eval-state isolation, trace/audit compatibility, and local JSON default behavior; run `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
+Use [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), the reviewed migration artifacts at `infra/postgres/migrations/001_core.sql` and `infra/postgres/migrations/002_project1_denied_evidence_count.sql`, the deterministic Project 1 seed artifact at `infra/postgres/seeds/001_project1_demo.sql`, `docker-compose.postgres.yml`, [Production Upgrade Notes](docs/production_upgrade_notes.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the [Evidence Matrix](#evidence-matrix) before adding persistent storage prototypes. Storage adapters must preserve permission checks before retrieval or side effects, eval-state isolation, trace/audit compatibility, seed SQL synchronization, runtime provider switching, optional Postgres pool configuration, local role separation through `fde_app`, denied-evidence counts without leaking unauthorized content, and local JSON default behavior; run `python -B scripts/dev.py postgres-migrations`, `python -B scripts/dev.py postgres-compose`, `python -B scripts/dev.py postgres-runtime`, `python -B scripts/dev.py postgres-seed`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py dependency-surface`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`.
 
 Red-team eval readiness:
 
@@ -258,7 +272,7 @@ Use [Threat Model](docs/threat_model.md), [System Evidence Matrix](docs/portfoli
 
 OpenTelemetry backend readiness:
 
-Use [OpenTelemetry Trace Export](docs/otel_trace_export.md), [Observability Integrity](docs/observability_integrity.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), and the [Evidence Legend](#evidence-legend) before adding hosted collector support. Local JSON trace export remains the default proof path and hosted collectors are optional environment-dependent extensions; run `python -B scripts/dev.py replay`, `python -B scripts/dev.py otel-traces`, `python -B scripts/dev.py observability`, and `python -B scripts/dev.py quality`.
+Use [OpenTelemetry Trace Export](docs/otel_trace_export.md), [OpenTelemetry Collector Handoff Troubleshooting](docs/opentelemetry_collector_handoff_troubleshooting.md), [Observability Integrity](docs/observability_integrity.md), [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Production Upgrade Notes](docs/production_upgrade_notes.md), and the [Evidence Legend](#evidence-legend) before adding hosted collector support. Local JSON trace export remains the default proof path, the optional OTLP/HTTP JSON handoff is tested against a local collector stub, and hosted collectors remain environment-dependent extensions; run `python -B scripts/dev.py replay`, `python -B scripts/dev.py otel-traces`, `python -B scripts/dev.py otel-collector-handoff`, `python -B scripts/dev.py observability`, and `python -B scripts/dev.py quality`.
 
 Docker runtime readiness:
 
@@ -376,7 +390,7 @@ Use this with the [Maintainer PR Checklist](#maintainer-pr-checklist), [Contribu
 | Docs-only | The command decision tree above, [Launch Asset Hygiene](docs/launch_assets_hygiene.md), and [System Evidence Matrix](docs/portfolio_evidence_matrix.md). | `python -B scripts/dev.py assets`, `python -B scripts/dev.py launch-assets`, then `python -B scripts/dev.py quality` before publishing. |
 | Frontend/UI | [Frontend Integrity](docs/frontend_integrity.md), [Runtime UI Contracts](docs/runtime_ui_contracts.md), and [Visual Asset Hygiene](docs/visual_asset_hygiene.md). | `python -B scripts/dev.py frontend`, `python -B scripts/dev.py ui-contracts`, `python -B scripts/dev.py visual-assets`, then `python -B scripts/dev.py quality`. |
 | Backend/API | [API Contracts](docs/api_contracts.md), [Architecture Boundaries](docs/architecture_boundaries.md), and the service `src/` package being changed. | `python -B scripts/dev.py contracts`, `python -B scripts/dev.py api-docs`, `python -B scripts/dev.py architecture`, then `python -B scripts/dev.py quality`. |
-| Eval/data | [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), [Seed Data Extension Examples](docs/seed_data_extension_examples.md), and the project `data/` folder. | `python -B scripts/dev.py evals`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py claims`, then `python -B scripts/dev.py quality`. |
+| Eval/data | [System Evidence Matrix](docs/portfolio_evidence_matrix.md), [Trace-To-Eval Workflow](docs/trace_to_eval_workflow.md), [Reviewed Eval Dataset Ledger](docs/reviewed_eval_dataset_ledger.json), [Scenario Data Integrity](docs/scenario_data_integrity.md), [Eval Authoring Guide](docs/eval_authoring_guide.md), [Seed Data Extension Examples](docs/seed_data_extension_examples.md), and the project `data/` folder. | `python -B scripts/dev.py trace-to-eval-check`, `python -B scripts/dev.py reviewed-eval-ledger`, `python -B scripts/dev.py evals`, `python -B scripts/dev.py retrieval-metrics`, `python -B scripts/dev.py scenario-data`, `python -B scripts/dev.py claims`, then `python -B scripts/dev.py quality`. |
 | Visual assets | The [Screenshots](#screenshots) section and [Visual Asset Hygiene](docs/visual_asset_hygiene.md). | `python -B scripts/dev.py visual-assets` and `python -B scripts/dev.py visual-asset-diff`; use `python -B scripts/dev.py refresh-visual-assets` only for intentional screenshot updates. |
 | GitHub maintenance | [Maintainer PR Checklist](#maintainer-pr-checklist), [PR Review Security](docs/pr_review_security.md), [PR Review Runbook](docs/pr_review_runbook.md), and [GitHub Authenticated Maintenance Troubleshooting Examples](docs/github_authenticated_maintenance_troubleshooting_examples.md). | `python -B scripts/dev.py pr-triage`, `python -B scripts/dev.py github-readiness`, and dry-run `python -B scripts/dev.py github-maintenance` before any account-level action. |
 
@@ -385,9 +399,9 @@ Production upgrade pointer:
 | Upgrade Path | Start With | Verification Boundary |
 | --- | --- | --- |
 | FastAPI service adapter | [Production Upgrade Notes](docs/production_upgrade_notes.md), [API Contracts](docs/api_contracts.md), and [Architecture Boundaries](docs/architecture_boundaries.md). | Keep the stdlib HTTP server as the default local path; run `python -B scripts/dev.py contracts`, `python -B scripts/dev.py api-docs`, and `python -B scripts/dev.py quality`. |
-| PostgreSQL and pgvector | [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md). | Preserve permission checks before retrieval or side effects, keep eval state isolated, and run `python -B scripts/dev.py scenario-data` plus `python -B scripts/dev.py quality`. |
+| PostgreSQL and pgvector | [PostgreSQL And pgvector Adapter Design](docs/postgres_pgvector_adapter_design.md), `docker-compose.postgres.yml`, `infra/postgres/migrations/001_core.sql`, `infra/postgres/migrations/002_project1_denied_evidence_count.sql`, `infra/postgres/seeds/001_project1_demo.sql`, `python -B scripts/dev.py postgres-compose`, and `python -B scripts/dev.py postgres-runtime`. | Preserve permission checks before retrieval or side effects, keep eval state isolated, keep seed SQL synchronized with Project 1 seed data, keep `COPILOT_REPOSITORY=postgres` and `COPILOT_POSTGRES_DSN` opt-in, keep `COPILOT_POSTGRES_POOL` optional, keep local app role `fde_app` separate from the migrator role with the local-only demo password `fde_app_demo_password`, count denied relevant evidence through `project1_denied_relevant_chunk_count` without exposing unauthorized content, and run `python -B scripts/dev.py postgres-migrations`, `python -B scripts/dev.py postgres-compose`, `python -B scripts/dev.py postgres-runtime`, `python -B scripts/dev.py postgres-seed`, `python -B scripts/dev.py scenario-data`, and `python -B scripts/dev.py quality`. |
 | Connector stubs | [Production Upgrade Notes](docs/production_upgrade_notes.md) and project service packages. | Keep external side effects behind approval, idempotency, audit, and trace boundaries; run `python -B scripts/dev.py model-gateway-safety`, `python -B scripts/dev.py contracts`, and `python -B scripts/dev.py quality`. |
-| OpenTelemetry export | [OpenTelemetry Trace Export](docs/otel_trace_export.md) and [Observability Integrity](docs/observability_integrity.md). | Local traces export without a collector by default; run `python -B scripts/dev.py replay`, `python -B scripts/dev.py otel-traces`, and `python -B scripts/dev.py observability`. |
+| OpenTelemetry export | [OpenTelemetry Trace Export](docs/otel_trace_export.md), [OpenTelemetry Collector Handoff Troubleshooting](docs/opentelemetry_collector_handoff_troubleshooting.md), and [Observability Integrity](docs/observability_integrity.md). | Local traces export without a collector by default; optional OTLP/HTTP JSON handoff is verified against a local collector stub; run `python -B scripts/dev.py replay`, `python -B scripts/dev.py otel-traces`, `python -B scripts/dev.py otel-collector-handoff`, and `python -B scripts/dev.py observability`. |
 | OpenAI runtime mode | [Model Runtime Configuration](docs/model_runtime_configuration.md), [Model Gateway Safety](docs/model_gateway_safety.md), and [OpenAI Live Mode Troubleshooting](docs/openai_live_mode_troubleshooting.md). | Local deterministic mode remains the verified default; run `python -B scripts/dev.py openai-live` only in an API-key environment before claiming live model evidence. |
 | Docker runtime | [Container Release Hygiene](docs/container_release_hygiene.md) and [Docker Runtime Evidence Checklist](docs/docker_runtime_evidence_checklist.md). | Static container config is covered by `python -B scripts/dev.py container-release`; run `python -B scripts/dev.py docker-runtime` on a Docker-enabled machine before claiming container runtime evidence. |
 
@@ -410,13 +424,18 @@ Production upgrade pointer:
 | Dependency surface | `scripts/check_dependency_surface.py`, `.github/dependabot.yml`, `docs/supply_chain_security.md` | stdlib-only Python path, first-party frontend assets, pinned Docker bases, and Dependabot coverage |
 | Container release hygiene | `scripts/check_container_release.py`, `scripts/check_docker_runtime.py`, `docs/container_release_hygiene.md` | Dockerfiles, compose ports, health checks, startup commands, env handling, build-context ignores, and optional runtime smoke checks stay aligned |
 | API contracts | `scripts/check_api_contracts.py`, `scripts/check_api_documentation.py`, `docs/api_contracts.md` | runtime response shapes and public API documentation stay aligned with source routes |
+| Liveness and readiness | `/api/health`, `/api/ready`, `scripts/check_health.py` | services expose both process health and local storage/seed/eval/scenario readiness |
+| Local signed identity | `local_auth_tokens.py`, project API classes, `scripts/check_auth_boundary.py`, `docs/api_contracts.md` | bearer-token identity, subject mismatch rejection, supervisor approval identity, and release-triage identity are covered by static and runtime contracts |
+| Request body limits | `local_http_limits.py`, project `app.py` files, `scripts/check_request_body_limits.py` | oversized JSON returns `413`, non-object JSON returns `400`, and all three services reject unbounded bodies before route handling |
+| Request governance | `local_request_governance.py`, project `app.py` files, `scripts/check_request_governance.py` | API responses include request ids and rate-limit budget headers; local request-count or cost-budget pressure returns safe `429` responses with `Retry-After` |
+| Request correlation | `local_request_governance.py`, response builders, trace/audit writers, `scripts/check_request_correlation.py` | Project 1 query, Project 2 agent, and Project 3 triage responses carry the same `request_id` as their persisted traces and linked audit events |
 | GitHub launch setup | `scripts/configure_github_launch.py` | dry-run repo metadata, topics, branch protection, release commands, and release asset upload commands |
 | Community issue pack | `scripts/check_community_issue_pack.py`, `scripts/manage_community_issues.py`, `docs/github_labels.json` | labels, issue templates, contributor issue pack, and optional GitHub issue creation stay aligned |
 | Launch asset hygiene | `scripts/check_launch_assets.py`, `docs/launch_assets_hygiene.md` | launch copy, star-growth plan, public issue pack, and anti-hype boundaries stay complete and honest |
 | Repository governance | `scripts/check_repository_governance.py`, `.github/CODEOWNERS` | code-owner review and branch-protection payload sanity checks |
 | Workflow security | `scripts/check_workflow_security.py`, `.github/workflows/ci.yml` | read-only workflow token, safe PR trigger, hardened checkout, and approved actions |
 | Model gateway safety | `scripts/check_model_gateway_safety.py`, `scripts/check_openai_live_mode.py`, project `model_gateway.py` files | OpenAI mode is opt-in, key references are constrained, structured outputs are required, failures fall back locally, and live mode can be verified when a key is available |
-| Observability integrity | `scripts/check_observability_integrity.py`, project trace/audit/approval endpoints | response trace IDs, audit events, approval records, blocked actions, unauthorized-query evidence, and release decisions stay internally consistent |
+| Observability integrity | `scripts/check_observability_integrity.py`, `scripts/check_runtime_latency_budget.py`, project trace/audit/approval endpoints | response trace IDs, latency evidence, audit events, approval records, blocked actions, unauthorized-query evidence, and release decisions stay internally consistent |
 | Threat model | `docs/threat_model.md`, `scripts/check_threat_model.py` | threat IDs map to deterministic controls, source files, and evidence commands |
 | Scenario data integrity | `scripts/check_scenario_data_integrity.py`, project `data/` folders | fictional seed data, roles, references, eval expectations, and browser-local scenario drafts remain internally consistent |
 | Demo state presets | `scripts/check_demo_state_presets.py`, `docs/demo_state_presets.json` | shareable reset presets for the Project 1 finance-access path, Project 2 `case-1001` approval path, and Project 3 unsafe canary release path stay aligned with seed and eval data |
@@ -435,13 +454,13 @@ See [System Evidence Matrix](docs/portfolio_evidence_matrix.md) for the full cla
 
 | Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
 | --- | --- | --- |
-| ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png)<br>Desktop: role-aware knowledge access, visible documents, eval gate, and trace/audit surfaces for permission-aware RAG. | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png)<br>Desktop: investigator workflow with case context, governed action buttons, eval gate, and approval-driven operations controls. | ![AI Reliability Incident Console screenshot](docs/assets/ai-reliability-incident-console-screenshot.png)<br>Desktop: release and incident triage workspace with eval evidence, rollout blocking, and audit/trace context. |
+| ![Secure Enterprise Knowledge Copilot screenshot](docs/assets/secure-knowledge-copilot-screenshot.png)<br>Desktop: role-aware knowledge access, visible documents, admin source intake, eval gate, and trace/audit surfaces for permission-aware RAG. | ![Regulated Customer Operations Agent screenshot](docs/assets/regulated-ops-agent-screenshot.png)<br>Desktop: investigator workflow with case context, governed action buttons, eval gate, and approval-driven operations controls. | ![AI Reliability Incident Console screenshot](docs/assets/ai-reliability-incident-console-screenshot.png)<br>Desktop: release and incident triage workspace with eval evidence, rollout blocking, and audit/trace context. |
 
 Mobile / narrow viewport captures are checked by the same visual asset manifest:
 
 | Secure Enterprise Knowledge Copilot | Regulated Customer Operations Agent | AI Reliability Incident Console |
 | --- | --- | --- |
-| ![Secure Enterprise Knowledge Copilot mobile screenshot](docs/assets/secure-knowledge-copilot-mobile.png)<br>Mobile: narrow layout keeps user context, visible documents, and permission-aware knowledge controls readable. | ![Regulated Customer Operations Agent mobile screenshot](docs/assets/regulated-ops-agent-mobile.png)<br>Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning. | ![AI Reliability Incident Console mobile screenshot](docs/assets/ai-reliability-incident-console-mobile.png)<br>Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence. |
+| ![Secure Enterprise Knowledge Copilot mobile screenshot](docs/assets/secure-knowledge-copilot-mobile.png)<br>Mobile: narrow layout keeps user context, admin source intake, and permission-aware knowledge controls readable. | ![Regulated Customer Operations Agent mobile screenshot](docs/assets/regulated-ops-agent-mobile.png)<br>Mobile: approval workflow remains usable with case selection, eval gate, and governed action controls stacked for scanning. | ![AI Reliability Incident Console mobile screenshot](docs/assets/ai-reliability-incident-console-mobile.png)<br>Mobile: release gate and incident triage stay readable while preserving blocked-rollout evidence. |
 
 Screenshot reviewer checklist:
 
@@ -468,11 +487,12 @@ Show:
 4. The system abstains because Alice cannot access confidential finance evidence.
 5. Morgan asks the same finance question.
 6. The system answers with `Finance Retention Plan 2026` citation.
-7. Run evals.
+7. Run `python -B scripts/dev.py contracts` to prove admin-only ingestion/source sync/GitHub connector/jobs, non-admin refusal, job idempotency/dead-letter evidence, audit evidence, and retrieval from ingested and synced documents.
+8. Run evals.
 
 Core claim:
 
-> The model never receives evidence the user is not allowed to access.
+> Documents enter through admin-controlled ingestion, source sync, GitHub connector, and ingestion job boundaries, and the model never receives evidence the user is not allowed to access.
 
 ## Project 2: Regulated Customer Operations Agent
 
@@ -487,10 +507,10 @@ Show:
 1. Ivy investigates Market Blue / RX-900 recalled product.
 2. The agent searches policy and listings.
 3. It creates a violation, drafts seller notice, schedules follow-up.
-4. It creates an approval request before sending.
+4. It exposes the governed tool registry and creates an approval request with dry-run preview, owner, expiry, and payload hash evidence before sending.
 5. Direct `send_notice` is blocked for investigator.
-6. Supervisor approval sends the notice.
-7. Run evals.
+6. Supervisor approval sends the notice; supervisor rejection or expiry closes the outbox item without execution.
+7. Run evals and API contracts.
 
 Core claim:
 
@@ -503,6 +523,7 @@ Core claim:
 ```text
 Reference Systems
   +-- Secure Enterprise Knowledge Copilot
+  |   +-- admin-only document ingestion
   |   +-- role-aware retrieval
   |   +-- citation answer shape
   |   +-- abstention logic
@@ -565,6 +586,18 @@ Docker release hygiene is statically gated:
 python -B scripts/dev.py container-release
 ```
 
+Optional Project 1 PostgreSQL/pgvector compose is kept in a separate file:
+
+```powershell
+python -B scripts/dev.py postgres-compose
+docker compose -f docker-compose.postgres.yml up -d
+$env:COPILOT_REPOSITORY="postgres"
+$env:COPILOT_POSTGRES_DSN="postgresql://fde_app:fde_app_demo_password@127.0.0.1:55432/fde_portfolio"
+python -B scripts/check_project1_postgres_runtime.py --live
+```
+
+The `fde_app` / `fde_app_demo_password` values are public local-only demo credentials for `docker-compose.postgres.yml`. Use real secret management for any non-local deployment.
+
 On a Docker-enabled machine, run the runtime proof:
 
 ```powershell
@@ -610,6 +643,7 @@ repository/
 - [Local Demo Reset Troubleshooting](docs/local_demo_reset_troubleshooting.md)
 - [Command Output Troubleshooting Map](docs/command_output_troubleshooting_map.md)
 - [Eval Authoring Guide](docs/eval_authoring_guide.md)
+- [Trace-To-Eval Workflow](docs/trace_to_eval_workflow.md)
 - [Eval Gate Troubleshooting Examples](docs/eval_gate_troubleshooting_examples.md)
 - [Eval CSV Troubleshooting Examples](docs/eval_csv_troubleshooting_examples.md)
 - [Seed Data Extension Examples](docs/seed_data_extension_examples.md)

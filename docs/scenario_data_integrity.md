@@ -13,10 +13,12 @@ python -B scripts/dev.py scenario-data
 Project 1 checks:
 
 - demo users include employee, manager, and admin roles
+- Project 1 users can also include fictional `group_ids` for source ACL checks
 - all users are scoped to the fictional `acme` tenant
 - document ids are unique
 - document `source_url` values use the fictional `internal://` scheme
 - confidential documents are not visible to the employee role
+- source-group scoped documents can be visible to one employee and hidden from another employee with the same coarse role
 - confidential documents remain visible to manager and admin roles
 - the unsafe vendor note remains present as a retrieved-content injection fixture
 - eval ids are unique and consistently formatted

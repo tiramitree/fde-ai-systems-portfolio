@@ -41,13 +41,14 @@ Frontend
 
 ```text
 question
-  -> resolve user role
+  -> resolve user role and source groups
   -> retrieve tenant chunks
-  -> filter by allowed roles
+  -> filter by tenant, role, source group, and source principals
+  -> filter superseded, deprecated, or deleted sources
   -> detect unsafe retrieved instructions
   -> select evidence
   -> answer or abstain
-  -> attach citations
+  -> attach chunk and sentence evidence citations
   -> write trace
   -> write audit
 ```
@@ -64,10 +65,11 @@ Failure modes:
 Controls:
 
 - permission filter before answer generation
-- citation requirement
+- source lifecycle filter before answer generation
+- citation requirement with parser-normalized chunk and answer-support spans
 - abstention threshold
 - prompt-injection detection
-- eval cases for leaks and unsupported questions
+- eval cases for leaks, stale-source filtering, and unsupported questions
 
 ## Project 2 Request Flow
 

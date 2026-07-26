@@ -13,12 +13,16 @@ import {
 import { installThemeToggle } from "./theme.js";
 import {
   populateCaseSelect,
+  renderActionOutbox,
+  renderActionRuns,
   populateUserSelect,
   renderApprovals,
   renderAudit,
   renderCaseSummary,
   renderDecision,
+  renderToolRegistry,
   renderTraces,
+  renderWorkflowRuns,
 } from "./renderers.js";
 
 const state = {
@@ -79,13 +83,59 @@ async function approve(approvalId) {
     method: "POST",
     body: JSON.stringify({ approval_id: approvalId, approver_id: "sam" }),
   });
-  byId("decision").textContent = `Approved ${approvalId}: ${data.result}`;
+  const execution = data.execution ? ` (${data.execution.id})` : "";
+  const outbox = data.outbox_item ? ` via ${data.outbox_item.id}` : "";
+  byId("decision").textContent = `Approved ${approvalId}: ${data.result}${execution}${outbox}`;
+  await refreshOperationalViews();
+}
+
+async function rejectApproval(approvalId) {
+  const data = await api("/api/approval/reject", {
+    method: "POST",
+    body: JSON.stringify({
+      approval_id: approvalId,
+      reviewer_id: "sam",
+      reason: "supervisor rejected this controlled demo action",
+    }),
+  });
+  const outbox = data.outbox_item ? ` via ${data.outbox_item.id}` : "";
+  byId("decision").textContent = `Rejected ${approvalId}: ${data.result}${outbox}`;
+  await refreshOperationalViews();
+}
+
+async function retryOutbox(outboxId) {
+  const data = await api("/api/action-outbox/retry", {
+    method: "POST",
+    body: JSON.stringify({ outbox_id: outboxId, operator_id: "sam" }),
+  });
+  const execution = data.execution ? ` (${data.execution.id})` : "";
+  byId("decision").textContent = `Retried ${outboxId}: ${data.result}${execution}`;
   await refreshOperationalViews();
 }
 
 async function loadApprovals() {
   const data = await api("/api/approvals");
-  renderApprovals(data.approvals, approve);
+  renderApprovals(data.approvals, approve, rejectApproval);
+}
+
+async function loadToolRegistry() {
+  const data = await api("/api/tool-registry");
+  renderToolRegistry(data.tools);
+}
+
+async function loadActionRuns() {
+  const data = await api("/api/action-runs?limit=6");
+  renderActionRuns(data.action_runs);
+}
+
+async function loadWorkflowRuns() {
+  const data = await api("/api/workflow-runs?limit=6");
+  renderWorkflowRuns(data.workflow_runs);
+}
+
+async function loadActionOutbox() {
+  const data = await api("/api/action-outbox?limit=6");
+  renderActionOutbox(data.action_outbox, retryOutbox);
 }
 
 async function loadAudit() {
@@ -109,6 +159,9 @@ async function runEval() {
 async function refreshOperationalViews() {
   await loadCases();
   await loadApprovals();
+  await loadWorkflowRuns();
+  await loadActionOutbox();
+  await loadActionRuns();
   await loadAudit();
   await loadTraces();
 }
@@ -117,6 +170,7 @@ async function boot() {
   const health = await api("/api/health");
   byId("health").textContent = health.status === "ok" ? "Healthy" : health.status;
   await loadUsers();
+  await loadToolRegistry();
   await refreshOperationalViews();
 }
 

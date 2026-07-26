@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -7,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 COMPOSE = ROOT / "docker-compose.yml"
 DOCKER_RUNTIME_EVIDENCE_CHECKLIST = ROOT / "docs" / "docker_runtime_evidence_checklist.md"
 DOCKER_RUNTIME_FAILURE_EXAMPLES = ROOT / "docs" / "docker_runtime_failure_examples.md"
+POSTGRES_COMPOSE_CHECK = ROOT / "scripts" / "check_postgres_compose.py"
 
 PROJECTS = [
     {
@@ -209,9 +212,23 @@ def check_runtime_failure_examples() -> list[str]:
     return failures
 
 
+def check_postgres_compose_gate() -> list[str]:
+    result = subprocess.run(
+        [sys.executable, "-B", str(POSTGRES_COMPOSE_CHECK)],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode == 0:
+        return []
+    output = (result.stdout + "\n" + result.stderr).strip()
+    return [f"postgres compose gate failed: {output or 'no output'}"]
+
+
 def main() -> int:
     failures: list[str] = []
     failures.extend(check_compose())
+    failures.extend(check_postgres_compose_gate())
     failures.extend(check_runtime_evidence_checklist())
     failures.extend(check_runtime_failure_examples())
     for project in PROJECTS:

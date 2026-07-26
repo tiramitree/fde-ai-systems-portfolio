@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -16,12 +18,20 @@ SEED_FIXTURE_DATA_FLOW = ROOT / "docs" / "seed_fixture_data_flow.md"
 P1_ROOT = ROOT / "secure-enterprise-knowledge-copilot"
 P2_ROOT = ROOT / "regulated-customer-operations-agent"
 P3_ROOT = ROOT / "ai-reliability-incident-console"
+P1_SRC_PATH = P1_ROOT / "src"
+
+sys.path.insert(0, str(P1_SRC_PATH))
+
+from copilot.source_parsing import PARSER_CONTRACT_VERSION, PARSER_QUALITY_SCHEMA_VERSION  # noqa: E402
+from copilot.source_scanning import SOURCE_SCAN_SCHEMA_VERSION  # noqa: E402
+from copilot.storage import JsonStore, seed as seed_runtime  # noqa: E402
 
 P1_ROLES = {"employee", "manager", "admin"}
 P2_ROLES = {"investigator", "supervisor"}
 P3_ROLES = {"reliability_lead", "product_manager"}
 P1_BEHAVIORS = {"answer", "abstain"}
 P2_INTENTS = {"approve_action", "request_escalation", "request_notice_send", "investigate_listing", "general"}
+P1_SOURCE_LIFECYCLE_STATES = {"active", "superseded", "deprecated", "deleted"}
 
 FORBIDDEN_DATA_MARKERS = (
     "C:/",
@@ -98,12 +108,67 @@ def check_eval_ids(cases: list[dict[str, Any]], source: str, failures: list[str]
     require(len(seen) == len(cases), failures, f"{source}: eval ids must be unique")
 
 
+def check_p1_seed_runtime_quality(seed_path: Path, failures: list[str]) -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        store = JsonStore(Path(temp_dir) / "runtime_state.json")
+        seed_runtime(store, seed_path)
+
+    documents = store.state.get("documents", [])
+    chunks = store.state.get("chunks", [])
+    require(bool(documents), failures, "P1 runtime seed: documents must be initialized")
+    require(bool(chunks), failures, "P1 runtime seed: chunks must be initialized")
+
+    for doc in documents:
+        doc_id = doc.get("id")
+        metadata = doc.get("parser_metadata")
+        quality = metadata.get("quality") if isinstance(metadata, dict) else {}
+        require(doc.get("parser_contract_version") == PARSER_CONTRACT_VERSION, failures, f"P1 runtime document {doc_id}: missing parser contract")
+        require(
+            isinstance(quality, dict) and quality.get("schema_version") == PARSER_QUALITY_SCHEMA_VERSION,
+            failures,
+            f"P1 runtime document {doc_id}: missing parser quality schema",
+        )
+        require(len(str(doc.get("source_hash") or "")) == 64, failures, f"P1 runtime document {doc_id}: missing source hash")
+        require(bool(doc.get("source_mime")), failures, f"P1 runtime document {doc_id}: missing source mime")
+        require(bool(doc.get("source_connector")), failures, f"P1 runtime document {doc_id}: missing source connector")
+        require(bool(doc.get("acl_source")), failures, f"P1 runtime document {doc_id}: missing ACL source")
+        source_scan = doc.get("source_scan")
+        require(
+            isinstance(source_scan, dict) and source_scan.get("schema_version") == SOURCE_SCAN_SCHEMA_VERSION,
+            failures,
+            f"P1 runtime document {doc_id}: missing source scan schema",
+        )
+        require(source_scan.get("raw_matches_returned") is False, failures, f"P1 runtime document {doc_id}: source scan must not return raw matches")
+
+    for chunk in chunks:
+        chunk_id = chunk.get("id")
+        metadata = chunk.get("parser_metadata")
+        quality = metadata.get("quality") if isinstance(metadata, dict) else {}
+        require(chunk.get("parser_contract_version") == PARSER_CONTRACT_VERSION, failures, f"P1 runtime chunk {chunk_id}: missing parser contract")
+        require(
+            isinstance(quality, dict) and quality.get("schema_version") == PARSER_QUALITY_SCHEMA_VERSION,
+            failures,
+            f"P1 runtime chunk {chunk_id}: missing parser quality schema",
+        )
+        require(len(str(chunk.get("source_hash") or "")) == 64, failures, f"P1 runtime chunk {chunk_id}: missing source hash")
+        require(bool(chunk.get("source_mime")), failures, f"P1 runtime chunk {chunk_id}: missing source mime")
+        require(bool(chunk.get("source_span")), failures, f"P1 runtime chunk {chunk_id}: missing source span")
+        require(bool(chunk.get("chunk_source_span_unit")), failures, f"P1 runtime chunk {chunk_id}: missing source span unit")
+        source_scan = chunk.get("source_scan")
+        require(
+            isinstance(source_scan, dict) and source_scan.get("schema_version") == SOURCE_SCAN_SCHEMA_VERSION,
+            failures,
+            f"P1 runtime chunk {chunk_id}: missing source scan schema",
+        )
+
+
 def check_p1() -> list[str]:
     failures: list[str] = []
     seed = read_json(P1_ROOT / "data" / "seed_documents.json")
     eval_cases = read_json(P1_ROOT / "data" / "eval_cases.json")
     check_text_safety(seed, "P1 seed_documents.json", failures)
     check_text_safety(eval_cases, "P1 eval_cases.json", failures)
+    check_p1_seed_runtime_quality(P1_ROOT / "data" / "seed_documents.json", failures)
 
     users = seed.get("users", [])
     documents = seed.get("documents", [])
@@ -112,24 +177,47 @@ def check_p1() -> list[str]:
     user_ids = ids(users, "P1 users", failures)
     doc_ids = ids(documents, "P1 documents", failures)
     roles = {user.get("role") for user in users}
+    known_group_ids: set[str] = set()
 
     require(P1_ROLES.issubset(roles), failures, "P1: employee, manager, and admin demo roles must all exist")
     for user in users:
         require(user.get("role") in P1_ROLES, failures, f"P1 user {user.get('id')}: unknown role {user.get('role')}")
         require(user.get("tenant_id") == "acme", failures, f"P1 user {user.get('id')}: tenant_id must be acme")
+        group_ids = user.get("group_ids", [])
+        require(isinstance(group_ids, list), failures, f"P1 user {user.get('id')}: group_ids must be a list")
+        for group_id in group_ids:
+            require(isinstance(group_id, str) and group_id, failures, f"P1 user {user.get('id')}: group_ids must be non-empty strings")
+            known_group_ids.add(str(group_id))
 
     for doc in documents:
         doc_id = doc.get("id")
         allowed_roles = set(doc.get("allowed_roles", []))
+        allowed_groups = doc.get("allowed_groups", [])
         classification = doc.get("classification")
         require(classification in {"internal", "confidential"}, failures, f"P1 document {doc_id}: invalid classification")
         require(bool(allowed_roles), failures, f"P1 document {doc_id}: allowed_roles cannot be empty")
         require(allowed_roles <= P1_ROLES, failures, f"P1 document {doc_id}: allowed_roles contains unknown role")
+        require(isinstance(allowed_groups, list), failures, f"P1 document {doc_id}: allowed_groups must be a list when present")
+        for group_id in allowed_groups:
+            require(group_id in known_group_ids, failures, f"P1 document {doc_id}: allowed_groups references unknown group {group_id}")
         require(doc.get("source_url", "").startswith("internal://"), failures, f"P1 document {doc_id}: source_url must be internal://")
         require(str(doc.get("title", "")) in str(doc.get("body", "")), failures, f"P1 document {doc_id}: body should include title")
+        lifecycle_state = doc.get("source_lifecycle_state", "active")
+        require(
+            lifecycle_state in P1_SOURCE_LIFECYCLE_STATES,
+            failures,
+            f"P1 document {doc_id}: invalid source_lifecycle_state {lifecycle_state}",
+        )
+        if lifecycle_state == "superseded":
+            require(doc.get("superseded_by") in doc_ids, failures, f"P1 document {doc_id}: superseded_by must reference a seed document")
         if classification == "confidential":
             require("employee" not in allowed_roles, failures, f"P1 document {doc_id}: confidential docs must not allow employee")
             require({"manager", "admin"} <= allowed_roles, failures, f"P1 document {doc_id}: confidential docs must allow manager and admin")
+    require(
+        any(doc.get("allowed_groups") for doc in documents),
+        failures,
+        "P1: seed data must include at least one source-group restricted document",
+    )
 
     unsafe_docs = [doc for doc in documents if has_injection_marker(str(doc.get("body", "")))]
     require(bool(unsafe_docs), failures, "P1: seed data must include at least one unsafe retrieved-content document")
@@ -152,6 +240,19 @@ def check_p1() -> list[str]:
             require(isinstance(values, list), failures, f"P1 eval {case_id}: {field} must be a list")
             for doc_id in values:
                 require(doc_id in doc_ids, failures, f"P1 eval {case_id}: {field} references missing doc {doc_id}")
+        retrieval = expected.get("retrieval", {})
+        require(isinstance(retrieval, dict), failures, f"P1 eval {case_id}: retrieval must be an object when present")
+        for field in ("must_retrieve_doc_ids", "forbidden_retrieve_doc_ids"):
+            values = retrieval.get(field, [])
+            require(isinstance(values, list), failures, f"P1 eval {case_id}: retrieval.{field} must be a list")
+            for doc_id in values:
+                require(doc_id in doc_ids, failures, f"P1 eval {case_id}: retrieval.{field} references missing doc {doc_id}")
+        if "min_stale_filtered_count" in retrieval:
+            require(
+                isinstance(retrieval.get("min_stale_filtered_count"), int) and retrieval["min_stale_filtered_count"] >= 0,
+                failures,
+                f"P1 eval {case_id}: retrieval.min_stale_filtered_count must be a non-negative integer",
+            )
         if expected.get("requires_security_event"):
             require(
                 has_injection_marker(case.get("question", "")),
